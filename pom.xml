@@ -161,6 +161,11 @@
         <version>2.1.1</version>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webResources>
+            <webResource>
+              <directory>target/gulp</directory>
+            </webResource>
+          </webResources>
         </configuration>
       </plugin>
       
@@ -188,6 +193,17 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.2.1.v20140609</version>
+        <configuration>
+          <contextPath>/ldap-usermgm</contextPath>
+          <stopPort>8005</stopPort>
+          <stopKey>stop-instance</stopKey>
+        </configuration>
       </plugin>
       
     </plugins>
