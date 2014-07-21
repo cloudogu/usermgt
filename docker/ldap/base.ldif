@@ -1,0 +1,13 @@
+dn: dc=triology,dc=de
+objectClass: dcObject
+objectClass: organization
+dc: triology
+o : triology
+
+dn: ou=People,dc=triology,dc=de
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Groups,dc=triology,dc=de
+objectClass: organizationalUnit
+ou: Groups

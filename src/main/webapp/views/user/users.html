@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-sm-7">
+    <h1>Users</h1>
+  </div>
+  <div class="col-sm-1">
+    <a class="btn btn-primary" style="margin-top: 20px;" ng-href="#/users/">Create</a>
+  </div>
+  <div class="col-sm-4">
+
+    <form class="form" style="margin-top: 20px;" role="form" ng-submit="search(nonSubmittedQuery)">
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa">&#xf002;</i>
+        </span>
+        <input type="text" class="form-control" placeholder="Search" ng-model="nonSubmittedQuery">
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Display Name</th>
+      <th class="hidden-xs">E-Mail</th>
+      <th class="hidden-xs">Functions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="user in users">
+      <td>
+        <a ng-href="#/users/{{user.username}}">
+          {{user.username}}
+        </a>
+      </td>
+      <td>{{user.commonname}}</td>
+      <td class="hidden-xs">
+        <a ng-href="mailto:{{user.mail}}">
+          {{user.mail}}
+        </a>
+      </td>
+      <td class="hidden-xs">
+        <button class="btn btn-warning" href="" ng-click="remove(user)">
+          Remove
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="center">
+  <ul class="pagination">
+    <li ng-class="{disabled: page <= 1}">
+      <a href="#/users/1?q={{query}}">&laquo;</a>
+    </li>
+    <li ng-if="pageRange.length > 0 && pageRange[0] !== 1" class="disabled">
+      <a href="">...</a>
+    </li>
+    <li ng-repeat="p in pageRange" ng-class="{active: p === page}">
+      <a ng-href="#/users/{{p}}?q={{query}}">{{p}}</a>
+    </li>
+    <li ng-if="pageRange.length > 0 && pageRange[pageRange.length - 1] !== pages" class="disabled">
+      <a href="">...</a>
+    </li>
+    <li ng-class="{disabled: page >= pages}">
+      <a ng-href="#/users/{{pages}}?q={{query}}">&raquo;</a>
+    </li>
+  </ul>
+</div>

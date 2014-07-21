@@ -1,0 +1,11 @@
+version: 1
+
+dn: dc=hitchhiker,dc=com
+objectClass: domain
+objectClass: top
+dc: hitchhiker
+
+dn: ou=People,dc=hitchhiker,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: People

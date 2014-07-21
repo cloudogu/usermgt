@@ -1,0 +1,7 @@
+dn: uid=sdorra,ou=People,dc=triology,dc=de
+cn: Sebastian Sdorra
+sn: Sdorra
+objectClass: inetOrgPerson
+userPassword: not24get
+uid: sdorra
+mail: sebastian.sdorra@triology.de
