@@ -14,6 +14,7 @@ import de.triology.scmmu.usermgm.LDAPConfiguration;
 import de.triology.scmmu.usermgm.LDAPConnectionStrategy;
 import de.triology.scmmu.usermgm.LDAPHasher;
 import de.triology.scmmu.usermgm.PagedResultList;
+import de.triology.scmmu.usermgm.validation.Validator;
 import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -36,12 +37,14 @@ public class LDAPUserManagerTest
   private static final String LDIF_003 = "/de/triology/scmmu/usermgm/user/test.003.ldif";
 
   private EventBus eventBus;
+  private Validator validator;
   private final LDAPHasher hasher = new PlainLDAPHasher();
 
   @Before
   public void before()
   {
     eventBus = mock(EventBus.class);
+    validator = mock(Validator.class);
   }
 
   @Test
@@ -189,7 +192,7 @@ public class LDAPUserManagerTest
       "localhost", 10389, "cn=Directory Manager", 
       "manager123", "ou=People,".concat(BASEDN)
     );
-    return new LDAPUserManager(strategy, config, hasher, eventBus);
+    return new LDAPUserManager(strategy, config, hasher, validator, eventBus);
   }
 
   @Rule

@@ -10,6 +10,8 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.unboundid.ldap.sdk.persist.LDAPField;
 import com.unboundid.ldap.sdk.persist.LDAPObject;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -274,6 +276,8 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  @NotNull
+  @Size(min = 1)
   @LDAPField(attribute = "uid", inRDN = true)
   private String username;
 }

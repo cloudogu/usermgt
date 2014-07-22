@@ -32,8 +32,10 @@ import de.triology.scmmu.usermgm.LDAPHasher;
 import de.triology.scmmu.usermgm.LDAPUtil;
 import de.triology.scmmu.usermgm.PagedResultList;
 import de.triology.scmmu.usermgm.Paginations;
+import de.triology.scmmu.usermgm.validation.Validator;
 import java.util.Collections;
 import java.util.List;
+import javax.validation.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,15 +64,17 @@ public class LDAPUserManager implements UserManager
    * @param strategy
    * @param configuration
    * @param hasher
+   * @param validator
    * @param eventBus
    */
   @Inject
   public LDAPUserManager(LDAPConnectionStrategy strategy,
-          LDAPConfiguration configuration, LDAPHasher hasher, EventBus eventBus)
+          LDAPConfiguration configuration, LDAPHasher hasher, Validator validator, EventBus eventBus)
   {
     this.strategy = strategy;
     this.configuration = configuration;
     this.hasher = hasher;
+    this.validator = validator;
     this.eventBus = eventBus;
 
     try
@@ -82,6 +86,8 @@ public class LDAPUserManager implements UserManager
       throw new UserException("could not create ldap persister", ex);
     }
   }
+  
+  private final Validator validator;
 
   //~--- methods --------------------------------------------------------------
   /**
@@ -94,6 +100,8 @@ public class LDAPUserManager implements UserManager
   public void create(User user)
   {
     Preconditions.checkNotNull(user, "user is required");
+    // validate
+    validator.validate(user, "user object is not valid");
     logger.info("create user {}", user.getUsername());
 
     try
