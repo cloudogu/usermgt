@@ -1,4 +1,6 @@
+// load gulp
 var gulp = require('gulp');
+// load plugins
 var uglify = require('gulp-uglify');
 var rev = require('gulp-rev');
 var filesize = require('gulp-filesize');
@@ -12,6 +14,12 @@ var rename = require('gulp-rename');
 var revReplace = require('gulp-rev-replace');
 
 gulp.task('useref', function(){
+  // copy index.html for debugging purposes
+  gulp.src('src/main/webapp/*.html')
+      .pipe(rename({suffix: '-debug'}))
+      .pipe(gulp.dest('target/gulp'));
+  
+  // concat, compress and rename resources from index.html
   gulp.src('src/main/webapp/index.html')
       .pipe(useref.assets({searchPath: '{target/gulp,src/main/webapp}'}))
       .pipe(size())
