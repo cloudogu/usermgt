@@ -13,12 +13,19 @@ var size = require('gulp-size');
 var rename = require('gulp-rename');
 var revReplace = require('gulp-rev-replace');
 
-gulp.task('useref', function(){
+gulp.task('lessc', function(){
+  return gulp.src('src/main/webapp/style/less/*')
+      .pipe(less())
+      .pipe(gulp.dest('target/gulp/style/css/'));
+});
+
+
+gulp.task('useref', ['lessc'], function(){
   // copy index.html for debugging purposes
   gulp.src('src/main/webapp/*.html')
       .pipe(rename({suffix: '-debug'}))
       .pipe(gulp.dest('target/gulp'));
-  
+
   // concat, compress and rename resources from index.html
   gulp.src('src/main/webapp/index.html')
       .pipe(useref.assets({searchPath: '{target/gulp,src/main/webapp}'}))
@@ -31,13 +38,7 @@ gulp.task('useref', function(){
       .pipe(useref.restore())
       .pipe(useref())
       .pipe(revReplace())
-      .pipe(gulp.dest('target/gulp'));  
-});
-
-gulp.task('lessc', function(){
-  gulp.src('src/main/webapp/style/less/*')
-      .pipe(less())
-      .pipe(gulp.dest('target/gulp/style/css/'));
+      .pipe(gulp.dest('target/gulp'));
 });
 
 gulp.task('default', ['lessc', 'useref']);

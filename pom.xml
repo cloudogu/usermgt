@@ -18,111 +18,111 @@
       <version>6.0</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- injection -->
-    
+
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-servlet</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <!-- rest -->
-    
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-servlet-initializer</artifactId>
       <version>${resteasy.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-guice</artifactId>
       <version>${resteasy.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jackson-provider</artifactId>
       <version>${resteasy.version}</version>
     </dependency>
-    
+
     <!-- ldap -->
-    
+
     <dependency>
       <groupId>com.unboundid</groupId>
       <artifactId>unboundid-ldapsdk</artifactId>
       <version>2.3.6</version>
     </dependency>
-    
+
     <!-- util -->
-    
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>17.0</version>
     </dependency>
-    
+
     <!-- logging -->
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.1.2</version>
     </dependency>
-    
+
     <!-- test -->
-    
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
       <version>1.9.5</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>sonia.junit</groupId>
       <artifactId>ldap-unit</artifactId>
       <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 
   <build>
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -135,7 +135,7 @@
           </compilerArguments>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>com.github.sdorra</groupId>
         <artifactId>buildfrontend-maven-plugin</artifactId>
@@ -154,7 +154,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -168,7 +168,7 @@
           </webResources>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -194,21 +194,23 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>9.2.1.v20140609</version>
         <configuration>
-          <contextPath>/ldap-usermgm</contextPath>
+          <webAppConfig>
+            <contextPath>/ldap-usermgm</contextPath>
+          </webAppConfig>
           <stopPort>8005</stopPort>
           <stopKey>stop-instance</stopKey>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
-  
+
   <repositories>
 
     <repository>
@@ -262,7 +264,7 @@
 
     </profile>
   </profiles>
-  
+
   <properties>
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
