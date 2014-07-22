@@ -19,10 +19,10 @@ import org.hibernate.validator.constraints.Email;
  * @author Sebastian Sdorra
  */
 @LDAPObject(structuralClass = "organizationalperson",
-        superiorClass =
-        {
-    "inetorgperson", "person", "top"
-        })
+            superiorClass =
+            {
+              "inetorgperson", "person", "top"
+            })
 public class User implements Comparable<User>
 {
 
@@ -57,7 +57,7 @@ public class User implements Comparable<User>
    * @param password
    */
   public User(String username, String commonname, String givenname,
-          String surname, String mail, String password)
+              String surname, String mail, String password)
   {
     this.username = username;
     this.commonname = commonname;
@@ -207,7 +207,7 @@ public class User implements Comparable<User>
     return Strings.nullToEmpty(username).compareTo(Strings.nullToEmpty(o.username));
   }
 
- @Override
+  @Override
   public int hashCode()
   {
     return Objects.hashCode(username, commonname, givenname, surname, mail, password);
@@ -243,7 +243,7 @@ public class User implements Comparable<User>
             .add("mail", mail)
             .toString();
   }
-  
+
   //~--- fields ---------------------------------------------------------------
   /**
    * Field description

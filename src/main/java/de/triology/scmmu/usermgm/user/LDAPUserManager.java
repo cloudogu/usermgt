@@ -35,7 +35,6 @@ import de.triology.scmmu.usermgm.Paginations;
 import de.triology.scmmu.usermgm.validation.Validator;
 import java.util.Collections;
 import java.util.List;
-import javax.validation.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,6 +143,8 @@ public class LDAPUserManager implements UserManager
   public void modify(User user)
   {
     Preconditions.checkNotNull(user, "user is required");
+    // validate
+    validator.validate(user, "user object is not valid");
     logger.info("modify user {}", user.getUsername());
 
     try
