@@ -124,7 +124,7 @@ angular.module('usermgm.users.controllers', ['ui.bootstrap', 'usermgm.validation
           $scope.alerts = [{
             type: 'danger',
             msg: 'The user could not be saved'
-          }];          
+          }];
         }
       });
     };

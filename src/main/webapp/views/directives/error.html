@@ -1,0 +1,8 @@
+<div class="danger">
+  <alert type="danger">
+    {{message}}
+    <ul>
+      <li ng-repeat="violation in error.data.violations">{{violation.path}}: {{violation.message}}</li>
+    </ul>
+  </alert>
+</div>

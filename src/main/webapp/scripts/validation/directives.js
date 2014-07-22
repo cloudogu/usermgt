@@ -50,4 +50,41 @@ angular.module('usermgm.validation.directives', [])
         });
       }
     };
+  })
+  .directive('scmmuError', function(){
+    return {
+      restrict: 'AE',
+      scope: {
+        error: '=',
+        item: '='
+      },
+      transclude : false,
+      replace: true,
+      templateUrl: 'views/directives/error.html',
+      controller: function($scope){
+        var error = $scope.error;
+        var item = $scope.item;
+        if (!item){
+          item = 'object';
+        }
+        if (error){
+          // validation error ??
+          if ( error.status === 400 ) {
+            if ( error.data.message ){
+              $scope.message = error.data.message;
+            }
+            if ( error.data.violations ){
+              $scope.violations = error.data.violations;
+            }
+          } else if (error.status === 409){
+            $scope.message = 'The ' + item + ' already exists';
+          } else {
+            $scope.message = 'Server returned http status code ' + error.status;
+          }
+        }
+      },
+      link: function($scope, $element, $attr){
+        //console.log($scope.error);
+      }
+    };
   });
