@@ -12,6 +12,7 @@ import com.unboundid.ldap.sdk.persist.LDAPField;
 import com.unboundid.ldap.sdk.persist.LDAPObject;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Email;
 
 /**
  *
@@ -20,7 +21,7 @@ import javax.validation.constraints.Size;
 @LDAPObject(structuralClass = "organizationalperson",
         superiorClass =
         {
-          "inetorgperson", "person", "top"
+    "inetorgperson", "person", "top"
         })
 public class User implements Comparable<User>
 {
@@ -247,6 +248,8 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  @NotNull
+  @Size(min = 1)
   @LDAPField(attribute = "cn")
   private String commonname;
 
@@ -259,6 +262,8 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  @Email
+  @NotNull
   @LDAPField(attribute = "mail")
   private String mail;
 
@@ -270,6 +275,8 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  @NotNull
+  @Size(min = 1)
   @LDAPField(attribute = "sn")
   private String surname;
 

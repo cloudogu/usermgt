@@ -59,11 +59,7 @@ public class HibernateValidatorExceptionMapping implements ExceptionMapper<Const
     @XmlElementWrapper(name = "violations")
     private List<ConstraintViolationBean> violoations;
 
-    public ValidationFailure()
-    {
-    }
-
-    
+    ValidationFailure(){}
     
     public ValidationFailure(String message, List<ConstraintViolationBean> violoations)
     {
@@ -91,12 +87,8 @@ public class HibernateValidatorExceptionMapping implements ExceptionMapper<Const
     private String path;
     private String message;
 
-    public ConstraintViolationBean()
-    {
-    }
+    ConstraintViolationBean(){}
 
-    
-    
     public ConstraintViolationBean(ConstraintViolation<?> violation)
     {
       message = violation.getMessage();
@@ -112,8 +104,6 @@ public class HibernateValidatorExceptionMapping implements ExceptionMapper<Const
     {
       return path;
     }
-    
-    
     
   }
   
