@@ -120,6 +120,11 @@ angular.module('usermgm.users.controllers', ['ui.bootstrap', 'usermgm.validation
             type: 'danger',
             msg: 'The user ' + user.username + ' already exists'
           }];
+        } else {
+          $scope.alerts = [{
+            type: 'danger',
+            msg: 'The user could not be saved'
+          }];          
         }
       });
     };
