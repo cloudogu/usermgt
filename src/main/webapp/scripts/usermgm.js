@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -23,7 +23,7 @@ angular.module('usermgm', ['angular-loading-bar', 'ngAnimate', 'restangular', 'u
       }
       return response;
     });
-    
+
     $stateProvider
       .state('error404', {
         url: '/error/404',
@@ -33,7 +33,7 @@ angular.module('usermgm', ['angular-loading-bar', 'ngAnimate', 'restangular', 'u
         url: '/error/500',
         templateUrl: 'views/error/500.html'
       });;
-    
+
     // redirect unmatched to /users
     $urlRouterProvider.otherwise("/users");
   })
@@ -48,7 +48,7 @@ angular.module('usermgm', ['angular-loading-bar', 'ngAnimate', 'restangular', 'u
         $state.go('error500');
       }
     });
-    
+
     $rootScope.$on("$stateNotFound", function(event){
       $state.go('error404');
     });
@@ -60,7 +60,7 @@ angular.module('usermgm', ['angular-loading-bar', 'ngAnimate', 'restangular', 'u
       $scope.navCollapsed = !$scope.navCollapsed;
     };
 
-    $scope.$on('$routeChangeStart', function() { 
+    $scope.$on('$routeChangeStart', function() {
       $scope.navCollapsed = true;
     });
   });
