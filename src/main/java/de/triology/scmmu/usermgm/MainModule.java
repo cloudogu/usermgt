@@ -9,6 +9,7 @@ import de.triology.scmmu.usermgm.validation.Validator;
 import de.triology.scmmu.usermgm.validation.HibernateValidator;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
+import com.google.inject.servlet.ServletModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.triology.scmmu.usermgm.user.LDAPUserManager;
@@ -29,21 +30,22 @@ public class MainModule extends AbstractModule
    * the logger for MainModule
    */
   private static final Logger logger = LoggerFactory.getLogger(MainModule.class);
-
+  
   @Override
   protected void configure()
   {
     logger.info("bind resources");
 
-    //J-
     bind(LDAPConfiguration.class).toInstance(
-            BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class)
+      BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class)
     );
-    //J+
+
+    // validation
     bind(ValidatorFactory.class).toInstance(Validation.buildDefaultValidatorFactory());
+    bind(Validator.class).to(HibernateValidator.class);
     bind(HibernateValidatorExceptionMapping.class);
     
-    bind(Validator.class).to(HibernateValidator.class);
+    // misc
     bind(LDAPHasher.class).toInstance(new LDAPHasher());
     bind(EventBus.class).toInstance(new EventBus());
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);

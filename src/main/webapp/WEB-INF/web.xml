@@ -5,11 +5,6 @@
          version="3.0" metadata-complete="true">
   
   <display-name>LDAP UserManagement</display-name>
-
-  <context-param>
-    <param-name>resteasy.guice.modules</param-name>
-    <param-value>de.triology.scmmu.usermgm.MainModule</param-value>
-  </context-param>
   
   <context-param>
     <param-name>resteasy.servlet.mapping.prefix</param-name>
@@ -18,9 +13,19 @@
 
   <listener>
     <listener-class>
-      org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener
+      de.triology.scmmu.usermgm.BootstrapContextListener
     </listener-class>
   </listener>
+  
+  <filter>
+    <filter-name>guiceFilter</filter-name>
+    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>guiceFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <servlet>
     <servlet-name>Resteasy</servlet-name>
