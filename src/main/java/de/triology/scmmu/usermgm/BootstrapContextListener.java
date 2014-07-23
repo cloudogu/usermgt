@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 import java.util.List;
 import javax.servlet.ServletContext;
+import org.apache.shiro.guice.web.ShiroWebModule;
 import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 
 /**
@@ -22,8 +23,9 @@ public class BootstrapContextListener extends GuiceResteasyBootstrapServletConte
   protected List<? extends Module> getModules(ServletContext context)
   {
     return ImmutableList.of(
-      new SecurityModule(context),
-      new MainModule()
+      ShiroWebModule.guiceFilterModule(),
+      new MainModule(),
+      new SecurityModule(context)
     );
   }
 
