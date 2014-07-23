@@ -32,7 +32,7 @@ public final class BaseDirectory
   private static final String ENV_BASEDIR = "LDAPUSERMGM_HOME";
 
   /** Field description */
-  private static final String PROPERTY_BASEDIR = "ldap-usermdm.home";
+  private static final String PROPERTY_BASEDIR = "ldap-usermgm.home";
 
   /** Field description */
   private static final File baseDirectory;
