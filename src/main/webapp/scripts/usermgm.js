@@ -8,7 +8,7 @@
 angular.module('usermgm', ['angular-loading-bar', 'ngAnimate', 'restangular', 'ui.router', 'usermgm.config'])
   .config(function(RestangularProvider, $stateProvider, $urlRouterProvider){
     // configure restangular
-    RestangularProvider.setBaseUrl('/ldap-usermgm/api');
+    RestangularProvider.setBaseUrl(_contextPath + '/api');
     RestangularProvider.addResponseInterceptor(function(response, operation) {
       if (operation === 'getList') {
         if ( response.entries ){

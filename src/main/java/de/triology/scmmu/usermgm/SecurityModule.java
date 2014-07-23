@@ -56,7 +56,6 @@ public class SecurityModule extends ShiroWebModule
   @Override
   protected void configureShiroWeb()
   {
-    bindGuiceFilter(binder());
     CasConfiguration cas = getCasConfiguration();
     bind(CasConfiguration.class).toInstance(cas);
     config(CAS_SERVER_URL, cas.getServerUrl());
