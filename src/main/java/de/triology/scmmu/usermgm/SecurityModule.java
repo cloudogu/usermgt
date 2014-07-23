@@ -60,6 +60,8 @@ public class SecurityModule extends ShiroWebModule
   {
     CasConfiguration cas = getCasConfiguration();
     bind(CasConfiguration.class).toInstance(cas);
+    expose(CasConfiguration.class);
+    
     config(CAS_SERVER_URL, cas.getServerUrl());
     config(CAS_LOGIN_URL, cas.getLoginUrl());
     config(CAS_SERVICE, cas.getService());

@@ -31,6 +31,9 @@ public class CasConfiguration
   
   @XmlElement(name = "role-attribute-names")
   private String roleAttributeNames;
+  
+  @XmlElement(name = "logout-url")
+  private String logoutUrl;
 
   public String getServerUrl()
   {
@@ -50,6 +53,11 @@ public class CasConfiguration
   public String getRoleAttributeNames()
   {
     return roleAttributeNames;
+  }
+  
+  public String getLogoutUrl()
+  {
+    return logoutUrl;
   }
   
 }

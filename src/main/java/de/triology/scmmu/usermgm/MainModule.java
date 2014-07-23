@@ -49,8 +49,11 @@ public class MainModule extends ServletModule
     bind(EventBus.class).toInstance(new EventBus());
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
     bind(UserManager.class).to(LDAPUserManager.class);
+    
+    // rest resources
     bind(UserResource.class);
     bind(SubjectResource.class);
+    bind(LogoutResource.class);
 
     // serve index pages
     serve("/", "/index.html", "/index-debug.html").with(TemplateServlet.class);
