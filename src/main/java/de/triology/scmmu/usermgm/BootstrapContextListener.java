@@ -21,7 +21,10 @@ public class BootstrapContextListener extends GuiceResteasyBootstrapServletConte
   @Override
   protected List<? extends Module> getModules(ServletContext context)
   {
-    return ImmutableList.of(new MainModule());
+    return ImmutableList.of(
+      new SecurityModule(context),
+      new MainModule()
+    );
   }
 
 }
