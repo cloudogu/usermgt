@@ -31,6 +31,7 @@ public class SubjectResource
     StringBuilder buffer = new StringBuilder("Subject\n");
     buffer.append("\nprincipal : ").append(subject.getPrincipal().toString());
     buffer.append("\nprincipals: ").append(principals);
+    buffer.append("\nadmin     : ").append(subject.hasRole("admins"));
     return buffer.toString();
   }
   
