@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cas>
+  <service>http://localhost:8080/ldap-usermgm/login/cas</service>
+  <server-url>https://localhost:8443/cas</server-url>
+  <login-url>https://localhost:8443/cas/login?service=http://localhost:8080/ldap-usermgm/login/cas</login-url>
+</cas>

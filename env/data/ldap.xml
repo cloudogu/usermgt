@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldap>
+  <host>localhost</host>
+  <port>1389</port>
+  <bind-dn>cn=Directory Manager,dc=triology,dc=de</bind-dn>
+  <bind-password>trio123</bind-password>
+  <user-base-dn>ou=People,dc=triology,dc=de</user-base-dn>
+</ldap>
