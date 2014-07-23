@@ -50,32 +50,35 @@ public class TemplateServlet extends HttpServlet
 
   private static final Logger logger = LoggerFactory.getLogger(TemplateServlet.class);
 
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+  private String getNormalizePath(HttpServletRequest req)
+  {
+    String path = req.getRequestURI().substring(req.getContextPath().length());
+    if (path.isEmpty())
+    {
+      path = "/index.html";
+    }
+    else if (path.endsWith("/"))
+    {
+      path = path.concat("index.html");
+    }
+    return path;
+  }
+
+  private String processResource(HttpServletRequest req, String path, URL resource) throws IOException
   {
     String contextPath = req.getContextPath();
-    String path = req.getRequestURI().substring(contextPath.length());
-    String value = cache.getIfPresent(path);
-    if (value == null)
+    if (contextPath.endsWith("/"))
     {
-      URL resource = getServletContext().getResource(path);
-      if (resource != null)
-      {
-        if (contextPath.endsWith("/"))
-        {
-          contextPath = contextPath.substring(0, contextPath.length() - 1);
-        }
-        logger.trace("found resource {} at {}", path, resource);
-        value = Resources.toString(resource, Charsets.UTF_8);
-        value = value.replaceAll("\\$\\{contextPath\\}", contextPath);
-        cache.put(path, value);
-      }
-      else
-      {
-        logger.debug("could not find resource {}", path);
-        resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-      }
+      contextPath = contextPath.substring(0, contextPath.length() - 1);
     }
+    logger.trace("found resource {} at {}", path, resource);
+    String value = Resources.toString(resource, Charsets.UTF_8);
+    value = value.replaceAll("\\$\\{contextPath\\}", contextPath);
+    return value;
+  }
+
+  private void writeOutput(HttpServletResponse resp, String path, String value) throws IOException
+  {
     if (!Strings.isNullOrEmpty(value))
     {
       try (PrintWriter writer = resp.getWriter())
@@ -87,6 +90,33 @@ public class TemplateServlet extends HttpServlet
     {
       logger.warn("{} returned without content", path);
     }
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+  {
+    String path = getNormalizePath(req);
+    String value = cache.getIfPresent(path);
+    if (value == null)
+    {
+      URL resource = getServletContext().getResource(path);
+      if (resource != null)
+      {
+        value = processResource(req, path, resource);
+        cache.put(path, value);
+      }
+      else
+      {
+        logger.debug("could not find resource {}", path);
+        resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+      }
+    }
+    else
+    {
+      logger.trace("return chached value for {}", path);
+    }
+
+    writeOutput(resp, path, value);
   }
 
 }

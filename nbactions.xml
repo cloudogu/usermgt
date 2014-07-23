@@ -15,6 +15,7 @@
             </goals>
             <properties>
                 <skipTests>true</skipTests>
+                <de.triology.scmmu.usermgm.TemplateServlet.disable-cache>true</de.triology.scmmu.usermgm.TemplateServlet.disable-cache>
             </properties>
             <activatedProfiles>
                 <activatedProfile>!webcomponents</activatedProfile>
