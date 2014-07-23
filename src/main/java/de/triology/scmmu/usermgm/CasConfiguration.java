@@ -28,6 +28,9 @@ public class CasConfiguration
   private String loginUrl;
   
   private String service;
+  
+  @XmlElement(name = "role-attribute-names")
+  private String roleAttributeNames;
 
   public String getServerUrl()
   {
@@ -42,6 +45,11 @@ public class CasConfiguration
   public String getService()
   {
     return service;
+  }
+
+  public String getRoleAttributeNames()
+  {
+    return roleAttributeNames;
   }
   
 }

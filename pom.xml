@@ -58,6 +58,26 @@
       <artifactId>shiro-cas</artifactId>
       <version>${shiro.version}</version>
     </dependency>
+    
+    <!-- saml to get cas shiro attributes -->
+    
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.9</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.opensaml</groupId>
+      <artifactId>opensaml</artifactId>
+      <version>1.1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.santuario</groupId>
+      <artifactId>xmlsec</artifactId>
+      <version>1.4.3</version>
+    </dependency>
 
     <!-- rest -->
 

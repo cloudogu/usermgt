@@ -3,4 +3,7 @@
   <service>http://localhost:8080/ldap-usermgm/login/cas</service>
   <server-url>https://localhost:8443/cas</server-url>
   <login-url>https://localhost:8443/cas/login?service=http://localhost:8080/ldap-usermgm/login/cas</login-url>
+  <role-attribute-names>
+    <role-attribute-name>groups</role-attribute-name>
+  </role-attribute-names>
 </cas>

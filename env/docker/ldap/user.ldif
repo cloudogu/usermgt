@@ -6,6 +6,8 @@ objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
 o: Administrators
+ou: admins
+ou: triology
 sn: Admin
 cn: Admin Admin
 userPassword: admin

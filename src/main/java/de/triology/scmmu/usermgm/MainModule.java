@@ -36,7 +36,7 @@ public class MainModule extends ServletModule
     logger.info("bind resources");
 
     bind(LDAPConfiguration.class).toInstance(
-            BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class)
+      BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class)
     );
 
     // validation
@@ -50,6 +50,7 @@ public class MainModule extends ServletModule
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
     bind(UserManager.class).to(LDAPUserManager.class);
     bind(UserResource.class);
+    bind(SubjectResource.class);
 
     // serve index pages
     serve("/", "/index.html", "/index-debug.html").with(TemplateServlet.class);

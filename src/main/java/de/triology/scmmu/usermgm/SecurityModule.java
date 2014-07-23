@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 public class SecurityModule extends ShiroWebModule
 {
   
+  private static final String CAS_VALIDATION_PROTOCOL = "shiro.validationProtocol";
+  private static final String CAS_VALIDATION_PROTOCOL_VALUE = "SAML";
   private static final String CAS_SERVER_URL = "shiro.casServerUrlPrefix";
   private static final String CAS_LOGIN_URL = "shiro.loginUrl";
   private static final String CAS_SERVICE = "shiro.casService";
@@ -61,6 +63,7 @@ public class SecurityModule extends ShiroWebModule
     config(CAS_SERVER_URL, cas.getServerUrl());
     config(CAS_LOGIN_URL, cas.getLoginUrl());
     config(CAS_SERVICE, cas.getService());
+    config(CAS_VALIDATION_PROTOCOL, CAS_VALIDATION_PROTOCOL_VALUE);
     
     // use provider to configure realm, 
     // beacuse it looks like guice does not set constants for multi binding
@@ -89,6 +92,8 @@ public class SecurityModule extends ShiroWebModule
       CasRealm realm = new CasRealm();
       realm.setCasServerUrlPrefix(configuration.getServerUrl());
       realm.setCasService(configuration.getService());
+      realm.setRoleAttributeNames(configuration.getRoleAttributeNames());
+      realm.setValidationProtocol(CAS_VALIDATION_PROTOCOL_VALUE);
       return realm;
     }
     
