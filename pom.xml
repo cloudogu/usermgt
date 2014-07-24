@@ -247,7 +247,7 @@
         <version>9.2.1.v20140609</version>
         <configuration>
           <webAppConfig>
-            <contextPath>/ldap-usermgm</contextPath>
+            <contextPath>/universeadm</contextPath>
           </webAppConfig>
           <stopPort>8005</stopPort>
           <stopKey>stop-instance</stopKey>
