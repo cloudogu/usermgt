@@ -207,11 +207,6 @@
         <version>2.1.1</version>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
-          <webResources>
-            <webResource>
-              <directory>target/gulp</directory>
-            </webResource>
-          </webResources>
         </configuration>
       </plugin>
 
@@ -301,6 +296,20 @@
       </activation>
       <build>
         <plugins>
+          
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.1.1</version>
+            <configuration>
+              <failOnMissingWebXml>false</failOnMissingWebXml>
+              <webResources>
+                <webResource>
+                  <directory>target/gulp</directory>
+                </webResource>
+              </webResources>
+            </configuration>
+          </plugin>
           
           <plugin>
             <groupId>com.github.sdorra</groupId>
