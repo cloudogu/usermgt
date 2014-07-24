@@ -257,7 +257,7 @@
               <value>env/docker/cas/keystore.jks</value>
             </systemProperty>
             <systemProperty>
-              <name>ldap-usermgm.home</name>
+              <name>universeadm.home</name>
               <value>env/data</value>
             </systemProperty>
           </systemProperties>

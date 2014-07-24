@@ -29,10 +29,10 @@ public final class BaseDirectory
 {
 
   /** Field description */
-  private static final String ENV_BASEDIR = "LDAPUSERMGM_HOME";
+  private static final String ENV_BASEDIR = "UNIVERSEADM_HOME";
 
   /** Field description */
-  private static final String PROPERTY_BASEDIR = "ldap-usermgm.home";
+  private static final String PROPERTY_BASEDIR = "universeadm.home";
 
   /** Field description */
   private static final File baseDirectory;
@@ -56,7 +56,7 @@ public final class BaseDirectory
       if (Strings.isNullOrEmpty(basedir))
       {
         basedir = new File(System.getProperty("user.home"),
-          ".ldap-usermgm").getAbsolutePath();
+          ".universeadm").getAbsolutePath();
       }
     }
 
