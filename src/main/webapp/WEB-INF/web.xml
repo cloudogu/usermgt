@@ -13,7 +13,7 @@
 
   <listener>
     <listener-class>
-      de.triology.scmmu.usermgm.BootstrapContextListener
+      de.triology.universeadm.BootstrapContextListener
     </listener-class>
   </listener>
   
