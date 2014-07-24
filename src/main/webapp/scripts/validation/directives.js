@@ -38,7 +38,7 @@ angular.module('universeadm.validation.directives', [])
           var e1 = scope.$eval(attrs.ngModel);
 
           //get the value of the other password  
-          var e2 = scope.$eval(attrs.scmmuPasswordMatch);
+          var e2 = scope.$eval(attrs.uadmPasswordMatch);
           
           return e1 === e2;
         };
