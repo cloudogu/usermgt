@@ -5,7 +5,7 @@
  */
 
 
-angular.module('usermgm.users.controllers', ['ui.bootstrap', 'usermgm.validation.directives', 'usermgm.users.services'])
+angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.validation.directives', 'universeadm.users.services'])
   .controller('usersController', function($scope, $location, $modal, userService, users, page, query){
     
     function pageRange(currentPage, maxSize, totalPages){

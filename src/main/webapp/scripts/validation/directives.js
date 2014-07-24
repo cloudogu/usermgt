@@ -5,8 +5,8 @@
  */
 
 
-angular.module('usermgm.validation.directives', [])
-  .directive('scmmuValidate', function() {
+angular.module('universeadm.validation.directives', [])
+  .directive('uadmValidate', function() {
     return {
       restrict: 'A',
       require: '^form',
@@ -27,7 +27,7 @@ angular.module('usermgm.validation.directives', [])
       }
     };
   })
-  .directive('scmmuPasswordMatch', function() {
+  .directive('uadmPasswordMatch', function() {
     return {
       restrict: 'A',
       scope: true,
@@ -51,7 +51,7 @@ angular.module('usermgm.validation.directives', [])
       }
     };
   })
-  .directive('scmmuError', function(){
+  .directive('uadmError', function(){
     return {
       restrict: 'AE',
       scope: {

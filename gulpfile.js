@@ -26,7 +26,7 @@ gulp.task('lessc', function(){
 gulp.task('build-template-cache', function(){
   gutil.log('run build-template-cache');
   var opts = {
-    filename: 'usermgm.tpl.js',
+    filename: 'universeadm.tpl.js',
     module: 'usermgm',
     root: 'views/'
   };

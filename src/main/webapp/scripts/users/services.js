@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-angular.module('usermgm.users.services', ['restangular'])
+angular.module('universeadm.users.services', ['restangular'])
   .factory('userService', function(Restangular){
     var users = Restangular.all('users');
     return {

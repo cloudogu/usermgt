@@ -5,7 +5,7 @@
  */
 
 
-angular.module('usermgm.config', ['ui.router', 'usermgm.users.controllers'])
+angular.module('universeadm.config', ['ui.router', 'universeadm.users.controllers'])
   .config(function($stateProvider){
         // configure routes
     $stateProvider
