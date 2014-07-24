@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>sonia.ldap.usermgm</groupId>
-  <artifactId>ldap-usermgm</artifactId>
+  <artifactId>universeadm</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>ldap-usermgm</name>
+  <name>universeadm</name>
 
   <dependencies>
 

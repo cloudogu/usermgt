@@ -32,7 +32,7 @@ gulp.task('build-template-cache', function(){
   };
   return gulp.src('src/main/webapp/views/**/*.html')
       .pipe(templateCache(opts))
-      .pipe(gulp.dest('target/gulptmp/scripts'))
+      .pipe(gulp.dest('target/gulptmp/scripts'));
 });
 
 gulp.task('default', ['lessc', 'build-template-cache'], function(){

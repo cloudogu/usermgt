@@ -1,5 +1,5 @@
-ldap-usermgm
-============
+universeadm
+===========
 
 1. Requirements
  - Oracle JDK >= 7
