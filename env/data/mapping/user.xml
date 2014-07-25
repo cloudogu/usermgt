@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<mapping>
+    
+  <objectClasses>
+    <objectClass>top</objectClass>
+    <objectClass>person</objectClass>
+    <objectClass>inetorgperson</objectClass>
+    <objectClass>organizationalperson</objectClass>
+  </objectClasses>
+  
+  <attributes>
+    <attribute ldap-name="uid" in-modify="false">username</attribute>
+    <attribute ldap-name="cn">displayName</attribute>
+    <attribute ldap-name="sn">surname</attribute>
+    <attribute>givenName</attribute>
+    <attribute>mail</attribute>
+    <attribute ldap-name="userPassword" in-read="false" encoder="">password</attribute>
+  </attributes>
+  
+</mapping>
