@@ -237,8 +237,8 @@ public class User implements Comparable<User>
   {
     return Objects.toStringHelper(this)
             .add("username", username)
-            .add("commonname", displayName)
-            .add("displayName", givenname)
+            .add("displayName", displayName)
+            .add("givenname", givenname)
             .add("surname", surname)
             .add("mail", mail)
             .toString();
