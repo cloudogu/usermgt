@@ -35,6 +35,9 @@ import de.triology.universeadm.Paginations;
 import de.triology.universeadm.validation.Validator;
 import java.util.Collections;
 import java.util.List;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +101,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public void create(User user)
   {
+    SecurityUtils.getSubject().checkRole("admin");
     Preconditions.checkNotNull(user, "user is required");
     // validate
     validator.validate(user, "user object is not valid");
@@ -146,6 +150,12 @@ public class LDAPUserManager implements UserManager
     // validate
     validator.validate(user, "user object is not valid");
     logger.info("modify user {}", user.getUsername());
+    
+    Subject subject = SecurityUtils.getSubject();
+    if (! subject.hasRole("admins") && ! user.getUsername().equals(subject.getPrincipal().toString()))
+    {
+      throw new AuthorizationException("user has not enough privileges");
+    }
 
     try
     {
@@ -200,6 +210,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public void remove(User user)
   {
+    SecurityUtils.getSubject().checkRole("admin");
     Preconditions.checkNotNull(user, "user is required");
     logger.info("remove user {}", user.getUsername());
 
@@ -229,6 +240,13 @@ public class LDAPUserManager implements UserManager
   {
     Preconditions.checkNotNull(username, "username is required");
     logger.debug("get user {}", username);
+    
+    Subject subject = SecurityUtils.getSubject();
+    if (! subject.hasRole("admins") && ! username.equals(subject.getPrincipal().toString()))
+    {
+      throw new AuthorizationException("user has not enough privileges");
+    }
+    
 
     User user;
 
@@ -265,6 +283,7 @@ public class LDAPUserManager implements UserManager
   public List<User> getAll()
   {
     logger.debug("get all users");
+    SecurityUtils.getSubject().checkRole("admin");
 
     final List<User> users = Lists.newArrayList();
 
@@ -342,6 +361,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public List<User> search(String query)
   {
+    SecurityUtils.getSubject().checkRole("admins");
     String q = WILDCARD.concat(query).concat(WILDCARD);
     Filter base = persister.getObjectHandler().createBaseFilter();
     LDAPObjectHandler<User> oh = persister.getObjectHandler();
