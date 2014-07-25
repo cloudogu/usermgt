@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>run</actionName>
-            <packagings>
-                <packaging>war</packaging>
-                <packaging>ear</packaging>
-                <packaging>ejb</packaging>
-            </packagings>
+            <actionName>CUSTOM-jetty-run</actionName>
+            <displayName>jetty-run</displayName>
             <goals>
                 <goal>jetty:stop</goal>
                 <goal>package</goal>
@@ -15,7 +11,27 @@
             </goals>
             <properties>
                 <skipTests>true</skipTests>
-                <de.triology.scmmu.usermgm.TemplateServlet.disable-cache>true</de.triology.scmmu.usermgm.TemplateServlet.disable-cache>
+                <de.triology.universeadm.TemplateServlet.disable-cache>true</de.triology.universeadm.TemplateServlet.disable-cache>
+                
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>!webcomponents</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy>true</netbeans.deploy>
+                <skipTests>true</skipTests>
+                <de.triology.universeadm.TemplateServlet.disable-cache>true</de.triology.universeadm.TemplateServlet.disable-cache>
             </properties>
             <activatedProfiles>
                 <activatedProfile>!webcomponents</activatedProfile>

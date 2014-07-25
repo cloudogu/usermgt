@@ -50,17 +50,17 @@ public class User implements Comparable<User>
    *
    *
    * @param username
-   * @param commonname
+   * @param displayName
    * @param givenname
    * @param surname
    * @param mail
    * @param password
    */
-  public User(String username, String commonname, String givenname,
+  public User(String username, String displayName, String givenname,
               String surname, String mail, String password)
   {
     this.username = username;
-    this.commonname = commonname;
+    this.displayName = displayName;
     this.givenname = givenname;
     this.surname = surname;
     this.mail = mail;
@@ -74,9 +74,9 @@ public class User implements Comparable<User>
    *
    * @return
    */
-  public String getCommonname()
+  public String getDisplayName()
   {
-    return commonname;
+    return displayName;
   }
 
   /**
@@ -141,9 +141,9 @@ public class User implements Comparable<User>
    *
    * @param commonname
    */
-  public void setCommonname(String commonname)
+  public void setDisplayName(String commonname)
   {
-    this.commonname = commonname;
+    this.displayName = commonname;
   }
 
   /**
@@ -210,7 +210,7 @@ public class User implements Comparable<User>
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(username, commonname, givenname, surname, mail, password);
+    return Objects.hashCode(username, displayName, givenname, surname, mail, password);
   }
 
   @Override
@@ -226,7 +226,7 @@ public class User implements Comparable<User>
     }
     final User other = (User) obj;
     return Objects.equal(username, other.username)
-            && Objects.equal(commonname, other.commonname)
+            && Objects.equal(displayName, other.displayName)
             && Objects.equal(givenname, other.givenname)
             && Objects.equal(surname, other.surname)
             && Objects.equal(mail, other.mail);
@@ -237,8 +237,8 @@ public class User implements Comparable<User>
   {
     return Objects.toStringHelper(this)
             .add("username", username)
-            .add("commonname", commonname)
-            .add("givenname", givenname)
+            .add("commonname", displayName)
+            .add("displayName", givenname)
             .add("surname", surname)
             .add("mail", mail)
             .toString();
@@ -251,7 +251,7 @@ public class User implements Comparable<User>
   @NotNull
   @Size(min = 1)
   @LDAPField(attribute = "cn")
-  private String commonname;
+  private String displayName;
 
   /**
    * Field description

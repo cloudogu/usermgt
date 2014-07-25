@@ -106,7 +106,7 @@ public class LDAPUserManagerTest
     LDAPUserManager manager = createUserManager();
     User user = manager.get("dent");
     assertNotNull(user);
-    user.setCommonname("Dent, Arthur");
+    user.setDisplayName("Dent, Arthur");
     manager.modify(user);
     Entry entry = ldap.getConnection().getEntry("uid=dent,ou=People,dc=hitchhiker,dc=com");
     assertNotNull(entry);
@@ -161,7 +161,7 @@ public class LDAPUserManagerTest
   private void assertUser(User user){
     assertNotNull(user);
     assertEquals("dent", user.getUsername());
-    assertEquals("Arthur Dent", user.getCommonname());
+    assertEquals("Arthur Dent", user.getDisplayName());
     assertEquals("Arthur", user.getGivenname());
     assertEquals("Dent", user.getSurname());
     assertEquals("arthur.dent@hitchhiker.com", user.getMail());
