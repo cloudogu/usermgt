@@ -83,6 +83,8 @@ public class SecurityModule extends ShiroWebModule
     bind(SubjectFactory.class).to(CasSubjectFactory.class);
 
     addFilterChain("/login/cas", ANON, Key.get(CasFilter.class));
+    addFilterChain("/api/users**", config(ROLES, "admins"));
+    addFilterChain("/api/groups**", config(ROLES, "admins"));
     addFilterChain("/**", AUTHC);
   }
 

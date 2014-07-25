@@ -41,7 +41,7 @@
                 Account
               </a>
             </li>
-            <li ng-class="navClass('/users')">
+            <li ng-if="subject.admin" ng-class="navClass('/users')">
               <a href="#/users">
                 Users
               </a>
