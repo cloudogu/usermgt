@@ -5,7 +5,9 @@
  */
 
 
-angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular', 'ui.router', 'universeadm.users.config'])
+angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 
+  'restangular', 'ui.router', 'universeadm.account.config', 
+  'universeadm.users.config'])
   .config(function(RestangularProvider, $stateProvider, $urlRouterProvider){
     // configure restangular
     RestangularProvider.setBaseUrl(_contextPath + '/api');
@@ -35,7 +37,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
       });;
 
     // redirect unmatched to /users
-    $urlRouterProvider.otherwise("/users");
+    $urlRouterProvider.otherwise("/account");
   })
   .run(function($rootScope, $state, $log, $http){
     $http.get(_contextPath + '/api/subject').then(function(res){
@@ -60,7 +62,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
       $state.go('error404');
     });
   })
-  .controller('navigationController', function($scope){
+  .controller('navigationController', function($scope, $location){
     $scope.navCollapsed = true;
 
     $scope.toggleNav = function(){
@@ -70,4 +72,10 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
     $scope.$on('$routeChangeStart', function() {
       $scope.navCollapsed = true;
     });
+    
+    $scope.navClass = function(page) {
+      var currentRoute = $location.path();
+      return page === currentRoute || new RegExp(page).test(currentRoute) ? 'active' : '';
+    };
+
   });

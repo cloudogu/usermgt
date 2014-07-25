@@ -63,10 +63,10 @@
   <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user)">
     Save
   </button>
-  <button ng-if="!create" class="btn btn-warning" ng-click="remove(user)">
+  <button ng-if="!create && removeEnabled" class="btn btn-warning" ng-click="remove(user)">
     Remove
   </button>
-  <a class="btn btn-default" ng-href="#/users">
+  <a ng-if="backEnabled" class="btn btn-default" ng-href="#/users">
     Back
   </a>
 </form>

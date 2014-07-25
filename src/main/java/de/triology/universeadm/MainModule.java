@@ -9,6 +9,9 @@ import de.triology.universeadm.validation.Validator;
 import de.triology.universeadm.validation.HibernateValidator;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.servlet.ServletModule;
+import de.triology.universeadm.account.AccountManager;
+import de.triology.universeadm.account.AccountResource;
+import de.triology.universeadm.account.DefaultAccountManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.triology.universeadm.user.LDAPUserManager;
@@ -44,14 +47,22 @@ public class MainModule extends ServletModule
     bind(Validator.class).to(HibernateValidator.class);
     bind(HibernateValidatorExceptionMapping.class);
 
-    // misc
-    bind(LDAPHasher.class).toInstance(new LDAPHasher());
+    // events
     bind(EventBus.class).toInstance(new EventBus());
-    bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
-    bind(UserManager.class).to(LDAPUserManager.class);
     
-    // rest resources
+    // ldap stuff
+    bind(LDAPHasher.class).toInstance(new LDAPHasher());
+    bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
+    
+    // accont
+    bind(AccountManager.class).to(DefaultAccountManager.class);
+    bind(AccountResource.class);
+    
+    // users
+    bind(UserManager.class).to(LDAPUserManager.class);
     bind(UserResource.class);
+    
+    // other resources
     bind(SubjectResource.class);
     bind(LogoutResource.class);
 

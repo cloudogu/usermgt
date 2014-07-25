@@ -68,6 +68,8 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.va
   })
   .controller('userEditController', function($scope, $location, $modal, userService, user){
     $scope.alerts = [];
+    $scope.backEnabled = true;
+    $scope.removeEnabled = true;
     
     $scope.create = false;
     if (user === null){
