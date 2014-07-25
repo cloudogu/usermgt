@@ -37,7 +37,14 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
     // redirect unmatched to /users
     $urlRouterProvider.otherwise("/users");
   })
-  .run(function($rootScope, $state, $log){
+  .run(function($rootScope, $state, $log, $http){
+    $http.get(_contextPath + '/api/subject').then(function(res){
+      $log.info('subject for principal ' + res.data.principal + ' logged in');
+      $rootScope.subject = res.data;
+    }, function(e){
+      $log.error(e);
+    });
+    
     $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error){
       if ( error.status === 404 ){
         event.preventDefault();
