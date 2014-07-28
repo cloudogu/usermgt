@@ -64,6 +64,12 @@ public final class BaseDirectory
     baseDirectory = new File(basedir);
   }
 
+  private BaseDirectory()
+  {
+  }
+
+  
+  
   //~--- get methods ----------------------------------------------------------
 
   /**

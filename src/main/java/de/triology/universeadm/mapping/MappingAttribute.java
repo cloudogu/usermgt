@@ -110,7 +110,10 @@ public class MappingAttribute
   {
   }
 
-  public MappingAttribute(String name, String ldapName, boolean inRead, boolean inModify, boolean inCreate, boolean inSearch, boolean binary, boolean multiValue, boolean rdn, Class<? extends MappingEncoder> encoder, Class<? extends MappingDecoder> decoder)
+  public MappingAttribute(String name, String ldapName, boolean inRead, 
+      boolean inModify, boolean inCreate, boolean inSearch, boolean binary, 
+      boolean multiValue, boolean rdn, Class<? extends MappingEncoder> encoder, 
+      Class<? extends MappingDecoder> decoder)
   {
     this.name = name;
     this.ldapName = ldapName;

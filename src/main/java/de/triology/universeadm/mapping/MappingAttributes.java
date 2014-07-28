@@ -81,8 +81,6 @@ public final class MappingAttributes
   public static <T> Object getObjectValue(MappingAttribute ma, FieldDescriptor<T> desc, Attribute attribute)
   {
     Object value;
-    String name = ma.getLdapName();
-
     if (ma.isBinary())
     {
       if (ma.isMultiValue())

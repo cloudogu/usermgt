@@ -97,7 +97,7 @@ public class DefaultMapper<T> implements Mapper<T>
     List<Attribute> attributes = Lists.newArrayList();
     attributes.add(objectClasses);
 
-    String rdn = null;
+    String rdnAttr = null;
 
     for (MappingAttribute ma : filter(mapping.getAttributes(), createPredicate))
     {
@@ -106,18 +106,18 @@ public class DefaultMapper<T> implements Mapper<T>
       {
         if (ma.isRdn())
         {
-          rdn = ma.getLdapName().concat("=").concat(attribute.getValue());
+          rdnAttr = ma.getLdapName().concat("=").concat(attribute.getValue());
         }
 
         attributes.add(attribute);
       }
     }
 
-    if (rdn == null)
+    if (rdnAttr == null)
     {
       throw new MappingException("could not find rdn for entry");
     }
-    return new Entry(rdn.concat(",").concat(parentDN), attributes);
+    return new Entry(rdnAttr.concat(",").concat(parentDN), attributes);
   }
 
   private Attribute createAttribute(MappingAttribute ma, T object)

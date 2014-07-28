@@ -87,7 +87,7 @@ public class DefaultMappingDecoder implements MappingDecoder
     }
     else
     {
-
+      throw new MappingException("could not decode field");
     }
 
     return result;
