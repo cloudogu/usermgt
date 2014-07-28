@@ -201,9 +201,13 @@ public class UserResource
     {
       builder = Response.ok(result);
     }
-    else
+    else if (Strings.isNullOrEmpty(query))
     {
       builder = Response.status(Response.Status.NOT_FOUND);
+    } 
+    else 
+    {
+      builder = Response.noContent();
     }
     return builder.build();
   }

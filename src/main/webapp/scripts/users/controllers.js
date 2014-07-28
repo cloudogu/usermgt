@@ -27,6 +27,9 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.va
     };
     
     function setUsers(users){
+      if (!users.meta){
+        users.meta = {totalEntries: 0, limit: 10};
+      }
       $scope.users = users;
       $scope.pages = Math.ceil(users.meta.totalEntries / users.meta.limit);
       $scope.pageRange = pageRange(page, 10, $scope.pages);
