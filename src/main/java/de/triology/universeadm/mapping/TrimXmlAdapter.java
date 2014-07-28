@@ -16,13 +16,13 @@ public class TrimXmlAdapter extends XmlAdapter<String, String>
 {
 
   @Override
-  public String unmarshal(String v) throws Exception
+  public String unmarshal(String v)
   {
     return v != null ? v.trim() : v;
   }
 
   @Override
-  public String marshal(String v) throws Exception
+  public String marshal(String v)
   {
     return v;
   }

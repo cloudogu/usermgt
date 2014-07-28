@@ -64,7 +64,7 @@ public class DefaultMapperFactory implements MapperFactory
     {
 
       @Override
-      public Mapper<T> call() throws Exception
+      public Mapper<T> call()
       {
         String name = type.getSimpleName().toLowerCase(Locale.ENGLISH).concat(".xml");
         Mapping mapping = BaseDirectory.getConfiguration("mapping/".concat(name), Mapping.class);

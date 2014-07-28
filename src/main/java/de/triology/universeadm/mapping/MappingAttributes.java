@@ -7,7 +7,6 @@ package de.triology.universeadm.mapping;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.reflect.TypeToken;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
@@ -59,7 +58,7 @@ public final class MappingAttributes
     {
 
       @Override
-      public MappingDecoder call() throws Exception
+      public MappingDecoder call() throws InstantiationException, IllegalAccessException
       {
         return ma.getDecoder().newInstance();
       }
@@ -72,7 +71,7 @@ public final class MappingAttributes
     {
 
       @Override
-      public MappingEncoder call() throws Exception
+      public MappingEncoder call() throws InstantiationException, IllegalAccessException
       {
         return ma.getEncoder().newInstance();
       }
