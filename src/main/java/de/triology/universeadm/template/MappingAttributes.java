@@ -7,12 +7,9 @@ package de.triology.universeadm.template;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Lists;
-import com.unboundid.asn1.ASN1OctetString;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
@@ -90,8 +87,7 @@ public final class MappingAttributes
     {
       if (ma.isMultiValue())
       {
-        List<byte[]> bytes = Lists.newArrayList(attribute.getValueByteArrays());
-        value = getDecoder(ma).decodeFromMultiBytes(type, bytes);
+        value = getDecoder(ma).decodeFromMultiBytes(type, attribute.getValueByteArrays());
       }
       else
       {
@@ -102,8 +98,7 @@ public final class MappingAttributes
     {
       if (ma.isMultiValue())
       {
-        List<String> strings = Lists.newArrayList(attribute.getValues());
-        value = getDecoder(ma).decodeFromMultiString(type, strings);
+        value = getDecoder(ma).decodeFromMultiString(type, attribute.getValues());
       }
       else
       {
@@ -122,7 +117,7 @@ public final class MappingAttributes
     {
       if (ma.isMultiValue())
       {
-        byte[][] bytes = getEncoder(ma).encodeAsMultiBytes(value).toArray(new byte[0][0]);
+        byte[][] bytes = getEncoder(ma).encodeAsMultiBytes(value);
         modification = new Modification(ModificationType.REPLACE, name, bytes);
       }
       else
@@ -134,7 +129,7 @@ public final class MappingAttributes
     {
       if (ma.isMultiValue())
       {
-        String[] strings = getEncoder(ma).encodeAsMultiString(value).toArray(new String[0]);
+        String[] strings = getEncoder(ma).encodeAsMultiString(value);
         modification = new Modification(ModificationType.REPLACE, name, strings);
       }
       else
@@ -154,7 +149,7 @@ public final class MappingAttributes
     {
       if (ma.isMultiValue())
       {
-        byte[][] bytes = getEncoder(ma).encodeAsMultiBytes(value).toArray(new byte[0][0]);
+        byte[][] bytes = getEncoder(ma).encodeAsMultiBytes(value);
         attribute = new Attribute(name, bytes);
       }
       else
@@ -166,7 +161,7 @@ public final class MappingAttributes
     {
       if (ma.isMultiValue())
       {
-        String[] strings = getEncoder(ma).encodeAsMultiString(value).toArray(new String[0]);
+        String[] strings = getEncoder(ma).encodeAsMultiString(value);
         attribute = new Attribute(name, strings);
       }
       else

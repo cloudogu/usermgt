@@ -5,8 +5,6 @@
  */
 package de.triology.universeadm.template;
 
-import java.util.List;
-
 /**
  * TODO use com.unboundid.asn1.ASN1OctetString
  *
@@ -17,10 +15,10 @@ public interface MappingEncoder
 
   public String encodeAsString(Object object);
   
-  public List<String> encodeAsMultiString(Object object);
+  public String[] encodeAsMultiString(Object object);
   
   public byte[] encodeAsBytes(Object object);
   
-  public List<byte[]> encodeAsMultiBytes(Object object);
+  public byte[][] encodeAsMultiBytes(Object object);
 
 }

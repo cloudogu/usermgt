@@ -27,7 +27,7 @@ public final class DefaultMappingEncoder implements MappingEncoder
   }
 
   @Override
-  public List<String> encodeAsMultiString(Object object)
+  public String[] encodeAsMultiString(Object object)
   {
     List<String> values = Lists.newArrayList();
     if ( object instanceof Iterable)
@@ -49,19 +49,19 @@ public final class DefaultMappingEncoder implements MappingEncoder
       logger.debug("object {} is not an instance of iterable and is not an array", object.getClass());
       values.add(object.toString());
     }
-    return values;
+    return values.toArray(new String[values.size()]);
   }
 
   @Override
   public byte[] encodeAsBytes(Object object)
   {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet.");
   }
 
   @Override
-  public List<byte[]> encodeAsMultiBytes(Object object)
+  public byte[][] encodeAsMultiBytes(Object object)
   {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    throw new UnsupportedOperationException("Not supported yet.");
   }
   
 }

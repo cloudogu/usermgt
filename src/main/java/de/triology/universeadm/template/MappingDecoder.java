@@ -6,10 +6,7 @@
 
 package de.triology.universeadm.template;
 
-import java.util.List;
-
 /**
- * TODO use com.unboundid.asn1.ASN1OctetString
  * 
  * @author ssdorra
  */
@@ -18,10 +15,10 @@ public interface MappingDecoder
   
   public Object decodeFromString(Class<?> type, String string);
   
-  public Object decodeFromMultiString(Class<?> type, List<String> strings);
+  public Object decodeFromMultiString(Class<?> type, String[] strings);
   
   public Object decodeFromBytes(Class<?> type, byte[] bytes);
   
-  public Object decodeFromMultiBytes(Class<?> type, List<byte[]> bytes);
+  public Object decodeFromMultiBytes(Class<?> type, byte[][] bytes);
   
 }
