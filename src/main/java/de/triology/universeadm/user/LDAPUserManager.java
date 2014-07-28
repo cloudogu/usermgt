@@ -28,6 +28,7 @@ import de.triology.universeadm.LDAPHasher;
 import de.triology.universeadm.LDAPUtil;
 import de.triology.universeadm.PagedResultList;
 import de.triology.universeadm.Paginations;
+import de.triology.universeadm.Roles;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.validation.Validator;
@@ -64,12 +65,14 @@ public class LDAPUserManager implements UserManager
    * @param strategy
    * @param configuration
    * @param hasher
+   * @param mapperFactory
    * @param validator
    * @param eventBus
    */
   @Inject
   public LDAPUserManager(LDAPConnectionStrategy strategy,
-          LDAPConfiguration configuration, LDAPHasher hasher, MapperFactory mapperFactory, Validator validator, EventBus eventBus)
+    LDAPConfiguration configuration, LDAPHasher hasher, 
+    MapperFactory mapperFactory, Validator validator, EventBus eventBus)
   {
     this.strategy = strategy;
     this.configuration = configuration;
@@ -81,13 +84,8 @@ public class LDAPUserManager implements UserManager
     this.returningAttributes = rattrs.toArray(new String[rattrs.size()]);
   }
   
-  private final String[] returningAttributes;
-  
-  private final Mapper<User> mapper;
-  
-  private final Validator validator;
-
   //~--- methods --------------------------------------------------------------
+  
   /**
    * Method description
    *
@@ -97,7 +95,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public void create(User user)
   {
-    SecurityUtils.getSubject().checkRole("admins");
+    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
     Preconditions.checkNotNull(user, "user is required");
     // validate
     validator.validate(user, "user object is not valid");
@@ -148,7 +146,7 @@ public class LDAPUserManager implements UserManager
     logger.info("modify user {}", user.getUsername());
     
     Subject subject = SecurityUtils.getSubject();
-    if (! subject.hasRole("admins") && ! user.getUsername().equals(subject.getPrincipal().toString()))
+    if (! subject.hasRole(Roles.ADMINISTRATOR) && ! user.getUsername().equals(subject.getPrincipal().toString()))
     {
       throw new AuthorizationException("user has not enough privileges");
     }
@@ -206,7 +204,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public void remove(User user)
   {
-    SecurityUtils.getSubject().checkRole("admins");
+    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
     Preconditions.checkNotNull(user, "user is required");
     logger.info("remove user {}", user.getUsername());
 
@@ -238,7 +236,7 @@ public class LDAPUserManager implements UserManager
     logger.debug("get user {}", username);
     
     Subject subject = SecurityUtils.getSubject();
-    if (! subject.hasRole("admins") && ! username.equals(subject.getPrincipal().toString()))
+    if (! subject.hasRole(Roles.ADMINISTRATOR) && ! username.equals(subject.getPrincipal().toString()))
     {
       throw new AuthorizationException("user has not enough privileges");
     }
@@ -280,7 +278,7 @@ public class LDAPUserManager implements UserManager
   public List<User> getAll()
   {
     logger.debug("get all users");
-    SecurityUtils.getSubject().checkRole("admins");
+    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 
     final List<User> users = Lists.newArrayList();
 
@@ -302,7 +300,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public List<User> search(String query)
   {
-    SecurityUtils.getSubject().checkRole("admins");
+    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
     String q = WILDCARD.concat(query).concat(WILDCARD);
     Filter base = mapper.getBaseFilter();
 
@@ -346,6 +344,22 @@ public class LDAPUserManager implements UserManager
   }
 
   //~--- fields ---------------------------------------------------------------
+  /**
+   * Field description
+   */  
+  private final String[] returningAttributes;
+  
+  /**
+   * Field description
+   */  
+  private final Mapper<User> mapper;
+  
+  /**
+   * Field description
+   */  
+  private final Validator validator;
+
+  
   /**
    * Field description
    */

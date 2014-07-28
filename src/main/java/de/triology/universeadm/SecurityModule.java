@@ -102,12 +102,7 @@ public class SecurityModule extends ShiroWebModule
     @Override
     public Realm get()
     {
-      CasRealm realm = new FixedCasRealm();
-      realm.setCasServerUrlPrefix(configuration.getServerUrl());
-      realm.setCasService(configuration.getService());
-      realm.setRoleAttributeNames(configuration.getRoleAttributeNames());
-      realm.setValidationProtocol(CAS_VALIDATION_PROTOCOL_VALUE);
-      return realm;
+      return new FixedCasRealm(configuration);
     }
 
   }
@@ -119,6 +114,17 @@ public class SecurityModule extends ShiroWebModule
    */
   public static class FixedCasRealm extends CasRealm
   {
+    
+    private final CasConfiguration configuration;
+
+    public FixedCasRealm(CasConfiguration configuration)
+    {
+      this.configuration = configuration;
+      this.setCasServerUrlPrefix(configuration.getServerUrl());
+      this.setCasService(configuration.getService());
+      this.setRoleAttributeNames(configuration.getRoleAttributeNames());
+      this.setValidationProtocol(CAS_VALIDATION_PROTOCOL_VALUE);
+    }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)
@@ -167,6 +173,12 @@ public class SecurityModule extends ShiroWebModule
           addPermissions(simpleAuthorizationInfo, split((String) value));
         }
       }
+      
+      if (simpleAuthorizationInfo.getRoles().contains(configuration.getAdministratorRole()))
+      {
+        simpleAuthorizationInfo.addRole(Roles.ADMINISTRATOR);
+      }
+      
       return simpleAuthorizationInfo;
     }
 

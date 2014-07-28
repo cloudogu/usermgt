@@ -34,6 +34,14 @@ public class CasConfiguration
   
   @XmlElement(name = "logout-url")
   private String logoutUrl;
+  
+  @XmlElement(name = "administrator-role")
+  private String administratorRole;
+
+  public String getAdministratorRole()
+  {
+    return administratorRole;
+  }
 
   public String getServerUrl()
   {
