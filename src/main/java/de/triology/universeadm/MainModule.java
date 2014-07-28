@@ -71,6 +71,9 @@ public class MainModule extends ServletModule
     bind(SubjectResource.class);
     bind(LogoutResource.class);
 
+    // filter
+    filter("/*").through(LDAPConnectionStrategyBindFilter.class);
+    
     // serve index pages
     serve("/", "/index.html", "/index-debug.html").with(TemplateServlet.class);
   }
