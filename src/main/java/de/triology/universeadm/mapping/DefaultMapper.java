@@ -6,11 +6,15 @@
 package de.triology.universeadm.mapping;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
+import com.unboundid.ldap.sdk.Filter;
+import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.Modification;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -22,21 +26,63 @@ import org.apache.commons.beanutils.PropertyUtils;
  * @param <T>
  */
 public class DefaultMapper<T> implements Mapper<T>
-{
+{  
 
   private final Mapping mapping;
   private final String parentDN;
   private final ClassDescriptor<T> type;
   private final List<String> returningAttributes;
   private final Attribute objectClasses;
+  private final MappingAttribute rdn;
+  private final Filter baseFilter;
+  private final List<String> searchAttributes;
 
   public DefaultMapper(Mapping mapping, Class<T> type, String parentDN)
   {
+    Preconditions.checkNotNull(mapping, "mapping is required");
+    Preconditions.checkNotNull(parentDN, "parentDN is required");
+    
     this.mapping = mapping;
     this.parentDN = parentDN;
     this.type = new ClassDescriptor<>(type);
     this.returningAttributes = Lists.transform(mapping.getAttributes(), toLdapName);
+    this.searchAttributes = FluentIterable.from(mapping.getAttributes()).filter(searchPredicate).transform(toLdapName).toList();
     this.objectClasses = new Attribute("objectClass", mapping.getObjectClasses());
+    Iterable<MappingAttribute> rdns = Iterables.filter(mapping.getAttributes(), rdnPredicate);
+    this.rdn = Iterables.getOnlyElement(rdns);
+    try 
+    {
+      this.baseFilter = Filter.create("(".concat(rdn.getLdapName()).concat("=*)"));
+    } 
+    catch (LDAPException ex)
+    {
+      throw new MappingException("could not create base filter", ex);
+    }
+  }
+  
+  @Override
+  public String getParentDN()
+  {
+    return parentDN;
+  }
+
+  @Override
+  public Filter getBaseFilter()
+  {
+    return baseFilter;
+  }
+
+  @Override
+  public List<String> getSearchAttributes()
+  {
+    return searchAttributes;
+  }
+
+  @Override
+  public String getDN(String rdn)
+  {
+    StringBuilder dn = new StringBuilder(this.rdn.getLdapName());
+    return dn.append("=").append(rdn).append(",").append(parentDN).toString();
   }
 
   @Override
@@ -165,6 +211,16 @@ public class DefaultMapper<T> implements Mapper<T>
     }
   };
 
+  private static final Predicate<MappingAttribute> rdnPredicate = new Predicate<MappingAttribute>()
+  {
+
+    @Override
+    public boolean apply(MappingAttribute input)
+    {
+      return input.isRdn();
+    }
+  };
+  
   private static final Predicate<MappingAttribute> createPredicate = new Predicate<MappingAttribute>()
   {
 
@@ -192,6 +248,16 @@ public class DefaultMapper<T> implements Mapper<T>
     public boolean apply(MappingAttribute input)
     {
       return input.isInRead();
+    }
+  };
+  
+  private static final Predicate<MappingAttribute> searchPredicate = new Predicate<MappingAttribute>()
+  {
+
+    @Override
+    public boolean apply(MappingAttribute input)
+    {
+      return input.isInSearch();
     }
   };
 

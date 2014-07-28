@@ -9,6 +9,7 @@ import com.google.common.base.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -26,6 +27,7 @@ public class MappingAttribute
     private boolean inRead = true;
     private boolean inModify = true;
     private boolean inCreate = true;
+    private boolean inSearch = true;
     private boolean binary = false;
     private boolean multiValue = false;
     private boolean rdn = false;
@@ -58,6 +60,12 @@ public class MappingAttribute
     public MappingAttributeBuilder inCreate(boolean inCreate)
     {
       this.inCreate = inCreate;
+      return this;
+    }
+    
+    public MappingAttributeBuilder inSearch(boolean inSearch)
+    {
+      this.inSearch = inSearch;
       return this;
     }
 
@@ -93,7 +101,7 @@ public class MappingAttribute
 
     public MappingAttribute build()
     {
-      return new MappingAttribute(name, ldapName, inRead, inModify, inCreate, binary, multiValue, rdn, encoder, decoder);
+      return new MappingAttribute(name, ldapName, inRead, inModify, inCreate, inSearch, binary, multiValue, rdn, encoder, decoder);
     }
 
   }
@@ -102,13 +110,14 @@ public class MappingAttribute
   {
   }
 
-  public MappingAttribute(String name, String ldapName, boolean inRead, boolean inModify, boolean inCreate, boolean binary, boolean multiValue, boolean rdn, Class<? extends MappingEncoder> encoder, Class<? extends MappingDecoder> decoder)
+  public MappingAttribute(String name, String ldapName, boolean inRead, boolean inModify, boolean inCreate, boolean inSearch, boolean binary, boolean multiValue, boolean rdn, Class<? extends MappingEncoder> encoder, Class<? extends MappingDecoder> decoder)
   {
     this.name = name;
     this.ldapName = ldapName;
     this.inRead = inRead;
     this.inModify = inModify;
     this.inCreate = inCreate;
+    this.inSearch = inSearch;
     this.binary = binary;
     this.multiValue = multiValue;
     this.rdn = rdn;
@@ -117,6 +126,7 @@ public class MappingAttribute
   }
 
   @XmlValue
+  @XmlJavaTypeAdapter(TrimXmlAdapter.class)
   private String name;
 
   @XmlAttribute(name = "ldap-name")
@@ -130,6 +140,9 @@ public class MappingAttribute
 
   @XmlAttribute(name = "in-create")
   private boolean inCreate = true;
+  
+  @XmlAttribute(name = "in-search")
+  private boolean inSearch = true;
 
   @XmlAttribute(name = "is-binary")
   private boolean binary = false;
@@ -138,7 +151,7 @@ public class MappingAttribute
   private boolean multiValue = false;
 
   @XmlAttribute(name = "is-rdn")
-  private boolean rdn = true;
+  private boolean rdn = false;
 
   @XmlAttribute
   private Class<? extends MappingEncoder> encoder = DefaultMappingEncoder.class;
@@ -179,6 +192,11 @@ public class MappingAttribute
   public boolean isMultiValue()
   {
     return multiValue;
+  }
+
+  public boolean isInSearch()
+  {
+    return inSearch;
   }
 
   public boolean isRdn()

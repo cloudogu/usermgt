@@ -12,6 +12,8 @@ import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.account.AccountManager;
 import de.triology.universeadm.account.AccountResource;
 import de.triology.universeadm.account.DefaultAccountManager;
+import de.triology.universeadm.mapping.DefaultMapperFactory;
+import de.triology.universeadm.mapping.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.triology.universeadm.user.LDAPUserManager;
@@ -53,6 +55,9 @@ public class MainModule extends ServletModule
     // ldap stuff
     bind(LDAPHasher.class).toInstance(new LDAPHasher());
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
+    
+    // mapping
+    bind(MapperFactory.class).to(DefaultMapperFactory.class);
     
     // accont
     bind(AccountManager.class).to(DefaultAccountManager.class);

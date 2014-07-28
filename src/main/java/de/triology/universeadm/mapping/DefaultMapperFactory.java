@@ -10,6 +10,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
 import de.triology.universeadm.BaseDirectory;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +66,8 @@ public class DefaultMapperFactory implements MapperFactory
       @Override
       public Mapper<T> call() throws Exception
       {
-        Mapping mapping = BaseDirectory.getConfiguration("mapping/".concat(type.getSimpleName()), Mapping.class);
+        String name = type.getSimpleName().toLowerCase(Locale.ENGLISH).concat(".xml");
+        Mapping mapping = BaseDirectory.getConfiguration("mapping/".concat(name), Mapping.class);
         if (mapping == null)
         {
           throw new MappingException("could not find mapping");

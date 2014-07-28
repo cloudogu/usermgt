@@ -14,17 +14,13 @@ import com.google.inject.Inject;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.LDAPSearchException;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
 import com.unboundid.ldap.sdk.ResultCode;
 import com.unboundid.ldap.sdk.SearchResult;
 import com.unboundid.ldap.sdk.SearchResultEntry;
-import com.unboundid.ldap.sdk.SearchResultReference;
 import com.unboundid.ldap.sdk.SearchScope;
-import com.unboundid.ldap.sdk.persist.LDAPObjectHandler;
-import com.unboundid.ldap.sdk.persist.LDAPPersistException;
-import com.unboundid.ldap.sdk.persist.LDAPPersister;
-import com.unboundid.ldap.sdk.persist.ObjectSearchListener;
 import de.triology.universeadm.EventType;
 import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
@@ -32,6 +28,8 @@ import de.triology.universeadm.LDAPHasher;
 import de.triology.universeadm.LDAPUtil;
 import de.triology.universeadm.PagedResultList;
 import de.triology.universeadm.Paginations;
+import de.triology.universeadm.mapping.Mapper;
+import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.validation.Validator;
 import java.util.Collections;
 import java.util.List;
@@ -71,23 +69,21 @@ public class LDAPUserManager implements UserManager
    */
   @Inject
   public LDAPUserManager(LDAPConnectionStrategy strategy,
-          LDAPConfiguration configuration, LDAPHasher hasher, Validator validator, EventBus eventBus)
+          LDAPConfiguration configuration, LDAPHasher hasher, MapperFactory mapperFactory, Validator validator, EventBus eventBus)
   {
     this.strategy = strategy;
     this.configuration = configuration;
     this.hasher = hasher;
+    this.mapper = mapperFactory.createMapper(User.class, configuration.getUserBaseDN());
     this.validator = validator;
     this.eventBus = eventBus;
-
-    try
-    {
-      this.persister = LDAPPersister.getInstance(User.class);
-    }
-    catch (LDAPPersistException ex)
-    {
-      throw new UserException("could not create ldap persister", ex);
-    }
+    List<String> rattrs = this.mapper.getReturningAttributes();
+    this.returningAttributes = rattrs.toArray(new String[rattrs.size()]);
   }
+  
+  private final String[] returningAttributes;
+  
+  private final Mapper<User> mapper;
   
   private final Validator validator;
 
@@ -101,7 +97,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public void create(User user)
   {
-    SecurityUtils.getSubject().checkRole("admin");
+    SecurityUtils.getSubject().checkRole("admins");
     Preconditions.checkNotNull(user, "user is required");
     // validate
     validator.validate(user, "user object is not valid");
@@ -109,7 +105,7 @@ public class LDAPUserManager implements UserManager
 
     try
     {
-      Entry entry = persister.encode(user, configuration.getUserBaseDN());
+      Entry entry = mapper.convert(user);
       if (user.getPassword() != null)
       {
         entry.addAttribute(ATTRIBUTE_PASSWORD, encodePassword(user.getPassword()));
@@ -152,14 +148,14 @@ public class LDAPUserManager implements UserManager
     logger.info("modify user {}", user.getUsername());
     
     Subject subject = SecurityUtils.getSubject();
-    if (! subject.hasRole("admin") && ! user.getUsername().equals(subject.getPrincipal().toString()))
+    if (! subject.hasRole("admins") && ! user.getUsername().equals(subject.getPrincipal().toString()))
     {
       throw new AuthorizationException("user has not enough privileges");
     }
 
     try
     {
-      List<Modification> modifications = Lists.newArrayList(persister.getModifications(user, true));
+      List<Modification> modifications = Lists.newArrayList(mapper.getModifications(user));
       String password = user.getPassword();
       if (!DUMMY_PASSWORD.equals(password))
       {
@@ -173,14 +169,14 @@ public class LDAPUserManager implements UserManager
         }
       }
 
-      String dn = createDN(user);
+      String dn = mapper.getDN(user.getUsername());
 
       if (logger.isTraceEnabled())
       {
         logger.trace("modify user:\n{}", LDAPUtil.toLDIF(dn, modifications));
       }
 
-      strategy.get().modify(createDN(user), modifications);
+      strategy.get().modify(dn, modifications);
       eventBus.post(new UserEvent(user, EventType.MODIFY));
       user.setPassword(DUMMY_PASSWORD);
     }
@@ -210,13 +206,13 @@ public class LDAPUserManager implements UserManager
   @Override
   public void remove(User user)
   {
-    SecurityUtils.getSubject().checkRole("admin");
+    SecurityUtils.getSubject().checkRole("admins");
     Preconditions.checkNotNull(user, "user is required");
     logger.info("remove user {}", user.getUsername());
 
     try
     {
-      strategy.get().delete(createDN(user));
+      strategy.get().delete(mapper.getDN(user.getUsername()));
       eventBus.post(new UserEvent(user, EventType.REMOVE));
     }
     catch (LDAPException ex)
@@ -242,23 +238,24 @@ public class LDAPUserManager implements UserManager
     logger.debug("get user {}", username);
     
     Subject subject = SecurityUtils.getSubject();
-    if (! subject.hasRole("admin") && ! username.equals(subject.getPrincipal().toString()))
+    if (! subject.hasRole("admins") && ! username.equals(subject.getPrincipal().toString()))
     {
       throw new AuthorizationException("user has not enough privileges");
     }
-    
 
-    User user;
+    User user = null;
 
     try
     {
-      user = persister.get(createDN(username), strategy.get());
-      if (user != null)
+      
+      Entry e = strategy.get().getEntry(mapper.getDN(username), returningAttributes);
+      if (e != null)
       {
+        user = mapper.convert(e);
         user.setPassword(DUMMY_PASSWORD);
       }
     }
-    catch (LDAPPersistException ex)
+    catch (LDAPException ex)
     {
       throw new UserException("could not get user ".concat(username), ex);
     }
@@ -283,113 +280,49 @@ public class LDAPUserManager implements UserManager
   public List<User> getAll()
   {
     logger.debug("get all users");
-    SecurityUtils.getSubject().checkRole("admin");
+    SecurityUtils.getSubject().checkRole("admins");
 
     final List<User> users = Lists.newArrayList();
 
-    try
-    {
-      persister.getAll(strategy.get(), configuration.getUserBaseDN(),
-              new ObjectSearchListener<User>()
-              {
-
-                @Override
-                public void objectReturned(User o)
-                {
-                  o.setPassword(DUMMY_PASSWORD);
-                  users.add(o);
-                }
-
-                @Override
-                public void unparsableEntryReturned(SearchResultEntry entry,
-                        LDAPPersistException exception)
-                {
-                  logger.warn("could not parse entry ".concat(entry.getDN()),
-                          exception);
-                }
-
-                @Override
-                public void searchReferenceReturned(
-                        SearchResultReference searchReference)
-                {
-
-                        }
-              });
+    try {
+    SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, mapper.getBaseFilter(), returningAttributes);
+    for ( SearchResultEntry e : result.getSearchEntries() ){
+      users.add(mapper.convert(e));
     }
-    catch (LDAPPersistException ex)
-    {
+    } catch (LDAPSearchException ex){
       throw new UserException("could not get all users", ex);
     }
-
+    
     Collections.sort(users);
 
     return ImmutableList.copyOf(users);
   }
 
-  //~--- methods --------------------------------------------------------------
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   *
-   * @return
-   *
-   * @throws LDAPPersistException
-   */
-  private String createDN(String username) throws LDAPPersistException
-  {
-    return createDN(new User(username));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   *
-   * @throws LDAPPersistException
-   */
-  private String createDN(User user) throws LDAPPersistException
-  {
-    return persister.getObjectHandler().constructDN(user,
-            configuration.getUserBaseDN());
-  }
 
   @Override
   public List<User> search(String query)
   {
-    SecurityUtils.getSubject().checkRole("admin");
+    SecurityUtils.getSubject().checkRole("admins");
     String q = WILDCARD.concat(query).concat(WILDCARD);
-    Filter base = persister.getObjectHandler().createBaseFilter();
-    LDAPObjectHandler<User> oh = persister.getObjectHandler();
+    Filter base = mapper.getBaseFilter();
 
     List<User> users = Lists.newArrayList();
     try
     {
       List<Filter> or = Lists.newArrayList();
-      for (String attribute : oh.getAttributesToRequest())
+      for (String attribute : mapper.getSearchAttributes())
       {
         or.add(Filter.create(attribute.concat(EQUAL).concat(q)));
       }
       Filter filter = Filter.createANDFilter(base, Filter.createORFilter(or));
       logger.debug("start user search with filter {}", filter);
 
-      SearchResult result = strategy.get().search(configuration.getUserBaseDN(), SearchScope.SUB, filter, oh.getAttributesToRequest());
+      SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, filter, returningAttributes);
       for (SearchResultEntry e : result.getSearchEntries())
       {
-        try
-        {
-          User user = persister.decode(e);
-          user.setPassword(DUMMY_PASSWORD);
-          users.add(user);
-        }
-        catch (LDAPPersistException ex)
-        {
-          logger.error("could not decode user ".concat(e.getDN()), ex);
-        }
+        User user = mapper.convert(e);
+        user.setPassword(DUMMY_PASSWORD);
+        users.add(user);
       }
     }
     catch (LDAPException ex)
@@ -427,11 +360,6 @@ public class LDAPUserManager implements UserManager
    * Field description
    */
   private final EventBus eventBus;
-
-  /**
-   * Field description
-   */
-  private final LDAPPersister<User> persister;
 
   /**
    * Field description

@@ -7,6 +7,7 @@ package de.triology.universeadm.user;
 
 import com.google.common.base.Charsets;
 import com.google.common.eventbus.EventBus;
+import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.triology.universeadm.EventType;
@@ -14,8 +15,13 @@ import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
 import de.triology.universeadm.LDAPHasher;
 import de.triology.universeadm.PagedResultList;
+import de.triology.universeadm.mapping.DefaultMapper;
+import de.triology.universeadm.mapping.Mapper;
+import de.triology.universeadm.mapping.MapperFactory;
+import de.triology.universeadm.mapping.Mapping;
 import de.triology.universeadm.validation.Validator;
 import java.util.List;
+import javax.xml.bind.JAXB;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,6 +48,7 @@ public class LDAPUserManagerTest
   private static final String LDIF_001 = "/de/triology/universeadm/user/test.001.ldif";
   private static final String LDIF_002 = "/de/triology/universeadm/user/test.002.ldif";
   private static final String LDIF_003 = "/de/triology/universeadm/user/test.003.ldif";
+  private static final String MAPPING_001 = "de/triology/universeadm/user/mapping.001.xml";
 
   private EventBus eventBus;
   private Validator validator;
@@ -193,13 +200,18 @@ public class LDAPUserManagerTest
 
   private LDAPUserManager createUserManager() throws LDAPException
   {
+    String peopledn = "ou=People,".concat(BASEDN);
     LDAPConnectionStrategy strategy = mock(LDAPConnectionStrategy.class);
     when(strategy.get()).thenReturn(ldap.getConnection());
     LDAPConfiguration config = new LDAPConfiguration(
       "localhost", 10389, "cn=Directory Manager", 
-      "manager123", "ou=People,".concat(BASEDN)
+      "manager123", peopledn
     );
-    return new LDAPUserManager(strategy, config, hasher, validator, eventBus);
+    Mapping mapping = JAXB.unmarshal(Resources.getResource(MAPPING_001), Mapping.class);
+    Mapper<User> mapper = new DefaultMapper<>(mapping, User.class, peopledn);
+    MapperFactory mapperFactory = mock(MapperFactory.class);
+    when(mapperFactory.createMapper(User.class, peopledn)).thenReturn(mapper);
+    return new LDAPUserManager(strategy, config, hasher, mapperFactory, validator, eventBus);
   }
 
   @Rule

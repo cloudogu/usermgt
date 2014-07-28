@@ -7,6 +7,7 @@
 package de.triology.universeadm.mapping;
 
 import com.unboundid.ldap.sdk.Entry;
+import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.Modification;
 import java.util.List;
 
@@ -17,6 +18,13 @@ import java.util.List;
  */
 public interface Mapper<T>
 {
+  public String getParentDN();
+  
+  public Filter getBaseFilter();
+  
+  public List<String> getSearchAttributes();
+  
+  public String getDN(String rdn);
   
   public List<String> getReturningAttributes();
   
