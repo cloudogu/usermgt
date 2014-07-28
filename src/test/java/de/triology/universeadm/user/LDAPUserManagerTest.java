@@ -23,18 +23,25 @@ import org.junit.Test;
 import static org.mockito.Mockito.*;
 import sonia.junit.ldap.LDAP;
 import sonia.junit.ldap.LDAPUnit;
+import sonia.junit.shiro.ShiroRule;
+import sonia.junit.shiro.SubjectAware;
 
 /**
  *
  * @author ssdorra
  */
+@SubjectAware(
+  configuration = "classpath:de/triology/universeadm/user/shiro.001.ini", 
+  username = "trillian", 
+  password = "secret"
+)
 public class LDAPUserManagerTest
 {
 
   private static final String BASEDN = "dc=hitchhiker,dc=com";
-  private static final String LDIF_001 = "/de/triology/scmmu/usermgm/user/test.001.ldif";
-  private static final String LDIF_002 = "/de/triology/scmmu/usermgm/user/test.002.ldif";
-  private static final String LDIF_003 = "/de/triology/scmmu/usermgm/user/test.003.ldif";
+  private static final String LDIF_001 = "/de/triology/universeadm/user/test.001.ldif";
+  private static final String LDIF_002 = "/de/triology/universeadm/user/test.002.ldif";
+  private static final String LDIF_003 = "/de/triology/universeadm/user/test.003.ldif";
 
   private EventBus eventBus;
   private Validator validator;
@@ -197,6 +204,9 @@ public class LDAPUserManagerTest
 
   @Rule
   public LDAPUnit ldap = new LDAPUnit();
+  
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
 
   private static class PlainLDAPHasher extends LDAPHasher
   {

@@ -5,10 +5,6 @@
  */
 package de.triology.universeadm.mapping;
 
-import de.triology.universeadm.mapping.Mapping;
-import de.triology.universeadm.mapping.DefaultMapper;
-import de.triology.universeadm.mapping.MappingAttribute;
-import de.triology.universeadm.mapping.Mapper;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;

@@ -178,6 +178,13 @@
       <scope>test</scope>
     </dependency>
     
+    <dependency>
+       <groupId>sonia.junit.shiro</groupId>
+      <artifactId>shiro-unit</artifactId>
+      <version>1.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    
     <!--
     use provided scope to create a global exclude
     -->

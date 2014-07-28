@@ -152,7 +152,7 @@ public class LDAPUserManager implements UserManager
     logger.info("modify user {}", user.getUsername());
     
     Subject subject = SecurityUtils.getSubject();
-    if (! subject.hasRole("admins") && ! user.getUsername().equals(subject.getPrincipal().toString()))
+    if (! subject.hasRole("admin") && ! user.getUsername().equals(subject.getPrincipal().toString()))
     {
       throw new AuthorizationException("user has not enough privileges");
     }
@@ -242,7 +242,7 @@ public class LDAPUserManager implements UserManager
     logger.debug("get user {}", username);
     
     Subject subject = SecurityUtils.getSubject();
-    if (! subject.hasRole("admins") && ! username.equals(subject.getPrincipal().toString()))
+    if (! subject.hasRole("admin") && ! username.equals(subject.getPrincipal().toString()))
     {
       throw new AuthorizationException("user has not enough privileges");
     }
@@ -361,7 +361,7 @@ public class LDAPUserManager implements UserManager
   @Override
   public List<User> search(String query)
   {
-    SecurityUtils.getSubject().checkRole("admins");
+    SecurityUtils.getSubject().checkRole("admin");
     String q = WILDCARD.concat(query).concat(WILDCARD);
     Filter base = persister.getObjectHandler().createBaseFilter();
     LDAPObjectHandler<User> oh = persister.getObjectHandler();
