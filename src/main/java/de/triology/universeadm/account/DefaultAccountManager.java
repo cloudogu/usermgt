@@ -36,6 +36,7 @@ public class DefaultAccountManager implements AccountManager
   public User getCurrentUser()
   {
     String username = getSessionUser();
+    logger.trace("get current user {} from user manager", username);
     return userManager.get(username);
   }
   
@@ -48,6 +49,7 @@ public class DefaultAccountManager implements AccountManager
   public void modifyCurrentUser(User account)
   {
     String username = getSessionUser();
+    logger.trace("try to modify account {} as user {}", account.getUsername(), username);
     Preconditions.checkArgument(username.equals(account.getUsername()));
     userManager.modify(account);
   }
