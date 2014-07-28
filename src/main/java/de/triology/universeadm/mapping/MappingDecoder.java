@@ -3,22 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package de.triology.universeadm.mapping;
 
 /**
- * 
+ *
  * @author ssdorra
  */
 public interface MappingDecoder
 {
-  
-  public Object decodeFromString(Class<?> type, String string);
-  
-  public Object decodeFromMultiString(Class<?> type, String[] strings);
-  
-  public Object decodeFromBytes(Class<?> type, byte[] bytes);
-  
-  public Object decodeFromMultiBytes(Class<?> type, byte[][] bytes);
-  
+
+  public <T> Object decodeFromString(FieldDescriptor<T> type, String string);
+
+  public <T> Object decodeFromMultiString(FieldDescriptor<T> type, String[] strings);
+
+  public <T> Object decodeFromBytes(FieldDescriptor<T> type, byte[] bytes);
+
+  public <T> Object decodeFromMultiBytes(FieldDescriptor<T> type, byte[][] bytes);
+
 }

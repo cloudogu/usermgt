@@ -9,14 +9,11 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Modification;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.beanutils.PropertyUtils;
 
 /**
@@ -29,22 +26,17 @@ public class DefaultMapper<T> implements Mapper<T>
 
   private final Mapping mapping;
   private final String parentDN;
-  private final Class<T> type;
+  private final ClassDescriptor<T> type;
   private final List<String> returningAttributes;
   private final Attribute objectClasses;
-  private final Map<String, PropertyDescriptor> descriptors = Maps.newHashMap();
 
   public DefaultMapper(Mapping mapping, Class<T> type, String parentDN)
   {
     this.mapping = mapping;
     this.parentDN = parentDN;
-    this.type = type;
+    this.type = new ClassDescriptor<>(type);
     this.returningAttributes = Lists.transform(mapping.getAttributes(), toLdapName);
     this.objectClasses = new Attribute("objectClass", mapping.getObjectClasses());
-    for (PropertyDescriptor descriptor : PropertyUtils.getPropertyDescriptors(type))
-    {
-      descriptors.put(descriptor.getName(), descriptor);
-    }
   }
 
   @Override
@@ -111,18 +103,18 @@ public class DefaultMapper<T> implements Mapper<T>
   @Override
   public T convert(Entry entry)
   {
-    T object = createObject();
+    T object = type.newInstance();
     for (MappingAttribute ma : filter(mapping.getAttributes(), readPredicate))
     {
-      PropertyDescriptor desc = descriptors.get(ma.getName());
+      FieldDescriptor<T> desc = type.getField(ma.getName());
       if (desc == null)
       {
-        throw new MappingException("could not find property descriptor");
+        throw new MappingException("could not find type token for field");
       }
       Attribute attribute = entry.getAttribute(ma.getLdapName());
       if (attribute != null)
       {
-        Object value = MappingAttributes.getObjectValue(ma, desc.getPropertyType(), attribute);
+        Object value = MappingAttributes.getObjectValue(ma, desc, attribute);
         setObjectValue(object, ma, value);
       }
     }
@@ -138,18 +130,6 @@ public class DefaultMapper<T> implements Mapper<T>
     catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex)
     {
       throw new MappingException("could not set object value", ex);
-    }
-  }
-
-  private T createObject()
-  {
-    try
-    {
-      return type.newInstance();
-    }
-    catch (IllegalAccessException | InstantiationException ex)
-    {
-      throw new MappingException("could not create object", ex);
     }
   }
 

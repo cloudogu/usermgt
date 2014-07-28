@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package de.triology.universeadm.mapping;
 
 import com.google.common.collect.Lists;
+import java.lang.reflect.Array;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public final class DefaultMappingEncoder implements MappingEncoder
 {
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultMappingEncoder.class);
-  
+
   @Override
   public String encodeAsString(Object object)
   {
@@ -30,21 +30,32 @@ public final class DefaultMappingEncoder implements MappingEncoder
   public String[] encodeAsMultiString(Object object)
   {
     List<String> values = Lists.newArrayList();
-    if ( object instanceof Iterable)
+    if (object instanceof Iterable)
     {
-      for ( Object o : (Iterable) object )
+      for (Object o : (Iterable) object)
       {
         values.add(o.toString());
       }
-    } 
-    else if ( object.getClass().isArray() )
+    }
+    else if (object.getClass().isArray())
     {
-      for ( Object o : (Iterable) object )
+      Class<?> type = object.getClass().getComponentType();
+      if (type.equals(Object.class))
       {
-        values.add(o.toString());
+        for (Object o : (Object[]) object){
+          values.add(o.toString());
+        }
       }
-    } 
-    else 
+      else
+      {
+        int length = Array.getLength(object);
+        for (int i = 0; i < length; i++)
+        {
+          values.add(Array.get(object, i).toString());
+        }
+      }
+    }
+    else
     {
       logger.debug("object {} is not an instance of iterable and is not an array", object.getClass());
       values.add(object.toString());
@@ -63,5 +74,5 @@ public final class DefaultMappingEncoder implements MappingEncoder
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
-  
+
 }

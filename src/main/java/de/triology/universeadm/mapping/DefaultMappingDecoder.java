@@ -5,15 +5,15 @@
  */
 package de.triology.universeadm.mapping;
 
-import com.google.common.collect.Lists;
 import java.lang.reflect.Array;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.apache.commons.beanutils.ConvertUtils;
 
 /**
@@ -24,63 +24,72 @@ public class DefaultMappingDecoder implements MappingDecoder
 {
 
   @Override
-  public Object decodeFromString(Class<?> type, String string)
+  public <T> Object decodeFromString(FieldDescriptor<T> type, String string)
   {
-    return ConvertUtils.convert(string, type);
+    return ConvertUtils.convert(string, type.getBaseClass());
   }
 
   @Override
-  public Object decodeFromMultiString(Class<?> type, String[] strings)
+  public <T> Object decodeFromMultiString(FieldDescriptor<T> type, String[] strings)
   {
     Object result = null;
-    if (type.isAssignableFrom(Iterable.class))
+    if (type.isSubClassOf(ArrayList.class))
     {
-      Type[] types = ((ParameterizedType) type.getGenericSuperclass()).getActualTypeArguments();
-      if (types.length != 1)
-      {
-        throw new MappingException("supported iterables must have exactly on type parameter e.g. List<String>");
-      }
-      Class<?> typeParameter = (Class<?>) types[0];
-      if (type.isAssignableFrom(ArrayList.class))
-      {
-        ArrayList list = new ArrayList(strings.length);
-        fill(list, typeParameter, strings);
-        result = list;
-      }
-      else if (type.isAssignableFrom(LinkedList.class))
-      {
-        LinkedList list = new LinkedList();
-        fill(list, typeParameter, strings);
-        result = list;
-      }
-      else if (type.isAssignableFrom(List.class) && typeParameter.isAssignableFrom(String.class))
-      {
-        result = Lists.newArrayList(strings);
-      }
-      else if (type.isAssignableFrom(List.class))
-      {
-        ArrayList list = new ArrayList(strings.length);
-        fill(list, typeParameter, strings);
-        result = list;
-      } 
-      else 
-      {
-        throw new UnsupportedOperationException("Not supported yet.");
-      }
+      ArrayList list = new ArrayList(strings.length);
+      fill(list, type.getComponentType(), strings);
+      result = list;
+    }
+    else if (type.isSubClassOf(LinkedList.class))
+    {
+      LinkedList list = new LinkedList();
+      fill(list, type.getComponentType(), strings);
+      result = list;
+    }
+    else if (type.isSubClassOf(List.class))
+    {
+      ArrayList list = new ArrayList(strings.length);
+      fill(list, type.getComponentType(), strings);
+      result = list;
+    }
+    else if (type.isSubClassOf(HashSet.class))
+    {
+      HashSet set = new HashSet(strings.length);
+      fill(set, type.getComponentType(), strings);
+      result = set;
+    }
+    else if (type.isSubClassOf(TreeSet.class))
+    {
+      TreeSet set = new TreeSet();
+      fill(set, type.getComponentType(), strings);
+      result = set;
+    }
+    else if (type.isSubClassOf(Set.class))
+    {
+      HashSet set = new HashSet(strings.length);
+      fill(set, type.getComponentType(), strings);
+      result = set;
     }
     else if (type.isArray())
     {
       Class<?> ctype = type.getComponentType();
-      if (ctype.isAssignableFrom(String.class)){
+      if (ctype.isAssignableFrom(String.class))
+      {
         result = Arrays.copyOf(strings, strings.length);
-      } else {
+      }
+      else
+      {
         result = Array.newInstance(ctype, strings.length);
         for (int i = 0; i < strings.length; i++)
         {
-          Array.set(result, i, decodeFromString(ctype, strings[i]));
+          Array.set(result, i, ConvertUtils.convert(strings[i], ctype));
         }
       }
     }
+    else
+    {
+
+    }
+
     return result;
   }
 
@@ -88,18 +97,18 @@ public class DefaultMappingDecoder implements MappingDecoder
   {
     for (String value : values)
     {
-      collection.add(decodeFromString(type, value));
+      collection.add(ConvertUtils.convert(value, type));
     }
   }
 
   @Override
-  public Object decodeFromBytes(Class<?> type, byte[] bytes)
+  public <T> Object decodeFromBytes(FieldDescriptor<T> type, byte[] bytes)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
   @Override
-  public Object decodeFromMultiBytes(Class<?> type, byte[][] bytes)
+  public <T> Object decodeFromMultiBytes(FieldDescriptor<T> type, byte[][] bytes)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }

@@ -7,6 +7,7 @@ package de.triology.universeadm.mapping;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.reflect.TypeToken;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
@@ -78,7 +79,7 @@ public final class MappingAttributes
     });
   }
 
-  public static Object getObjectValue(MappingAttribute ma, Class<?> type, Attribute attribute)
+  public static <T> Object getObjectValue(MappingAttribute ma, FieldDescriptor<T> desc, Attribute attribute)
   {
     Object value;
     String name = ma.getLdapName();
@@ -87,22 +88,22 @@ public final class MappingAttributes
     {
       if (ma.isMultiValue())
       {
-        value = getDecoder(ma).decodeFromMultiBytes(type, attribute.getValueByteArrays());
+        value = getDecoder(ma).decodeFromMultiBytes(desc, attribute.getValueByteArrays());
       }
       else
       {
-        value = getDecoder(ma).decodeFromBytes(type, attribute.getValueByteArray());
+        value = getDecoder(ma).decodeFromBytes(desc, attribute.getValueByteArray());
       }
     }
     else
     {
       if (ma.isMultiValue())
       {
-        value = getDecoder(ma).decodeFromMultiString(type, attribute.getValues());
+        value = getDecoder(ma).decodeFromMultiString(desc, attribute.getValues());
       }
       else
       {
-        value = getDecoder(ma).decodeFromString(type, attribute.getValue());
+        value = getDecoder(ma).decodeFromString(desc, attribute.getValue());
       }
     }
     return value;
