@@ -174,7 +174,8 @@ public class SecurityModule extends ShiroWebModule
         }
       }
       
-      if (simpleAuthorizationInfo.getRoles().contains(configuration.getAdministratorRole()))
+      if (simpleAuthorizationInfo.getRoles() != null && 
+          simpleAuthorizationInfo.getRoles().contains(configuration.getAdministratorRole()))
       {
         simpleAuthorizationInfo.addRole(Roles.ADMINISTRATOR);
       }
