@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<mapping>
+    
+  <objectClasses>
+    <objectClass>top</objectClass>
+    <objectClass>person</objectClass>
+  </objectClasses>
+  
+  <attributes>
+    <attribute is-rdn="true">username</attribute>
+    <attribute>givenname</attribute>
+  </attributes>
+  
+</mapping>
