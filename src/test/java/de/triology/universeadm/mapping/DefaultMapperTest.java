@@ -97,6 +97,15 @@ public class DefaultMapperTest
     assertEquals(user.getGivenname(), entry.getAttributeValue("givenname"));
     assertEquals(user.getSurname(), entry.getAttributeValue("sn"));
   }
+  
+  @Test(expected = MappingException.class)
+  public void testConvertToEntryWithoutRdn()
+  {
+    DefaultMapper<User> mapper = createDefaultMapper();
+    User user = createUser();
+    user.setUsername(null);
+    mapper.convert(user);
+  }
 
   @Test
   public void testConvertToObject()
@@ -107,6 +116,26 @@ public class DefaultMapperTest
     assertEquals("dent", user.getUsername());
     assertEquals("Arthur", user.getGivenname());
     assertEquals("Dent", user.getSurname());
+  }
+  
+  @Test(expected = MappingException.class)
+  public void testWithoutRdn(){
+    Mapping mapping = createMapping(
+            attr("username"),
+            attr("givenname"),
+            attr("surname", "sn")
+    );
+    new DefaultMapper<>(mapping, User.class, "dc=hitchhiker,dc=com");
+  }
+  
+  @Test(expected = MappingException.class)
+  public void testMultipleRdn(){
+    Mapping mapping = createMapping(
+            attrb("username").rdn(true).build(),
+            attr("givenname"),
+            attrb("surname").rdn(true).build()
+    );
+    new DefaultMapper<>(mapping, User.class, "dc=hitchhiker,dc=com");
   }
 
   @Test

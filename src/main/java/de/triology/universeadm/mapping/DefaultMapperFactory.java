@@ -5,6 +5,7 @@
  */
 package de.triology.universeadm.mapping;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -29,7 +30,8 @@ public class DefaultMapperFactory implements MapperFactory
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultMapperFactory.class);
 
-  private static final boolean CACHE_DISABLED = Boolean.getBoolean(DefaultMapperFactory.class.getName().concat(".disable-cache"));
+  @VisibleForTesting
+  static final boolean CACHE_DISABLED = Boolean.getBoolean(DefaultMapperFactory.class.getName().concat(".disable-cache"));
 
   public DefaultMapperFactory()
   {

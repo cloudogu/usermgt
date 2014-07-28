@@ -8,13 +8,13 @@ package de.triology.universeadm.mapping;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Filter;
-import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.Modification;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -48,16 +48,20 @@ public class DefaultMapper<T> implements Mapper<T>
     this.returningAttributes = Lists.transform(mapping.getAttributes(), toLdapName);
     this.searchAttributes = FluentIterable.from(mapping.getAttributes()).filter(searchPredicate).transform(toLdapName).toList();
     this.objectClasses = new Attribute("objectClass", mapping.getObjectClasses());
+    this.rdn = extractRdn();
+    this.baseFilter = Filter.createPresenceFilter(rdn.getLdapName());
+  }
+  
+  private MappingAttribute extractRdn()
+  {
     Iterable<MappingAttribute> rdns = Iterables.filter(mapping.getAttributes(), rdnPredicate);
-    this.rdn = Iterables.getOnlyElement(rdns);
-    try 
-    {
-      this.baseFilter = Filter.create("(".concat(rdn.getLdapName()).concat("=*)"));
-    } 
-    catch (LDAPException ex)
-    {
-      throw new MappingException("could not create base filter", ex);
+    int size = Iterables.size(rdns);
+    if ( size <= 0 ){
+      throw new MappingException("no attribute marked as rdn");
+    } else if ( size > 1 ){
+      throw new MappingException("more than one attribute is marked as rdn");
     }
+    return Iterables.getOnlyElement(rdns);
   }
   
   @Override
@@ -97,7 +101,7 @@ public class DefaultMapper<T> implements Mapper<T>
     List<Attribute> attributes = Lists.newArrayList();
     attributes.add(objectClasses);
 
-    String rdnAttr = null;
+    String value = null;
 
     for (MappingAttribute ma : filter(mapping.getAttributes(), createPredicate))
     {
@@ -106,18 +110,18 @@ public class DefaultMapper<T> implements Mapper<T>
       {
         if (ma.isRdn())
         {
-          rdnAttr = ma.getLdapName().concat("=").concat(attribute.getValue());
+          value = attribute.getValue();
         }
 
         attributes.add(attribute);
       }
     }
 
-    if (rdnAttr == null)
+    if (Strings.isNullOrEmpty(value))
     {
-      throw new MappingException("could not find rdn for entry");
+      throw new MappingException("entry does not have an rdn");
     }
-    return new Entry(rdnAttr.concat(",").concat(parentDN), attributes);
+    return new Entry(getDN(value), attributes);
   }
 
   private Attribute createAttribute(MappingAttribute ma, T object)
