@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.triology.universeadm.template;
+package de.triology.universeadm.mapping;
 
+import de.triology.universeadm.mapping.Mapping;
+import de.triology.universeadm.mapping.DefaultMapper;
+import de.triology.universeadm.mapping.MappingAttribute;
+import de.triology.universeadm.mapping.Mapper;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;

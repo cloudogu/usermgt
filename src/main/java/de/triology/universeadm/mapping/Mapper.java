@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package de.triology.universeadm.template;
+package de.triology.universeadm.mapping;
 
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Modification;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package de.triology.universeadm.template;
+package de.triology.universeadm.mapping;
 
 import com.google.common.collect.Lists;
 import java.util.List;

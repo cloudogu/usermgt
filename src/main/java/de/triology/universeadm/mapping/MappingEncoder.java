@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.triology.universeadm.template;
+package de.triology.universeadm.mapping;
 
 /**
- * TODO use com.unboundid.asn1.ASN1OctetString
  *
  * @author ssdorra
  */
