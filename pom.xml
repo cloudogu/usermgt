@@ -170,6 +170,20 @@
       <version>1.9.5</version>
       <scope>test</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>sonia.junit</groupId>
@@ -179,7 +193,7 @@
     </dependency>
     
     <dependency>
-       <groupId>sonia.junit.shiro</groupId>
+      <groupId>sonia.junit.shiro</groupId>
       <artifactId>shiro-unit</artifactId>
       <version>1.0.0</version>
       <scope>test</scope>
@@ -377,6 +391,7 @@
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.javaLevel>1.7</project.build.javaLevel>
+    <powermock.version>1.5.3</powermock.version>
     <slf4j.version>1.7.7</slf4j.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <guice.version>3.0</guice.version>
