@@ -102,10 +102,19 @@ public class UserResource
   @Consumes(MediaType.APPLICATION_JSON)
   public Response modify(@PathParam("username") String username, User user)
   {
-    user.setUsername(username);
-    userManager.modify(user);
+    ResponseBuilder builder;
+    try
+    {
+      user.setUsername(username);
+      userManager.modify(user);
+      builder = Response.noContent();
+    }
+    catch (UserNotFoundException ex)
+    {
+      builder = Response.status(Response.Status.NOT_FOUND);
+    }
 
-    return Response.noContent().build();
+    return builder.build();
   }
 
   /**
@@ -180,12 +189,12 @@ public class UserResource
     {
       start = 0;
     }
-    
+
     if (limit <= 0 || limit > 1000)
     {
       limit = 20;
     }
-    
+
     PagedResultList<User> result;
     if (Strings.isNullOrEmpty(query))
     {
@@ -195,7 +204,7 @@ public class UserResource
     {
       result = userManager.search(query, start, limit);
     }
-    
+
     ResponseBuilder builder;
     if (result != null)
     {
@@ -204,8 +213,8 @@ public class UserResource
     else if (Strings.isNullOrEmpty(query))
     {
       builder = Response.status(Response.Status.NOT_FOUND);
-    } 
-    else 
+    }
+    else
     {
       builder = Response.noContent();
     }

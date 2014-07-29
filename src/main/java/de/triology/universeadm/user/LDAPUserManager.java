@@ -180,8 +180,14 @@ public class LDAPUserManager implements UserManager
     }
     catch (LDAPException ex)
     {
-      throw new UserException(
-              "could not modify user ".concat(user.getUsername()), ex);
+      if ( ex.getResultCode() == ResultCode.NO_SUCH_OBJECT )
+      {
+        throw new UserNotFoundException("could not find user ".concat(user.getUsername()));
+      } 
+      else 
+      {
+        throw new UserException("could not modify user ".concat(user.getUsername()), ex);
+      }
     }
   }
 
