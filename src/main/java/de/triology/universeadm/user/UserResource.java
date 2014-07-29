@@ -8,6 +8,8 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import de.triology.universeadm.EntityAlreadyExistsException;
+import de.triology.universeadm.EntityNotFoundException;
 import de.triology.universeadm.PagedResultList;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -79,7 +81,7 @@ public class UserResource
       uriBuilder.path(user.getUsername());
       builder = Response.created(uriBuilder.build());
     }
-    catch (UserAlreadyExistsException ex)
+    catch (EntityAlreadyExistsException ex)
     {
       logger.warn("user {} already exists", user.getUsername());
       builder = Response.status(Response.Status.CONFLICT);
@@ -109,7 +111,7 @@ public class UserResource
       userManager.modify(user);
       builder = Response.noContent();
     }
-    catch (UserNotFoundException ex)
+    catch (EntityNotFoundException ex)
     {
       builder = Response.status(Response.Status.NOT_FOUND);
     }

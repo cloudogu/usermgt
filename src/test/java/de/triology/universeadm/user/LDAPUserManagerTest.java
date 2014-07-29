@@ -10,6 +10,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
+import de.triology.universeadm.EntityAlreadyExistsException;
 import de.triology.universeadm.EventType;
 import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
@@ -75,7 +76,7 @@ public class LDAPUserManagerTest
     verify(eventBus, times(1)).post(event);
   }
   
-  @Test(expected = UserAlreadyExistsException.class)
+  @Test(expected = EntityAlreadyExistsException.class)
   @LDAP(baseDN = BASEDN, ldif = LDIF_001)
   public void testCreateAlreadyExists() throws LDAPException
   {

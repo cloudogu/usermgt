@@ -21,6 +21,9 @@ import com.unboundid.ldap.sdk.ResultCode;
 import com.unboundid.ldap.sdk.SearchResult;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
+import de.triology.universeadm.EntityAlreadyExistsException;
+import de.triology.universeadm.EntityException;
+import de.triology.universeadm.EntityNotFoundException;
 import de.triology.universeadm.EventType;
 import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
@@ -120,12 +123,12 @@ public class LDAPUserManager implements UserManager
     {
       if (ex.getResultCode() == ResultCode.ENTRY_ALREADY_EXISTS)
       {
-        throw new UserAlreadyExistsException(
+        throw new EntityAlreadyExistsException(
                 String.format("user %s already exists", user.getUsername()), ex);
       }
       else
       {
-        throw new UserException(
+        throw new EntityException(
                 "could not create user ".concat(user.getUsername()), ex);
       }
     }
@@ -182,11 +185,11 @@ public class LDAPUserManager implements UserManager
     {
       if ( ex.getResultCode() == ResultCode.NO_SUCH_OBJECT )
       {
-        throw new UserNotFoundException("could not find user ".concat(user.getUsername()));
+        throw new EntityNotFoundException("could not find user ".concat(user.getUsername()));
       } 
       else 
       {
-        throw new UserException("could not modify user ".concat(user.getUsername()), ex);
+        throw new EntityException("could not modify user ".concat(user.getUsername()), ex);
       }
     }
   }
@@ -221,7 +224,7 @@ public class LDAPUserManager implements UserManager
     }
     catch (LDAPException ex)
     {
-      throw new UserException(
+      throw new EntityException(
               "could not remove user ".concat(user.getUsername()), ex);
     }
   }
@@ -261,7 +264,7 @@ public class LDAPUserManager implements UserManager
     }
     catch (LDAPException ex)
     {
-      throw new UserException("could not get user ".concat(username), ex);
+      throw new EntityException("could not get user ".concat(username), ex);
     }
 
     return user;
@@ -294,7 +297,7 @@ public class LDAPUserManager implements UserManager
       users.add(mapper.convert(e));
     }
     } catch (LDAPSearchException ex){
-      throw new UserException("could not get all users", ex);
+      throw new EntityException("could not get all users", ex);
     }
     
     Collections.sort(users);
@@ -331,7 +334,7 @@ public class LDAPUserManager implements UserManager
     }
     catch (LDAPException ex)
     {
-      throw new UserException("could not search users with query: ".concat(query), ex);
+      throw new EntityException("could not search users with query: ".concat(query), ex);
     }
 
     Collections.sort(users);

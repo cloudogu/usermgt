@@ -7,6 +7,8 @@ package de.triology.universeadm.user;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import de.triology.universeadm.EntityAlreadyExistsException;
+import de.triology.universeadm.EntityNotFoundException;
 import de.triology.universeadm.PagedResultList;
 import de.triology.universeadm.Resources;
 import java.io.IOException;
@@ -94,7 +96,7 @@ public class UserResourceTest
   {
     User dent = Users.createDent();
     UserManager manager = mockUserManager();
-    doThrow(UserAlreadyExistsException.class).when(manager).create(dent);
+    doThrow(EntityAlreadyExistsException.class).when(manager).create(dent);
     MockHttpRequest request = MockHttpRequest.post("/users");
     MockHttpResponse response = Resources.dispatch(new UserResource(manager), request, dent);
     assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
@@ -116,7 +118,7 @@ public class UserResourceTest
   {
     User trillian = Users.createTrillian();
     UserManager manager = mockUserManager();
-    doThrow(UserNotFoundException.class).when(manager).modify(trillian);
+    doThrow(EntityNotFoundException.class).when(manager).modify(trillian);
     MockHttpRequest request = MockHttpRequest.put("/users/trillian");
     MockHttpResponse response = Resources.dispatch(new UserResource(manager), request, trillian);
     assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
