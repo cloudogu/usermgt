@@ -159,7 +159,7 @@ public class DefaultMapper<T> implements Mapper<T>
       FieldDescriptor<T> desc = type.getField(ma.getName());
       if (desc == null)
       {
-        throw new MappingException("could not find type token for field");
+        throw new MappingException("could not find descriptor for field ".concat(ma.getName()));
       }
       Attribute attribute = entry.getAttribute(ma.getLdapName());
       if (attribute != null)
