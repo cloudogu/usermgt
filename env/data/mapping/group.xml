@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<mapping>
+    
+  <objectClasses>
+    <objectClass>top</objectClass>
+    <objectClass>groupOfNames</objectClass>
+  </objectClasses>
+  
+  <attributes>
+    <attribute ldap-name="cn" is-rdn="true" in-modify="false">name</attribute>
+    <attribute>description</attribute>
+    <attribute is-multi-value="true">member</attribute>
+  </attributes>
+  
+</mapping>
