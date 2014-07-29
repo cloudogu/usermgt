@@ -8,8 +8,6 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import com.unboundid.ldap.sdk.persist.LDAPField;
-import com.unboundid.ldap.sdk.persist.LDAPObject;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
@@ -18,11 +16,6 @@ import org.hibernate.validator.constraints.Email;
  *
  * @author Sebastian Sdorra
  */
-@LDAPObject(structuralClass = "organizationalperson",
-            superiorClass =
-            {
-              "inetorgperson", "person", "top"
-            })
 public class User implements Comparable<User>
 {
 
@@ -250,13 +243,11 @@ public class User implements Comparable<User>
    */
   @NotNull
   @Size(min = 1)
-  @LDAPField(attribute = "cn")
   private String displayName;
 
   /**
    * Field description
    */
-  @LDAPField(attribute = "givenName")
   private String givenname;
 
   /**
@@ -264,7 +255,6 @@ public class User implements Comparable<User>
    */
   @Email
   @NotNull
-  @LDAPField(attribute = "mail")
   private String mail;
 
   /**
@@ -277,7 +267,6 @@ public class User implements Comparable<User>
    */
   @NotNull
   @Size(min = 1)
-  @LDAPField(attribute = "sn")
   private String surname;
 
   /**
@@ -285,6 +274,5 @@ public class User implements Comparable<User>
    */
   @NotNull
   @Size(min = 1)
-  @LDAPField(attribute = "uid", inRDN = true)
   private String username;
 }
