@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.triology.universeadm.user;
+
+package de.triology.universeadm.group;
 
 import com.google.common.base.Objects;
 import de.triology.universeadm.EntityEvent;
@@ -13,27 +14,27 @@ import de.triology.universeadm.EventType;
  *
  * @author ssdorra
  */
-public class UserEvent implements EntityEvent<User>
+public class GroupEvent implements EntityEvent<Group>
 {
-  private final User entity;
+  private final Group entity;
   private final EventType type;
 
-  public UserEvent(User entity, EventType type)
+  public GroupEvent(Group entity, EventType type)
   {
     this.entity = entity;
     this.type = type;
   }
 
   @Override
-  public EventType getType()
+  public Group getEntity()
   {
-    return type;
+    return entity;
   }
 
   @Override
-  public User getEntity()
+  public EventType getType()
   {
-    return entity;
+    return type;
   }
 
   @Override
@@ -53,8 +54,8 @@ public class UserEvent implements EntityEvent<User>
     {
       return false;
     }
-    final UserEvent other = (UserEvent) obj;
-    return Objects.equal(entity, other.entity)
+    final GroupEvent other = (GroupEvent) obj;
+    return Objects.equal(entity, other.entity) 
             && Objects.equal(type, other.type);
   }
 
@@ -62,9 +63,9 @@ public class UserEvent implements EntityEvent<User>
   public String toString()
   {
     return Objects.toStringHelper(this)
-            .add("entity", entity)
-            .add("type", type)
-            .toString();
+                  .add("entity", entity)
+                  .add("type", type)
+                  .toString();
   }
-
+  
 }
