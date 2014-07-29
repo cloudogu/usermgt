@@ -66,7 +66,7 @@ public class LDAPUserManagerTest
   public void testCreate() throws LDAPException
   {
     LDAPUserManager manager = createUserManager();
-    User user = createUser();
+    User user = Users.createDent();
     manager.create(user);
 
     Entry entry = ldap.getConnection().getEntry("uid=dent,ou=People,dc=hitchhiker,dc=com");
@@ -80,7 +80,7 @@ public class LDAPUserManagerTest
   public void testCreateAlreadyExists() throws LDAPException
   {
     LDAPUserManager manager = createUserManager();
-    User user = createUser();
+    User user = Users.createDent();
     manager.create(user);
     manager.create(user);
   }
@@ -191,13 +191,6 @@ public class LDAPUserManagerTest
     assertEquals("hitchhiker123", entry.getAttributeValue("userPassword"));
   }
   
-  private User createUser(){
-    return new User(
-      "dent", "Arthur Dent", "Arthur", "Dent", 
-      "arthur.dent@hitchhiker.com", "hitchhiker123"
-    );
-  }
-
   private LDAPUserManager createUserManager() throws LDAPException
   {
     String peopledn = "ou=People,".concat(BASEDN);
