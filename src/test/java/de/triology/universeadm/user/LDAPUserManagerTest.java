@@ -199,7 +199,7 @@ public class LDAPUserManagerTest
     when(strategy.get()).thenReturn(ldap.getConnection());
     LDAPConfiguration config = new LDAPConfiguration(
       "localhost", 10389, "cn=Directory Manager", 
-      "manager123", peopledn
+      "manager123", peopledn, null
     );
     Mapping mapping = JAXB.unmarshal(Resources.getResource(MAPPING_001), Mapping.class);
     Mapper<User> mapper = new DefaultMapper<>(mapping, User.class, peopledn);

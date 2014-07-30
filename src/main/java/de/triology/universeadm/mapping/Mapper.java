@@ -26,6 +26,8 @@ public interface Mapper<T>
   
   public String getDN(String rdn);
   
+  public String getRDNValue( T object );
+  
   public List<String> getReturningAttributes();
   
   public Entry convert( T object );

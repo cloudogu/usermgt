@@ -28,16 +28,15 @@ public class LDAPConfiguration
   {
   }
 
-  public LDAPConfiguration(String host, int port, String bindDN, String bindPassword, String userBaseDN)
+  public LDAPConfiguration(String host, int port, String bindDN, String bindPassword, String userBaseDN, String groupBaseDN)
   {
     this.host = host;
     this.port = port;
-        this.bindDN = bindDN;
+    this.bindDN = bindDN;
     this.bindPassword = bindPassword;
     this.userBaseDN = userBaseDN;
+    this.groupBaseDN = groupBaseDN;
   }
-  
-  
 
   //~--- get methods ----------------------------------------------------------
   /**
@@ -95,6 +94,11 @@ public class LDAPConfiguration
     return userBaseDN;
   }
 
+  public String getGroupBaseDN()
+  {
+    return groupBaseDN;
+  }
+
   public String getPasswordAlgorithm()
   {
     return passwordAlgorithm;
@@ -139,4 +143,7 @@ public class LDAPConfiguration
    */
   @XmlElement(name = "user-base-dn")
   private String userBaseDN = "ou=People";
+
+  @XmlElement(name = "group-base-dn")
+  private String groupBaseDN = "ou=Groups";
 }

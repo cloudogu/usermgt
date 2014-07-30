@@ -65,6 +65,16 @@ public class DefaultMapper<T> implements Mapper<T>
   }
   
   @Override
+  public String getRDNValue(T object)
+  {
+    Object value = getObjectValue(object, rdn);
+    if ( value == null ){
+      throw new MappingException("object does not contain a rdn");
+    }
+    return value.toString();
+  }
+  
+  @Override
   public String getParentDN()
   {
     return parentDN;

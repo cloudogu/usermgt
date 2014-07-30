@@ -12,6 +12,9 @@ import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.account.AccountManager;
 import de.triology.universeadm.account.AccountResource;
 import de.triology.universeadm.account.DefaultAccountManager;
+import de.triology.universeadm.group.GroupManager;
+import de.triology.universeadm.group.GroupResource;
+import de.triology.universeadm.group.LDAPGroupManager;
 import de.triology.universeadm.mapping.DefaultMapperFactory;
 import de.triology.universeadm.mapping.MapperFactory;
 import org.slf4j.Logger;
@@ -66,6 +69,10 @@ public class MainModule extends ServletModule
     // users
     bind(UserManager.class).to(LDAPUserManager.class);
     bind(UserResource.class);
+    
+    // groups
+    bind(GroupManager.class).to(LDAPGroupManager.class);
+    bind(GroupResource.class);
     
     // other resources
     bind(SubjectResource.class);
