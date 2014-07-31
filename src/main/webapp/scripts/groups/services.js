@@ -14,17 +14,17 @@ angular.module('universeadm.groups.services', ['restangular'])
       search: function(query, start, limit){
         return groups.getList({query: query, start: start, limit: limit});
       },
-      get: function(username){
-        return groups.one(username).get();
+      get: function(name){
+        return groups.one(name).get();
       },
-      modify: function(user){
-        return user.put();
+      modify: function(group){
+        return group.put();
       },
-      remove: function(user){
-        return groups.one(user.username).remove();
+      remove: function(group){
+        return groups.one(group.name).remove();
       },
-      create: function(user){
-        return groups.post(user);
+      create: function(group){
+        return groups.post(group);
       }
     };
   });

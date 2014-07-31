@@ -1,1 +1,16 @@
 <h1>{{create ? 'New group' : group.name}}</h1>
+
+<form name="form" role="form" novalidate>
+  
+  <div class="form-group">
+    <label class="control-label" for="description">Description</label>
+    <input type="text" class="form-control" id="description" placeholder="Enter description" ng-model="group.description">
+  </div>
+  
+  <ul>
+    <li ng-repeat="member in group.members">
+      {{member}}
+    </li>
+  </ul>
+
+</form>
