@@ -8,7 +8,10 @@ package de.triology.universeadm.group;
 
 import com.google.inject.Inject;
 import de.triology.universeadm.AbstractManagerResource;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -18,10 +21,13 @@ import javax.ws.rs.Path;
 public class GroupResource extends AbstractManagerResource<Group>
 {
 
+  private final GroupManager groupManager;
+  
   @Inject
   public GroupResource(GroupManager groupManager)
   {
     super(groupManager);
+    this.groupManager = groupManager;
   }
 
   @Override
@@ -34,6 +40,56 @@ public class GroupResource extends AbstractManagerResource<Group>
   protected void prepareForModify(String id, Group group)
   {
     group.setName(id);
+  }
+  
+  @POST
+  @Path("{name}/members/{member}")
+  public Response addMember(String name, String member)
+  {
+    Response.ResponseBuilder builder;
+    
+    Group group = groupManager.get(name);
+    if ( group == null )
+    {
+      builder = Response.status(Response.Status.NOT_FOUND);
+    }
+    else if ( group.getMembers().contains(member) )
+    {
+      builder = Response.status(Response.Status.CONFLICT);
+    }
+    else 
+    {
+      group.getMembers().add(member);
+      groupManager.modify(group);
+      builder = Response.noContent();
+    }
+    
+    return builder.build();
+  }
+  
+  @DELETE
+  @Path("{name}/members/{member}")
+  public Response removeMember(String name, String member)
+  {
+    Response.ResponseBuilder builder;
+    
+    Group group = groupManager.get(name);
+    if ( group == null )
+    {
+      builder = Response.status(Response.Status.NOT_FOUND);
+    }
+    else if ( ! group.getMembers().contains(member) )
+    {
+      builder = Response.status(Response.Status.CONFLICT);
+    }
+    else 
+    {
+      group.getMembers().remove(member);
+      groupManager.modify(group);
+      builder = Response.noContent();
+    }
+    
+    return builder.build();
   }
   
 }

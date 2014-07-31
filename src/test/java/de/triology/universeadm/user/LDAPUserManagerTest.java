@@ -20,6 +20,7 @@ import de.triology.universeadm.mapping.DefaultMapper;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.Mapping;
+import de.triology.universeadm.mapping.SimpleMappingConverterFactory;
 import de.triology.universeadm.validation.Validator;
 import java.util.List;
 import javax.xml.bind.JAXB;
@@ -202,7 +203,7 @@ public class LDAPUserManagerTest
       "manager123", peopledn, null
     );
     Mapping mapping = JAXB.unmarshal(Resources.getResource(MAPPING_001), Mapping.class);
-    Mapper<User> mapper = new DefaultMapper<>(mapping, User.class, peopledn);
+    Mapper<User> mapper = new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, peopledn);
     MapperFactory mapperFactory = mock(MapperFactory.class);
     when(mapperFactory.createMapper(User.class, peopledn)).thenReturn(mapper);
     return new LDAPUserManager(strategy, config, hasher, mapperFactory, validator, eventBus);

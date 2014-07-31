@@ -16,6 +16,7 @@ import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.Modification;
+import com.unboundid.ldap.sdk.ModificationType;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -28,6 +29,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 public class DefaultMapper<T> implements Mapper<T>
 {  
 
+  private final MappingConverterFactory converterFactory;
   private final Mapping mapping;
   private final String parentDN;
   private final ClassDescriptor<T> type;
@@ -37,11 +39,12 @@ public class DefaultMapper<T> implements Mapper<T>
   private final Filter baseFilter;
   private final List<String> searchAttributes;
 
-  public DefaultMapper(Mapping mapping, Class<T> type, String parentDN)
+  public DefaultMapper(MappingConverterFactory converterFactory, Mapping mapping, Class<T> type, String parentDN)
   {
+    Preconditions.checkNotNull(converterFactory, "converterFactory is required");
     Preconditions.checkNotNull(mapping, "mapping is required");
     Preconditions.checkNotNull(parentDN, "parentDN is required");
-    
+    this.converterFactory = converterFactory;
     this.mapping = mapping;
     this.parentDN = parentDN;
     this.type = new ClassDescriptor<>(type);
@@ -145,7 +148,7 @@ public class DefaultMapper<T> implements Mapper<T>
     Object value = getObjectValue(object, ma);
     if (value != null)
     {
-      attribute = MappingAttributes.createAttributeWithValue(ma, value);
+      attribute = createAttributeWithValue(ma, value);
     }
 
     return attribute;
@@ -179,7 +182,7 @@ public class DefaultMapper<T> implements Mapper<T>
       Attribute attribute = entry.getAttribute(ma.getLdapName());
       if (attribute != null)
       {
-        Object value = MappingAttributes.getObjectValue(ma, desc, attribute);
+        Object value = getObjectValue(ma, desc, attribute);
         setObjectValue(object, ma, value);
       }
     }
@@ -210,7 +213,7 @@ public class DefaultMapper<T> implements Mapper<T>
     for (MappingAttribute ma : filter(mapping.getAttributes(), modifyPredicate))
     {
       Object value = getObjectValue(object, ma);
-      Modification modification = MappingAttributes.createModification(ma, value);
+      Modification modification = createModification(ma, value);
       if (modification != null)
       {
         modifications.add(modification);
@@ -218,6 +221,99 @@ public class DefaultMapper<T> implements Mapper<T>
     }
     return modifications;
   }
+  
+  private <T> Object getObjectValue(MappingAttribute ma, FieldDescriptor<T> desc, Attribute attribute)
+  {
+    Object value;
+    if (ma.isBinary())
+    {
+      if (ma.isMultiValue())
+      {
+        value = converterFactory.getDecoder(ma).decodeFromMultiBytes(desc, attribute.getValueByteArrays());
+      }
+      else
+      {
+        value = converterFactory.getDecoder(ma).decodeFromBytes(desc, attribute.getValueByteArray());
+      }
+    }
+    else
+    {
+      if (ma.isMultiValue())
+      {
+        value = converterFactory.getDecoder(ma).decodeFromMultiString(desc, attribute.getValues());
+      }
+      else
+      {
+        value = converterFactory.getDecoder(ma).decodeFromString(desc, attribute.getValue());
+      }
+    }
+    return value;
+  }
+
+  private Modification createModification(MappingAttribute ma, Object value)
+  {
+    Modification modification;
+    String name = ma.getLdapName();
+
+    if (ma.isBinary())
+    {
+      if (ma.isMultiValue())
+      {
+        byte[][] bytes = converterFactory.getEncoder(ma).encodeAsMultiBytes(value);
+        modification = new Modification(ModificationType.REPLACE, name, bytes);
+      }
+      else
+      {
+        modification = new Modification(ModificationType.REPLACE, name, converterFactory.getEncoder(ma).encodeAsBytes(value));
+      }
+    }
+    else
+    {
+      if (ma.isMultiValue())
+      {
+        String[] strings = converterFactory.getEncoder(ma).encodeAsMultiString(value);
+        modification = new Modification(ModificationType.REPLACE, name, strings);
+      }
+      else
+      {
+        modification = new Modification(ModificationType.REPLACE, name, converterFactory.getEncoder(ma).encodeAsString(value));
+      }
+    }
+    return modification;
+  }
+
+  private Attribute createAttributeWithValue(MappingAttribute ma, Object value)
+  {
+    Attribute attribute;
+    String name = ma.getLdapName();
+
+    if (ma.isBinary())
+    {
+      if (ma.isMultiValue())
+      {
+        byte[][] bytes = converterFactory.getEncoder(ma).encodeAsMultiBytes(value);
+        attribute = new Attribute(name, bytes);
+      }
+      else
+      {
+        attribute = new Attribute(name, converterFactory.getEncoder(ma).encodeAsBytes(value));
+      }
+    }
+    else
+    {
+      if (ma.isMultiValue())
+      {
+        String[] strings = converterFactory.getEncoder(ma).encodeAsMultiString(value);
+        attribute = new Attribute(name, strings);
+      }
+      else
+      {
+        attribute = new Attribute(name, converterFactory.getEncoder(ma).encodeAsString(value));
+      }
+    }
+    return attribute;
+  }
+  
 
   // private classes
   private static final Function<MappingAttribute, String> toLdapName = new Function<MappingAttribute, String>()

@@ -9,6 +9,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.triology.universeadm.BaseDirectory;
 import java.util.Locale;
@@ -27,13 +28,15 @@ public class DefaultMapperFactory implements MapperFactory
 {
 
   private final Cache<CacheKey, Mapper> cache;
+  private final MappingConverterFactory converterFactory;
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultMapperFactory.class);
 
   @VisibleForTesting
   static final boolean CACHE_DISABLED = Boolean.getBoolean(DefaultMapperFactory.class.getName().concat(".disable-cache"));
 
-  public DefaultMapperFactory()
+  @Inject
+  public DefaultMapperFactory(MappingConverterFactory converterFactory)
   {
     if (!CACHE_DISABLED)
     {
@@ -45,6 +48,7 @@ public class DefaultMapperFactory implements MapperFactory
       logger.info("create mapper factory with disabled cache");
       cache = CacheBuilder.newBuilder().maximumSize(0).build();
     }
+    this.converterFactory = converterFactory;
   }
 
   @Override
@@ -74,7 +78,7 @@ public class DefaultMapperFactory implements MapperFactory
         {
           throw new MappingException("could not find mapping");
         }
-        return new DefaultMapper<>(mapping, type, parentDN);
+        return new DefaultMapper<>(converterFactory, mapping, type, parentDN);
       }
     });
   }

@@ -57,7 +57,7 @@ public class DefaultMapperTest
             attr("givenname"),
             attr("surname", "sn")
     );
-    return new DefaultMapper<>(mapping, User.class, "dc=hitchhiker,dc=com");
+    return new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, "dc=hitchhiker,dc=com");
   }
 
   private User createUser()
@@ -125,7 +125,7 @@ public class DefaultMapperTest
             attr("givenname"),
             attr("surname", "sn")
     );
-    new DefaultMapper<>(mapping, User.class, "dc=hitchhiker,dc=com");
+    new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, "dc=hitchhiker,dc=com");
   }
   
   @Test(expected = MappingException.class)
@@ -135,7 +135,7 @@ public class DefaultMapperTest
             attr("givenname"),
             attrb("surname").rdn(true).build()
     );
-    new DefaultMapper<>(mapping, User.class, "dc=hitchhiker,dc=com");
+    new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, "dc=hitchhiker,dc=com");
   }
 
   @Test

@@ -16,7 +16,9 @@ import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.GroupResource;
 import de.triology.universeadm.group.LDAPGroupManager;
 import de.triology.universeadm.mapping.DefaultMapperFactory;
+import de.triology.universeadm.mapping.InjectorMappingConverterFactory;
 import de.triology.universeadm.mapping.MapperFactory;
+import de.triology.universeadm.mapping.MappingConverterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import de.triology.universeadm.user.LDAPUserManager;
@@ -60,6 +62,7 @@ public class MainModule extends ServletModule
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
     
     // mapping
+    bind(MappingConverterFactory.class).to(InjectorMappingConverterFactory.class);
     bind(MapperFactory.class).to(DefaultMapperFactory.class);
     
     // accont

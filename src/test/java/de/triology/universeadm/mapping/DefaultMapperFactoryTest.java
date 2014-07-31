@@ -31,7 +31,7 @@ public class DefaultMapperFactoryTest
 
   private static final String MAPPING_001 = "de/triology/universeadm/mapping/mapping.001.xml";
   
-  private final DefaultMapperFactory factory = new DefaultMapperFactory();
+  private final DefaultMapperFactory factory = new DefaultMapperFactory(new SimpleMappingConverterFactory());
   
   @Before
   public void prepareBaseDirectory(){
