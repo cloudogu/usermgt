@@ -12,8 +12,14 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
   .controller('groupsController', function($scope, groups){
     $scope.groups = groups;
   })
-  .controller('groupEditController', function($scope, userService, group){
+  .controller('groupEditController', function($scope, $timeout, userService, group){
     $scope.group = group;
+    
+    $scope.addMember = function(member){
+      if ( member ){
+        member.newMember = null;
+      }
+    };
     
     $scope.searchUsers = function(value){
       return userService.search(value, 0, 5);

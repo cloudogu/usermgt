@@ -25,14 +25,15 @@
   </tab>
   <tab heading="Members">
 
-    <form name="memberform" role="form" novalidate>
+    <form name="memberform" role="form" ng-submit="addMember(member)" novalidate>
 
       <div class="form-group">
         <label class="control-label" for="addMember">Add member</label>
         <input id="addMember" name="addMember" type="text" class="form-control" 
-               placeholder="Add member" ng-model="newMember" 
+               placeholder="Add member" ng-model="member.newMember" required="true"
                typeahead="user.username as user.displayName for user in searchUsers($viewValue)" 
                typeahead-min-length="2"
+               typeahead-on-select="addMember(member)"
                typeahead-loading="searchUsersIndicator" />
       </div>
       
