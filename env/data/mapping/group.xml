@@ -16,7 +16,7 @@ and open the template in the editor.
   <attributes>
     <attribute ldap-name="cn" is-rdn="true" in-modify="false">name</attribute>
     <attribute>description</attribute>
-    <attribute ldap-name="member" is-multi-value="true">members</attribute>
+    <attribute ldap-name="member" is-multi-value="true" decoder="de.triology.universeadm.mapping.DNToValueMappingDecoder">members</attribute>
   </attributes>
   
 </mapping>
