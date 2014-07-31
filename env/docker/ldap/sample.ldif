@@ -687,7 +687,7 @@ objectClass: top
 objectClass: groupOfNames
 cn: Koalition
 member: cn=SPD-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
-member: cn=CDU/CSU-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
+member: cn=CDU - CSU-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
 
 dn: cn=Opposition,ou=Groups,dc=triology,dc=de
 description: Mitglieder der Opposition im Deutschen Bundestag
@@ -695,7 +695,7 @@ objectClass: top
 objectClass: groupOfNames
 cn: Opposition
 member: cn=FDP-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
-member: cn=BUENDNIS 90/DIE GRUENEN-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
+member: cn=BUENDNIS 90 - DIE GRUENEN-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
 member: cn=DIE LINKE-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
 member: uid=gwinkelm,ou=People,dc=triology,dc=de
 
@@ -1652,11 +1652,11 @@ member: uid=cschenk,ou=People,dc=triology,dc=de
 member: uid=gschur,ou=People,dc=triology,dc=de
 member: uid=wwolf,ou=People,dc=triology,dc=de
 
-dn: cn=BUENDNIS 90/DIE GRUENEN,ou=parteien,ou=Groups,dc=triology,dc=de
+dn: cn=BUENDNIS 90 - DIE GRUENEN,ou=parteien,ou=Groups,dc=triology,dc=de
 description:: QsO8bmRuaXMgOTAvRGllIEdyw7xuZW4=
 objectClass: top
 objectClass: groupOfNames
-cn: BUENDNIS 90/DIE GRUENEN
+cn: BUENDNIS 90 - DIE GRUENEN
 member: uid=kandreae,ou=People,dc=triology,dc=de
 member: uid=mbeck,ou=People,dc=triology,dc=de
 member: uid=vbeck,ou=People,dc=triology,dc=de
@@ -2036,11 +2036,11 @@ member: uid=uzapf,ou=People,dc=triology,dc=de
 member: uid=mzoellme,ou=People,dc=triology,dc=de
 member: uid=bzypries,ou=People,dc=triology,dc=de
 
-dn: cn=CDU/CSU-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
-description: CDU/CSU Fraktion im Deutschen Bundestag
+dn: cn=CDU - CSU-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
+description: CDU - CSU Fraktion im Deutschen Bundestag
 objectClass: top
 objectClass: groupOfNames
-cn: CDU/CSU-Fraktion
+cn: CDU - CSU-Fraktion
 member: uid=uadam,ou=People,dc=triology,dc=de
 member: uid=iaigner,ou=People,dc=triology,dc=de
 member: uid=palbach,ou=People,dc=triology,dc=de
@@ -2266,11 +2266,11 @@ member: uid=dwoehrl,ou=People,dc=triology,dc=de
 member: uid=wzoeller,ou=People,dc=triology,dc=de
 member: uid=wzylajew,ou=People,dc=triology,dc=de
 
-dn: cn=BUENDNIS 90/DIE GRUENEN-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
+dn: cn=BUENDNIS 90 - DIE GRUENEN-Fraktion,ou=fraktionen,ou=Groups,dc=triology,dc=de
 description:: QnVuZGVzdGFnc2ZyYWt0aW9uIELDvG5kbmlzIDkwL0RJRSBHUsOcTkVO
 objectClass: top
 objectClass: groupOfNames
-cn: BUENDNIS 90/DIE GRUENEN-Fraktion
+cn: BUENDNIS 90 - DIE GRUENEN-Fraktion
 member: uid=kandreae,ou=People,dc=triology,dc=de
 member: uid=mbeck,ou=People,dc=triology,dc=de
 member: uid=vbeck,ou=People,dc=triology,dc=de
@@ -2565,7 +2565,7 @@ cn: Gregor Amann
 
 dn: uid=kandreae,ou=People,dc=triology,dc=de
 labeledUri: http://www.kerstin-andreae.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Kerstin
 sn: Andreae
 mail: kerstin.andreae@bundestag.de
@@ -2847,7 +2847,7 @@ cn: Ernst-Reinhard Beck
 
 dn: uid=mbeck,ou=People,dc=triology,dc=de
 labeledUri: http://www.marieluisebeck.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Marieluise
 sn: Beck
 mail: marieluise.beck@bundestag.de
@@ -2885,7 +2885,7 @@ title: Dr.
 
 dn: uid=vbeck,ou=People,dc=triology,dc=de
 labeledUri: http://www.volkerbeck.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Volker
 sn: Beck
 mail: volker.beck@bundestag.de
@@ -2898,7 +2898,7 @@ cn: Volker Beck
 
 dn: uid=cbehm,ou=People,dc=triology,dc=de
 labeledUri: http://www.cornelia-behm.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Cornelia
 sn: Behm
 mail: cornelia.behm@bundestag.de
@@ -2923,7 +2923,7 @@ cn: Veronika Bellmann
 
 dn: uid=bbender,ou=People,dc=triology,dc=de
 labeledUri: http://www.biggi-bender.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Birgitt
 sn: Bender
 mail: birgitt.bender@bundestag.de
@@ -3003,7 +3003,7 @@ cn: Otto Bernhardt
 
 dn: uid=mberning,ou=People,dc=triology,dc=de
 labeledUri: http://www.gruene-fraktion.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Matthias
 sn: Berninger
 mail: matthias.berninger@bundestag.de
@@ -3016,7 +3016,7 @@ cn: Matthias Berninger
 
 dn: uid=gbettin,ou=People,dc=triology,dc=de
 labeledUri: http://www.grietje-bettin.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Grietje
 sn: Bettin
 mail: grietje.bettin@bundestag.de
@@ -3233,7 +3233,7 @@ cn: Gerd Friedrich Bollmann
 
 dn: uid=abonde,ou=People,dc=triology,dc=de
 labeledUri: http://www.alexander-bonde.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Alexander
 sn: Bonde
 mail: alexander.bonde@bundestag.de
@@ -3659,7 +3659,7 @@ cn: Hubert Deittert
 
 dn: uid=edeligoe,ou=People,dc=triology,dc=de
 labeledUri: http://www.ekin.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Ekin
 sn:: RGVsaWfDtno=
 mail: ekin.deligoez@bundestag.de
@@ -3786,7 +3786,7 @@ cn: Elvira Drobinski-Weiss
 
 dn: uid=tduecker,ou=People,dc=triology,dc=de
 labeledUri: http://www.theadueckert.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Thea
 sn:: RMO8Y2tlcnQ=
 mail: thea.dueckert@bundestag.de
@@ -3889,7 +3889,7 @@ cn: Maria Eichhorn
 
 dn: uid=ueid,ou=People,dc=triology,dc=de
 labeledUri: http://www.Uschi-Eid.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Uschi
 sn: Eid
 mail: uschi.eid@bundestag.de
@@ -4046,7 +4046,7 @@ title: Dr.
 
 dn: uid=hfell,ou=People,dc=triology,dc=de
 labeledUri: http://www.hans-josef-fell.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Hans-Josef
 sn: Fell
 mail: hans-josef.fell@bundestag.de
@@ -4137,7 +4137,7 @@ cn: Hartwig Fischer
 
 dn: uid=jfischer,ou=People,dc=triology,dc=de
 labeledUri: http://www.gruene-fraktion.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Joseph
 sn: Fischer
 mail: joseph.fischer@bundestag.de
@@ -4431,7 +4431,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Gehring
 cn: Kai Gehring
 
@@ -4582,7 +4582,7 @@ cn:: Sm9zZWYgR8O2cHBlbA==
 
 dn: uid=kgoering,ou=People,dc=triology,dc=de
 labeledUri: http://www.goering-eckardt.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Katrin
 sn:: R8O2cmluZy1FY2thcmR0
 mail: katrin.goering-eckardt@bundestag.de
@@ -4988,7 +4988,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Hajduk
 cn: Anja Hajduk
 
@@ -5053,7 +5053,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: SGHDn2VsbWFubg==
 cn:: QnJpdHRhIEhhw59lbG1hbm4=
 
@@ -5188,7 +5188,7 @@ cn: Michael Hennrich
 
 dn: uid=whermann,ou=People,dc=triology,dc=de
 labeledUri: http://www.winnehermann.de/
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Winfried
 sn: Hermann
 mail: winfried.hermann@bundestag.de
@@ -5240,7 +5240,7 @@ cn:: UGV0cmEgSGXDnw==
 
 dn: uid=phettlic,ou=People,dc=triology,dc=de
 labeledUri: http://www.peter-hettlich.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Peter
 sn: Hettlich
 mail: peter.hettlich@bundestag.de
@@ -5348,7 +5348,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Hinz
 cn: Priska Hinz
 
@@ -5392,7 +5392,7 @@ cn:: R2VyZCBIw7ZmZXI=
 
 dn: uid=uhoefken,ou=People,dc=triology,dc=de
 labeledUri: http://www.ulrike-hoefken.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Ulrike
 sn:: SMO2Zmtlbg==
 mail: ulrike.hoefken@bundestag.de
@@ -5423,7 +5423,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: SMO2aG4=
 cn:: QsOkcmJlbCBIw7Zobg==
 
@@ -5506,7 +5506,7 @@ cn: Frank Hofmann
 
 dn: uid=ahofreit,ou=People,dc=triology,dc=de
 labeledUri: http://www.gruene-fraktion.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Anton
 sn: Hofreiter
 objectClass: top
@@ -5544,7 +5544,7 @@ cn: Birgit Homburger
 
 dn: uid=thoppe,ou=People,dc=triology,dc=de
 labeledUri: http://www.thilo-hoppe.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Thilo
 sn: Hoppe
 mail: thilo.hoppe@bundestag.de
@@ -6048,7 +6048,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Koczy
 cn: Ute Koczy
 
@@ -6265,7 +6265,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Kotting-Uhl
 cn: Sylvia Kotting-Uhl
 
@@ -6460,7 +6460,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: S8O8bmFzdA==
 cn:: UmVuYXRlIEvDvG5hc3Q=
 
@@ -6494,7 +6494,7 @@ title: Dr.
 
 dn: uid=fkuhn,ou=People,dc=triology,dc=de
 labeledUri: http://www.fritz-kuhn.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Fritz
 sn: Kuhn
 mail: fritz.kuhn@bundestag.de
@@ -6532,7 +6532,7 @@ cn: Katrin Kunert
 
 dn: uid=mkurth,ou=People,dc=triology,dc=de
 labeledUri: http://www.markus-kurth.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Markus
 sn: Kurth
 mail: markus.kurth@bundestag.de
@@ -6545,7 +6545,7 @@ cn: Markus Kurth
 
 dn: uid=ukurth,ou=People,dc=triology,dc=de
 labeledUri: http://www.undine-kurth.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Undine
 sn: Kurth
 mail: undine.kurth@wk.bundestag.de
@@ -6693,7 +6693,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Lazar
 cn: Monika Lazar
 
@@ -6916,7 +6916,7 @@ cn: Helga Lopez
 
 dn: uid=rloske,ou=People,dc=triology,dc=de
 labeledUri: http://www.loske.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Reinhard
 sn: Loske
 mail: reinhard.loske@bundestag.de
@@ -6930,7 +6930,7 @@ title: Dr.
 
 dn: uid=aluehrma,ou=People,dc=triology,dc=de
 labeledUri: http://www.anna-luehrmann.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Anna
 sn:: TMO8aHJtYW5u
 mail: anna.luehrmann@bundestag.de
@@ -6963,7 +6963,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Maisch
 cn: Nicole Maisch
 
@@ -7577,7 +7577,7 @@ cn: Ursula Mogg
 
 dn: uid=jmontag,ou=People,dc=triology,dc=de
 labeledUri: http://www.jerzy-montag.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Jerzy
 sn: Montag
 mail: jerzy.montag@bundestag.de
@@ -7691,7 +7691,7 @@ cn:: SGlsZGVnYXJkIE3DvGxsZXI=
 
 dn: uid=kmueller,ou=People,dc=triology,dc=de
 labeledUri: http://www.kerstin-mueller-mdb.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Kerstin
 sn:: TcO8bGxlcg==
 mail: kerstin.mueller@bundestag.de
@@ -7796,7 +7796,7 @@ cn: Gesine Multhaupt
 
 dn: uid=wnachtwe,ou=People,dc=triology,dc=de
 labeledUri: http://www.nachtwei.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Winfried
 sn: Nachtwei
 mail: winfried.nachtwei@bundestag.de
@@ -7902,7 +7902,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Nouripour
 cn: Omid Nouripour
 
@@ -8227,7 +8227,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Pothmer
 cn: Brigitte Pothmer
 
@@ -8620,7 +8620,7 @@ title: Dr.
 
 dn: uid=croth,ou=People,dc=triology,dc=de
 labeledUri: http://www.claudia-roth.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Claudia
 sn: Roth
 mail: claudia.roth@bundestag.de
@@ -8725,7 +8725,7 @@ cn: Peter Rzepka
 
 dn: uid=ksager,ou=People,dc=triology,dc=de
 labeledUri: http://www.krista-sager.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Krista
 sn: Sager
 mail: krista.sager@bundestag.de
@@ -8822,7 +8822,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Scharfenberg
 cn: Elisabeth Scharfenberg
 
@@ -8867,7 +8867,7 @@ description:: QnVuZGVzbWluaXN0ZXJpbiBmw7xyIEJpbGR1bmcgdW5kIEZvcnNjaHVuZw==
 
 dn: uid=cscheel,ou=People,dc=triology,dc=de
 labeledUri: http://www.christine-scheel.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Christine
 sn: Scheel
 mail: christine.scheel@bundestag.de
@@ -8921,7 +8921,7 @@ title: Dr.
 
 dn: uid=ischeweg,ou=People,dc=triology,dc=de
 labeledUri: http://www.schewe-gerigk.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Irmingard
 sn: Schewe-Gerigk
 mail: irmingard.schewe-gerigk@bundestag.de
@@ -8934,7 +8934,7 @@ cn: Irmingard Schewe-Gerigk
 
 dn: uid=gschick,ou=People,dc=triology,dc=de
 labeledUri: http://www.gerhardschick.net
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Gerhard
 sn: Schick
 objectClass: top
@@ -9610,7 +9610,7 @@ title: Dr.
 
 dn: uid=rsteenbl,ou=People,dc=triology,dc=de
 labeledUri: http://www.rainder-steenblock.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Rainder
 sn: Steenblock
 mail: rainder.steenblock@bundestag.de
@@ -9726,7 +9726,7 @@ title: Dr.
 
 dn: uid=sstokar,ou=People,dc=triology,dc=de
 labeledUri: http://www.stokar.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Silke
 sn: Stokar von Neuforn
 mail: silke.stokar@bundestag.de
@@ -9804,7 +9804,7 @@ cn: Thomas Strobl
 
 dn: uid=hstroebe,ou=People,dc=triology,dc=de
 labeledUri: http://www.stroebele-online.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Hans-Christian
 sn:: U3Ryw7ZiZWxl
 mail: hans-christian.stroebele@bundestag.de
@@ -9909,7 +9909,7 @@ cn:: SsO2cmcgVGF1c3M=
 
 dn: uid=hterpe,ou=People,dc=triology,dc=de
 labeledUri: http://www.gruene-fraktion.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Harald
 sn: Terpe
 objectClass: top
@@ -10023,7 +10023,7 @@ cn: Florian Toncar
 
 dn: uid=jtrittin,ou=People,dc=triology,dc=de
 labeledUri: http://www.trittin.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName:: SsO8cmdlbg==
 sn: Trittin
 mail: juergen.trittin@bundestag.de
@@ -10474,7 +10474,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Wieland
 cn: Wolfgang Wieland
 
@@ -10530,7 +10530,7 @@ cn: Gert Winkelmeier
 
 dn: uid=jwinkler,ou=People,dc=triology,dc=de
 labeledUri: http://www.josef-winkler.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Josef Philip
 sn: Winkler
 mail: josef.winkler@bundestag.de
@@ -10647,7 +10647,7 @@ cn: Waltraud Wolff
 
 dn: uid=mwolf,ou=People,dc=triology,dc=de
 labeledUri: http://margareta-wolf.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Margareta
 sn: Wolf
 mail: margareta.wolf@bundestag.de
@@ -11108,7 +11108,7 @@ cn:: RWx2aXJhIERyb2JpbnNraS1XZWnDnw==
 
 dn: uid=jduempek,ou=People,dc=triology,dc=de
 labeledUri: http://www.jutta-duempe-krueger.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Jutta
 sn:: RMO8bXBlLUtyw7xnZXI=
 mail: jutta.duempe-krueger@bundestag.de
@@ -11134,7 +11134,7 @@ title: Dr.
 
 dn: uid=feichsta,ou=People,dc=triology,dc=de
 labeledUri: http://www.eichstaedt-bohlig.de/
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Franziska
 sn:: RWljaHN0w6RkdC1Cb2hsaWc=
 mail: franziska.eichstaedt-bohlig@bundestag.de
@@ -11446,7 +11446,7 @@ cn: Siegfried Helias
 
 dn: uid=ahermena,ou=People,dc=triology,dc=de
 labeledUri: http://www.gruene-fraktion.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Antje
 sn: Hermenau
 mail: antje.hermenau@bundestag.de
@@ -11535,7 +11535,7 @@ cn: Eike Maria Hovermann
 
 dn: uid=mhustedt,ou=People,dc=triology,dc=de
 labeledUri: http://www.michaele-hustedt.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Michaele
 sn: Hustedt
 mail: michaele.hustedt@bundestag.de
@@ -11737,7 +11737,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: S3LDvGdlci1KYWNvYg==
 cn:: SnV0dGEgS3LDvGdlci1KYWNvYg==
 
@@ -11781,7 +11781,7 @@ cn:: RXJuc3QgS8O8Y2hsZXI=
 
 dn: uid=rkuenast,ou=People,dc=triology,dc=de
 labeledUri: http://www.renate-kuenast.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Renate Elly
 sn:: S8O8bmFzdA==
 mail: renate.kuenast@bundestag.de
@@ -12199,7 +12199,7 @@ cn: Volker Neumann
 
 dn: uid=cnickels,ou=People,dc=triology,dc=de
 labeledUri: http://www.christanickels.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Christa
 sn: Nickels
 mail: christa.nickels@bundestag.de
@@ -12278,7 +12278,7 @@ title: Dr.
 
 dn: uid=fostendo,ou=People,dc=triology,dc=de
 labeledUri: http://www.friedrich-ostendorff.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Friedrich
 sn: Ostendorff
 mail: friedrich.ostendorff@bundestag.de
@@ -12344,7 +12344,7 @@ cn:: Sm9hY2hpbSBQb8Of
 
 dn: uid=sprobst,ou=People,dc=triology,dc=de
 labeledUri: http://www.probst-simone.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Simone
 sn: Probst
 mail: simone.probst@bundestag.de
@@ -12567,7 +12567,7 @@ cn: Horst Schild
 
 dn: uid=rschlauc,ou=People,dc=triology,dc=de
 labeledUri: http://www.rezzoschlauch.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Rezzo
 sn: Schlauch
 mail: rezzo.schlauch@bundestag.de
@@ -12605,7 +12605,7 @@ cn: Horst Schmidbauer
 
 dn: uid=aschmidt,ou=People,dc=triology,dc=de
 labeledUri: http://www.albert-schmidt-mdb.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Albert
 sn: Schmidt
 mail: albert.schmidt@bundestag.de
@@ -12709,7 +12709,7 @@ cn:: QmVybmhhcmQgQXVndXN0IFNjaHVsdGUtRHLDvGdnZWx0ZQ==
 
 dn: uid=wschulz,ou=People,dc=triology,dc=de
 labeledUri: http://www.werner-schulz.info
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Werner
 sn: Schulz
 mail: werner.schulz@bundestag.de
@@ -12774,7 +12774,7 @@ cn: Heinz Seiffert
 
 dn: uid=pselg,ou=People,dc=triology,dc=de
 labeledUri: http://www.petra-selg.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Petra
 sn: Selg
 mail: petra.selg@bundestag.de
@@ -12828,7 +12828,7 @@ title: Dr.
 
 dn: uid=usowa,ou=People,dc=triology,dc=de
 labeledUri: http://www.ursula-sowa.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Ursula
 sn: Sowa
 mail: ursula.sowa@bundestag.de
@@ -12947,7 +12947,7 @@ cn:: RWRlbHRyYXV0IFTDtnBmZXI=
 
 dn: uid=mtritz,ou=People,dc=triology,dc=de
 labeledUri: http://www.marianne-tritz.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Marianne
 sn: Tritz
 mail: marianne.tritz@bundestag.de
@@ -12973,7 +12973,7 @@ cn:: SsO8cmdlbiBUw7xyaw==
 
 dn: uid=hulrich,ou=People,dc=triology,dc=de
 labeledUri: http://www.gruene-fraktion.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Hubert
 sn: Ulrich
 mail: hubert.ulrich@bundestag.de
@@ -12986,7 +12986,7 @@ cn: Hubert Ulrich
 
 dn: uid=avogelsp,ou=People,dc=triology,dc=de
 labeledUri: http://www.vogel-sperl.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Antje
 sn: Vogel-Sperl
 mail: antje.vogel-sperl@bundestag.de
@@ -13013,7 +13013,7 @@ cn: Ute Vogt
 
 dn: uid=avollmer,ou=People,dc=triology,dc=de
 labeledUri: http://www.antje-vollmer.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Antje
 sn: Vollmer
 mail: antje.vollmer@bundestag.de
@@ -13027,7 +13027,7 @@ title: Dr.
 
 dn: uid=lvolmer,ou=People,dc=triology,dc=de
 labeledUri: http://www.ludger-volmer.de
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 givenName: Ludger
 sn: Volmer
 mail: ludger.volmer@bundestag.de
@@ -13327,7 +13327,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Altmann
 cn: Gila Altmann
 
@@ -13371,7 +13371,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Beer
 cn: Angelika Beer
 
@@ -13596,7 +13596,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Buntenbach
 cn: Annelie Buntenbach
 
@@ -13674,7 +13674,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Dietert-Scheuer
 cn: Amke Dietert-Scheuer
 
@@ -13798,7 +13798,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Fischer
 cn: Andrea Fischer
 
@@ -14000,7 +14000,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: R3JpZcOfaGFiZXI=
 cn:: Uml0YSBHcmllw59oYWJlcg==
 
@@ -14034,7 +14034,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: SMOkZm5lcg==
 cn:: R2VyYWxkIEjDpGZuZXI=
 
@@ -14167,7 +14167,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Heyne
 cn: Kristin Heyne
 
@@ -14506,7 +14506,7 @@ objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
 title: Dr.
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: S8O2c3Rlci1Mb8OfYWNr
 cn:: RHIuIEFuZ2VsaWthIEvDtnN0ZXItTG/Dn2Fjaw==
 
@@ -14642,7 +14642,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Lemke
 cn: Steffi Lemke
 
@@ -14665,7 +14665,7 @@ objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
 title: Dr.
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Lippelt
 cn: Dr. Helmut Lippelt
 
@@ -14842,7 +14842,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Metzger
 cn: Oswald Metzger
 
@@ -14920,7 +14920,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: TcO8bGxlcg==
 cn:: S2xhdXMgV29sZmdhbmcgTcO8bGxlcg==
 
@@ -14999,7 +14999,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: w5Z6ZGVtaXI=
 cn:: Q2VtIMOWemRlbWly
 
@@ -15744,7 +15744,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Simmert
 cn: Christian Simmert
 
@@ -15821,7 +15821,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Sterzing
 cn: Christian Sterzing
 
@@ -15945,7 +15945,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn:: Vm/Dnw==
 cn:: U3lsdmlhIFZvw58=
 
@@ -16058,7 +16058,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-o: BUENDNIS 90/DIE GRUENEN
+o: BUENDNIS 90 - DIE GRUENEN
 sn: Wilhelm
 cn: Helmut Wilhelm
 
