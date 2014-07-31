@@ -6,14 +6,8 @@
 package de.triology.universeadm.mapping;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import org.apache.commons.beanutils.ConvertUtils;
 
 /**
@@ -33,41 +27,11 @@ public class DefaultMappingDecoder implements MappingDecoder
   public <T> Object decodeFromMultiString(FieldDescriptor<T> type, String[] strings)
   {
     Object result = null;
-    if (type.isSubClassOf(ArrayList.class))
+    if (type.isSubClassOf(Collection.class))
     {
-      ArrayList list = new ArrayList(strings.length);
-      fill(list, type.getComponentType(), strings);
-      result = list;
-    }
-    else if (type.isSubClassOf(LinkedList.class))
-    {
-      LinkedList list = new LinkedList();
-      fill(list, type.getComponentType(), strings);
-      result = list;
-    }
-    else if (type.isSubClassOf(List.class))
-    {
-      ArrayList list = new ArrayList(strings.length);
-      fill(list, type.getComponentType(), strings);
-      result = list;
-    }
-    else if (type.isSubClassOf(HashSet.class))
-    {
-      HashSet set = new HashSet(strings.length);
-      fill(set, type.getComponentType(), strings);
-      result = set;
-    }
-    else if (type.isSubClassOf(TreeSet.class))
-    {
-      TreeSet set = new TreeSet();
-      fill(set, type.getComponentType(), strings);
-      result = set;
-    }
-    else if (type.isSubClassOf(Set.class))
-    {
-      HashSet set = new HashSet(strings.length);
-      fill(set, type.getComponentType(), strings);
-      result = set;
+      Collection collection = Decoders.createCollection(type, strings.length);
+      fill(collection, type.getComponentType(), strings);
+      result = collection;
     }
     else if (type.isArray())
     {
