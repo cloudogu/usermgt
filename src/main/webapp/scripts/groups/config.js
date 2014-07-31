@@ -13,7 +13,8 @@ angular.module('universeadm.groups.config', ['ui.router',
       label: 'Groups',
       requireAdminPrivileges: true
     });
-        // configure routes
+    
+    // configure routes
     $stateProvider
       .state('groups', {
         url: '/groups',
@@ -22,6 +23,17 @@ angular.module('universeadm.groups.config', ['ui.router',
         resolve: {
           groups: function(groupService){
             return groupService.getAll(0, 20);
+          }
+        }
+      })
+      .state('groupsEdit', {
+        url: '/groups/:name',
+        controller: 'groupEditController',
+        templateUrl: 'views/group/edit.html',
+        resolve: {
+          group: function(groupService, $stateParams){
+            var name = $stateParams.name;
+            return name !== null && name.length > 0 ? groupService.get(name) : null;
           }
         }
       });

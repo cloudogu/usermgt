@@ -43,7 +43,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
     $http.get(_contextPath + '/api/subject').then(function(res){
       $log.info('subject for principal ' + res.data.principal + ' logged in');
       $rootScope.subject = res.data;
-      $rootScope.$broadcast('universeadmSubjectc', res.data);
+      $rootScope.$broadcast('universeadmSubjectReceived', res.data);
     }, function(e){
       $log.error(e);
     });
@@ -72,7 +72,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
     
     var subject = $scope.subject;
     if (!subject){
-      $scope.$on('universeadmSubject', function(event, subject){
+      $scope.$on('universeadmSubjectReceived', function(event, subject){
         setNavigation(subject);
       });
     } else {

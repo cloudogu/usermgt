@@ -8,4 +8,7 @@
 angular.module('universeadm.groups.controllers', ['ui.bootstrap', 'universeadm.validation.directives', 'universeadm.groups.services'])
   .controller('groupsController', function($scope, groups){
     $scope.groups = groups;
+  })
+  .controller('groupEditController', function($scope, group){
+    $scope.group = group;
   });
