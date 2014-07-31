@@ -103,7 +103,7 @@ public class MappingHandler<T extends Comparable<T>>
       modifications = consume(object, modifications);
       if (modifications != null && !modifications.isEmpty())
       {
-        String dn = mapper.getDN(id);
+        String dn = searchDN(id);
         if (logger.isTraceEnabled())
         {
           logger.trace("modify ldap entry:\n{}", LDAPUtil.toLDIF(dn, modifications));
@@ -134,7 +134,7 @@ public class MappingHandler<T extends Comparable<T>>
     logger.info("remove entity with id {}", id);
     try
     {
-      String dn = mapper.getDN(id);
+      String dn = searchDN(id);
       logger.trace("remove ldap entry {}", dn);
       strategy.get().delete(dn);
     }
@@ -150,14 +150,36 @@ public class MappingHandler<T extends Comparable<T>>
       }
     }
   }
+  
+  private Filter createObjectFilter(String id)
+  {
+    return Filter.createANDFilter(
+      mapper.getBaseFilter(), 
+      Filter.createEqualityFilter(mapper.getRDNName(), id)
+    );
+  }
+  
+  private Entry searchForObject(String id, String... attributes) throws LDAPSearchException
+  {
+    Filter filter = createObjectFilter(id);
+    return strategy.get().searchForEntry(mapper.getParentDN(), SearchScope.SUB, filter, attributes);
+  }
+  
+  private String searchDN(String id) throws LDAPSearchException{
+    Entry entry = searchForObject(id, mapper.getRDNName());
+    if ( entry == null ){
+      throw new EntityNotFoundException("could not find entity with id ".concat(id));
+    }
+    return entry.getDN();
+  }
 
   public T get(String id)
   {
     Preconditions.checkNotNull(id, "id is required");
     T entity = null;
     try
-    {
-      Entry e = strategy.get().getEntry(mapper.getDN(id), returningAttributes);
+    { 
+      Entry e = searchForObject(id, returningAttributes);
       if (e != null)
       {
         T object = consume(e, mapper.convert(e));
@@ -171,7 +193,7 @@ public class MappingHandler<T extends Comparable<T>>
         }
       }
     }
-    catch (LDAPException ex)
+    catch (LDAPSearchException ex)
     {
       throw new EntityException("could not get entity for ".concat(id), ex);
     }

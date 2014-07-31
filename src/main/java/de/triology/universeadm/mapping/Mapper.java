@@ -24,7 +24,7 @@ public interface Mapper<T>
   
   public List<String> getSearchAttributes();
   
-  public String getDN(String rdn);
+  public String getRDNName();
   
   public String getRDNValue( T object );
   

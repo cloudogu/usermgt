@@ -52,6 +52,12 @@ public class DefaultMapper<T> implements Mapper<T>
     this.baseFilter = Filter.createPresenceFilter(rdn.getLdapName());
   }
   
+  @Override
+  public String getRDNName()
+  {
+    return rdn.getLdapName();
+  }
+  
   private MappingAttribute extractRdn()
   {
     Iterable<MappingAttribute> rdns = Iterables.filter(mapping.getAttributes(), rdnPredicate);
@@ -92,8 +98,7 @@ public class DefaultMapper<T> implements Mapper<T>
     return searchAttributes;
   }
 
-  @Override
-  public String getDN(String rdn)
+  private String getDN(String rdn)
   {
     StringBuilder dn = new StringBuilder(this.rdn.getLdapName());
     return dn.append("=").append(rdn).append(",").append(parentDN).toString();
