@@ -5,9 +5,17 @@
  */
 
 
-angular.module('universeadm.users.config', ['ui.router', 'universeadm.users.controllers'])
-  .config(function($stateProvider){
-        // configure routes
+angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation', 'universeadm.users.controllers'])
+  .config(function($stateProvider, navigationProvider){
+    
+    // register navigation item
+    navigationProvider.add({
+      url: '/users',
+      label: 'Users',
+      requireAdminPrivileges: true
+    });
+    
+    // configure routes
     $stateProvider
       .state('users', {
         url: '/users',

@@ -5,9 +5,9 @@
  */
 
 
-angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 
-  'restangular', 'ui.router', 'universeadm.account.config', 
-  'universeadm.users.config'])
+angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular',
+  'ui.router', 'universeadm.navigation', 'universeadm.account.config', 
+  'universeadm.users.config', 'universeadm.groups.config'])
   .config(function(RestangularProvider, $stateProvider, $urlRouterProvider){
     // configure restangular
     RestangularProvider.setBaseUrl(_contextPath + '/api');
@@ -43,6 +43,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate',
     $http.get(_contextPath + '/api/subject').then(function(res){
       $log.info('subject for principal ' + res.data.principal + ' logged in');
       $rootScope.subject = res.data;
+      $rootScope.$broadcast('universeadmSubjectc', res.data);
     }, function(e){
       $log.error(e);
     });
@@ -62,7 +63,22 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate',
       $state.go('error404');
     });
   })
-  .controller('navigationController', function($scope, $location){
+  .controller('navigationController', function($scope, $location, $log, navigation){    
+    function setNavigation(subject){
+      $scope.navItems = _.filter(navigation.items, function(item){
+        return ! item.requireAdminPrivileges || subject.admin;
+      });
+    }
+    
+    var subject = $scope.subject;
+    if (!subject){
+      $scope.$on('universeadmSubject', function(event, subject){
+        setNavigation(subject);
+      });
+    } else {
+      setNavigation(subject);
+    }
+
     $scope.navCollapsed = true;
 
     $scope.toggleNav = function(){

@@ -5,8 +5,17 @@
  */
 
 
-angular.module('universeadm.account.config', ['ui.router', 'universeadm.account.controllers', 'universeadm.account.services'])
-  .config(function($stateProvider){
+angular.module('universeadm.account.config', ['ui.router', 
+  'universeadm.account.controllers', 'universeadm.account.services', 
+  'universeadm.navigation'])
+  .config(function($stateProvider, navigationProvider){
+    // registar navigation
+    navigationProvider.add({
+      url: '/account',
+      label: 'Account',
+      requireAdminPrivileges: false
+    });
+    
     $stateProvider.state('account', {
       url: '/account',
       templateUrl: 'views/user/edit.html',

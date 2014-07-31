@@ -1,0 +1,28 @@
+<h1>Groups</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Users</th>
+      <th class="hidden-xs">Functions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="group in groups">
+      <td>
+        <a ng-href="#/groups/{{group.name}}">
+          {{group.name}}
+        </a>
+      </td>
+      <td>{{group.description}}</td>
+      <td>{{group.members.length}}</td>
+      <td class="hidden-xs">
+        <button class="btn btn-warning" href="" ng-click="remove(group)">
+          Remove
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
