@@ -23,7 +23,7 @@ public final class DefaultMappingEncoder extends AbstractMappingEncoder
   @Override
   public String encodeAsString(Object object)
   {
-    return object.toString();
+    return object != null ? object.toString() : null;
   }
 
   @Override

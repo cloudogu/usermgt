@@ -54,28 +54,76 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
     $scope.nonSubmittedQuery = query;
     setGroups(groups);
   })
-  .controller('groupEditController', function($scope, groupService, userService, group){
-    $scope.group = group;
+  .controller('groupEditController', function($scope, $location, groupService, userService, group){
+    $scope.alerts = [];
+    $scope.backEnabled = true;
+    $scope.removeEnabled = true;
     
     $scope.addMember = function(member){
       if ( member ){
-        groupService.addMember(group, member.newMember).then(function(){
-          if (!group.members){
-            group.members = [];
+        if (group.members.indexOf(member.newMemeber) < 0){
+          if ($scope.create){
+            group.members.push(member.newMember);
+            member.newMember = null;
+          } else {
+            groupService.addMember(group, member.newMember).then(function(){
+              group.members.push(member.newMember);
+              member.newMember = null;
+            });
           }
-          group.members.push(member.newMember);
+        } else {
           member.newMember = null;
-        });
+        }
       }
     };
     
     $scope.removeMember = function(member){
-      groupService.removeMember(group, member).then(function(){
+      if ($scope.create){
         group.members.splice(group.members.indexOf(member), 1);
-      });
+      } else {
+        groupService.removeMember(group, member).then(function(){
+          group.members.splice(group.members.indexOf(member), 1);
+        });
+      }
     };
     
     $scope.searchUsers = function(value){
       return userService.search(value, 0, 5);
     };
+    
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
+    };
+    
+    $scope.save = function(user){
+      var promise;
+      if ($scope.create){
+        promise = groupService.create(user);
+      } else {
+        promise = groupService.modify(user);
+      }
+      promise.then(function(){
+        $location.path('/groups');
+      }, function(error){
+        if ( error.status === 409 ){
+          $scope.alerts = [{
+            type: 'danger',
+            msg: 'The group ' + group.name + ' already exists'
+          }];
+        } else {
+          $scope.alerts = [{
+            type: 'danger',
+            msg: 'The group could not be saved'
+          }];
+        }
+      });
+    };
+    
+    $scope.create = false;
+    if (group === null){
+      $scope.create = true;
+      group = {};
+      group.members = [];
+    }
+    $scope.group = group;
   });

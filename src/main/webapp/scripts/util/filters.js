@@ -8,6 +8,6 @@
 angular.module('universeadm.util.filters', [])
   .filter('simpleSort', function() {
     return function(input){
-      return input.sort();
+      return input ? input.sort() : input;
     };
   });
