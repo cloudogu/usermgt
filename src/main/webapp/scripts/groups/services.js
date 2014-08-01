@@ -25,6 +25,12 @@ angular.module('universeadm.groups.services', ['restangular'])
       },
       create: function(group){
         return groups.post(group);
+      },
+      addMember: function(group, member){
+        return group.one('members/' + member).post();
+      },
+      removeMember: function(group, member){
+        return group.one('members/' + member).remove();
       }
     };
   });

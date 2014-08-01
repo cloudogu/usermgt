@@ -27,7 +27,7 @@ gulp.task('build-template-cache', function(){
   gutil.log('run build-template-cache');
   var opts = {
     filename: 'universeadm.tpl.js',
-    module: 'usermgm',
+    module: 'universeadm',
     root: 'views/'
   };
   return gulp.src('src/main/webapp/views/**/*.html')

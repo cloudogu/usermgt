@@ -11,6 +11,7 @@ import de.triology.universeadm.AbstractManagerResource;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -44,7 +45,7 @@ public class GroupResource extends AbstractManagerResource<Group>
   
   @POST
   @Path("{name}/members/{member}")
-  public Response addMember(String name, String member)
+  public Response addMember(@PathParam("name") String name, @PathParam("member") String member)
   {
     Response.ResponseBuilder builder;
     
@@ -69,7 +70,7 @@ public class GroupResource extends AbstractManagerResource<Group>
   
   @DELETE
   @Path("{name}/members/{member}")
-  public Response removeMember(String name, String member)
+  public Response removeMember(@PathParam("name") String name, @PathParam("member") String member)
   {
     Response.ResponseBuilder builder;
     
