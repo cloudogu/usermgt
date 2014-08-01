@@ -5,26 +5,8 @@
  */
 
 
-angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.validation.directives', 'universeadm.users.services'])
-  .controller('usersController', function($scope, $location, $modal, userService, users, page, query){
-    
-    function pageRange(currentPage, maxSize, totalPages){
-      var ret = [];
-      
-      var startPage = Math.max(currentPage - Math.floor(maxSize/2), 1);
-      var endPage   = startPage + maxSize - 1;
-      if (endPage > totalPages) {
-        endPage = totalPages;
-        startPage = endPage - maxSize + 1;
-      }
-      if (startPage <= 0){
-        startPage = 1;
-      }
-      for (var i = startPage; i <= endPage; i++) {
-        ret.push(i);
-      }
-      return ret;
-    };
+angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.validation.directives', 'universeadm.users.services', 'universeadm.util.services'])
+  .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
     
     function setUsers(users){
       if (!users.meta){
@@ -32,7 +14,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.va
       }
       $scope.users = users;
       $scope.pages = Math.ceil(users.meta.totalEntries / users.meta.limit);
-      $scope.pageRange = pageRange(page, 10, $scope.pages);
+      $scope.pageRange = pagingService.pageRange(page, 10, $scope.pages);
     };
     
     $scope.search = function(query){

@@ -23,6 +23,28 @@ angular.module('universeadm.groups.config', ['ui.router',
         resolve: {
           groups: function(groupService){
             return groupService.getAll(0, 20);
+          },
+          query: function(){
+            return null;
+          },
+          page: function(){
+            return 1;
+          }
+        }
+      })
+      .state('groupsPage', {
+        url: '/groups/{page:[0-9]+}?q',
+        controller: 'groupsController',
+        templateUrl: 'views/group/groups.html',
+        resolve: {
+          page: function($stateParams){
+            return parseInt($stateParams.page);
+          },
+          query: function($stateParams){
+            return $stateParams.q;
+          },
+          groups: function(groupService, page, query){
+            return groupService.search(query, (page-1) * 20, 20);
           }
         }
       })
