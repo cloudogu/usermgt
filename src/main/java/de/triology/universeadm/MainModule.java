@@ -77,7 +77,8 @@ public class MainModule extends ServletModule
     bind(GroupManager.class).to(LDAPGroupManager.class);
     bind(GroupResource.class);
     
-    // other resources
+    // other jax-rs stuff
+    bind(CatchAllExceptionMapper.class);
     bind(SubjectResource.class);
     bind(LogoutResource.class);
 
