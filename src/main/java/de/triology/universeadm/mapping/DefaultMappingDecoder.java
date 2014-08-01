@@ -14,7 +14,7 @@ import org.apache.commons.beanutils.ConvertUtils;
  *
  * @author ssdorra
  */
-public class DefaultMappingDecoder implements MappingDecoder
+public class DefaultMappingDecoder extends AbstractMappingDecoder
 {
 
   @Override
@@ -63,18 +63,6 @@ public class DefaultMappingDecoder implements MappingDecoder
     {
       collection.add(ConvertUtils.convert(value, type));
     }
-  }
-
-  @Override
-  public <T> Object decodeFromBytes(FieldDescriptor<T> type, byte[] bytes)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  public <T> Object decodeFromMultiBytes(FieldDescriptor<T> type, byte[][] bytes)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
   }
 
 }

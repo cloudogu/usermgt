@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author ssdorra
  */
-public final class DefaultMappingEncoder implements MappingEncoder
+public final class DefaultMappingEncoder extends AbstractMappingEncoder
 {
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultMappingEncoder.class);
@@ -61,18 +61,6 @@ public final class DefaultMappingEncoder implements MappingEncoder
       values.add(object.toString());
     }
     return values.toArray(new String[values.size()]);
-  }
-
-  @Override
-  public byte[] encodeAsBytes(Object object)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  public byte[][] encodeAsMultiBytes(Object object)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
   }
 
 }

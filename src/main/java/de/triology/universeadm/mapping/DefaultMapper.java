@@ -222,7 +222,7 @@ public class DefaultMapper<T> implements Mapper<T>
     return modifications;
   }
   
-  private <T> Object getObjectValue(MappingAttribute ma, FieldDescriptor<T> desc, Attribute attribute)
+  private Object getObjectValue(MappingAttribute ma, FieldDescriptor<T> desc, Attribute attribute)
   {
     Object value;
     if (ma.isBinary())
