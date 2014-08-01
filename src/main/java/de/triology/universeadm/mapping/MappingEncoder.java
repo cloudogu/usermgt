@@ -12,12 +12,12 @@ package de.triology.universeadm.mapping;
 public interface MappingEncoder
 {
 
-  public <T> String encodeAsString(Mapper<T> mapper, Object object);
+  public String encodeAsString(Object object);
   
-  public <T> String[] encodeAsMultiString(Mapper<T> mapper, Object object);
+  public String[] encodeAsMultiString(Object object);
   
-  public <T> byte[] encodeAsBytes(Mapper<T> mapper, Object object);
+  public byte[] encodeAsBytes(Object object);
   
-  public <T> byte[][] encodeAsMultiBytes(Mapper<T> mapper, Object object);
+  public byte[][] encodeAsMultiBytes(Object object);
 
 }
