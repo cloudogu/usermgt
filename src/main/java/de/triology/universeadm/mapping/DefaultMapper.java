@@ -284,7 +284,7 @@ public class DefaultMapper<T> implements Mapper<T>
 
   private Attribute createAttributeWithValue(MappingAttribute ma, Object value)
   {
-    Attribute attribute;
+    Attribute attribute = null;
     String name = ma.getLdapName();
 
     if (ma.isBinary())
@@ -304,7 +304,9 @@ public class DefaultMapper<T> implements Mapper<T>
       if (ma.isMultiValue())
       {
         String[] strings = converterFactory.getEncoder(ma).encodeAsMultiString(value);
-        attribute = new Attribute(name, strings);
+        if ( strings != null && strings.length > 0 ){
+          attribute = new Attribute(name, strings);
+        }
       }
       else
       {
