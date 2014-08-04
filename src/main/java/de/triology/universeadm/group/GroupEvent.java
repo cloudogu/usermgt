@@ -6,66 +6,24 @@
 
 package de.triology.universeadm.group;
 
-import com.google.common.base.Objects;
-import de.triology.universeadm.EntityEvent;
+import de.triology.universeadm.AbstractEntityEvent;
 import de.triology.universeadm.EventType;
 
 /**
  *
  * @author ssdorra
  */
-public class GroupEvent implements EntityEvent<Group>
+public class GroupEvent extends AbstractEntityEvent<Group>
 {
-  private final Group entity;
-  private final EventType type;
+  
+  public GroupEvent(Group entity, Group oldEntity)
+  {
+    super(entity, oldEntity);
+  }
 
   public GroupEvent(Group entity, EventType type)
   {
-    this.entity = entity;
-    this.type = type;
+    super(entity, type);
   }
-
-  @Override
-  public Group getEntity()
-  {
-    return entity;
-  }
-
-  @Override
-  public EventType getType()
-  {
-    return type;
-  }
-
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(entity, type);
-  }
-
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-    final GroupEvent other = (GroupEvent) obj;
-    return Objects.equal(entity, other.entity) 
-            && Objects.equal(type, other.type);
-  }
-
-  @Override
-  public String toString()
-  {
-    return Objects.toStringHelper(this)
-                  .add("entity", entity)
-                  .add("type", type)
-                  .toString();
-  }
-  
+ 
 }

@@ -116,8 +116,9 @@ public class LDAPUserManager extends AbstractLDAPManager<User> implements UserMa
       }
     }
 
+    User oldUser = mapping.get(user.getUsername());
     mapping.modify(user);
-    eventBus.post(new UserEvent(user, EventType.MODIFY));
+    eventBus.post(new UserEvent(user, oldUser));
     user.setPassword(DUMMY_PASSWORD);
   }
 
