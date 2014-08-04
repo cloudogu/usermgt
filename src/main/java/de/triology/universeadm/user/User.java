@@ -8,6 +8,8 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
@@ -48,9 +50,10 @@ public class User implements Comparable<User>
    * @param surname
    * @param mail
    * @param password
+   * @param memberOf
    */
   public User(String username, String displayName, String givenname,
-              String surname, String mail, String password)
+              String surname, String mail, String password, List<String> memberOf)
   {
     this.username = username;
     this.displayName = displayName;
@@ -58,6 +61,7 @@ public class User implements Comparable<User>
     this.surname = surname;
     this.mail = mail;
     this.password = password;
+    this.memberOf = memberOf;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -194,6 +198,21 @@ public class User implements Comparable<User>
     this.username = username;
   }
 
+  public void setMemberOf(List<String> memberOf)
+  {
+    this.memberOf = memberOf;
+  }
+
+  public List<String> getMemberOf()
+  {
+    if ( memberOf == null ){
+      memberOf = Lists.newArrayList();
+    }
+    return memberOf;
+  }
+  
+  
+
   @Override
   public int compareTo(User o)
   {
@@ -203,7 +222,7 @@ public class User implements Comparable<User>
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(username, displayName, givenname, surname, mail, password);
+    return Objects.hashCode(username, displayName, givenname, surname, mail, memberOf);
   }
 
   @Override
@@ -222,7 +241,8 @@ public class User implements Comparable<User>
             && Objects.equal(displayName, other.displayName)
             && Objects.equal(givenname, other.givenname)
             && Objects.equal(surname, other.surname)
-            && Objects.equal(mail, other.mail);
+            && Objects.equal(mail, other.mail)
+            && Objects.equal(memberOf, other.memberOf);
   }
 
   @Override
@@ -234,6 +254,7 @@ public class User implements Comparable<User>
             .add("givenname", givenname)
             .add("surname", surname)
             .add("mail", mail)
+            .add("memberOf", memberOf)
             .toString();
   }
 
@@ -275,4 +296,9 @@ public class User implements Comparable<User>
   @NotNull
   @Size(min = 1)
   private String username;
+  
+  /**
+   * Field description
+   */
+  private List<String> memberOf;
 }

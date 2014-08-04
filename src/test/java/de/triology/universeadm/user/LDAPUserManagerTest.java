@@ -24,6 +24,7 @@ import de.triology.universeadm.mapping.SimpleMappingConverterFactory;
 import de.triology.universeadm.validation.Validator;
 import java.util.List;
 import javax.xml.bind.JAXB;
+import org.apache.shiro.authz.AuthorizationException;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Rule;
@@ -114,6 +115,36 @@ public class LDAPUserManagerTest
     assertNull(entry);
     UserEvent event = new UserEvent(user, EventType.REMOVE);
     verify(eventBus, times(1)).post(event);
+  }
+
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @SubjectAware(username = "dent", password = "secret")
+  public void testSelfModify() throws LDAPException
+  {
+    User dent = Users.createDent();
+    dent.setDisplayName("The dent");
+    createUserManager().modify(dent);
+  }
+  
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = AuthorizationException.class)
+  @SubjectAware(username = "dent", password = "secret")
+  public void testSelfModifyMembership() throws LDAPException
+  {
+    User dent = Users.createDent();
+    dent.setDisplayName("The dent");
+    dent.getMemberOf().add("piloten");
+    createUserManager().modify(dent);
+  }
+  
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = AuthorizationException.class)
+  @SubjectAware(username = "dent", password = "secret")
+  public void testModifyOtherUserUnprivileged() throws LDAPException
+  {
+    User tricia = Users.createTrillian();
+    tricia.setDisplayName("Tricia");
+    createUserManager().modify(tricia);
   }
   
   @Test

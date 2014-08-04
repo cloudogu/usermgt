@@ -5,7 +5,9 @@
  */
 
 
-angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.validation.directives', 'universeadm.users.services', 'universeadm.util.services'])
+angular.module('universeadm.users.controllers', ['ui.bootstrap', 
+  'universeadm.validation.directives', 'universeadm.users.services', 
+  'universeadm.util.services', 'universeadm.groups.services'])
   .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
     
     function setUsers(users){
@@ -51,7 +53,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.va
     $scope.nonSubmittedQuery = query;
     setUsers(users);
   })
-  .controller('userEditController', function($scope, $location, $modal, userService, user){
+  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
@@ -68,6 +70,38 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.va
     
     $scope.isUnchanged = function(user){
       return angular.equals(user, $scope.master);
+    };
+    
+    $scope.addGroup = function(group){
+      if ( group ){
+        if (user.memberOf.indexOf(group.newGroup) < 0){
+          if ($scope.create){
+            user.memberOf.push(group.newGroup);
+            group.newGroup = null;
+          } else {
+            userService.addGroup(user, group.newGroup).then(function(){
+              user.memberOf.push(group.newGroup);
+              group.newGroup = null;
+            });
+          }
+        } else {
+          group.newGroup = null;
+        }
+      }
+    };
+    
+    $scope.removeGroup = function(group){
+      if ($scope.create){
+        user.memberOf.splice(user.memberOf.indexOf(group), 1);
+      } else {
+        userService.removeGroup(user, group).then(function(){
+          user.memberOf.splice(user.memberOf.indexOf(group), 1);
+        });
+      }
+    };
+    
+    $scope.searchGroups = function(value){
+      return groupService.search(value, 0, 5);
     };
     
     $scope.remove = function(user){

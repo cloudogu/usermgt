@@ -4,69 +4,106 @@
   <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 </div>
 
-<form name="form" role="form" novalidate>
-  
-  <div class="form-group has-feedback" ng-if="create" data-uadm-validate>
-    <label class="control-label" for="username">Username</label>
-    <input id="username" name="username" type="text" class="form-control" placeholder="Enter username" ng-model="user.username" required="true">
-    <span class="fa fa-check fa-2x form-control-feedback"></span>
-    <span class="fa fa-times fa-2x form-control-feedback"></span>
-    <strong class="text-danger help-block">
-      Username is required
-    </strong>
-  </div>
-  
-  <div class="form-group">
-    <label class="control-label" for="givenname">Given name</label>
-    <input type="text" class="form-control" id="givenname" placeholder="Enter given name" ng-model="user.givenname">
-  </div>
-  <div class="form-group has-feedback" data-uadm-validate>
-    <label class="control-label" for="surname">Surname</label>
-    <input id="surname" name="surname" type="text" class="form-control" placeholder="Enter surname" required="true" ng-model="user.surname">
-    <span class="fa fa-check fa-2x form-control-feedback"></span>
-    <span class="fa fa-times fa-2x form-control-feedback"></span>
-    <strong class="text-danger help-block">
-      Surname is required
-    </strong>
-  </div>
-  <div class="form-group has-feedback" data-uadm-validate>
-    <label class="control-label" for="displayName">Display name</label>
-    <input id="displayName" name="displayName" type="text" class="form-control" placeholder="Enter display name" required="true" ng-model="user.displayName">
-    <span class="fa fa-check fa-2x form-control-feedback"></span>
-    <span class="fa fa-times fa-2x form-control-feedback"></span>
-    <strong class="text-danger help-block">
-      Display name is required
-    </strong>
-  </div>
-  <div class="form-group has-feedback" data-uadm-validate>
-    <label class="control-label" for="email">Email address</label>
-    <input id="email" name="email" type="email" class="form-control" placeholder="Enter email" required="true" ng-model="user.mail">
-    <span class="fa fa-check fa-2x form-control-feedback"></span>
-    <span class="fa fa-times fa-2x form-control-feedback"></span>
-    <strong class="text-danger help-block">
-      E-Mail address is invalid
-    </strong>
-  </div>
-  <div class="form-group" data-uadm-validate>
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" class="form-control" placeholder="Password" required="true" ng-model="user.password">
-  </div>
-  <div class="form-group" data-uadm-validate>
-    <label for="confirmPassword">Confirm password</label>
-    <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Password" ng-model="confirmPassword" uadm-password-match="user.password">
-    <span class="fa fa-check fa-2x form-control-feedback"></span>
-    <span class="fa fa-times fa-2x form-control-feedback"></span>
-    <strong class="text-danger help-block">
-      Passwords do not match
-    </strong>
-  </div>
-  <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user)">
-    Save
-  </button>
-  <button ng-if="!create && removeEnabled" class="btn btn-warning" ng-click="remove(user)">
-    Remove
-  </button>
-  <a ng-if="backEnabled" class="btn btn-default" ng-href="#/users">
-    Back
-  </a>
-</form>
+<tabset>
+  <tab heading="Options">
+
+    <form name="form" role="form" novalidate>
+
+      <div class="form-group has-feedback" ng-if="create" data-uadm-validate>
+        <label class="control-label" for="username">Username</label>
+        <input id="username" name="username" type="text" class="form-control" placeholder="Enter username" ng-model="user.username" required="true">
+        <span class="fa fa-check fa-2x form-control-feedback"></span>
+        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <strong class="text-danger help-block">
+          Username is required
+        </strong>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="givenname">Given name</label>
+        <input type="text" class="form-control" id="givenname" placeholder="Enter given name" ng-model="user.givenname">
+      </div>
+      <div class="form-group has-feedback" data-uadm-validate>
+        <label class="control-label" for="surname">Surname</label>
+        <input id="surname" name="surname" type="text" class="form-control" placeholder="Enter surname" required="true" ng-model="user.surname">
+        <span class="fa fa-check fa-2x form-control-feedback"></span>
+        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <strong class="text-danger help-block">
+          Surname is required
+        </strong>
+      </div>
+      <div class="form-group has-feedback" data-uadm-validate>
+        <label class="control-label" for="displayName">Display name</label>
+        <input id="displayName" name="displayName" type="text" class="form-control" placeholder="Enter display name" required="true" ng-model="user.displayName">
+        <span class="fa fa-check fa-2x form-control-feedback"></span>
+        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <strong class="text-danger help-block">
+          Display name is required
+        </strong>
+      </div>
+      <div class="form-group has-feedback" data-uadm-validate>
+        <label class="control-label" for="email">Email address</label>
+        <input id="email" name="email" type="email" class="form-control" placeholder="Enter email" required="true" ng-model="user.mail">
+        <span class="fa fa-check fa-2x form-control-feedback"></span>
+        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <strong class="text-danger help-block">
+          E-Mail address is invalid
+        </strong>
+      </div>
+      <div class="form-group" data-uadm-validate>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" class="form-control" placeholder="Password" required="true" ng-model="user.password">
+      </div>
+      <div class="form-group" data-uadm-validate>
+        <label for="confirmPassword">Confirm password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Password" ng-model="confirmPassword" uadm-password-match="user.password">
+        <span class="fa fa-check fa-2x form-control-feedback"></span>
+        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <strong class="text-danger help-block">
+          Passwords do not match
+        </strong>
+      </div>
+      <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user)">
+        Save
+      </button>
+      <button ng-if="!create && removeEnabled" class="btn btn-warning" ng-click="remove(user)">
+        Remove
+      </button>
+      <a ng-if="backEnabled" class="btn btn-default" ng-href="#/users">
+        Back
+      </a>
+    </form>
+    
+  </tab>
+  <tab heading="Groups" ng-if="subject.admin">
+    
+     <form name="groupform" role="form" ng-submit="addGroup(group)" novalidate>
+
+      <div class="form-group">
+        <label class="control-label" for="addGroup">Add group</label>
+        <input id="addGroup" name="addGroup" type="text" class="form-control" 
+               placeholder="Add group" ng-model="group.newGroup" required="true"
+               typeahead="group.name for group in searchGroups($viewValue)" 
+               typeahead-min-length="2"
+               typeahead-on-select="addGroup(group)"
+               typeahead-loading="searchGroupIndicator" />
+      </div>
+      
+    </form>
+
+    <table class="table">
+      <tr ng-repeat="group in user.memberOf | simpleSort">
+        <td>
+          <a ng-href="#/groups/{{group}}">{{group}}</a>
+        </td>
+        <td class="text-right">
+          <button class="btn btn-warning" href="" ng-click="removeGroup(group)">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </table>
+
+    
+  </tab>
+</tabset>

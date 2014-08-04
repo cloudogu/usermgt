@@ -29,6 +29,7 @@ and open the template in the editor.
       in-search="false">
       password
     </attribute>
+    <attribute ldap-name="ou" is-multi-value="true">memberOf</attribute>
   </attributes>
   
 </mapping>

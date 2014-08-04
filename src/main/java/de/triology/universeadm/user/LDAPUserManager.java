@@ -8,6 +8,7 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -99,9 +100,20 @@ public class LDAPUserManager extends AbstractLDAPManager<User> implements UserMa
   {
     Preconditions.checkNotNull(user, "user is required");
     Subject subject = SecurityUtils.getSubject();
-    if (!subject.hasRole(Roles.ADMINISTRATOR) && !user.getUsername().equals(subject.getPrincipal().toString()))
+    if (!subject.hasRole(Roles.ADMINISTRATOR))
     {
-      throw new AuthorizationException("user has not enough privileges");
+      if ( user.getUsername().equals(subject.getPrincipal().toString()) )
+      {
+        User ldapUser = get(user.getUsername());
+        if ( ! Iterables.elementsEqual(user.getMemberOf(), ldapUser.getMemberOf()))
+        {
+          throw new AuthorizationException("user has not enough privileges, to modify group membership");
+        }
+      } 
+      else 
+      {
+        throw new AuthorizationException("user has not enough privileges, to modify other users");
+      }
     }
 
     mapping.modify(user);

@@ -14,6 +14,7 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
 import de.triology.universeadm.user.User;
+import de.triology.universeadm.user.Users;
 import java.util.List;
 import java.util.NoSuchElementException;
 import static org.hamcrest.Matchers.*;
@@ -62,10 +63,7 @@ public class DefaultMapperTest
 
   private User createUser()
   {
-    return new User(
-            "dent", "Arthur Dent", "Arthur", "Dent",
-            "arthur.dent@hitchhiker.com", "hitchhiker123"
-    );
+    return Users.createDent();
   }
 
   private Entry createEntry()
