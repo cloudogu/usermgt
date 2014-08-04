@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 public class MemberMappingConverter extends AbstractMappingConverter
 {
   
+  private static final String DUMMY_DN = "cn=__dummy";
+  
   private final LDAPConnectionStrategy strategy;
   private final Mapper<User> mapper;
 
@@ -68,7 +70,10 @@ public class MemberMappingConverter extends AbstractMappingConverter
       collection = Decoders.createCollection(type, strings.length);
       for ( String v : strings )
       {
-        collection.add(decodeFromString(null, v));
+        if (!DUMMY_DN.equals(v))
+        {
+          collection.add(decodeFromString(null, v));
+        }
       }
       if ( type.isList() )
       {
@@ -115,7 +120,7 @@ public class MemberMappingConverter extends AbstractMappingConverter
       throw new MappingException("encoder supports only subtyes of iterabke");
     }
     
-    List<String> dns = Lists.newArrayList();
+    List<String> dns = Lists.newArrayList(DUMMY_DN);
     List<Filter> or = Lists.newArrayList();
     String name = mapper.getRDNName();
     for (String value : (Iterable<String>) object)
