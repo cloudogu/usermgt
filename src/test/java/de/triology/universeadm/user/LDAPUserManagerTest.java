@@ -152,13 +152,14 @@ public class LDAPUserManagerTest
   public void testModify() throws LDAPException{
     LDAPUserManager manager = createUserManager();
     User user = manager.get("dent");
+    User old = manager.get("dent");
     assertNotNull(user);
     user.setDisplayName("Dent, Arthur");
     manager.modify(user);
     Entry entry = ldap.getConnection().getEntry("uid=dent,ou=People,dc=hitchhiker,dc=com");
     assertNotNull(entry);
     assertEquals("Dent, Arthur", entry.getAttributeValue("cn"));
-    UserEvent event = new UserEvent(user, EventType.MODIFY);
+    UserEvent event = new UserEvent(user, old);
     verify(eventBus, times(1)).post(event);
   }
   
