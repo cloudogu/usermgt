@@ -276,7 +276,15 @@ public class DefaultMapper<T> implements Mapper<T>
       }
       else
       {
-        modification = new Modification(ModificationType.REPLACE, name, converterFactory.getEncoder(ma).encodeAsString(value));
+        String modValue = converterFactory.getEncoder(ma).encodeAsString(value);
+        if ( Strings.isNullOrEmpty(modValue) )
+        {
+          modification = new Modification(ModificationType.REPLACE, name);
+        } 
+        else 
+        {
+          modification = new Modification(ModificationType.REPLACE, name, modValue);
+        }
       }
     }
     return modification;
