@@ -107,6 +107,26 @@
       <version>2.3.6</version>
     </dependency>
     
+    <!-- events -->
+    
+    <dependency>
+      <groupId>com.github.legman</groupId>
+      <artifactId>core</artifactId>
+      <version>${legman.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.legman.support</groupId>
+      <artifactId>guice</artifactId>
+      <version>${legman.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.legman.support</groupId>
+      <artifactId>shiro</artifactId>
+      <version>${legman.version}</version>
+    </dependency>
+    
     <!-- validation -->
     
     <dependency>
@@ -396,6 +416,7 @@
     <resteasy.version>3.0.8.Final</resteasy.version>
     <guice.version>3.0</guice.version>
     <shiro.version>1.2.3</shiro.version>
+    <legman.version>1.2.0</legman.version>
   </properties>
 
 </project>

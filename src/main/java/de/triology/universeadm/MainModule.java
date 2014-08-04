@@ -5,9 +5,8 @@
  */
 package de.triology.universeadm;
 
-import de.triology.universeadm.validation.Validator;
-import de.triology.universeadm.validation.HibernateValidator;
-import com.google.common.eventbus.EventBus;
+import com.github.legman.EventBus;
+import com.github.legman.guice.LegmanModule;
 import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.account.AccountManager;
 import de.triology.universeadm.account.AccountResource;
@@ -15,18 +14,21 @@ import de.triology.universeadm.account.DefaultAccountManager;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.GroupResource;
 import de.triology.universeadm.group.LDAPGroupManager;
+import de.triology.universeadm.group.MemberListener;
 import de.triology.universeadm.mapping.DefaultMapperFactory;
 import de.triology.universeadm.mapping.InjectorMappingConverterFactory;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingConverterFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import de.triology.universeadm.user.LDAPUserManager;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.UserResource;
+import de.triology.universeadm.validation.HibernateValidator;
 import de.triology.universeadm.validation.HibernateValidatorExceptionMapping;
+import de.triology.universeadm.validation.Validator;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -55,7 +57,9 @@ public class MainModule extends ServletModule
     bind(HibernateValidatorExceptionMapping.class);
 
     // events
-    bind(EventBus.class).toInstance(new EventBus());
+    EventBus eventBus = new EventBus();
+    install(new LegmanModule(eventBus));
+    bind(EventBus.class).toInstance(eventBus);
     
     // ldap stuff
     bind(LDAPHasher.class).toInstance(new LDAPHasher());
@@ -75,6 +79,7 @@ public class MainModule extends ServletModule
     
     // groups
     bind(GroupManager.class).to(LDAPGroupManager.class);
+    bind(MemberListener.class).asEagerSingleton();
     bind(GroupResource.class);
     
     // other jax-rs stuff

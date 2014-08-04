@@ -6,7 +6,7 @@
 
 package de.triology.universeadm.group;
 
-import com.google.common.eventbus.EventBus;
+import com.github.legman.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.triology.universeadm.AbstractLDAPManager;

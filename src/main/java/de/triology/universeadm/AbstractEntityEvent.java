@@ -47,6 +47,12 @@ public class AbstractEntityEvent<T> implements EntityEvent<T>
   }
   
   @Override
+  public T getOldEntity()
+  {
+    return oldEntity;
+  }
+  
+  @Override
   public int hashCode()
   {
     return Objects.hashCode(entity, oldEntity, type);

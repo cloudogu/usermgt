@@ -15,5 +15,7 @@ public interface EntityEvent<T>
 
   public EventType getType();
 
+  public T getOldEntity();
+  
   public T getEntity();
 }

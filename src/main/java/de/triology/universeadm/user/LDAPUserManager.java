@@ -6,11 +6,11 @@
 package de.triology.universeadm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
+import com.github.legman.EventBus;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Modification;

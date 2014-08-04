@@ -5,8 +5,8 @@
  */
 package de.triology.universeadm.user;
 
+import com.github.legman.EventBus;
 import com.google.common.base.Charsets;
-import com.google.common.eventbus.EventBus;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
