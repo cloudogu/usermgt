@@ -10,7 +10,7 @@ package de.triology.universeadm;
  *
  * @author ssdorra
  */
-public class Roles
+public final class Roles
 {
   private Roles(){}
   
