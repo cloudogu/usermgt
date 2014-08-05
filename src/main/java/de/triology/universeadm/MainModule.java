@@ -14,7 +14,7 @@ import de.triology.universeadm.account.DefaultAccountManager;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.GroupResource;
 import de.triology.universeadm.group.LDAPGroupManager;
-import de.triology.universeadm.group.MemberListener;
+import de.triology.universeadm.group.MemberOfListener;
 import de.triology.universeadm.mapping.DefaultMapperFactory;
 import de.triology.universeadm.mapping.InjectorMappingConverterFactory;
 import de.triology.universeadm.mapping.MapperFactory;
@@ -79,7 +79,7 @@ public class MainModule extends ServletModule
 
     // groups
     bind(GroupManager.class).to(LDAPGroupManager.class);
-    bind(MemberListener.class).asEagerSingleton();
+    bind(MemberOfListener.class).asEagerSingleton();
     bind(GroupResource.class);
 
     // other jax-rs stuff

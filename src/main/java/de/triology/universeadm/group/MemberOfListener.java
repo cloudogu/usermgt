@@ -23,16 +23,16 @@ import org.slf4j.LoggerFactory;
  * @author ssdorra
  */
 @Singleton
-public final class MemberListener
+public final class MemberOfListener
 {
 
-  private static final Logger logger = LoggerFactory.getLogger(MemberListener.class);
+  private static final Logger logger = LoggerFactory.getLogger(MemberOfListener.class);
 
   private final LDAPConnectionStrategy strategy;
   private final GroupManager groupManager;
 
   @Inject
-  public MemberListener(LDAPConnectionStrategy strategy, GroupManager groupManager)
+  public MemberOfListener(LDAPConnectionStrategy strategy, GroupManager groupManager)
   {
     this.strategy = strategy;
     this.groupManager = groupManager;

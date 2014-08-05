@@ -23,7 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author ssdorra
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MemberListenerTest
+public class MemberOfListenerTest
 {
   
   @Mock
@@ -36,11 +36,11 @@ public class MemberListenerTest
   
   private Group group;
 
-  private MemberListener listener;
+  private MemberOfListener listener;
   
   @Before
   public void prepareForTest(){
-    listener = new MemberListener(strategy, groupManager);
+    listener = new MemberOfListener(strategy, groupManager);
     user = new User("dent");
     group = new Group("Heart Of Gold");
     when(groupManager.get("Heart Of Gold")).thenReturn(group);
