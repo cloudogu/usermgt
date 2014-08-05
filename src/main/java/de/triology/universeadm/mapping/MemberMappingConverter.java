@@ -107,7 +107,7 @@ public class MemberMappingConverter extends AbstractMappingConverter
     }
     catch (LDAPSearchException ex)
     {
-      throw new MappingException("could not ma", ex);
+      throw new MappingException("search for member dn failed", ex);
     }
     return dn;
   }
@@ -140,7 +140,7 @@ public class MemberMappingConverter extends AbstractMappingConverter
     }
     catch (LDAPSearchException ex)
     {
-      throw new MappingException("could not ma", ex);
+      throw new MappingException("search for member dns failed", ex);
     }
     
     
