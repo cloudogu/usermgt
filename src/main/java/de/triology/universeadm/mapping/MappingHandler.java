@@ -119,7 +119,7 @@ public class MappingHandler<T extends Comparable<T>>
     {
       if (ex.getResultCode() == ResultCode.NO_SUCH_OBJECT)
       {
-        throw new EntityNotFoundException("could not find entity ".concat(id));
+        throw new EntityNotFoundException("could not find entity ".concat(id), ex);
       }
       else
       {
@@ -142,7 +142,7 @@ public class MappingHandler<T extends Comparable<T>>
     {
       if (ex.getResultCode() == ResultCode.NO_SUCH_OBJECT)
       {
-        throw new EntityNotFoundException("could not find entity ".concat(id));
+        throw new EntityNotFoundException("could not find entity ".concat(id), ex);
       }
       else
       {
