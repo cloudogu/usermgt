@@ -22,6 +22,12 @@ public abstract class AbstractLDAPManager<T> implements Manager<T>
   public static final String EQUAL = "=";
   
   private static final Logger logger = LoggerFactory.getLogger(AbstractLDAPManager.class);
+
+  @Override
+  public void modify(T object)
+  {
+    modify(object, true);
+  }
   
   @Override
   public PagedResultList<T> getAll(int start, int limit)

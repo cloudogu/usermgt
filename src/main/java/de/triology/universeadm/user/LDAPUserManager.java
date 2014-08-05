@@ -96,7 +96,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User> implements UserMa
    * @param user
    */
   @Override
-  public void modify(User user)
+  public void modify(User user, boolean fireEvent)
   {
     Preconditions.checkNotNull(user, "user is required");
     Subject subject = SecurityUtils.getSubject();
@@ -118,7 +118,15 @@ public class LDAPUserManager extends AbstractLDAPManager<User> implements UserMa
 
     User oldUser = mapping.get(user.getUsername());
     mapping.modify(user);
-    eventBus.post(new UserEvent(user, oldUser));
+    if ( fireEvent )
+    {
+      // clone user ??
+      eventBus.post(new UserEvent(user, oldUser));
+    } 
+    else 
+    {
+      logger.trace("events are disabled for this modification");
+    }
     user.setPassword(DUMMY_PASSWORD);
   }
 

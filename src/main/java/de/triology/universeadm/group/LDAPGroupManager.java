@@ -57,13 +57,20 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
   }
 
   @Override
-  public void modify(Group group)
+  public void modify(Group group, boolean fireEvent)
   {
     logger.debug("modify group {}", group.getName());
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
     Group oldGroup = mapping.get(group.getName());
     mapping.modify(group);
-    eventBus.post(new GroupEvent(group, oldGroup));
+    if ( fireEvent )
+    {
+      eventBus.post(new GroupEvent(group, oldGroup));
+    } 
+    else 
+    {
+      logger.trace("events are disabled for this modification");
+    }
   }
 
   @Override

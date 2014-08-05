@@ -62,6 +62,9 @@ public class Group implements Comparable<Group>
 
   public List<String> getMembers()
   {
+    if ( members == null ){
+      members = Lists.newArrayList();
+    }
     return members;
   }
 

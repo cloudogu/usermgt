@@ -30,6 +30,15 @@ public interface Manager<T>
    * @param object
    */
   public void modify(T object);
+  
+  /**
+   * Method description
+   *
+   *
+   * @param object
+   * @param fireEvent
+   */
+  public void modify(T object, boolean fireEvent);
 
   /**
    * Method description

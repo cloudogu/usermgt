@@ -48,7 +48,7 @@ public class MainModule extends ServletModule
     logger.info("bind resources");
 
     bind(LDAPConfiguration.class).toInstance(
-      BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class)
+            BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class)
     );
 
     // validation
@@ -60,28 +60,28 @@ public class MainModule extends ServletModule
     EventBus eventBus = new EventBus();
     install(new LegmanModule(eventBus));
     bind(EventBus.class).toInstance(eventBus);
-    
+
     // ldap stuff
     bind(LDAPHasher.class).toInstance(new LDAPHasher());
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
-    
+
     // mapping
     bind(MappingConverterFactory.class).to(InjectorMappingConverterFactory.class);
     bind(MapperFactory.class).to(DefaultMapperFactory.class);
-    
+
     // accont
     bind(AccountManager.class).to(DefaultAccountManager.class);
     bind(AccountResource.class);
-    
+
     // users
     bind(UserManager.class).to(LDAPUserManager.class);
     bind(UserResource.class);
-    
+
     // groups
     bind(GroupManager.class).to(LDAPGroupManager.class);
     bind(MemberListener.class).asEagerSingleton();
     bind(GroupResource.class);
-    
+
     // other jax-rs stuff
     bind(CatchAllExceptionMapper.class);
     bind(SubjectResource.class);
@@ -89,7 +89,7 @@ public class MainModule extends ServletModule
 
     // filter
     filter("/*").through(LDAPConnectionStrategyBindFilter.class);
-    
+
     // serve index pages
     serve("/", "/index.html", "/index-debug.html").with(TemplateServlet.class);
   }
