@@ -20,6 +20,7 @@ import de.triology.universeadm.mapping.InjectorMappingConverterFactory;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingConverterFactory;
 import de.triology.universeadm.user.LDAPUserManager;
+import de.triology.universeadm.user.MemberListener;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.UserResource;
 import de.triology.universeadm.validation.HibernateValidator;
@@ -75,6 +76,7 @@ public class MainModule extends ServletModule
 
     // users
     bind(UserManager.class).to(LDAPUserManager.class);
+    bind(MemberListener.class).asEagerSingleton();
     bind(UserResource.class);
 
     // groups

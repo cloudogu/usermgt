@@ -6,15 +6,16 @@
 package de.triology.universeadm.group;
 
 import com.github.legman.Subscribe;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import de.triology.universeadm.DoesNotContainPredicate;
 import de.triology.universeadm.LDAPConnectionStrategy;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserEvent;
 import java.util.Collection;
 import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,8 +111,7 @@ public final class MemberOfListener
       if (group.getMembers().contains(member))
       {
         group.getMembers().remove(member);
-        // do not send events, because this would execute the checks twice
-        groupManager.modify(group, false);
+        modify(group);
       }
       else
       {
@@ -140,8 +140,7 @@ public final class MemberOfListener
       if (!group.getMembers().contains(member))
       {
         group.getMembers().add(member);
-        // do not send events, because this would execute the checks twice
-        groupManager.modify(group, false);
+        modify(group);
       }
       else
       {
@@ -154,21 +153,16 @@ public final class MemberOfListener
     }
   }
   
-  private static class DoesNotContainPredicate<T> implements Predicate<T> {
-
-    private final Collection<T> collection;
-
-    public DoesNotContainPredicate(Collection<T> collection)
+  private void modify(Group group){
+    try 
     {
-      this.collection = collection;
-    }
-    
-    @Override
-    public boolean apply(T input)
+      // do not send events, because this would execute the checks twice
+      groupManager.modify(group, false);
+    } 
+    catch ( ConstraintViolationException ex )
     {
-      return ! collection.contains(input);
+      logger.warn("could not modify group {}, because the group is not valid", group.getName());
     }
-    
   }
 
 }
