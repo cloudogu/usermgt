@@ -176,15 +176,17 @@ public abstract class AbstractManagerResource<T>
    * Method description
    *
    *
-   * @param start
-   * @param limit
+   * @param s
+   * @param l
    * @param query
    * @return
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getAll(@QueryParam("start") int start, @QueryParam("limit") int limit, @QueryParam("query") String query)
+  public Response getAll(@QueryParam("start") int s, @QueryParam("limit") int l, @QueryParam("query") String query)
   {
+    int start = s;
+    int limit = l;
     if (start < 0)
     {
       start = 0;
