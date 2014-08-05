@@ -30,6 +30,12 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractManagerResource<T>
 {
+  
+  private static final int PAGING_DEFAULT_START = 0;
+  
+  private static final int PAGING_DEFAULT_LIMIT = 20;
+  
+  private static final int PAGING_MAXIMUM = 100000;
 
   /**
    * the logger for UserResource
@@ -189,12 +195,12 @@ public abstract class AbstractManagerResource<T>
     int limit = l;
     if (start < 0)
     {
-      start = 0;
+      start = PAGING_DEFAULT_START;
     }
 
-    if (limit <= 0 || limit > 1000)
+    if (limit <= 0 || limit > PAGING_MAXIMUM)
     {
-      limit = 20;
+      limit = PAGING_DEFAULT_LIMIT;
     }
 
     PagedResultList<T> result;
