@@ -36,10 +36,11 @@ public class TemplateServletTest
   @Mock
   private HttpServletResponse response;
 
+  
   @Test
   public void testDoGet() throws ServletException, IOException
   {
-    TemplateServlet servlet = createTemplateServlet();
+    TemplateServlet servlet = createTemplateServlet(res("de/triology/universeadm/index.001.txt"));
     when(request.getContextPath()).thenReturn("/universeadm/");
     when(request.getRequestURI()).thenReturn("/universeadm/");
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -52,9 +53,22 @@ public class TemplateServletTest
     assertEquals("ctx: /universeadm", baos.toString().trim());
   }
   
-  private TemplateServlet createTemplateServlet() throws MalformedURLException
+  @Test
+  public void testNotFound() throws ServletException, IOException
   {
-    URL url = com.google.common.io.Resources.getResource("de/triology/universeadm/index.001.txt");
+    TemplateServlet servlet = createTemplateServlet(null);
+    when(request.getContextPath()).thenReturn("/universeadm/");
+    when(request.getRequestURI()).thenReturn("/universeadm/");
+    servlet.doGet(request, response);
+    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+  }
+  
+  private URL res(String path){
+    return com.google.common.io.Resources.getResource(path);
+  }
+  
+  private TemplateServlet createTemplateServlet(URL url) throws MalformedURLException
+  {
     final ServletContext ctx = mock(ServletContext.class);
     when(ctx.getResource("/index.html")).thenReturn(url);
     return new TemplateServlet(){
