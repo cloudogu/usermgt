@@ -8,13 +8,11 @@ package de.triology.universeadm;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Resources;
 import com.google.inject.Singleton;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +37,12 @@ public class TemplateServlet extends HttpServlet
     if (!CACHE_DISABLED)
     {
       logger.info("create template servlet with enabled cache");
-      cache = CacheBuilder.newBuilder().maximumSize(5).expireAfterWrite(1l, TimeUnit.HOURS).build();
+      cache = Caches.createSmallCache();
     }
     else
     {
       logger.info("create template servlet with disabled cache");
-      cache = CacheBuilder.newBuilder().maximumSize(0).build();
+      cache = Caches.createDisabledCache();
     }
   }
 

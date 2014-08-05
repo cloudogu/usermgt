@@ -8,14 +8,13 @@ package de.triology.universeadm.mapping;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.triology.universeadm.BaseDirectory;
+import de.triology.universeadm.Caches;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +40,12 @@ public class DefaultMapperFactory implements MapperFactory
     if (!CACHE_DISABLED)
     {
       logger.info("create mapper factory with enabled cache");
-      cache = CacheBuilder.newBuilder().maximumSize(5).expireAfterWrite(1l, TimeUnit.HOURS).build();
+      cache = Caches.createSmallCache();
     }
     else
     {
       logger.info("create mapper factory with disabled cache");
-      cache = CacheBuilder.newBuilder().maximumSize(0).build();
+      cache = Caches.createDisabledCache();
     }
     this.converterFactory = converterFactory;
   }
