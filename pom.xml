@@ -225,6 +225,22 @@
       <scope>test</scope>
     </dependency>
     
+    <!-- hibernate validator dependencies -->
+    
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>javax.el-api</artifactId>
+      <version>2.2.4</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>2.2.4</version>
+      <scope>test</scope>
+    </dependency>
+    
     <!--
     use provided scope to create a global exclude
     -->

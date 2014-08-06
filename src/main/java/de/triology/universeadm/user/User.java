@@ -9,6 +9,7 @@ package de.triology.universeadm.user;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import de.triology.universeadm.validation.RDN;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -293,8 +294,7 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
-  @NotNull
-  @Size(min = 1)
+  @RDN
   private String username;
   
   /**

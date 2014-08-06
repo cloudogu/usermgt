@@ -35,6 +35,10 @@ public final class Resources
   
   public static MockHttpResponse dispatch(Object resource, MockHttpRequest request, Object object) throws IOException {
     Dispatcher dispatcher = createDispatcher(resource);
+    return dispatch(dispatcher, request, object);
+  }
+  
+  public static MockHttpResponse dispatch(Dispatcher dispatcher, MockHttpRequest request, Object object) throws IOException {
     MockHttpResponse response = new MockHttpResponse();
     if ( object != null ){
       request.content(mapper.writeValueAsBytes(object));

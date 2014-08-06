@@ -8,6 +8,7 @@ package de.triology.universeadm.group;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import de.triology.universeadm.validation.RDN;
 import java.util.List;
 
 /**
@@ -62,7 +63,8 @@ public class Group implements Comparable<Group>
 
   public List<String> getMembers()
   {
-    if ( members == null ){
+    if (members == null)
+    {
       members = Lists.newArrayList();
     }
     return members;
@@ -91,19 +93,19 @@ public class Group implements Comparable<Group>
       return false;
     }
     final Group other = (Group) obj;
-    return Objects.equal(name, other.name) 
-      && Objects.equal(description, other.description) 
-      && Objects.equal(members, other.members);
+    return Objects.equal(name, other.name)
+            && Objects.equal(description, other.description)
+            && Objects.equal(members, other.members);
   }
 
   @Override
   public String toString()
   {
     return Objects.toStringHelper(this)
-                  .add("name", name)
-                  .add("description", description)
-                  .add("members", members)
-                  .toString();
+            .add("name", name)
+            .add("description", description)
+            .add("members", members)
+            .toString();
   }
 
   @Override
@@ -112,6 +114,7 @@ public class Group implements Comparable<Group>
     return Strings.nullToEmpty(name).compareTo(Strings.nullToEmpty(o.name));
   }
 
+  @RDN
   private String name;
 
   private String description;
