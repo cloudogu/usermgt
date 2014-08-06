@@ -7,12 +7,8 @@
 package de.triology.universeadm.settings;
 
 import com.google.common.base.Objects;
-import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -24,16 +20,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Settings
 {
   
-  @XmlElement(name = "update-service-credentials")
   private Credentials updateServiceCredentials;
   
-  @XmlElement(name = "update-check-enabled")
   private boolean updateCheckEnabled;
   
-  @XmlElement(name = "update-bugzilla-plugin")
   private boolean updateBugzillaPlugin;
   
-  @XmlElement(name = "update-cas-server")
   private boolean updateCasServer;
 
   public Settings()
@@ -102,12 +94,6 @@ public class Settings
                   .add("updateBugzillaPlugin", updateBugzillaPlugin)
                   .add("updateCasServer", updateCasServer)
                   .toString();
-  }
- 
-  
-  public static void main(String[] args) throws JAXBException
-  {
-    JAXBContext.newInstance(Settings.class).createMarshaller().marshal(new Settings(null, true, true, true), System.out);
   }
   
 }

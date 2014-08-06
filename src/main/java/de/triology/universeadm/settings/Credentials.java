@@ -7,11 +7,9 @@
 package de.triology.universeadm.settings;
 
 import com.google.common.base.Objects;
-import de.triology.universeadm.XmlCipherAdapter;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -23,7 +21,6 @@ public class Credentials
 {
   private String username;
  
-  @XmlJavaTypeAdapter(XmlCipherAdapter.class)
   private String password;
 
   public Credentials()
