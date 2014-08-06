@@ -11,6 +11,7 @@ import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.account.AccountModule;
 import de.triology.universeadm.group.GroupModule;
 import de.triology.universeadm.mapping.MappingModule;
+import de.triology.universeadm.settings.SettingsModule;
 import de.triology.universeadm.user.UserModule;
 import de.triology.universeadm.validation.ValidationModule;
 import org.slf4j.Logger;
@@ -60,6 +61,9 @@ public class MainModule extends ServletModule
 
     // groups
     install(new GroupModule());
+    
+    // settings
+    install(new SettingsModule());
 
     // other jax-rs stuff
     bind(CatchAllExceptionMapper.class);

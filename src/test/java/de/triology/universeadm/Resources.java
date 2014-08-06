@@ -12,6 +12,7 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -26,7 +27,7 @@ public final class Resources
 
   private Resources(){}
   
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final ObjectMapper mapper = new ObjectMapper().setAnnotationIntrospector(new JaxbAnnotationIntrospector());
   
   public static MockHttpResponse dispatch(Object resource, MockHttpRequest request) throws IOException
   {
@@ -53,6 +54,10 @@ public final class Resources
     Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
     dispatcher.getRegistry().addSingletonResource(resource);
     return dispatcher;
+  }
+  
+  public static <T> T parseJson(MockHttpResponse response, Class<T> objectClass) throws IOException {
+    return mapper.readValue(response.getContentAsString(), objectClass);
   }
   
   public static JsonNode parseJson(MockHttpResponse response) throws IOException
