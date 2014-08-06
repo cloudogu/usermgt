@@ -54,9 +54,10 @@ public class DefaultMapperTest
   private DefaultMapper<User> createDefaultMapper()
   {
     Mapping mapping = createMapping(
-            attrb("username").ldapName("uid").inModify(false).rdn(true).build(),
-            attr("givenname"),
-            attr("surname", "sn")
+      attrb("username").ldapName("uid").inModify(false).rdn(true).build(),
+      attr("givenname"),
+      attr("surname", "sn"),
+      attrb("displayName").ldapName("cn").sibling("displayName").build()
     );
     return new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, "dc=hitchhiker,dc=com");
   }
@@ -81,7 +82,7 @@ public class DefaultMapperTest
   {
     DefaultMapper<User> mapper = createDefaultMapper();
     List<String> attributes = mapper.getReturningAttributes();
-    assertThat(attributes, containsInAnyOrder("uid", "givenname", "sn"));
+    assertThat(attributes, containsInAnyOrder("uid", "givenname", "sn", "cn"));
   }
 
   @Test
@@ -94,6 +95,9 @@ public class DefaultMapperTest
     assertEquals(user.getUsername(), entry.getAttributeValue("uid"));
     assertEquals(user.getGivenname(), entry.getAttributeValue("givenname"));
     assertEquals(user.getSurname(), entry.getAttributeValue("sn"));
+    assertEquals(user.getDisplayName(), entry.getAttributeValue("cn"));
+    // test sibling
+    assertEquals(user.getDisplayName(), entry.getAttributeValue("displayName"));
   }
   
   @Test(expected = MappingException.class)
@@ -143,7 +147,7 @@ public class DefaultMapperTest
     User user = createUser();
     List<Modification> modifications = mapper.getModifications(user);
     assertNotNull(modifications);
-    assertEquals(2, modifications.size());
+    assertEquals(4, modifications.size());
     Modification username = find(modifications, "uid");
     assertNull(username);
     Modification givenname = find(modifications, "givenname");
@@ -154,6 +158,13 @@ public class DefaultMapperTest
     assertNotNull(sn);
     assertEquals(user.getSurname(), sn.getAttribute().getValue());
     assertEquals(ModificationType.REPLACE, sn.getModificationType());
+    Modification cn = find(modifications, "cn");
+    assertNotNull(cn);
+    assertEquals(user.getDisplayName(), cn.getAttribute().getValue());
+    // sibling
+    Modification displayName = find(modifications, "displayName");
+    assertNotNull(displayName);
+    assertEquals(user.getDisplayName(), displayName.getAttribute().getValue());
   }
 
   private Modification find(List<Modification> modifications, final String name)

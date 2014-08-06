@@ -17,7 +17,7 @@ and open the template in the editor.
   
   <attributes>
     <attribute ldap-name="uid" is-rdn="true" in-modify="false">username</attribute>
-    <attribute ldap-name="cn">displayName</attribute>
+    <attribute ldap-name="cn" sibling="displayName">displayName</attribute>
     <attribute ldap-name="sn">surname</attribute>
     <attribute>givenname</attribute>
     <attribute>mail</attribute>

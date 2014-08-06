@@ -6,6 +6,9 @@
 package de.triology.universeadm.mapping;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -24,6 +27,7 @@ public class MappingAttribute
 
     private final String name;
     private String ldapName;
+    private final List<String> siblings = Lists.newArrayList();
     private boolean inRead = true;
     private boolean inModify = true;
     private boolean inCreate = true;
@@ -42,6 +46,11 @@ public class MappingAttribute
     public MappingAttributeBuilder ldapName(String ldapName)
     {
       this.ldapName = ldapName;
+      return this;
+    }
+    
+    public MappingAttributeBuilder sibling(String sibling){
+      this.siblings.add(sibling);
       return this;
     }
 
@@ -101,7 +110,7 @@ public class MappingAttribute
 
     public MappingAttribute build()
     {
-      return new MappingAttribute(name, ldapName, inRead, inModify, inCreate, inSearch, binary, multiValue, rdn, encoder, decoder);
+      return new MappingAttribute(name, ldapName, siblings, inRead, inModify, inCreate, inSearch, binary, multiValue, rdn, encoder, decoder);
     }
 
   }
@@ -110,13 +119,14 @@ public class MappingAttribute
   {
   }
 
-  public MappingAttribute(String name, String ldapName, boolean inRead, 
-      boolean inModify, boolean inCreate, boolean inSearch, boolean binary, 
-      boolean multiValue, boolean rdn, Class<? extends MappingEncoder> encoder, 
-      Class<? extends MappingDecoder> decoder)
+  public MappingAttribute(String name, String ldapName, List<String> siblings, 
+      boolean inRead, boolean inModify, boolean inCreate, boolean inSearch, 
+      boolean binary, boolean multiValue, boolean rdn, 
+      Class<? extends MappingEncoder> encoder, Class<? extends MappingDecoder> decoder)
   {
     this.name = name;
     this.ldapName = ldapName;
+    this.siblings = siblings;
     this.inRead = inRead;
     this.inModify = inModify;
     this.inCreate = inCreate;
@@ -134,6 +144,9 @@ public class MappingAttribute
 
   @XmlAttribute(name = "ldap-name")
   private String ldapName;
+  
+  @XmlAttribute(name = "sibling")
+  private List<String> siblings;
 
   @XmlAttribute(name = "in-read")
   private boolean inRead = true;
@@ -170,6 +183,14 @@ public class MappingAttribute
   public String getLdapName()
   {
     return Objects.firstNonNull(ldapName, name);
+  }
+
+  public List<String> getSiblings()
+  {
+    if (siblings == null){
+      siblings = ImmutableList.of();
+    }
+    return siblings;
   }
 
   public boolean isInRead()
@@ -216,5 +237,5 @@ public class MappingAttribute
   {
     return decoder;
   }
-
+  
 }

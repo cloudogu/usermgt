@@ -12,6 +12,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.unboundid.asn1.ASN1OctetString;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Filter;
@@ -132,6 +133,11 @@ public class DefaultMapper<T> implements Mapper<T>
         }
 
         attributes.add(attribute);
+        List<String> siblings = ma.getSiblings();
+        for (String sibling : siblings)
+        {
+          attributes.add(new Attribute(sibling, attribute.getRawValues()));
+        }
       }
     }
 
@@ -217,6 +223,19 @@ public class DefaultMapper<T> implements Mapper<T>
       if (modification != null)
       {
         modifications.add(modification);
+        List<String> siblings = ma.getSiblings();
+        for (String sibling : siblings)
+        {
+          ASN1OctetString[] data = modification.getRawValues();
+          if (data != null)
+          {
+            modifications.add(new Modification(modification.getModificationType(), sibling, data));
+          } 
+          else 
+          {
+            modifications.add(new Modification(modification.getModificationType(), sibling));
+          }
+        }
       }
     }
     return modifications;
