@@ -40,7 +40,7 @@ import sonia.junit.shiro.SubjectAware;
  * @author ssdorra
  */
 @SubjectAware(
-  configuration = "classpath:de/triology/universeadm/user/shiro.001.ini", 
+  configuration = "classpath:de/triology/universeadm/shiro.001.ini", 
   username = "trillian", 
   password = "secret"
 )
