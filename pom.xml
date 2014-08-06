@@ -310,6 +310,9 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>9.2.1.v20140609</version>
         <configuration>
+          <httpConnector>
+            <port>8084</port>
+          </httpConnector>
           <webAppConfig>
             <contextPath>/universeadm</contextPath>
           </webAppConfig>

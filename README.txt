@@ -18,12 +18,14 @@ universeadm
 5. Start development environment
  - ./env/env.sh start
 
-6. Start application for development
+6. Start application for development (port 8084)
  - mvn package jetty:run
 
-7. Fast development application start
+7. Fast development application start (port 8084)
  - mvn -DskipTests -P'!webcomponents' package jetty:run
 
+8. Start application with release configuration (port 8084)
+ - mvn package jetty:run-war
 
 CAS Account
 username: admin

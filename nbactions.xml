@@ -37,4 +37,13 @@
                 <activatedProfile>!webcomponents</activatedProfile>
             </activatedProfiles>
         </action>
+        <action>
+            <actionName>CUSTOM-jetty-run-release</actionName>
+            <displayName>jetty-run-release</displayName>
+            <goals>
+                <goal>jetty:stop</goal>
+                <goal>package</goal>
+                <goal>jetty:run-war</goal>
+            </goals>
+        </action>
     </actions>
