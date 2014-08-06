@@ -8,26 +8,11 @@ package de.triology.universeadm;
 import com.github.legman.EventBus;
 import com.github.legman.guice.LegmanModule;
 import com.google.inject.servlet.ServletModule;
-import de.triology.universeadm.account.AccountManager;
-import de.triology.universeadm.account.AccountResource;
-import de.triology.universeadm.account.DefaultAccountManager;
-import de.triology.universeadm.group.GroupManager;
-import de.triology.universeadm.group.GroupResource;
-import de.triology.universeadm.group.LDAPGroupManager;
-import de.triology.universeadm.group.MemberOfListener;
-import de.triology.universeadm.mapping.DefaultMapperFactory;
-import de.triology.universeadm.mapping.InjectorMappingConverterFactory;
-import de.triology.universeadm.mapping.MapperFactory;
-import de.triology.universeadm.mapping.MappingConverterFactory;
-import de.triology.universeadm.user.LDAPUserManager;
-import de.triology.universeadm.user.MemberListener;
-import de.triology.universeadm.user.UserManager;
-import de.triology.universeadm.user.UserResource;
-import de.triology.universeadm.validation.HibernateValidator;
-import de.triology.universeadm.validation.HibernateValidatorExceptionMapping;
-import de.triology.universeadm.validation.Validator;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
+import de.triology.universeadm.account.AccountModule;
+import de.triology.universeadm.group.GroupModule;
+import de.triology.universeadm.mapping.MappingModule;
+import de.triology.universeadm.user.UserModule;
+import de.triology.universeadm.validation.ValidationModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +38,7 @@ public class MainModule extends ServletModule
     );
 
     // validation
-    bind(ValidatorFactory.class).toInstance(Validation.buildDefaultValidatorFactory());
-    bind(Validator.class).to(HibernateValidator.class);
-    bind(HibernateValidatorExceptionMapping.class);
+    install(new ValidationModule());
 
     // events
     EventBus eventBus = new EventBus();
@@ -67,22 +50,16 @@ public class MainModule extends ServletModule
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
 
     // mapping
-    bind(MappingConverterFactory.class).to(InjectorMappingConverterFactory.class);
-    bind(MapperFactory.class).to(DefaultMapperFactory.class);
+    install(new MappingModule());
 
     // accont
-    bind(AccountManager.class).to(DefaultAccountManager.class);
-    bind(AccountResource.class);
+    install(new AccountModule());
 
     // users
-    bind(UserManager.class).to(LDAPUserManager.class);
-    bind(MemberListener.class).asEagerSingleton();
-    bind(UserResource.class);
+    install(new UserModule());
 
     // groups
-    bind(GroupManager.class).to(LDAPGroupManager.class);
-    bind(MemberOfListener.class).asEagerSingleton();
-    bind(GroupResource.class);
+    install(new GroupModule());
 
     // other jax-rs stuff
     bind(CatchAllExceptionMapper.class);
