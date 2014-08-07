@@ -34,6 +34,8 @@
     Fill in the support ID and password you received after booking one of the 
     mentioned support packages.
   </p>
+  
+  <alert ng-if="invalidCredentials" type="danger">Invalid credentials</alert>
 
   <div class="form-group">
     <label class="control-label" for="userid">Support User/ID:</label>

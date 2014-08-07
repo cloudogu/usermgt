@@ -11,6 +11,7 @@ angular.module('universeadm.settings.controllers', [
     
     $scope.master = angular.copy(settings);
     $scope.settings = settings;
+    $scope.invalidCredentials = false;
     
     $scope.isUnchanged = function(settings){
       return angular.equals(settings, $scope.master);
@@ -20,6 +21,11 @@ angular.module('universeadm.settings.controllers', [
       settingsService.update(settings).then(function(){
         $scope.master = angular.copy(settings);
         $scope.settings = settings;
+        $scope.invalidCredentials = false;
+      }, function(e){
+        if (e.status === 400){
+          $scope.invalidCredentials = true;
+        }
       });
     };
     
