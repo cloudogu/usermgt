@@ -117,13 +117,13 @@ public class DefaultSettingsStore implements SettingsStore
     StringBuilder content = new StringBuilder();
     if (Strings.isNullOrEmpty(credentials.getUsername()) || Strings.isNullOrEmpty(credentials.getPassword()))
     {
-      content.append(LINE_SEPARATOR).append(FLAG_INVALID);
+      content.append(LINE_SEPARATOR).append(LINE_SEPARATOR).append(FLAG_INVALID);
     }
     else
     {
       content.append(credentials.getUsername()).append(LINE_SEPARATOR);
       content.append(credentials.getPassword()).append(LINE_SEPARATOR);
-      content.append(FLAG_VALID);
+      content.append(FLAG_VALID).append(LINE_SEPARATOR);
     }
     try
     {
