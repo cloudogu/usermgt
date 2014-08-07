@@ -35,11 +35,18 @@ public class SubjectResource
     Response.ResponseBuilder builder;
     if (subject.isAuthenticated())
     {
-      Map<String, Object> attributes = Maps.newHashMap(
-        (Map<String, Object>) subject.getPrincipals().oneByType(Map.class)
-      );
+      Map<String, Object> attributes = Maps.newHashMap();
+      Map<String, Object> principals = (Map<String, Object>) subject.getPrincipals().oneByType(Map.class);
+      if ( principals != null )
+      {
+        attributes.putAll(principals);
+      } 
+      else 
+      {
+        logger.warn("no principals available in subject");
+      }
       attributes.put("principal", subject.getPrincipal());
-      attributes.put("admin", subject.hasRole("admins"));
+      attributes.put("admin", subject.hasRole(Roles.ADMINISTRATOR));
       builder = Response.ok(attributes);
     }
     else
