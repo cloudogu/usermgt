@@ -147,6 +147,14 @@ public class LDAPUserManagerTest
     createUserManager().modify(tricia);
   }
   
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = AuthorizationException.class)
+  @SubjectAware(username = "dent", password = "secret")
+  public void testGetOtherUserUnprivileged() throws LDAPException
+  {
+    createUserManager().get("tricia");
+  }
+  
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_002)
   public void testModify() throws LDAPException{
@@ -204,6 +212,21 @@ public class LDAPUserManagerTest
     assertNotNull(users);
     assertEquals(1, users.size());
     assertEquals("tricia", users.get(0).getUsername());
+  }
+  
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void testModifyPassword() throws LDAPException {
+    LDAPUserManager manager = createUserManager();
+    User user = manager.get("tricia");
+    user.setPassword("secret");
+    manager.modify(user);
+    Entry entry = ldap.getConnection().getEntry("uid=tricia,ou=People,dc=hitchhiker,dc=com");
+    String pwd = entry.getAttributeValue("userPassword");
+    user = manager.get("tricia");
+    manager.modify(user);
+    entry = ldap.getConnection().getEntry("uid=tricia,ou=People,dc=hitchhiker,dc=com");
+    assertEquals(pwd, entry.getAttributeValue("userPassword"));
   }
 
   private void assertUser(User user){

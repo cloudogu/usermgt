@@ -164,6 +164,28 @@ public class LDAPGroupManagerTest
     createGroupManager().modify(Groups.createHeartOfGold());
   }
   
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void searchTest() throws LDAPException{
+    List<Group> groups = createGroupManager().search("Heart");
+    assertThat(groups, contains(Groups.createHeartOfGold()));
+  }
+  
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void searchTestNotFound() throws LDAPException{
+    List<Group> groups = createGroupManager().search("Marvin");
+    assertThat(groups, empty());
+  }
+  
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @SubjectAware(username = "dent", password = "secret")
+  public void searchTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().search("Heart");
+  }
+  
   private void assertEntry(Group group, Entry entry){
     assertEquals(group.getName(), entry.getAttributeValue("cn"));
     assertEquals(group.getDescription(), entry.getAttributeValue("description"));
