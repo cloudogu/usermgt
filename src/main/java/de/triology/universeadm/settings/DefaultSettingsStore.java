@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -46,19 +48,25 @@ public class DefaultSettingsStore implements SettingsStore
   private static final Charset UTF8 = Charsets.UTF_8;
 
   private static final String FILENAME = "settings.xml";
+  
+  private static final String DEFAULT_UPDATE_WEBSITE = "https://www.scm-manager.com/applupdateservice/applupdate.php";
 
+  private static final Logger logger = LoggerFactory.getLogger(DefaultSettingsStore.class);
+  
   private final EventBus eventBus;
+  private final CredentialsChecker checker;
   private final SettingsStoreConfiguration config;
 
   @Inject
-  public DefaultSettingsStore(EventBus eventBus)
+  public DefaultSettingsStore(EventBus eventBus, CredentialsChecker checker)
   {
-    this(eventBus, JAXB.unmarshal(BaseDirectory.get(FILENAME), SettingsStoreConfiguration.class));
+    this(eventBus, checker, JAXB.unmarshal(BaseDirectory.get(FILENAME), SettingsStoreConfiguration.class));
   }
 
-  public DefaultSettingsStore(EventBus eventBus, SettingsStoreConfiguration config)
+  public DefaultSettingsStore(EventBus eventBus, CredentialsChecker checker, SettingsStoreConfiguration config)
   {
     this.eventBus = eventBus;
+    this.checker = checker;
     this.config = config;
   }
 
@@ -66,6 +74,11 @@ public class DefaultSettingsStore implements SettingsStore
   public void set(Settings settings)
   {
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
+    Credentials credentials = settings.getUpdateServiceCredentials();
+    if ( credentials != null && credentials.isValid() && ! validateCredentials(credentials) )
+    {
+      throw new SettingsException("credentials are not valid");
+    }
     Settings oldSettings = get();
     writeFlagFile(config.getUpdateBugzillaPluginFile(), settings.isUpdateBugzillaPlugin());
     writeFlagFile(config.getUpdateCasServerFile(), settings.isUpdateCasServer());
@@ -85,6 +98,44 @@ public class DefaultSettingsStore implements SettingsStore
       readFlagFile(config.getUpdateCasServerFile(), true)
     );
     return settings;
+  }
+
+  @Override
+  public boolean validateCredentials(Credentials credentials)
+  {
+    String website = getUpdateWebsite();
+    logger.info("check credentials against {}", website);
+    
+    try {
+      return checker.checkCredentials(credentials, website);
+    } catch (IOException ex){
+      throw new SettingsException("creadential validation failed", ex);
+    }
+  }
+  
+  private String getUpdateWebsite()
+  {
+    return readFile(config.getUpdateWebsiteFile(), DEFAULT_UPDATE_WEBSITE);
+  }
+  
+  private String readFile(File file, String defaultValue){
+    String result = defaultValue;
+    if (file.exists())
+    {
+      try
+      {
+        String content = Files.toString(file, UTF8);
+        if (!Strings.isNullOrEmpty(content))
+        {
+          result = content;
+        }
+      }
+      catch (IOException ex)
+      {
+        throw new SettingsException("could not read file", ex);
+      }
+    }
+    return result;
   }
 
   private Credentials readCredentialsFile(File file)
@@ -115,15 +166,15 @@ public class DefaultSettingsStore implements SettingsStore
   private void writeCredentialsFile(File file, Credentials credentials)
   {
     StringBuilder content = new StringBuilder();
-    if (Strings.isNullOrEmpty(credentials.getUsername()) || Strings.isNullOrEmpty(credentials.getPassword()))
-    {
-      content.append(LINE_SEPARATOR).append(LINE_SEPARATOR).append(FLAG_INVALID);
-    }
-    else
+    if (credentials.isValid())
     {
       content.append(credentials.getUsername()).append(LINE_SEPARATOR);
       content.append(credentials.getPassword()).append(LINE_SEPARATOR);
       content.append(FLAG_VALID).append(LINE_SEPARATOR);
+    }
+    else
+    {
+      content.append(LINE_SEPARATOR).append(LINE_SEPARATOR).append(FLAG_INVALID);
     }
     try
     {
@@ -185,6 +236,8 @@ public class DefaultSettingsStore implements SettingsStore
     private static final String DEFAULT_UPDATE_CAS_SERVER_FILE = "scmcasupdt";
 
     private static final String DEFAULT_UPDATE_CHECK_ENABLED_FILE = "scmupdcheck";
+    
+    private static final String DEFAULT_UPDATE_WEBSITE_FILE = "updateserver";
 
     @XmlElement(name = "configuration-directory")
     private File configurationDirectory;
@@ -200,6 +253,9 @@ public class DefaultSettingsStore implements SettingsStore
 
     @XmlElement(name = "update-check-enabled-file")
     private File updateCheckEnabledFile;
+    
+    @XmlElement(name = "update-website-file")
+    private File updateWebsiteFile;
 
     public SettingsStoreConfiguration()
     {
@@ -228,6 +284,11 @@ public class DefaultSettingsStore implements SettingsStore
     public File getUpdateServiceCredentialsFile()
     {
       return getFile(updateServiceCredentialsFile, DEFAULT_UPDATE_SERVICE_CREDENTIALS_FILE);
+    }
+    
+    public File getUpdateWebsiteFile()
+    {
+      return getFile(updateWebsiteFile, DEFAULT_UPDATE_WEBSITE_FILE);
     }
 
     private File getFile(File file, String defaultFile)

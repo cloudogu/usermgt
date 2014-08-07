@@ -7,7 +7,6 @@
 package de.triology.universeadm.settings;
 
 import com.github.legman.EventBus;
-import de.triology.universeadm.BaseDirectory;
 import java.io.File;
 import java.io.IOException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -17,7 +16,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 
@@ -25,18 +23,19 @@ import com.github.sdorra.shiro.SubjectAware;
  *
  * @author ssdorra
  */
-@PrepareForTest(BaseDirectory.class)
 @SubjectAware(configuration = "classpath:de/triology/universeadm/shiro.001.ini")
 public class DefaultSettingsStoreTest
 {
   
   private EventBus eventBus;
+  private CredentialsChecker checker;
   private DefaultSettingsStore.SettingsStoreConfiguration configurarion;
   
   @Before
   public void prepare() throws IOException
   {
     eventBus = mock(EventBus.class);
+    checker = mock(CredentialsChecker.class);
     File directory = temp.newFolder();
     configurarion = new DefaultSettingsStore.SettingsStoreConfiguration(directory);
   }
@@ -45,7 +44,7 @@ public class DefaultSettingsStoreTest
   @SubjectAware(username = "dent", password = "secret")
   public void testGetNonAdministrator()
   {
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
+    DefaultSettingsStore store = createSettingsStore();
     store.get();
   }
   
@@ -53,7 +52,7 @@ public class DefaultSettingsStoreTest
   @SubjectAware(username = "dent", password = "secret")
   public void testSetNonAdministrator()
   {
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
+    DefaultSettingsStore store = createSettingsStore();
     store.set(new Settings(null, true, true, true));
   }
   
@@ -61,7 +60,7 @@ public class DefaultSettingsStoreTest
   @SubjectAware(username = "trillian", password = "secret")
   public void testGet()
   {
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
+    DefaultSettingsStore store = createSettingsStore();
     Settings settings = store.get();
     assertNotNull(settings);
   }
@@ -69,13 +68,18 @@ public class DefaultSettingsStoreTest
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void testSet(){
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
+    DefaultSettingsStore store = createSettingsStore();
     Settings oldSettings = store.get();
     Settings settings = new Settings(new Credentials("trillian", "secret"), true, true, true);
     store.set(settings);
     Settings other = store.get();
     assertEquals(settings, other);
     verify(eventBus, times(1)).post(new SettingsChangedEvent(settings, oldSettings));
+  }
+  
+  private DefaultSettingsStore createSettingsStore()
+  {
+    return new DefaultSettingsStore(eventBus, checker, configurarion);
   }
   
   @Rule

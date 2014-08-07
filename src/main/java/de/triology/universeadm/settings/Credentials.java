@@ -7,6 +7,7 @@
 package de.triology.universeadm.settings;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -41,6 +42,10 @@ public class Credentials
   public String getUsername()
   {
     return username;
+  }
+  
+  public boolean isValid(){
+    return ! Strings.isNullOrEmpty(username) && ! Strings.isNullOrEmpty(password);
   }
 
   @Override
