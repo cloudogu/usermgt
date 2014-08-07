@@ -18,8 +18,8 @@ import org.junit.rules.TemporaryFolder;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import sonia.junit.shiro.ShiroRule;
-import sonia.junit.shiro.SubjectAware;
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 
 /**
  *

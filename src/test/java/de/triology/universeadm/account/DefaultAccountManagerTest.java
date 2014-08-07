@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-import sonia.junit.shiro.ShiroRule;
-import sonia.junit.shiro.SubjectAware;
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 
 /**
  *

@@ -30,10 +30,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-import sonia.junit.ldap.LDAP;
-import sonia.junit.ldap.LDAPUnit;
-import sonia.junit.shiro.ShiroRule;
-import sonia.junit.shiro.SubjectAware;
+import com.github.sdorra.ldap.LDAP;
+import com.github.sdorra.ldap.LDAPRule;
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
 
 /**
  *
@@ -242,7 +242,7 @@ public class LDAPUserManagerTest
   }
 
   @Rule
-  public LDAPUnit ldap = new LDAPUnit();
+  public LDAPRule ldap = new LDAPRule();
   
   @Rule
   public ShiroRule shiro = new ShiroRule();

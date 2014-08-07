@@ -15,7 +15,6 @@ import de.triology.universeadm.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import org.junit.Rule;
@@ -24,8 +23,8 @@ import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import sonia.junit.ldap.LDAP;
-import sonia.junit.ldap.LDAPUnit;
+import com.github.sdorra.ldap.LDAP;
+import com.github.sdorra.ldap.LDAPRule;
 
 /**
  *
@@ -131,6 +130,6 @@ public class MemberMappingConverterTest
   }
   
   @Rule
-  public LDAPUnit rule = new LDAPUnit();
+  public LDAPRule rule = new LDAPRule();
   
 }
