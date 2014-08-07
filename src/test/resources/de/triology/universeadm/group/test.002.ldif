@@ -1,0 +1,20 @@
+version: 1
+
+dn: dc=hitchhiker,dc=com
+objectClass: domain
+objectClass: top
+dc: hitchhiker
+
+dn: ou=Groups,dc=hitchhiker,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: Groups
+
+dn: cn=Heart Of Gold,ou=Groups,dc=hitchhiker,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: Heart Of Gold
+description: The starship Heart of Gold was the first spacecraft to make use of 
+ the Infinite Improbability Drive
+member: dent
+member: trillian

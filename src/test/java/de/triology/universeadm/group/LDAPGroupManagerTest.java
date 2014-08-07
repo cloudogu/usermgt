@@ -1,0 +1,196 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package de.triology.universeadm.group;
+
+import com.github.legman.EventBus;
+import com.github.sdorra.ldap.LDAP;
+import org.junit.Test;
+import org.junit.Rule;
+import com.github.sdorra.ldap.LDAPRule;
+import com.github.sdorra.shiro.ShiroRule;
+import com.github.sdorra.shiro.SubjectAware;
+import com.google.common.io.Resources;
+import com.unboundid.ldap.sdk.Entry;
+import com.unboundid.ldap.sdk.LDAPException;
+import de.triology.universeadm.EventType;
+import de.triology.universeadm.LDAPConfiguration;
+import de.triology.universeadm.LDAPConnectionStrategy;
+import de.triology.universeadm.mapping.DefaultMapper;
+import de.triology.universeadm.mapping.Mapper;
+import de.triology.universeadm.mapping.MapperFactory;
+import de.triology.universeadm.mapping.Mapping;
+import de.triology.universeadm.mapping.SimpleMappingConverterFactory;
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
+import de.triology.universeadm.validation.Validator;
+import java.util.List;
+import javax.xml.bind.JAXB;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.junit.Before;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+/**
+ *
+ * @author ssdorra
+ */
+@SubjectAware(
+  configuration = "classpath:de/triology/universeadm/shiro.001.ini", 
+  username = "trillian", 
+  password = "secret"
+)
+public class LDAPGroupManagerTest
+{
+  
+  private static final String BASEDN = "dc=hitchhiker,dc=com";
+  private static final String LDIF_001 = "/de/triology/universeadm/group/test.001.ldif";
+  private static final String LDIF_002 = "/de/triology/universeadm/group/test.002.ldif";
+  private static final String LDIF_003 = "/de/triology/universeadm/group/test.003.ldif";
+  private static final String MAPPING_001 = "de/triology/universeadm/group/mapping.001.xml";
+  
+  private EventBus eventBus;
+  private Validator validator;
+
+  @Before
+  public void before()
+  {
+    eventBus = mock(EventBus.class);
+    validator = mock(Validator.class);
+  }
+  
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_001)
+  public void createTest() throws LDAPException {
+    LDAPGroupManager groupManager = createGroupManager();
+    Group heartOfGold = Groups.createHeartOfGold();
+    groupManager.create(heartOfGold);
+    Entry entry = ldap.getConnection().getEntry("cn=Heart Of Gold,ou=Groups,dc=hitchhiker,dc=com");
+    assertEntry(heartOfGold, entry);
+    GroupEvent event = new GroupEvent(heartOfGold, EventType.CREATE);
+    verify(eventBus, times(1)).post(event);
+  }
+  
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_001)
+  @SubjectAware(username = "dent", password = "secret")
+  public void createTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().create(Groups.createHeartOfGold());
+  }
+  
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_002)
+  public void getTest() throws LDAPException
+  {
+    Group group = createGroupManager().get("Heart Of Gold");
+    assertEquals(Groups.createHeartOfGold(), group);
+  }
+  
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_002)
+  public void getTestNotFound() throws LDAPException
+  {
+    assertNull(createGroupManager().get("Brockian Ultra-Cricket"));
+  }
+  
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_002)
+  @SubjectAware(username = "dent", password = "secret")
+  public void getTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().get("Heart Of Gold");
+  }
+  
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void getAllTest() throws LDAPException
+  {
+    List<Group> groups = createGroupManager().getAll();
+    assertNotNull(groups);
+    assertEquals(2, groups.size());
+    assertThat(groups, contains(Groups.createBrockianUltraCricket(), Groups.createHeartOfGold()));
+  }
+  
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @SubjectAware(username = "dent", password = "secret")
+  public void getAllTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().getAll();
+  }
+  
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void removeTest() throws LDAPException
+  {
+    Group group = Groups.createHeartOfGold();
+    createGroupManager().remove(group);
+    assertNull(ldap.getConnection().getEntry("cn=Heart Of Gold,ou=Groups,dc=hitchhiker,dc=com"));
+    verify(eventBus).post(new GroupEvent(group, EventType.REMOVE));
+  }
+  
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @SubjectAware(username = "dent", password = "secret")
+  public void removeTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().remove(Groups.createHeartOfGold());
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void modifyTest() throws LDAPException
+  {
+    Group group = Groups.createHeartOfGold();
+    Group modified = Groups.createHeartOfGold();
+    modified.setDescription("The Heart of Gold is 150 metres long. It is shaped like a running shoe, and it is generally rather white.");
+    createGroupManager().modify(modified);
+    Entry entry = ldap.getConnection().getEntry("cn=Heart Of Gold,ou=Groups,dc=hitchhiker,dc=com");
+    assertEntry(modified, entry);
+    verify(eventBus).post(new GroupEvent(modified, group));
+  }
+  
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @SubjectAware(username = "dent", password = "secret")
+  public void modifyTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().modify(Groups.createHeartOfGold());
+  }
+  
+  private void assertEntry(Group group, Entry entry){
+    assertEquals(group.getName(), entry.getAttributeValue("cn"));
+    assertEquals(group.getDescription(), entry.getAttributeValue("description"));
+    assertThat(entry.getAttributeValues("member"), arrayContaining("dent", "trillian"));
+  }
+  
+  private LDAPGroupManager createGroupManager() throws LDAPException
+  {
+    String groupsdn = "ou=Groups,".concat(BASEDN);
+    LDAPConnectionStrategy strategy = mock(LDAPConnectionStrategy.class);
+    when(strategy.get()).thenReturn(ldap.getConnection());
+    LDAPConfiguration config = new LDAPConfiguration(
+      "localhost", 10389, "cn=Directory Manager", 
+      "manager123", null, groupsdn
+    );
+    Mapping mapping = JAXB.unmarshal(Resources.getResource(MAPPING_001), Mapping.class);
+    Mapper<Group> mapper = new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, Group.class, groupsdn);
+    MapperFactory mapperFactory = mock(MapperFactory.class);
+    when(mapperFactory.createMapper(Group.class, groupsdn)).thenReturn(mapper);
+    return new LDAPGroupManager(strategy, config, mapperFactory, validator, eventBus);
+  }
+  
+  
+  @Rule
+  public LDAPRule ldap = new LDAPRule();
+  
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
+  
+}

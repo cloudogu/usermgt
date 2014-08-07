@@ -5,7 +5,7 @@ objectClass: domain
 objectClass: top
 dc: hitchhiker
 
-dn: ou=People,dc=hitchhiker,dc=com
+dn: ou=Groups,dc=hitchhiker,dc=com
 objectClass: organizationalUnit
 objectClass: top
-ou: People
+ou: Groups

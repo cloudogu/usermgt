@@ -6,7 +6,6 @@
 package de.triology.universeadm.user;
 
 import com.github.legman.EventBus;
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
@@ -34,6 +33,7 @@ import com.github.sdorra.ldap.LDAP;
 import com.github.sdorra.ldap.LDAPRule;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import de.triology.universeadm.PlainLDAPHasher;
 
 /**
  *
@@ -246,16 +246,4 @@ public class LDAPUserManagerTest
   
   @Rule
   public ShiroRule shiro = new ShiroRule();
-
-  private static class PlainLDAPHasher extends LDAPHasher
-  {
-
-    @Override
-    public byte[] hash(String value)
-    {
-      return value.getBytes(Charsets.UTF_8);
-    }
-
-  }
-
 }
