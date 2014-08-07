@@ -17,3 +17,5 @@ Desktop DF
 node_modules/
 src/main/webapp/components/
 src/main/webapp/style/css/
+# dynamic settings
+env/data/settings/
