@@ -13,6 +13,7 @@ import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.triology.universeadm.BaseDirectory;
+import de.triology.universeadm.PathXmlAdapter;
 import de.triology.universeadm.Roles;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,7 +168,7 @@ public class DefaultSettingsStore implements SettingsStore
   private void writeCredentialsFile(File file, Credentials credentials)
   {
     StringBuilder content = new StringBuilder();
-    if (credentials.isValid())
+    if (credentials != null && credentials.isValid())
     {
       content.append(credentials.getUsername()).append(LINE_SEPARATOR);
       content.append(credentials.getPassword()).append(LINE_SEPARATOR);
@@ -239,21 +241,27 @@ public class DefaultSettingsStore implements SettingsStore
     
     private static final String DEFAULT_UPDATE_WEBSITE_FILE = "updateserver";
 
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
     @XmlElement(name = "configuration-directory")
     private File configurationDirectory;
 
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
     @XmlElement(name = "update-bugzilla-plugin-file")
     private File updateBugzillaPluginFile;
 
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
     @XmlElement(name = "update-cas-server-file")
     private File updateCasServerFile;
 
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
     @XmlElement(name = "update-service-credentials-file")
     private File updateServiceCredentialsFile;
 
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
     @XmlElement(name = "update-check-enabled-file")
     private File updateCheckEnabledFile;
     
+    @XmlJavaTypeAdapter(PathXmlAdapter.class)
     @XmlElement(name = "update-website-file")
     private File updateWebsiteFile;
 

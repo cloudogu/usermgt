@@ -46,4 +46,25 @@
                 <goal>jetty:run-war</goal>
             </goals>
         </action>
+        <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                
+                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+                <netbeans.deploy>true</netbeans.deploy>
+                <skipTests>true</skipTests>
+                <de.triology.universeadm.TemplateServlet.disable-cache>true</de.triology.universeadm.TemplateServlet.disable-cache>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>!webcomponents</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>
