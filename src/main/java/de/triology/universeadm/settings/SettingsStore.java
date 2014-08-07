@@ -5,18 +5,13 @@
  */
 package de.triology.universeadm.settings;
 
-import java.io.IOException;
-
 /**
  *
  * @author ssdorra
  */
 public interface SettingsStore
 {
-
   public void set(Settings settings);
 
   public Settings get();
-  
-  public boolean validateCredentials(Credentials credentials) throws IOException;
 }

@@ -21,6 +21,7 @@ public class SettingsModule extends AbstractModule
     bind(CredentialsChecker.class).to(DefaultCredentialsChecker.class);
     bind(SettingsStore.class).to(DefaultSettingsStore.class);
     bind(SettingsResource.class);
+    bind(CredentialsInvalidSettingsExceptionMapper.class);
   }
   
 }

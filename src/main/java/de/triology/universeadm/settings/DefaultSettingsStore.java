@@ -6,6 +6,7 @@
 package de.triology.universeadm.settings;
 
 import com.github.legman.EventBus;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -51,7 +52,8 @@ public class DefaultSettingsStore implements SettingsStore
 
   private static final String FILENAME = "settings.xml";
   
-  private static final String DEFAULT_UPDATE_WEBSITE = "https://www.scm-manager.com/applupdateservice/applupdate.php";
+  @VisibleForTesting
+  static final String DEFAULT_UPDATE_WEBSITE = "https://www.scm-manager.com/applupdateservice/applupdate.php";
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultSettingsStore.class);
   
@@ -77,9 +79,9 @@ public class DefaultSettingsStore implements SettingsStore
   {
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
     Credentials credentials = settings.getUpdateServiceCredentials();
-    if ( credentials != null && credentials.isValid() && ! validateCredentials(credentials) )
+    if ( credentials != null && credentials.isValid() )
     {
-      throw new SettingsException("credentials are not valid");
+      validateCredentials(credentials);
     }
     Settings oldSettings = get();
     writeFlagFile(config.getUpdateBugzillaPluginFile(), settings.isUpdateBugzillaPlugin());
@@ -102,15 +104,20 @@ public class DefaultSettingsStore implements SettingsStore
     return settings;
   }
 
-  @Override
-  public boolean validateCredentials(Credentials credentials)
+  private void validateCredentials(Credentials credentials)
   {
     String website = getUpdateWebsite();
     logger.info("check credentials against {}", website);
-    
-    try {
-      return checker.checkCredentials(credentials, website);
-    } catch (IOException ex){
+    try 
+    {
+       boolean result = checker.checkCredentials(credentials, website);
+       if (!result)
+       {
+         throw new CredentialsInvalidSettingsException("credentials are not valid");
+       }
+    } 
+    catch (IOException ex)
+    {
       throw new SettingsException("creadential validation failed", ex);
     }
   }
@@ -178,14 +185,8 @@ public class DefaultSettingsStore implements SettingsStore
     {
       content.append(LINE_SEPARATOR).append(LINE_SEPARATOR).append(FLAG_INVALID);
     }
-    try
-    {
-      Files.write(content, file, UTF8);
-    }
-    catch (IOException ex)
-    {
-      throw new SettingsException("could not store credentials file", ex);
-    }
+
+    writeFile(file, content.toString());
   }
 
   private boolean readFlagFile(File file, boolean defaultState)
@@ -211,13 +212,23 @@ public class DefaultSettingsStore implements SettingsStore
 
   private void writeFlagFile(File file, boolean value)
   {
+    writeFile(file, val(value));
+  }
+  
+  private void writeFile(File file, String content)
+  {
     try
     {
-      Files.write(val(value), file, UTF8);
+      File parent = file.getParentFile();
+      if (!parent.exists() && !parent.mkdirs())
+      {
+        throw new SettingsException("could not create directory ".concat(file.getPath()));
+      }
+      Files.write(content, file, UTF8);
     }
     catch (IOException ex)
     {
-      throw new SettingsException("could not store flag file", ex);
+      throw new SettingsException("could not store file ".concat(file.getPath()), ex);
     }
   }
 

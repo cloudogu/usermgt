@@ -67,14 +67,24 @@ public class DefaultSettingsStoreTest
   
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void testSet(){
+  public void testSet() throws IOException{
     DefaultSettingsStore store = createSettingsStore();
     Settings oldSettings = store.get();
-    Settings settings = new Settings(new Credentials("trillian", "secret"), true, true, true);
+    Credentials credentials = new Credentials("trillian", "secret");
+    when(checker.checkCredentials(credentials, DefaultSettingsStore.DEFAULT_UPDATE_WEBSITE)).thenReturn(true);
+    Settings settings = new Settings(credentials, true, true, true);
     store.set(settings);
     Settings other = store.get();
     assertEquals(settings, other);
     verify(eventBus, times(1)).post(new SettingsChangedEvent(settings, oldSettings));
+  }
+  
+  @Test(expected = CredentialsInvalidSettingsException.class)
+  @SubjectAware(username = "trillian", password = "secret")
+  public void testSetWithInvalidCredentials()
+  {
+    DefaultSettingsStore store = createSettingsStore();
+    store.set(new Settings(new Credentials("dent", "secret"), true, true, true));
   }
   
   private DefaultSettingsStore createSettingsStore()
