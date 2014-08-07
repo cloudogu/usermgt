@@ -31,20 +31,21 @@ public class DefaultSettingsStoreTest
 {
   
   private EventBus eventBus;
-  private File file;
+  private DefaultSettingsStore.SettingsStoreConfiguration configurarion;
   
   @Before
   public void prepare() throws IOException
   {
     eventBus = mock(EventBus.class);
-    file = temp.newFile();
+    File directory = temp.newFolder();
+    configurarion = new DefaultSettingsStore.SettingsStoreConfiguration(directory);
   }
   
   @Test(expected = UnauthorizedException.class)
   @SubjectAware(username = "dent", password = "secret")
   public void testGetNonAdministrator()
   {
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, file);
+    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
     store.get();
   }
   
@@ -52,7 +53,7 @@ public class DefaultSettingsStoreTest
   @SubjectAware(username = "dent", password = "secret")
   public void testSetNonAdministrator()
   {
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, file);
+    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
     store.set(new Settings(null, true, true, true));
   }
   
@@ -60,7 +61,7 @@ public class DefaultSettingsStoreTest
   @SubjectAware(username = "trillian", password = "secret")
   public void testGet()
   {
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, file);
+    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
     Settings settings = store.get();
     assertNotNull(settings);
   }
@@ -68,7 +69,7 @@ public class DefaultSettingsStoreTest
   @Test
   @SubjectAware(username = "trillian", password = "secret")
   public void testSet(){
-    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, file);
+    DefaultSettingsStore store = new DefaultSettingsStore(eventBus, configurarion);
     Settings oldSettings = store.get();
     Settings settings = new Settings(new Credentials("trillian", "secret"), true, true, true);
     store.set(settings);
