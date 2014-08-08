@@ -18,7 +18,7 @@ angular.module('universeadm.settings.config', ['ui.router',
     // registar navigation
     navigationProvider.add({
       url: '/settings',
-      label: 'Settings',
+      label: 'Appliance Settings',
       requireAdminPrivileges: true
     });
     
