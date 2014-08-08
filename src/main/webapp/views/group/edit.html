@@ -24,7 +24,7 @@
         <textarea id="description" name="description" class="form-control" rows="3" ng-model="group.description" placeholder="Enter description"></textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary" ng-click="save(group)" ng-disabled="form.$invalid || isUnchanged(user)">
+      <button type="submit" class="btn btn-primary" ng-click="save(group)" ng-disabled="form.$invalid || isUnchanged(group)">
         Save
       </button>
       <button  class="btn btn-warning" ng-click="remove(group)">

@@ -116,12 +116,16 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
       $scope.alerts.splice(index, 1);
     };
     
-    $scope.save = function(user){
+    $scope.isUnchanged = function(group){
+      return angular.equals(group, $scope.master);
+    };
+    
+    $scope.save = function(group){
       var promise;
       if ($scope.create){
-        promise = groupService.create(user);
+        promise = groupService.create(group);
       } else {
-        promise = groupService.modify(user);
+        promise = groupService.modify(group);
       }
       promise.then(function(){
         $location.path('/groups');
@@ -146,5 +150,6 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
       group = {};
       group.members = [];
     }
+    $scope.master = angular.copy(group);
     $scope.group = group;
   });
