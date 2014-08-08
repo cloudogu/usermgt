@@ -1,6 +1,46 @@
+// base gray-dark 363636
+@gray-darker:            darken(#363636, 20%);
+@gray-dark:              #363636;
+@gray:                   lighten(#363636, 20%);
+@gray-light:             lighten(#363636, 20%);
+@gray-lighter:           lighten(#363636, 60%);
+
+// scmmu light blue
+@brand-primary:         #00A5E2;
+
+// scmmu yellow
+@brand-warning:         #fcc917;
+
+@body-bg:               #F7F7F7;
+
+// scmmu dark blue
+// @navbar-inverse-bg:     #30343F;
+// @navbar-inverse-link-active-bg:             darken(@navbar-inverse-bg, 10%);
+
+@font-family-sans-serif:  Exo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-serif:       Exo, Georgia, "Times New Roman", Times, serif;
+
 body {
   padding-top: 60px;
   padding-bottom: 20px;
+}
+
+th {
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+  text-transform: uppercase;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-weight: bold;
+  padding: 0;
+  margin-bottom: 15px;
+  text-rendering: optimizeLegibility;
+  text-transform: uppercase;
+}
+
+.navbar-header, .navbar-nav {
+  text-transform: uppercase;
 }
 
 .starter-template {
