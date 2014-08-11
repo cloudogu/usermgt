@@ -28,7 +28,7 @@
 
 angular.module('universeadm.backup.config', ['ui.router', 
   'universeadm.backup.controllers', 'universeadm.backup.services', 
-  'universeadm.navigation'])
+  'universeadm.navigation', 'universeadm.util.filters'])
   .config(function($stateProvider, navigationProvider){
     // registar navigation
     navigationProvider.add({
