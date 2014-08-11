@@ -38,6 +38,7 @@ import com.unboundid.asn1.ASN1OctetString;
 import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Filter;
+import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
 import java.lang.reflect.InvocationTargetException;
@@ -75,7 +76,24 @@ public class DefaultMapper<T> implements Mapper<T>
     this.searchAttributes = FluentIterable.from(mapping.getAttributes()).filter(searchPredicate).transform(toLdapName).toList();
     this.objectClasses = new Attribute("objectClass", mapping.getObjectClasses());
     this.rdn = extractRdn();
-    this.baseFilter = Filter.createPresenceFilter(rdn.getLdapName());
+    
+    Filter rdnPresence = Filter.createPresenceFilter(rdn.getLdapName());
+    String mfilter = mapping.getBaseFilter();
+    if (!Strings.isNullOrEmpty(mfilter))
+    {
+      try 
+      {
+        this.baseFilter = Filter.createANDFilter(Filter.create(mfilter), rdnPresence);
+      } 
+      catch (LDAPException ex)
+      {
+        throw new MappingException("could not create base filter from ".concat(mfilter), ex);
+      }
+    } 
+    else 
+    {
+      this.baseFilter = rdnPresence;
+    }
   }
   
   @Override

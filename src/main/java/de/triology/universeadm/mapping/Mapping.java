@@ -51,14 +51,23 @@ public class Mapping
   @XmlElementWrapper(name = "attributes")
   private List<MappingAttribute> attributes;
 
+  @XmlElement(name = "base-filter")
+  private String baseFilter;
+  
   Mapping()
   {
   }
   
   public Mapping(List<String> objectClasses, List<MappingAttribute> attributes)
   {
+    this(objectClasses, attributes, null);
+  }
+  
+  public Mapping(List<String> objectClasses, List<MappingAttribute> attributes, String baseFilter)
+  {
     this.objectClasses = objectClasses;
     this.attributes = attributes;
+    this.baseFilter = baseFilter;
   }
   
   public List<MappingAttribute> getAttributes()
@@ -69,5 +78,10 @@ public class Mapping
   public List<String> getObjectClasses()
   {
     return objectClasses;
+  }
+
+  public String getBaseFilter()
+  {
+    return baseFilter;
   }
 }
