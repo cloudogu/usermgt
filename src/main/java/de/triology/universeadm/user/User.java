@@ -284,8 +284,6 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
-  @NotNull
-  @Size(min = 1)
   private String displayName;
 
   /**
