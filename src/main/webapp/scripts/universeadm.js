@@ -28,7 +28,7 @@
 
 angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular',
   'ui.router', 'universeadm.navigation', 'universeadm.account.config', 
-  'universeadm.users.config', 'universeadm.groups.config', 
+  'universeadm.users.config', 'universeadm.groups.config', 'universeadm.backup.config',
   'universeadm.settings.config'])
   .config(function(RestangularProvider, $stateProvider, $urlRouterProvider){
     // configure restangular

@@ -50,6 +50,15 @@ public final class Resources
   
   private static final ObjectMapper mapper = new ObjectMapper().setAnnotationIntrospector(new JaxbAnnotationIntrospector());
   
+  public static MockHttpResponse dispatchWithProviders(Object resource, MockHttpRequest request, Class... providers) throws IOException
+  {
+    Dispatcher dispatcher = createDispatcher(resource);
+    for (Class provider : providers){
+      dispatcher.getProviderFactory().register(provider);
+    }
+    return dispatch(dispatcher, request, null);
+  }
+  
   public static MockHttpResponse dispatch(Object resource, MockHttpRequest request) throws IOException
   {
     return dispatch(resource, request, null);

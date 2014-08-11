@@ -31,6 +31,7 @@ import com.github.legman.EventBus;
 import com.github.legman.guice.LegmanModule;
 import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.account.AccountModule;
+import de.triology.universeadm.backup.BackupModule;
 import de.triology.universeadm.group.GroupModule;
 import de.triology.universeadm.mapping.MappingModule;
 import de.triology.universeadm.settings.SettingsModule;
@@ -83,6 +84,9 @@ public class MainModule extends ServletModule
 
     // groups
     install(new GroupModule());
+    
+    // backup
+    install(new BackupModule());
     
     // settings
     install(new SettingsModule());

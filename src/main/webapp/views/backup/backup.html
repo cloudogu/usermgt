@@ -1,0 +1,29 @@
+<h1>Backup</h1>
+
+<p>
+  Just click on the filenames on this page to download the files from the latest backup run. 
+  More information about <a href="/?page_id=832">Backup & Recovery.</a>
+</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Last modified</th>
+      <th>Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="file in files">
+      <td>
+        <a ng-href="{{downloadUrl(file)}}">{{file.name}}</a>
+      </td>
+      <td>
+        {{file.lastModified | date:'yyyy-MM-dd HH:mm:ss'}}
+      </td>
+      <td>
+        {{file.size}}
+      </td>
+    </tr>
+  </tbody>
+</table>
