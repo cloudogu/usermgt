@@ -49,6 +49,8 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class TemplateServlet extends HttpServlet
 {
+  
+  private static final String CONTENT_TYPE = "text/html; charset=UTF-8";
 
   private final Cache<String, String> cache;
 
@@ -101,6 +103,7 @@ public class TemplateServlet extends HttpServlet
   {
     if (!Strings.isNullOrEmpty(value))
     {
+      resp.setContentType(CONTENT_TYPE);
       try (PrintWriter writer = resp.getWriter())
       {
         writer.println(value);
