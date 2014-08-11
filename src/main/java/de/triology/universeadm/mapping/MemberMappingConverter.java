@@ -93,7 +93,15 @@ public class MemberMappingConverter extends AbstractMappingConverter
       {
         if (!DUMMY_DN.equals(v))
         {
-          collection.add(decodeFromString(null, v));
+          Object member = decodeFromString(null, v);
+          if ( collection.contains(member) )
+          {
+            logger.warn("dublicate member {} found", member);
+          }
+          else 
+          {
+            collection.add(decodeFromString(null, v));
+          }
         }
       }
       if ( type.isList() )
