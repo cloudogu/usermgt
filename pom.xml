@@ -385,6 +385,22 @@
     </pluginRepository>
 
   </pluginRepositories>
+  
+  <distributionManagement>
+    
+    <repository>
+      <id>universe.triology.de</id>
+      <name>Triology Nexus Release Repository</name>
+      <url>http://universe.triology.de/nexus/content/repositories/releases/</url>
+    </repository>
+    
+    <snapshotRepository>
+      <id>universe.triology.de</id>
+      <name>Triology Nexus Snapshot Repository</name>
+      <url>http://universe.triology.de/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+    
+  </distributionManagement>
 
   <profiles>
     <profile>
