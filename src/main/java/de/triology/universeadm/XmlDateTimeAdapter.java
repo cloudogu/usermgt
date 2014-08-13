@@ -41,13 +41,13 @@ public class XmlDateTimeAdapter extends XmlAdapter<String, DateTime>
   private static final DateTimeFormatter ISO8601 = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZoneUTC();
 
   @Override
-  public DateTime unmarshal(String v) throws Exception
+  public DateTime unmarshal(String v)
   {
     return ISO8601.parseDateTime(v);
   }
 
   @Override
-  public String marshal(DateTime v) throws Exception
+  public String marshal(DateTime v)
   {
     return ISO8601.print(v);
   }
