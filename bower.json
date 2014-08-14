@@ -1,6 +1,5 @@
 {
   "name": "universeadm",
-  "version": "1.0.0-SNAPSHOT",
   "dependencies": {
     "angular": "1.2.20",
     "angular-i18n": "1.2.20",
