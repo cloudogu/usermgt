@@ -34,7 +34,7 @@ angular.module('universeadm.util.filters', [])
   })
   .filter('byteSize', function() {
 	return function(bytes, precision) {
-      if (bytes < 1024) return bytes;
+      if (bytes < 1024) return '' + bytes;
       if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
       if (typeof precision === 'undefined') precision = 1;
       var units = ['', 'kB', 'MB', 'GB', 'TB', 'PB'],
