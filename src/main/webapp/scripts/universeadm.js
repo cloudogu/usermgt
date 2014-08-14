@@ -28,7 +28,7 @@
 
 angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular',
   'ui.router', 'universeadm.navigation', 'universeadm.account.config', 
-  'universeadm.users.config', 'universeadm.groups.config', /**'universeadm.backup.config',
+  'universeadm.users.config', 'universeadm.groups.config'/**, 'universeadm.backup.config',
   'universeadm.settings.config'**/])
   .config(function(RestangularProvider, $stateProvider, $urlRouterProvider){
     // configure restangular
@@ -58,7 +58,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
         templateUrl: 'views/error/500.html'
       });;
 
-    // redirect unmatched to /users
+    // redirect unmatched to /account
     $urlRouterProvider.otherwise("/account");
   })
   .run(function($rootScope, $state, $log, $http){
