@@ -36,7 +36,7 @@ module.exports = function(config) {
     autoWatch: true,
     frameworks: ['jasmine'],
     browsers: ['PhantomJS'],
-    reporters: ['progress', 'junit'],
+    reporters: ['dots', 'junit'],
     plugins: [
       'karma-phantomjs-launcher',
       'karma-chrome-launcher',
@@ -45,7 +45,7 @@ module.exports = function(config) {
       'karma-junit-reporter'
     ],
     junitReporter: {
-      outputFile: 'target/karma-report/unit.xml',
+      outputFile: 'target/karma-reports/unit.xml',
       suite: 'unit'
     }
 
