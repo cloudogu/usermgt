@@ -31,6 +31,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.cache.Cache;
 import com.google.common.io.Resources;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,11 +55,14 @@ public class TemplateServlet extends HttpServlet
 
   private final Cache<String, String> cache;
 
-  private static final boolean CACHE_DISABLED = Boolean.getBoolean(TemplateServlet.class.getName().concat(".disable-cache"));
-
+  @Inject
   public TemplateServlet()
   {
-    if (!CACHE_DISABLED)
+    this(Stage.get());
+  }
+  
+  TemplateServlet(Stage stage){
+    if (stage == Stage.PRODUCTION)
     {
       logger.info("create template servlet with enabled cache");
       cache = Caches.createSmallCache();

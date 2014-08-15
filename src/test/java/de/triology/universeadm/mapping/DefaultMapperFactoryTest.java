@@ -30,6 +30,7 @@ package de.triology.universeadm.mapping;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Filter;
 import de.triology.universeadm.BaseDirectory;
+import de.triology.universeadm.Stage;
 import de.triology.universeadm.user.User;
 import javax.xml.bind.JAXB;
 import org.junit.Test;
@@ -78,7 +79,10 @@ public class DefaultMapperFactoryTest
   
   @Test
   public void testCacheDisabled(){
-    // how ?
+    DefaultMapperFactory dcf = new DefaultMapperFactory(new SimpleMappingConverterFactory(), Stage.DEVELOPMENT);
+    Mapper<User> m1 = dcf.createMapper(User.class, "ou=People");
+    Mapper<User> m2 = dcf.createMapper(User.class, "ou=People");
+    assertNotSame(m1, m2);
   }
   
 }
