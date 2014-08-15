@@ -573,6 +573,7 @@ public class ResourceServlet extends HttpServlet
 
             // The browser accepts GZIP, so GZIP the content.
             response.setHeader("Content-Encoding", "gzip");
+            response.setHeader("Vary", "Accept-Encoding");
             output = new GZIPOutputStream(output, DEFAULT_BUFFER_SIZE);
           }
           else

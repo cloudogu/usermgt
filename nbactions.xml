@@ -31,7 +31,7 @@
             <properties>
                 <netbeans.deploy>true</netbeans.deploy>
                 <skipTests>true</skipTests>
-                <de.triology.universeadm.TemplateServlet.disable-cache>true</de.triology.universeadm.TemplateServlet.disable-cache>
+                
             </properties>
             <activatedProfiles>
                 <activatedProfile>!webcomponents</activatedProfile>
@@ -65,6 +65,20 @@
             </properties>
             <activatedProfiles>
                 <activatedProfile>!webcomponents</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-Run production</actionName>
+            <displayName>Run production</displayName>
+            <goals>
+                <goal>package</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy>true</netbeans.deploy>
+                <skipTests>true</skipTests>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>webcomponents</activatedProfile>
             </activatedProfiles>
         </action>
     </actions>
