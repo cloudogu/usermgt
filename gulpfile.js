@@ -15,6 +15,13 @@ var size = require('gulp-size');
 var rename = require('gulp-rename');
 var revReplace = require('gulp-rev-replace');
 var templateCache = require('gulp-angular-templatecache');
+var jshint = require('gulp-jshint');
+
+gulp.task('jshint', function(){
+  gulp.src('src/main/webapp/scripts/**/*.js')
+      .pipe(jshint())
+      .pipe(jshint.reporter('default'));
+});
 
 gulp.task('lessc', function(){
   gutil.log('run lessc');
