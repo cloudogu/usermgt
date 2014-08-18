@@ -33,7 +33,7 @@ angular.module('universeadm.validation.directives', [])
       require: '^form',
       link: function(scope, el, attrs, formCtrl) {
         // find the text box element, which has the 'name' attribute
-        var inputEl = el[0].querySelector("[name]");
+        var inputEl = el[0].querySelector('[name]');
         // convert the native text box element to an angular element
         var inputNgEl = angular.element(inputEl);
         // get the name on the text box so we know the property to check
@@ -67,7 +67,7 @@ angular.module('universeadm.validation.directives', [])
 
           //set the form control to valid if both 
           //passwords are the same, else invalid
-          control.$setValidity("passwordMatch", n);
+          control.$setValidity('passwordMatch', n);
         });
       }
     };
@@ -103,9 +103,6 @@ angular.module('universeadm.validation.directives', [])
             $scope.message = 'Server returned http status code ' + error.status;
           }
         }
-      },
-      link: function($scope, $element, $attr){
-        //console.log($scope.error);
       }
     };
   });

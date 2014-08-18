@@ -38,7 +38,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.users = users;
       $scope.pages = Math.ceil(users.meta.totalEntries / users.meta.limit);
       $scope.pageRange = pagingService.pageRange(page, 10, $scope.pages);
-    };
+    }
     
     $scope.search = function(query){
       $location.search({q: query});

@@ -56,10 +56,10 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
       .state('error500', {
         url: '/error/500',
         templateUrl: 'views/error/500.html'
-      });;
+      });
 
     // redirect unmatched to /account
-    $urlRouterProvider.otherwise("/account");
+    $urlRouterProvider.otherwise('/account');
   })
   .run(function($rootScope, $state, $log, $http){
     $http.get(_contextPath + '/api/subject').then(function(res){
@@ -70,7 +70,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
       $log.error(e);
     });
     
-    $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error){
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
       if ( error.status === 404 ){
         event.preventDefault();
         $log.warn('could not find page, redirect to error page');
@@ -81,7 +81,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
       }
     });
 
-    $rootScope.$on("$stateNotFound", function(event){
+    $rootScope.$on('$stateNotFound', function(){
       $state.go('error404');
     });
   })

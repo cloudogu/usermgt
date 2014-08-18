@@ -46,7 +46,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       accountService.modify(account).then(function() {
         setAccount(account);
         $scope.form.$setPristine();
-      }, function(e) {
+      }, function() {
 
       });
     };
@@ -61,7 +61,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
           account.memberOf.push(group.newGroup);
           accountService.modify(account).then(function() {
             group.newGroup = null;
-          }, function(e) {
+          }, function() {
 
           });
         } else {

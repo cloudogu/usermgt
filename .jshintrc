@@ -20,6 +20,7 @@
   "multistr": true,
   "globals": {
     "angular": false,
-    "_contextPath": false
+    "_contextPath": false,
+    "_": false
   }
 }
