@@ -1,67 +1,79 @@
+/* 
+ * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * http://www.scm-manager.com
+ */
+
+
 // load gulp
 var gulp = require('gulp');
-var gutil = require('gulp-util');
-
-// load plugins
-var uglify = require('gulp-uglify');
-var rev = require('gulp-rev');
-var filesize = require('gulp-filesize');
-var ngannotate = require('gulp-ng-annotate');
-var minifycss = require('gulp-minify-css');
-var less = require('gulp-less');
-var useref = require('gulp-useref');
-var gulpif = require('gulp-if');
-var size = require('gulp-size');
-var rename = require('gulp-rename');
-var revReplace = require('gulp-rev-replace');
-var templateCache = require('gulp-angular-templatecache');
-var jshint = require('gulp-jshint');
+var $ = require('gulp-load-plugins')();
 
 gulp.task('jshint', function(){
   gulp.src('src/main/webapp/scripts/**/*.js')
-      .pipe(jshint())
-      .pipe(jshint.reporter('jshint-stylish'));
+      .pipe($.jshint())
+      .pipe($.jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('lessc', function(){
-  gutil.log('run lessc');
   return gulp.src('src/main/webapp/style/less/*')
-      .pipe(less())
+      .pipe($.less())
       .pipe(gulp.dest('target/gulp/style/css/'));
 });
 
 gulp.task('build-template-cache', function(){
-  gutil.log('run build-template-cache');
   var opts = {
     filename: 'universeadm.tpl.js',
     module: 'universeadm',
     root: 'views/'
   };
   return gulp.src('src/main/webapp/views/**/*.html')
-      .pipe(templateCache(opts))
+      .pipe($.angularTemplatecache(opts))
       .pipe(gulp.dest('target/gulptmp/scripts'));
 });
 
 gulp.task('default', ['lessc', 'build-template-cache'], function(){
-  gutil.log('run default');
-
   // copy index.html for debugging purposes
   gulp.src('src/main/webapp/*.html')
-      .pipe(rename({suffix: '-debug'}))
+      .pipe($.rename({suffix: '-debug'}))
       .pipe(gulp.dest('target/gulp'));
+
+  var assets = $.useref.assets({searchPath: '{target/gulp,target/gulptmp,src/main/webapp}'});
 
   // concat, compress and rename resources from index.html
   gulp.src('src/main/webapp/index.html')
-      .pipe(useref.assets({searchPath: '{target/gulp,target/gulptmp,src/main/webapp}'}))
-      .pipe(size())
-      .pipe(gulpif('*.js', ngannotate()))
-      .pipe(gulpif('*.js', uglify()))
-      .pipe(gulpif('*.css', minifycss()))
-      .pipe(rev())
-      .pipe(rename({suffix: '.min'}))
-      .pipe(useref.restore())
-      .pipe(useref())
-      .pipe(revReplace())
+      .pipe(assets)
+      .pipe($.filesize())
+      .pipe($.if('*.js', $.ngAnnotate()))
+      .pipe($.if('*.js', $.uglify()))
+      .pipe($.if('*.css', $.minifyCss()))
+      .pipe($.rev())
+      .pipe($.rename({suffix: '.min'}))
+      .pipe(assets.restore())
+      .pipe($.useref())
+      .pipe($.revReplace())
+      //.pipe($.if('*.html', $.minifyHtml()))
       .pipe(gulp.dest('target/gulp'));
 });
 
