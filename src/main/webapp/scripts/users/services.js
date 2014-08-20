@@ -39,6 +39,9 @@ angular.module('universeadm.users.services', ['restangular'])
       get: function(username){
         return users.one(username).get();
       },
+      exists: function(username){
+        return users.one(username).head();
+      },
       modify: function(user){
         return user.put();
       },

@@ -97,29 +97,35 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     
     $scope.addGroup = function(group){
       if ( group ){
-        if (user.memberOf.indexOf(group.newGroup) < 0){
-          var promise = null;
-          if ($scope.create){
-            promise = groupService.exists(group.newGroup);
-          } else {
-            promise = userService.addGroup(user, group.newGroup);
-          }
-          promise.then(function(){
-            user.memberOf.push(group.newGroup);
-            group.newGroup = null;
-          }, function(e){
-            // ?? do not clear, mark as dirty ?
-            if (e.status === 400 || e.status === 404){
-              $scope.alerts = [{
-                type: 'danger',
-                msg: 'group ' + group.newGroup + ' does not exists'
-              }];
-            }
-            group.newGroup = null;
-          });
+        var promise = null;
+        if ($scope.create){
+          promise = groupService.exists(group.newGroup);
         } else {
-          group.newGroup = null;
+          promise = userService.addGroup(user, group.newGroup);
         }
+        promise.then(function(){
+          user.memberOf.push(group.newGroup);
+          group.newGroup = null;
+        }, function(e){
+          // ?? do not clear, mark as dirty ?
+          if (e.status === 400 || e.status === 404){
+            $scope.alerts = [{
+              type: 'danger',
+              msg: 'group ' + group.newGroup + ' does not exists'
+            }];
+          } else if (e.status === 409) {
+            $scope.alerts = [{
+              type: 'info',
+              msg: 'The user is allready a member of ' + group.newGroup
+            }];  
+          } else {
+            $scope.alerts = [{
+              type: 'danger',
+              msg: 'The group could not be added'
+            }];
+          }
+          group.newGroup = null;
+        });
       }
     };
     

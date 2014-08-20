@@ -82,19 +82,35 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
     
     $scope.addMember = function(member){
       if ( member ){
-        if (group.members.indexOf(member.newMemeber) < 0){
-          if ($scope.create){
-            group.members.push(member.newMember);
-            member.newMember = null;
-          } else {
-            groupService.addMember(group, member.newMember).then(function(){
-              group.members.push(member.newMember);
-              member.newMember = null;
-            });
-          }
+        var promise = null;
+        if ($scope.create){
+          promise = userService.exists(member.newMember);
         } else {
-          member.newMember = null;
+          promise = groupService.addMember(group, member.newMember);
         }
+        promise.then(function(){
+          group.members.push(member.newMember);
+          member.newMember = null;
+        }, function(e){
+          // ?? do not clear, mark as dirty ?
+          if (e.status === 400 || e.status === 404){
+            $scope.alerts = [{
+              type: 'danger',
+              msg: 'user ' + member.newMember + ' does not exists'
+            }];
+          } else if (e.status === 409) {
+            $scope.alerts = [{
+              type: 'info',
+              msg: 'The user ' + member.newMember + ' is allready a member'
+            }];              
+          } else {
+            $scope.alerts = [{
+              type: 'danger',
+              msg: 'The member could not be added'
+            }];
+          }
+          member.newMember = null;
+        });
       }
     };
     

@@ -29,6 +29,8 @@ package de.triology.universeadm.group;
 
 import com.google.inject.Inject;
 import de.triology.universeadm.AbstractManagerResource;
+import de.triology.universeadm.user.User;
+import de.triology.universeadm.user.UserManager;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -44,12 +46,14 @@ public class GroupResource extends AbstractManagerResource<Group>
 {
 
   private final GroupManager groupManager;
+  private final UserManager userManager;
   
   @Inject
-  public GroupResource(GroupManager groupManager)
+  public GroupResource(GroupManager groupManager, UserManager userManager)
   {
     super(groupManager);
     this.groupManager = groupManager;
+    this.userManager = userManager;
   }
 
   @Override
@@ -71,9 +75,13 @@ public class GroupResource extends AbstractManagerResource<Group>
     Response.ResponseBuilder builder;
     
     Group group = groupManager.get(name);
+    User user = userManager.get(member);
     if ( group == null )
     {
       builder = Response.status(Response.Status.NOT_FOUND);
+    }
+    else if (user == null){
+      builder = Response.status(Response.Status.BAD_REQUEST);
     }
     else if ( group.getMembers().contains(member) )
     {
