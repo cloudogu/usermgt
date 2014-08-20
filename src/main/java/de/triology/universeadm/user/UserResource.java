@@ -1,16 +1,16 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -21,15 +21,22 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * http://www.scm-manager.com
  */
 
+
+
 package de.triology.universeadm.user;
 
+//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+
 import de.triology.universeadm.AbstractManagerResource;
+
+//~--- JDK imports ------------------------------------------------------------
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -44,8 +51,12 @@ import javax.ws.rs.core.Response;
 public class UserResource extends AbstractManagerResource<User>
 {
 
-  private final UserManager userManager;
-  
+  /**
+   * Constructs ...
+   *
+   *
+   * @param userManager
+   */
   @Inject
   public UserResource(UserManager userManager)
   {
@@ -53,67 +64,111 @@ public class UserResource extends AbstractManagerResource<User>
     this.userManager = userManager;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   * @param group
+   *
+   * @return
+   */
+  @POST
+  @Path("{user}/groups/{group}")
+  public Response addMembership(@PathParam("user") String username,
+    @PathParam("group") String group)
+  {
+    Response.ResponseBuilder builder;
+
+    User user = userManager.get(username);
+
+    if (user == null)
+    {
+      builder = Response.status(Response.Status.NOT_FOUND);
+    }
+    else if (user.getMemberOf().contains(group))
+    {
+      builder = Response.status(Response.Status.CONFLICT);
+    }
+    else
+    {
+      user.getMemberOf().add(group);
+      userManager.modify(user);
+      builder = Response.noContent();
+    }
+
+    return builder.build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   * @param group
+   *
+   * @return
+   */
+  @DELETE
+  @Path("{user}/groups/{group}")
+  public Response removeMember(@PathParam("user") String username,
+    @PathParam("group") String group)
+  {
+    Response.ResponseBuilder builder;
+
+    User user = userManager.get(username);
+
+    if (user == null)
+    {
+      builder = Response.status(Response.Status.NOT_FOUND);
+    }
+    else if (!user.getMemberOf().contains(group))
+    {
+      builder = Response.status(Response.Status.CONFLICT);
+    }
+    else
+    {
+      user.getMemberOf().remove(group);
+      userManager.modify(user);
+      builder = Response.noContent();
+    }
+
+    return builder.build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param user
+   */
+  @Override
+  protected void prepareForModify(String id, User user)
+  {
+    user.setUsername(id);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   *
+   * @return
+   */
   @Override
   protected String getId(User user)
   {
     return user.getUsername();
   }
 
-  @Override
-  protected void prepareForModify(String id, User user)
-  {
-    user.setUsername(id);
-  }
-  
-  @POST
-  @Path("{user}/groups/{group}")
-  public Response addMembership(@PathParam("user") String username, @PathParam("group") String group)
-  {
-    Response.ResponseBuilder builder;
-    
-    User user = userManager.get(username);
-    if ( user == null )
-    {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if ( user.getMemberOf().contains(group) )
-    {
-      builder = Response.status(Response.Status.CONFLICT);
-    }
-    else 
-    {
-      user.getMemberOf().add(group);
-      userManager.modify(user);
-      builder = Response.noContent();
-    }
-    
-    return builder.build();
-  }
-  
-    
-  @DELETE
-  @Path("{user}/groups/{group}")
-  public Response removeMember(@PathParam("user") String username, @PathParam("group") String group)
-  {
-    Response.ResponseBuilder builder;
-    
-    User user = userManager.get(username);
-    if ( user == null )
-    {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if ( ! user.getMemberOf().contains(group) )
-    {
-      builder = Response.status(Response.Status.CONFLICT);
-    }
-    else 
-    {
-      user.getMemberOf().remove(group);
-      userManager.modify(user);
-      builder = Response.noContent();
-    }
-    
-    return builder.build();
-  }
+  //~--- fields ---------------------------------------------------------------
 
+  /** Field description */
+  private final UserManager userManager;
 }
