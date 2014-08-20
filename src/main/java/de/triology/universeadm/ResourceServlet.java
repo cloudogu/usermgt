@@ -77,8 +77,8 @@ public class ResourceServlet extends HttpServlet
 
   // Constants ----------------------------------------------------------------------------------
 
-  /** Field description */
-  private static final int DEFAULT_BUFFER_SIZE = 10240;    // ..bytes = 10KB.
+  /** bytes = 10KB */
+  private static final int DEFAULT_BUFFER_SIZE = 10240;
 
   /** Field description */
   private static final long DEFAULT_EXPIRE_TIME = TimeUnit.DAYS.toMillis(31l);
@@ -370,8 +370,10 @@ public class ResourceServlet extends HttpServlet
     if ((ifNoneMatch != null) && matches(ifNoneMatch, eTag))
     {
       response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-      response.setHeader("ETag", eTag);    // Required in 304.
-      response.setDateHeader("Expires", expires);    // Postpone cache with 1 week.
+      // Required in 304.
+      response.setHeader("ETag", eTag);
+      // Postpone cache with 1 month.
+      response.setDateHeader("Expires", expires);
 
       return;
     }
@@ -384,8 +386,10 @@ public class ResourceServlet extends HttpServlet
       && (ifModifiedSince + 1000 > lastModified))
     {
       response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-      response.setHeader("ETag", eTag);    // Required in 304.
-      response.setDateHeader("Expires", expires);    // Postpone cache with 1 week.
+      // Required in 304.
+      response.setHeader("ETag", eTag);
+      // Postpone cache with 1 month.
+      response.setDateHeader("Expires", expires);
 
       return;
     }
@@ -427,7 +431,8 @@ public class ResourceServlet extends HttpServlet
       // Range header should match format "bytes=n-n,n-n,n-n...". If not, then return 416.
       if (!range.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$"))
       {
-        response.setHeader("Content-Range", "bytes */" + length);    // Required in 416.
+        // Required in 416.
+        response.setHeader("Content-Range", "bytes */" + length);
         response.sendError(
           HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
 
@@ -442,7 +447,8 @@ public class ResourceServlet extends HttpServlet
       {
         try
         {
-          long ifRangeTime = request.getDateHeader("If-Range");    // Throws IAE if invalid.
+          // Throws IAE if invalid.
+          long ifRangeTime = request.getDateHeader("If-Range");    
 
           if ((ifRangeTime != -1) && (ifRangeTime + 1000 < lastModified))
           {
@@ -479,7 +485,8 @@ public class ResourceServlet extends HttpServlet
           // Check if Range is syntactically valid. If not, then return 416.
           if (start > end)
           {
-            response.setHeader("Content-Range", "bytes */" + length);    // Required in 416.
+            // Required in 416.
+            response.setHeader("Content-Range", "bytes */" + length);
             response.sendError(
               HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
 
@@ -599,7 +606,8 @@ public class ResourceServlet extends HttpServlet
         response.setHeader("Content-Range",
           "bytes " + r.start + "-" + r.end + "/" + r.total);
         response.setHeader("Content-Length", String.valueOf(r.length));
-        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);    // 206.
+        // 206.
+        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
 
         if (content)
         {
@@ -615,7 +623,8 @@ public class ResourceServlet extends HttpServlet
         // Return multiple parts of file.
         response.setContentType("multipart/byteranges; boundary="
           + MULTIPART_BOUNDARY);
-        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);    // 206.
+        // 206.
+        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
 
         if (content)
         {
@@ -660,7 +669,7 @@ public class ResourceServlet extends HttpServlet
   /**
    * This class represents a byte range.
    */
-  protected class Range
+  private static class Range
   {
 
     /**
@@ -680,16 +689,16 @@ public class ResourceServlet extends HttpServlet
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    long end;
+    private final long end;
 
     /** Field description */
-    long length;
+    private final long length;
 
     /** Field description */
-    long start;
+    private final long start;
 
     /** Field description */
-    long total;
+    private final long total;
   }
 
   //~--- fields ---------------------------------------------------------------
