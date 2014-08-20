@@ -34,6 +34,8 @@ package de.triology.universeadm.user;
 import com.google.inject.Inject;
 
 import de.triology.universeadm.AbstractManagerResource;
+import de.triology.universeadm.group.Group;
+import de.triology.universeadm.group.GroupManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -44,6 +46,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
+ * TODO remove package cycle with group.
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
@@ -56,12 +59,14 @@ public class UserResource extends AbstractManagerResource<User>
    *
    *
    * @param userManager
+   * @param groupManager
    */
   @Inject
-  public UserResource(UserManager userManager)
+  public UserResource(UserManager userManager, GroupManager groupManager)
   {
     super(userManager);
     this.userManager = userManager;
+    this.groupManager = groupManager;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -71,30 +76,35 @@ public class UserResource extends AbstractManagerResource<User>
    *
    *
    * @param username
-   * @param group
+   * @param groupname
    *
    * @return
    */
   @POST
   @Path("{user}/groups/{group}")
   public Response addMembership(@PathParam("user") String username,
-    @PathParam("group") String group)
+    @PathParam("group") String groupname)
   {
     Response.ResponseBuilder builder;
 
     User user = userManager.get(username);
+    Group group = groupManager.get(groupname);
 
     if (user == null)
     {
       builder = Response.status(Response.Status.NOT_FOUND);
     }
-    else if (user.getMemberOf().contains(group))
+    else if (group == null)
+    {
+      builder = Response.status(Response.Status.BAD_REQUEST);
+    }
+    else if (user.getMemberOf().contains(groupname))
     {
       builder = Response.status(Response.Status.CONFLICT);
     }
     else
     {
-      user.getMemberOf().add(group);
+      user.getMemberOf().add(groupname);
       userManager.modify(user);
       builder = Response.noContent();
     }
@@ -168,6 +178,9 @@ public class UserResource extends AbstractManagerResource<User>
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final GroupManager groupManager;
 
   /** Field description */
   private final UserManager userManager;

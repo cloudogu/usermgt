@@ -82,7 +82,9 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.create = false;
     if (user === null){
       $scope.create = true;
-      user = {};
+      user = {
+        memberOf: []
+      };
     } else {
       $scope.master = angular.copy(user);
       $scope.confirmPassword = user.password;
@@ -96,15 +98,25 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.addGroup = function(group){
       if ( group ){
         if (user.memberOf.indexOf(group.newGroup) < 0){
+          var promise = null;
           if ($scope.create){
+            promise = groupService.exists(group.newGroup);
+          } else {
+            promise = userService.addGroup(user, group.newGroup);
+          }
+          promise.then(function(){
             user.memberOf.push(group.newGroup);
             group.newGroup = null;
-          } else {
-            userService.addGroup(user, group.newGroup).then(function(){
-              user.memberOf.push(group.newGroup);
-              group.newGroup = null;
-            });
-          }
+          }, function(e){
+            // ?? do not clear, mark as dirty ?
+            if (e.status === 400 || e.status === 404){
+              $scope.alerts = [{
+                type: 'danger',
+                msg: 'group ' + group.newGroup + ' does not exists'
+              }];
+            }
+            group.newGroup = null;
+          });
         } else {
           group.newGroup = null;
         }

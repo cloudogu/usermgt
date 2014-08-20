@@ -36,6 +36,9 @@ angular.module('universeadm.groups.services', ['restangular'])
       search: function(query, start, limit){
         return groups.getList({query: query, start: start, limit: limit});
       },
+      exists: function(name){
+        return groups.one(name).head();
+      },
       get: function(name){
         return groups.one(name).get();
       },
