@@ -73,6 +73,12 @@ public class ValidatorTest
   }
   
   @Test(expected = ConstraintViolationException.class)
+  public void testRDNInvalidLength()
+  {
+    validator.validate(new RDNObject("dentdentdentdentdentdentdentdentd"), "not valid");
+  }
+  
+  @Test(expected = ConstraintViolationException.class)
   public void testRDNInvalidEmpty()
   {
     validator.validate(new RDNObject(""), "not valid");
