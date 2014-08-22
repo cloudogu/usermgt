@@ -54,19 +54,52 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     $scope.searchGroups = function(value){
       return groupService.search(value, 0, 5);
     };
+    
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
+    };
+    
+    function addError(e, group){
+      // ?? do not clear, mark as dirty ?
+      if (e.status === 400 || e.status === 404){
+        $scope.alerts = [{
+          type: 'danger',
+          msg: 'group ' + group.newGroup + ' does not exists'
+        }];
+      } else if (e.status === 409) {
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'Account is allready a member of ' + group.newGroup
+        }];  
+      } else {
+        $scope.alerts = [{
+          type: 'danger',
+          msg: 'The group could not be added'
+        }];
+      }
+    }
 
-    $scope.addGroup = function(group) {
-      if (group) {
-        if (account.memberOf.indexOf(group.newGroup) < 0) {
+    $scope.addGroup = function(group){
+      if ( group && account.memberOf.indexOf(group.newGroup) < 0 ){
+        groupService.exists(group.newGroup).then(function(){
           account.memberOf.push(group.newGroup);
-          accountService.modify(account).then(function() {
+          accountService.modify(account).then(function(){
             group.newGroup = null;
-          }, function() {
-
+            $scope.alerts.splice(0, $scope.alerts.length);
+          }, function(e){
+            addError(e, group);
+            group.newGroup = null;
           });
-        } else {
+        }, function(e){
+          addError(e, group);
           group.newGroup = null;
-        }
+        });
+      } else if (group) {
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'Account is allready a member of ' + group.newGroup
+        }];
+        group.newGroup = null;
       }
     };
 
