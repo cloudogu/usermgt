@@ -11,7 +11,17 @@
 
       <div class="form-group has-feedback" ng-if="create" data-uadm-validate>
         <label class="control-label" for="username">Username</label>
-        <input id="username" name="username" type="text" class="form-control" placeholder="Enter username" ng-model="user.username" ng-pattern="/^[^=,]+$/" maxlength="32" required="true">
+        <input id="username" 
+               name="username" 
+               type="text" 
+               class="form-control" 
+               placeholder="Enter username" 
+               ng-model="user.username" 
+               ng-pattern="/^[^=,]+$/" 
+               ng-minlength="2"
+               ng-maxlength="32" 
+               ng-required="true"
+        >
         <span class="fa fa-check fa-2x form-control-feedback"></span>
         <span class="fa fa-times fa-2x form-control-feedback"></span>
         <strong ng-show="form.username.$error.required" class="text-danger help-block">
@@ -19,6 +29,9 @@
         </strong>
         <strong ng-show="form.username.$error.pattern" class="text-danger help-block">
           Username can not contain the characters "=" and ","
+        </strong>
+        <strong ng-show="form.username.$error.minlength" class="text-danger help-block">
+          Username must have at least 2 characters
         </strong>
         <strong ng-show="form.username.$error.maxlength" class="text-danger help-block">
           Username is longer than 32 characters
@@ -31,7 +44,7 @@
       </div>
       <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="surname">Surname</label>
-        <input id="surname" name="surname" type="text" class="form-control" placeholder="Enter surname" required="true" ng-model="user.surname">
+        <input id="surname" name="surname" type="text" class="form-control" placeholder="Enter surname" ng-required="true" ng-model="user.surname">
         <span class="fa fa-check fa-2x form-control-feedback"></span>
         <span class="fa fa-times fa-2x form-control-feedback"></span>
         <strong class="text-danger help-block">
@@ -40,7 +53,7 @@
       </div>
       <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="displayName">Display name</label>
-        <input id="displayName" name="displayName" type="text" class="form-control" placeholder="Enter display name" required="true" ng-model="user.displayName">
+        <input id="displayName" name="displayName" type="text" class="form-control" placeholder="Enter display name" ng-required="true" ng-model="user.displayName">
         <span class="fa fa-check fa-2x form-control-feedback"></span>
         <span class="fa fa-times fa-2x form-control-feedback"></span>
         <strong class="text-danger help-block">
@@ -49,7 +62,7 @@
       </div>
       <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="email">Email address</label>
-        <input id="email" name="email" type="email" class="form-control" placeholder="Enter email" required="true" ng-model="user.mail">
+        <input id="email" name="email" type="email" class="form-control" placeholder="Enter email" ng-required="true" ng-model="user.mail">
         <span class="fa fa-check fa-2x form-control-feedback"></span>
         <span class="fa fa-times fa-2x form-control-feedback"></span>
         <strong class="text-danger help-block">
@@ -58,7 +71,7 @@
       </div>
       <div class="form-group" data-uadm-validate>
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" class="form-control" placeholder="Password" required="true" ng-model="user.password">
+        <input id="password" name="password" type="password" class="form-control" placeholder="Password" ng-required="true" ng-model="user.password">
       </div>
       <div class="form-group" data-uadm-validate>
         <label for="confirmPassword">Confirm password</label>

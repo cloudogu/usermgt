@@ -47,7 +47,7 @@ public class RDNValidator implements ConstraintValidator<RDN, String>
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context)
   {
-    return !Strings.isNullOrEmpty(value) && !value.contains(",") && !value.contains("=") && value.length() <= 32;
+    return !Strings.isNullOrEmpty(value) && !value.contains(",") && !value.contains("=") && value.length() >= 2 && value.length() <= 32;
   }
 
 }

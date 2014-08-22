@@ -73,9 +73,25 @@ public class ValidatorTest
   }
   
   @Test(expected = ConstraintViolationException.class)
-  public void testRDNInvalidLength()
+  public void testRDNInvalidMaxLength()
   {
     validator.validate(new RDNObject("dentdentdentdentdentdentdentdentd"), "not valid");
+  }
+  
+  public void testRDNMaxLength()
+  {
+    validator.validate(new RDNObject("dentdentdentdentdentdentdentdent"), "not valid");
+  }
+  
+  @Test(expected = ConstraintViolationException.class)
+  public void testRDNInvalidMinLength()
+  {
+    validator.validate(new RDNObject("a"), "not valid");
+  }
+
+  public void testRDNMinLength()
+  {
+    validator.validate(new RDNObject("as"), "not valid");
   }
   
   @Test(expected = ConstraintViolationException.class)
