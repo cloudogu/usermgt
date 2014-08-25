@@ -48,6 +48,9 @@ public class CasConfiguration
   @XmlElement(name = "login-url")
   private String loginUrl;
   
+  @XmlElement(name = "failure-url")
+  private String failureUrl;
+  
   private String service;
   
   @XmlElement(name = "role-attribute-names")
@@ -59,6 +62,11 @@ public class CasConfiguration
   @XmlElement(name = "administrator-role")
   private String administratorRole;
 
+  public String getFailureUrl()
+  {
+    return failureUrl;
+  }
+  
   public String getAdministratorRole()
   {
     return administratorRole;

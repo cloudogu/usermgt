@@ -2,6 +2,7 @@
 <cas>
   <service>http://localhost:8084/universeadm/login/cas</service>
   <server-url>https://localhost:8443/cas</server-url>
+  <failure-url>http://localhost:8084/universeadm/error/auth.html</failure-url>
   <login-url>https://localhost:8443/cas/login?service=http://localhost:8084/universeadm/login/cas</login-url>
   <logout-url>https://localhost:8443/cas/logout</logout-url>
   <role-attribute-names>groups</role-attribute-names>

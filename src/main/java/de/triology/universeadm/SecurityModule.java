@@ -62,6 +62,7 @@ public class SecurityModule extends ShiroWebModule
   private static final String CAS_VALIDATION_PROTOCOL_VALUE = "SAML";
   private static final String CAS_SERVER_URL = "shiro.casServerUrlPrefix";
   private static final String CAS_LOGIN_URL = "shiro.loginUrl";
+  private static final String CAS_FAILURE_URL = "shiro.failureUrl";
   private static final String CAS_SERVICE = "shiro.casService";
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityModule.class);
@@ -96,6 +97,7 @@ public class SecurityModule extends ShiroWebModule
 
     config(CAS_SERVER_URL, cas.getServerUrl());
     config(CAS_LOGIN_URL, cas.getLoginUrl());
+    config(CAS_FAILURE_URL, cas.getFailureUrl());
     config(CAS_SERVICE, cas.getService());
     config(CAS_VALIDATION_PROTOCOL, CAS_VALIDATION_PROTOCOL_VALUE);
 
@@ -104,7 +106,10 @@ public class SecurityModule extends ShiroWebModule
     bindRealm().toProvider(CasRealmProvider.class).in(Singleton.class);
     bind(SubjectFactory.class).to(CasSubjectFactory.class);
 
+    addFilterChain("/error/*", ANON);
+    addFilterChain("/style/**", ANON);
     addFilterChain("/login/cas", ANON, Key.get(CasFilter.class));
+    addFilterChain("/api/logout", ANON);
     addFilterChain("/api/users**", config(ROLES, "admins"));
     addFilterChain("/api/groups**", config(ROLES, "admins"));
     addFilterChain("/**", AUTHC);
