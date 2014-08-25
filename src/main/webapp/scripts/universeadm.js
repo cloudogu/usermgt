@@ -30,7 +30,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
   'ui.router', 'universeadm.navigation', 'universeadm.account.config', 
   'universeadm.users.config', 'universeadm.groups.config'/**, 'universeadm.backup.config',
   'universeadm.settings.config'**/])
-  .config(function(RestangularProvider, $stateProvider, $urlRouterProvider){
+  .config(function(RestangularProvider, $stateProvider, $urlRouterProvider, $logProvider){
     // configure restangular
     RestangularProvider.setBaseUrl(_contextPath + '/api');
     RestangularProvider.addResponseInterceptor(function(response, operation) {
@@ -58,8 +58,13 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
         templateUrl: 'views/error/500.html'
       });
 
-    // redirect unmatched to /account
-    $urlRouterProvider.otherwise('/account');
+    // diplay error 404 for unmatched routes
+    $urlRouterProvider.otherwise(function($injector){
+      $injector.get('$state').go('error404');
+    });
+    
+    // configure logging
+    $logProvider.debugEnabled(false);
   })
   .run(function($rootScope, $state, $log, $http){
     $http.get(_contextPath + '/api/subject').then(function(res){
@@ -82,6 +87,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
     });
 
     $rootScope.$on('$stateNotFound', function(){
+      $log.debug('$stateNotFound, go to 404 page');
       $state.go('error404');
     });
   })
