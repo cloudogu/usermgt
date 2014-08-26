@@ -53,6 +53,22 @@ public class ValidatorTest
   {
     validator.validate(new VObject(""), "not valid");
   }
+
+  @Test
+  public void testRDNValidMinus(){
+    validator.validate(new VObject("ab-ab"), "not valid");
+  }
+  
+  @Test
+  public void testRDNValidUnderscore(){
+    validator.validate(new VObject("ab_ab"), "not valid");
+  }
+  
+  
+  @Test
+  public void testRDNValidChars(){
+    validator.validate(new VObject("aB_ab09041985"), "not valid");
+  }
   
   @Test
   public void testRDNValid()
@@ -98,6 +114,24 @@ public class ValidatorTest
   public void testRDNInvalidEmpty()
   {
     validator.validate(new RDNObject(""), "not valid");
+  }
+  
+  @Test(expected = ConstraintViolationException.class)
+  public void testRDNInvalidSlash()
+  {
+    validator.validate(new RDNObject("as/as"), "not valid");
+  }
+  
+  @Test(expected = ConstraintViolationException.class)
+  public void testRDNInvalidPercent()
+  {
+    validator.validate(new RDNObject("as%as"), "not valid");
+  }
+  
+  @Test(expected = ConstraintViolationException.class)
+  public void testRDNInvalidStar()
+  {
+    validator.validate(new RDNObject("as*as"), "not valid");
   }
   
   @Test(expected = ConstraintViolationException.class)
