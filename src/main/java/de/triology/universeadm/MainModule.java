@@ -92,6 +92,7 @@ public class MainModule extends ServletModule
     install(new SettingsModule());
 
     // other jax-rs stuff
+    bind(DisableCacheResponseFilter.class);
     bind(CatchAllExceptionMapper.class);
     bind(SubjectResource.class);
     bind(LogoutResource.class);
