@@ -39,7 +39,7 @@ import javax.validation.ConstraintValidatorContext;
 public class RDNValidator implements ConstraintValidator<RDN, String>
 {
 
-  private static final Pattern PATTERN = Pattern.compile("[a-zA-Z0-9-_]{2,32}");
+  private static final Pattern PATTERN = Pattern.compile("[a-zA-Z0-9-_@\\.]{2,32}");
   
   @Override
   public void initialize(RDN rdn)
