@@ -377,7 +377,11 @@ public class DefaultMapper<T> implements Mapper<T>
       }
       else
       {
-        attribute = new Attribute(name, converterFactory.getEncoder(ma).encodeAsString(value));
+        String string = converterFactory.getEncoder(ma).encodeAsString(value);
+        if (!Strings.isNullOrEmpty(string))
+        {
+          attribute = new Attribute(name, string);
+        }
       }
     }
     return attribute;
