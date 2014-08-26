@@ -58,6 +58,9 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
         templateUrl: 'views/error/500.html'
       });
 
+    // redirect start page to account
+    $urlRouterProvider.when('', '/account');
+
     // diplay error 404 for unmatched routes
     $urlRouterProvider.otherwise(function($injector){
       $injector.get('$state').go('error404');
