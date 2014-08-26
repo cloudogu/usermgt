@@ -50,6 +50,7 @@ import de.triology.universeadm.validation.Validator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,8 @@ public class MappingHandler<T extends Comparable<T>>
 
   private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
   
-  private static final Pattern QUERY_PATTERN = Pattern.compile("[^\\(\\)]+");
+  private static final Pattern QUERY_PATTERN = Pattern.compile("[^\\(\\)\\\\]+");
+  private static final Pattern HEAVY_WILDCARD = Pattern.compile("[\\*]{2,}");
 
   private final LDAPConnectionStrategy strategy;
   private final Mapper<T> mapper;
@@ -246,6 +248,22 @@ public class MappingHandler<T extends Comparable<T>>
     Collections.sort(entities);
     return ImmutableList.copyOf(entities);
   }
+  
+  private String prepareQuery(String query){
+    StringBuffer buffer = new StringBuffer();
+    Matcher m = HEAVY_WILDCARD.matcher(query);
+    while (m.find()){
+      m.appendReplacement(buffer, "*");
+    }
+    m.appendTail(buffer);
+    
+    String q = buffer.toString();
+    if ( ! q.contains("*") )
+    {
+      q = WILDCARD.concat(q).concat(WILDCARD);
+    } 
+    return q;
+  }
 
   public List<T> search(String query)
   {
@@ -253,15 +271,8 @@ public class MappingHandler<T extends Comparable<T>>
     {
       throw new IllegalQueryException("query contain illegal characters");
     }
-    String q;
-    if ( ! query.contains("*") )
-    {
-      q = WILDCARD.concat(query).concat(WILDCARD);
-    } 
-    else 
-    {
-      q = query;
-    }
+    
+    String q = prepareQuery(query);
     
     Filter base = mapper.getBaseFilter();
 
@@ -284,7 +295,7 @@ public class MappingHandler<T extends Comparable<T>>
     }
     catch (LDAPException ex)
     {
-      throw new EntityException("could not search entities with query: ".concat(query), ex);
+      throw new EntityException("could not search entities with query: ".concat(q), ex);
     }
 
     Collections.sort(entities);
