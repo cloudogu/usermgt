@@ -236,6 +236,13 @@ public class LDAPUserManagerTest
     assertEquals("tricia", users.get(0).getUsername());
   }
   
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = IllegalArgumentException.class)
+  public void testSearchInvalidCharacters() throws LDAPException {
+    LDAPUserManager manager = createUserManager();
+    manager.search("tri(c)ia");
+  }
+  
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
   public void testModifyPassword() throws LDAPException {

@@ -41,6 +41,7 @@ import de.triology.universeadm.EventType;
 import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
 import de.triology.universeadm.mapping.DefaultMapper;
+import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.Mapping;
@@ -197,6 +198,12 @@ public class LDAPGroupManagerTest
   public void searchTestNotFound() throws LDAPException{
     List<Group> groups = createGroupManager().search("Marvin");
     assertThat(groups, empty());
+  }
+  
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = IllegalQueryException.class)
+  public void searchTestIllegalCharacters() throws LDAPException{
+    createGroupManager().search("Mar(v)in");
   }
   
   @Test(expected = UnauthorizedException.class)

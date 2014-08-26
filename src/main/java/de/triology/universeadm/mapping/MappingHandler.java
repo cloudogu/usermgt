@@ -50,6 +50,7 @@ import de.triology.universeadm.validation.Validator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,8 @@ public class MappingHandler<T extends Comparable<T>>
 {
 
   private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
+  
+  private static final Pattern QUERY_PATTERN = Pattern.compile("[^\\(\\)]+");
 
   private final LDAPConnectionStrategy strategy;
   private final Mapper<T> mapper;
@@ -246,7 +249,20 @@ public class MappingHandler<T extends Comparable<T>>
 
   public List<T> search(String query)
   {
-    String q = WILDCARD.concat(query).concat(WILDCARD);
+    if ( !QUERY_PATTERN.matcher(query).matches() )
+    {
+      throw new IllegalQueryException("query contain illegal characters");
+    }
+    String q;
+    if ( ! query.contains("*") )
+    {
+      q = WILDCARD.concat(query).concat(WILDCARD);
+    } 
+    else 
+    {
+      q = query;
+    }
+    
     Filter base = mapper.getBaseFilter();
 
     List<T> entities = Lists.newArrayList();
