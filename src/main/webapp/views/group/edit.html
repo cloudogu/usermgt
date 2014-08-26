@@ -15,11 +15,11 @@
                name="name" 
                type="text" 
                class="form-control" 
+               placeholder="Enter name" 
                ng-model="group.name" 
-               ng-pattern="/^[a-zA-Z0-9-_]+$/"
+               ng-pattern="/^[a-zA-Z0-9-_@\.]+$/"
                ng-minlength="2"
                ng-maxlength="32"
-               placeholder="Enter name" 
                ng-required="true">
         <span class="fa fa-check fa-2x form-control-feedback"></span>
         <span class="fa fa-times fa-2x form-control-feedback"></span>
