@@ -60,6 +60,7 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
 
     // redirect start page to account
     $urlRouterProvider.when('', '/account');
+    $urlRouterProvider.when('/', '/account');
 
     // diplay error 404 for unmatched routes
     $urlRouterProvider.otherwise(function($injector){
