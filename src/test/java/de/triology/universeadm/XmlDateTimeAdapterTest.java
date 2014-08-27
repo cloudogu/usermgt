@@ -32,51 +32,42 @@ package de.triology.universeadm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.DateTimeZone;
 
-//~--- JDK imports ------------------------------------------------------------
+import org.junit.Test;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class XmlDateTimeAdapter extends XmlAdapter<String, DateTime>
+public class XmlDateTimeAdapterTest
 {
-
-  /** Field description */
-  private static final DateTimeFormatter ISO8601 =
-    DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZoneUTC();
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param v
-   *
-   * @return
    */
-  @Override
-  public String marshal(DateTime v)
+  @Test
+  public void testMarshall()
   {
-    return ISO8601.print(v);
+    XmlDateTimeAdapter adapter = new XmlDateTimeAdapter();
+    DateTime dt = new DateTime(2014, 8, 27, 8, 43, DateTimeZone.UTC);
+
+    assertEquals("2014-08-27T08:43:00.000Z", adapter.marshal(dt));
   }
 
   /**
    * Method description
    *
-   *
-   * @param v
-   *
-   * @return
    */
-  @Override
-  public DateTime unmarshal(String v)
+  @Test
+  public void testUnmarshall()
   {
-    return ISO8601.parseDateTime(v);
+    XmlDateTimeAdapter adapter = new XmlDateTimeAdapter();
+    DateTime dt = new DateTime(2014, 8, 27, 8, 43, DateTimeZone.UTC);
+
+    assertEquals(dt, adapter.unmarshal("2014-08-27T08:43:00.000Z"));
   }
 }
