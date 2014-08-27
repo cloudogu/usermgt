@@ -40,10 +40,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import com.github.sdorra.ldap.LDAP;
 import com.github.sdorra.ldap.LDAPRule;
 
@@ -51,8 +48,6 @@ import com.github.sdorra.ldap.LDAPRule;
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(FieldDescriptor.class)
 public class MemberMappingConverterTest
 {
   

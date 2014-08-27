@@ -37,7 +37,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public final class FieldDescriptor<T>
+public class FieldDescriptor<T>
 {
 
   private final Class<T> declaringClass;

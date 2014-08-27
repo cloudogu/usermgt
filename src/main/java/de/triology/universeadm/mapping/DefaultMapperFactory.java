@@ -73,7 +73,7 @@ public class DefaultMapperFactory implements MapperFactory
   @Inject
   public DefaultMapperFactory(MappingConverterFactory converterFactory)
   {
-    this(converterFactory, Stage.get());
+    this(converterFactory, new DefaultMappingProvider(), Stage.get());
   }
 
   /**
@@ -81,10 +81,12 @@ public class DefaultMapperFactory implements MapperFactory
    *
    *
    * @param converterFactory
+   * @param mappingProvider
    * @param stage
    */
   @VisibleForTesting
-  DefaultMapperFactory(MappingConverterFactory converterFactory, Stage stage)
+  DefaultMapperFactory(MappingConverterFactory converterFactory,
+    MappingProvider mappingProvider, Stage stage)
   {
     if (stage == Stage.PRODUCTION)
     {
@@ -97,6 +99,7 @@ public class DefaultMapperFactory implements MapperFactory
       cache = Caches.createDisabledCache();
     }
 
+    this.mappingProvider = mappingProvider;
     this.converterFactory = converterFactory;
   }
 
@@ -150,11 +153,7 @@ public class DefaultMapperFactory implements MapperFactory
       @Override
       public Mapper<T> call()
       {
-        String name =
-          type.getSimpleName().toLowerCase(Locale.ENGLISH).concat(".xml");
-        Mapping mapping =
-          BaseDirectory.getConfiguration("mapping/".concat(name),
-            Mapping.class);
+        Mapping mapping = mappingProvider.getMapping(type);
 
         if (mapping == null)
         {
@@ -166,6 +165,31 @@ public class DefaultMapperFactory implements MapperFactory
     });
   }
 
+  //~--- inner interfaces -----------------------------------------------------
+
+  /**
+   * Interface description
+   *
+   *
+   * @version        Enter version here..., 14/08/27
+   * @author         Enter your name here...
+   */
+  @VisibleForTesting
+  static interface MappingProvider
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param type
+     *
+     * @return
+     */
+    Mapping getMapping(Class<?> type);
+  }
+
+
   //~--- inner classes --------------------------------------------------------
 
   /**
@@ -173,7 +197,7 @@ public class DefaultMapperFactory implements MapperFactory
    *
    *
    * @version        Enter version here..., 14/08/15
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class CacheKey
   {
@@ -242,6 +266,36 @@ public class DefaultMapperFactory implements MapperFactory
   }
 
 
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 14/08/27
+   * @author         Enter your name here...
+   */
+  private static class DefaultMappingProvider implements MappingProvider
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param type
+     *
+     * @return
+     */
+    @Override
+    public Mapping getMapping(Class<?> type)
+    {
+      String name =
+        type.getSimpleName().toLowerCase(Locale.ENGLISH).concat(".xml");
+
+      return BaseDirectory.getConfiguration("mapping/".concat(name),
+        Mapping.class);
+    }
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -249,4 +303,7 @@ public class DefaultMapperFactory implements MapperFactory
 
   /** Field description */
   private final MappingConverterFactory converterFactory;
+
+  /** Field description */
+  private final MappingProvider mappingProvider;
 }
