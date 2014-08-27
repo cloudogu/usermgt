@@ -50,6 +50,7 @@ public class SubjectResource
   private static final Logger logger = LoggerFactory.getLogger(SubjectResource.class);
 
   @GET
+  @SuppressWarnings("unchecked")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getSubject()
   {

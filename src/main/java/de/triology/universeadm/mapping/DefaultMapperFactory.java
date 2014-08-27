@@ -139,6 +139,7 @@ public class DefaultMapperFactory implements MapperFactory
    *
    * @throws ExecutionException
    */
+  @SuppressWarnings("unchecked")
   private <T> Mapper<T> getOrCreateMapperFromCache(final Class<T> type,
     final String parentDN)
     throws ExecutionException

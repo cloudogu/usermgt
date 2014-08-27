@@ -80,6 +80,7 @@ public class AbstractEntityEvent<T> implements EntityEvent<T>
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public boolean equals(Object obj)
   {
     if (obj == null)

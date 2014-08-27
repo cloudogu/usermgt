@@ -89,6 +89,7 @@ public class SecurityModule extends ShiroWebModule
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected void configureShiroWeb()
   {
     CasConfiguration cas = getCasConfiguration();
@@ -155,6 +156,7 @@ public class SecurityModule extends ShiroWebModule
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)
     {
       // retrieve user information

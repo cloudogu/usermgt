@@ -83,6 +83,7 @@ public class MemberMappingConverter extends AbstractMappingConverter
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> Object decodeFromMultiString(FieldDescriptor<T> type, String[] strings)
   {
     Collection collection;
@@ -142,6 +143,7 @@ public class MemberMappingConverter extends AbstractMappingConverter
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public String[] encodeAsMultiString(Object object)
   {
     if (!(object instanceof Iterable))

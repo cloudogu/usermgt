@@ -127,6 +127,7 @@ public class DefaultMappingDecoder extends AbstractMappingDecoder
    * @param type
    * @param values
    */
+  @SuppressWarnings("unchecked")
   private void fill(Collection collection, Class<?> type, String[] values)
   {
     for (String value : values)

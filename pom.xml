@@ -316,6 +316,9 @@
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
+          <compilerArgument>-Xlint:unchecked</compilerArgument>
           <compilerArguments>
             <endorseddirs>${endorsed.dir}</endorseddirs>
           </compilerArguments>
@@ -436,7 +439,7 @@
         </configuration>
       </plugin>
       
-   <!--
+      <!--
          fix maven troubleshooting part on
          https://bitbucket.org/sdorra/scm-manager/wiki/configure-eclipse
       -->

@@ -83,6 +83,7 @@ public class MemberMappingConverterTest
   }
   
   @Test
+  @SuppressWarnings("unchecked")
   public void testDecodeFromMultiString(){
     MemberMappingConverter converter = createConverterForDecode();
     FieldDescriptor desc = mock(FieldDescriptor.class);
@@ -136,6 +137,7 @@ public class MemberMappingConverterTest
     return new MemberMappingConverter(null, config, factory);    
   }
   
+  @SuppressWarnings("unchecked")
   private MemberMappingConverter createConverterForEncode() throws LDAPException{
     Mapper<User> mapper = mock(Mapper.class);
     when(mapper.getRDNName()).thenReturn("uid");
