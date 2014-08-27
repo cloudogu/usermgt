@@ -27,6 +27,7 @@
 
 package de.triology.universeadm.mapping;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -204,7 +205,7 @@ public class MappingAttribute
 
   public String getLdapName()
   {
-    return Objects.firstNonNull(ldapName, name);
+    return MoreObjects.firstNonNull(ldapName, name);
   }
 
   public List<String> getSiblings()

@@ -1,16 +1,16 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -21,20 +21,31 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * http://www.scm-manager.com
  */
 
+
+
 package de.triology.universeadm.user;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+
 import de.triology.universeadm.validation.RDN;
+
+import org.hibernate.validator.constraints.Email;
+
+//~--- JDK imports ------------------------------------------------------------
+
 import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.Email;
 
 /**
  *
@@ -47,9 +58,7 @@ public class User implements Comparable<User>
    * Constructs ...
    *
    */
-  public User()
-  {
-  }
+  public User() {}
 
   /**
    * Constructs ...
@@ -75,7 +84,7 @@ public class User implements Comparable<User>
    * @param memberOf
    */
   public User(String username, String displayName, String givenname,
-              String surname, String mail, String password, List<String> memberOf)
+    String surname, String mail, String password, List<String> memberOf)
   {
     this.username = username;
     this.displayName = displayName;
@@ -86,7 +95,84 @@ public class User implements Comparable<User>
     this.memberOf = memberOf;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param o
+   *
+   * @return
+   */
+  @Override
+  public int compareTo(User o)
+  {
+    return Strings.nullToEmpty(username).compareTo(
+      Strings.nullToEmpty(o.username));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final User other = (User) obj;
+
+    return Objects.equal(username, other.username)
+      && Objects.equal(displayName, other.displayName)
+      && Objects.equal(givenname, other.givenname)
+      && Objects.equal(surname, other.surname)
+      && Objects.equal(mail, other.mail)
+      && Objects.equal(memberOf, other.memberOf);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(username, displayName, givenname, surname, mail,
+      memberOf);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    return MoreObjects.toStringHelper(this).add("username",
+      username).add("displayName", displayName).add("givenname",
+        givenname).add("surname", surname).add("mail", mail).add("memberOf",
+          memberOf).toString();
+  }
+
   //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
@@ -126,6 +212,22 @@ public class User implements Comparable<User>
    *
    * @return
    */
+  public List<String> getMemberOf()
+  {
+    if (memberOf == null)
+    {
+      memberOf = Lists.newArrayList();
+    }
+
+    return memberOf;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getPassword()
   {
     return password;
@@ -154,6 +256,7 @@ public class User implements Comparable<User>
   }
 
   //~--- set methods ----------------------------------------------------------
+
   /**
    * Method description
    *
@@ -191,6 +294,17 @@ public class User implements Comparable<User>
    * Method description
    *
    *
+   * @param memberOf
+   */
+  public void setMemberOf(List<String> memberOf)
+  {
+    this.memberOf = memberOf;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param password
    */
   public void setPassword(String password)
@@ -220,67 +334,8 @@ public class User implements Comparable<User>
     this.username = username;
   }
 
-  public void setMemberOf(List<String> memberOf)
-  {
-    this.memberOf = memberOf;
-  }
-
-  public List<String> getMemberOf()
-  {
-    if ( memberOf == null ){
-      memberOf = Lists.newArrayList();
-    }
-    return memberOf;
-  }
-  
-  
-
-  @Override
-  public int compareTo(User o)
-  {
-    return Strings.nullToEmpty(username).compareTo(Strings.nullToEmpty(o.username));
-  }
-
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(username, displayName, givenname, surname, mail, memberOf);
-  }
-
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-    final User other = (User) obj;
-    return Objects.equal(username, other.username)
-            && Objects.equal(displayName, other.displayName)
-            && Objects.equal(givenname, other.givenname)
-            && Objects.equal(surname, other.surname)
-            && Objects.equal(mail, other.mail)
-            && Objects.equal(memberOf, other.memberOf);
-  }
-
-  @Override
-  public String toString()
-  {
-    return Objects.toStringHelper(this)
-            .add("username", username)
-            .add("displayName", displayName)
-            .add("givenname", givenname)
-            .add("surname", surname)
-            .add("mail", mail)
-            .add("memberOf", memberOf)
-            .toString();
-  }
-
   //~--- fields ---------------------------------------------------------------
+
   /**
    * Field description
    */
@@ -301,6 +356,11 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  private List<String> memberOf;
+
+  /**
+   * Field description
+   */
   private String password;
 
   /**
@@ -315,9 +375,4 @@ public class User implements Comparable<User>
    */
   @RDN
   private String username;
-  
-  /**
-   * Field description
-   */
-  private List<String> memberOf;
 }

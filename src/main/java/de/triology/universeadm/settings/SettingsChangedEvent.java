@@ -1,16 +1,16 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -21,12 +21,17 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * http://www.scm-manager.com
  */
 
+
+
 package de.triology.universeadm.settings;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -36,31 +41,29 @@ import com.google.common.base.Objects;
 public class SettingsChangedEvent
 {
 
-  private final Settings settings;
-  private final Settings oldSettings;
-
+  /**
+   * Constructs ...
+   *
+   *
+   * @param settings
+   * @param oldSettings
+   */
   public SettingsChangedEvent(Settings settings, Settings oldSettings)
   {
     this.settings = settings;
     this.oldSettings = oldSettings;
   }
 
-  public Settings getOldSettings()
-  {
-    return oldSettings;
-  }
+  //~--- methods --------------------------------------------------------------
 
-  public Settings getSettings()
-  {
-    return settings;
-  }
-
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(settings, oldSettings);
-  }
-
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
   @Override
   public boolean equals(Object obj)
   {
@@ -68,22 +71,76 @@ public class SettingsChangedEvent
     {
       return false;
     }
+
     if (getClass() != obj.getClass())
     {
       return false;
     }
+
     final SettingsChangedEvent other = (SettingsChangedEvent) obj;
-    return Objects.equal(settings, other.settings) 
+
+    return Objects.equal(settings, other.settings)
       && Objects.equal(oldSettings, other.oldSettings);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(settings, oldSettings);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public String toString()
   {
-    return Objects.toStringHelper(this)
+    //J-
+    return MoreObjects.toStringHelper(this)
                   .add("settings", settings)
                   .add("oldSettings", oldSettings)
                   .toString();
+    //J+
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Settings getOldSettings()
+  {
+    return oldSettings;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Settings getSettings()
+  {
+    return settings;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final Settings oldSettings;
+
+  /** Field description */
+  private final Settings settings;
 }
