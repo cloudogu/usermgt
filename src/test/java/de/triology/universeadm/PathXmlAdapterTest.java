@@ -31,91 +31,58 @@ package de.triology.universeadm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class PathXmlAdapter extends XmlAdapter<String, File>
+public class PathXmlAdapterTest
 {
 
-  /** Field description */
-  private static final String BASEDIR = "{basedir}";
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public PathXmlAdapter()
-  {
-    this(BaseDirectory.get());
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseDirectory
-   */
-  @VisibleForTesting
-  PathXmlAdapter(File baseDirectory)
-  {
-    this.baseDirectory = baseDirectory.getAbsolutePath();
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseDirectory
-   */
-  @VisibleForTesting
-  PathXmlAdapter(String baseDirectory)
-  {
-    this.baseDirectory = baseDirectory;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
    *
-   * @param v
-   *
-   * @return
+   * @throws IOException
    */
-  @Override
-  public String marshal(File v)
+  @Test
+  public void testMarshall() throws IOException
   {
-    return v.getAbsolutePath();
+    File base = folder.newFolder();
+    PathXmlAdapter adapter = new PathXmlAdapter(base);
+
+    assertEquals(base.getAbsolutePath(), adapter.marshal(base));
   }
 
   /**
    * Method description
    *
    *
-   * @param v
-   *
-   * @return
+   * @throws IOException
    */
-  @Override
-  public File unmarshal(String v)
+  @Test
+  public void testUnmarshall() throws IOException
   {
-    return new File(v.replace(BASEDIR, baseDirectory));
+    File base = folder.newFolder();
+    PathXmlAdapter adapter = new PathXmlAdapter(base);
+
+    assertEquals(new File(base, "test"), adapter.unmarshal("{basedir}/test"));
+    assertEquals("/test", "/test");
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final String baseDirectory;
+  @Rule
+  public TemporaryFolder folder = new TemporaryFolder();
 }
