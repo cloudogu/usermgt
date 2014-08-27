@@ -56,6 +56,7 @@ import com.github.sdorra.ldap.LDAPRule;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import de.triology.universeadm.PlainLDAPHasher;
+import de.triology.universeadm.mapping.IllegalQueryException;
 
 /**
  *
@@ -237,7 +238,7 @@ public class LDAPUserManagerTest
   }
   
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = IllegalQueryException.class)
   public void testSearchInvalidCharacters() throws LDAPException {
     LDAPUserManager manager = createUserManager();
     manager.search("tri(c)ia");
