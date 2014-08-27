@@ -334,15 +334,16 @@ public class DefaultSettingsStore implements SettingsStore
 
     private File getFile(File file, String defaultFile)
     {
+      File result = file;
       if (file == null && configurationDirectory == null)
       {
         throw new SettingsException("there is not configuration for this file");
       }
       else if (file == null)
       {
-        file = new File(configurationDirectory, defaultFile);
+        result = new File(configurationDirectory, defaultFile);
       }
-      return file;
+      return result;
     }
 
   }
