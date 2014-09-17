@@ -112,8 +112,8 @@ public class SecurityModule extends ShiroWebModule
     addFilterChain("/components/**", ANON);
     addFilterChain("/login/cas", ANON, Key.get(CasFilter.class));
     addFilterChain("/api/logout", ANON);
-    addFilterChain("/api/users**", config(ROLES, "admins"));
-    addFilterChain("/api/groups**", config(ROLES, "admins"));
+    addFilterChain("/api/users**", config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/groups**", config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/**", AUTHC);
   }
 
