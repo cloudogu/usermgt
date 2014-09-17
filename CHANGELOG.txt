@@ -1,0 +1,10 @@
+1.0.1
+=====
+- show error page, if ldap is disabled
+- fix password validation error message
+- fix hardcoded admin role in SecurityModule
+- update web components
+
+1.0.0
+=====
+- initial release
