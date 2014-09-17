@@ -31,65 +31,67 @@ package de.triology.universeadm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableList;
-import com.google.inject.Module;
-
-import org.apache.shiro.guice.web.ShiroWebModule;
-
-import org.jboss.resteasy.plugins.guice
-  .GuiceResteasyBootstrapServletContextListener;
+import com.google.common.base.Strings;
+import com.google.inject.Singleton;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.List;
+import java.io.IOException;
 
-import javax.servlet.ServletContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class BootstrapContextListener
-  extends GuiceResteasyBootstrapServletContextListener
+@Singleton
+public class RedirectServlet extends HttpServlet
 {
 
-  private static final Logger logger = LoggerFactory.getLogger(BootstrapContextListener.class);
-  
+  /** Field description */
+  public static final String PARAM_PATH = "redirect.path";
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
    *
-   * @param context
-   *
-   * @return
+   * @throws ServletException
    */
   @Override
-  protected List<? extends Module> getModules(ServletContext context)
+  public void init() throws ServletException
   {
-    LDAPConfiguration ldapConfiguration =
-      BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class);
-
-    List<? extends Module> modules;
-
-    if (ldapConfiguration.isDisabled())
+    redirectPath = getServletConfig().getInitParameter(PARAM_PATH);
+    
+    if (Strings.isNullOrEmpty(redirectPath))
     {
-      logger.warn("ldap is disable load error module");
-      modules = ImmutableList.of(new LDAPDisabledModule());
+      throw new ServletException("init-param for redirect.path is not defined");
     }
-    else
-    {
-      logger.info("load injection modules");
-      //J-
-      modules = ImmutableList.of(
-        ShiroWebModule.guiceFilterModule(),
-        new MainModule(ldapConfiguration),
-        new SecurityModule(context)
-      );  
-      //J+
-    }
-
-    return modules;
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param req
+   * @param resp
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException
+  {
+    resp.sendRedirect(req.getContextPath() + redirectPath);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String redirectPath;
 }

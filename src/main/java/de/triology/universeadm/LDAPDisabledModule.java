@@ -31,65 +31,32 @@ package de.triology.universeadm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableList;
-import com.google.inject.Module;
-
-import org.apache.shiro.guice.web.ShiroWebModule;
-
-import org.jboss.resteasy.plugins.guice
-  .GuiceResteasyBootstrapServletContextListener;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
-
-import javax.servlet.ServletContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.servlet.ServletModule;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class BootstrapContextListener
-  extends GuiceResteasyBootstrapServletContextListener
+public class LDAPDisabledModule extends ServletModule
 {
 
-  private static final Logger logger = LoggerFactory.getLogger(BootstrapContextListener.class);
-  
   /**
    * Method description
    *
-   *
-   * @param context
-   *
-   * @return
    */
   @Override
-  protected List<? extends Module> getModules(ServletContext context)
+  protected void configureServlets()
   {
-    LDAPConfiguration ldapConfiguration =
-      BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class);
+    serve("/components/*", "/scripts/*", "/style/*")
+      .with(ResourceServlet.class);
 
-    List<? extends Module> modules;
-
-    if (ldapConfiguration.isDisabled())
-    {
-      logger.warn("ldap is disable load error module");
-      modules = ImmutableList.of(new LDAPDisabledModule());
-    }
-    else
-    {
-      logger.info("load injection modules");
-      //J-
-      modules = ImmutableList.of(
-        ShiroWebModule.guiceFilterModule(),
-        new MainModule(ldapConfiguration),
-        new SecurityModule(context)
-      );  
-      //J+
-    }
-
-    return modules;
+    Map<String, String> initParams = ImmutableMap.of(
+      RedirectServlet.PARAM_PATH, "/error/ldap-disabled.html"
+    );
+    // serve index pages
+    serve("/", "/index.html", "/index-debug.html")
+      .with(RedirectServlet.class, initParams);
   }
 }

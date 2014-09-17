@@ -6,4 +6,5 @@
   <bind-password>ObZCgb216HvcGNEnJ9Avt9ethiiWuOzzXhFSo+d32f8=</bind-password>
   <user-base-dn>ou=People,dc=triology,dc=de</user-base-dn>
   <group-base-dn>ou=Groups,dc=triology,dc=de</group-base-dn>
+  <disabled>false</disabled>
 </ldap>
