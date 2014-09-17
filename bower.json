@@ -1,9 +1,9 @@
 {
   "name": "universeadm",
   "dependencies": {
-    "angular": "1.2.23",
-    "angular-i18n": "1.2.23",
-    "angular-animate": "1.2.23",
+    "angular": "1.2.25",
+    "angular-i18n": "1.2.25",
+    "angular-animate": "1.2.25",
     "angular-ui-router": "~0.2.10",
     "angular-bootstrap": "~0.11.0",
     "angular-loading-bar": "~0.5.0",
@@ -16,9 +16,9 @@
     "respond": "1.4.2"
   },
   "devDependencies": {
-    "angular-mocks": "1.2.23"
+    "angular-mocks": "1.2.25"
   },
   "resolutions": {
-    "angular": "1.2.23"
+    "angular": "1.2.25"
   }
 }
