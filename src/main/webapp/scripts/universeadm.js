@@ -84,6 +84,8 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
         event.preventDefault();
         $log.warn('could not find page, redirect to error page');
         $state.go('error404');
+      } else if (error.status === 302 || error.status === 0){
+        location.href = _contextPath;
       } else {
         $log.warn('http error ' + error.status);
         $state.go('error500');
