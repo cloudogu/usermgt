@@ -61,7 +61,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         }).then(function(groups){
           setGroups(groups);
           instance.close();
-        });        
+        });
       };
       
       removeScope.cancel = function(){
@@ -75,7 +75,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
     $scope.nonSubmittedQuery = query;
     setGroups(groups);
   })
-  .controller('groupEditController', function($scope, $location, groupService, userService, group){
+  .controller('groupEditController', function($scope, $location, $modal, groupService, userService, group){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
@@ -112,6 +112,27 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
           member.newMember = null;
         });
       }
+    };
+    
+    $scope.remove = function(group){
+      var removeScope = $scope.$new();
+      removeScope.group = group;
+      
+      var instance = $modal.open({
+        templateUrl: 'views/group/remove.dialog.html',
+        scope: removeScope
+      });
+      
+      removeScope.remove = function(group){
+        groupService.remove(group).then(function(){
+          instance.close();
+          $location.path('/groups');
+        });
+      };
+      
+      removeScope.cancel = function(){
+        instance.close();
+      };
     };
     
     $scope.removeMember = function(member){
