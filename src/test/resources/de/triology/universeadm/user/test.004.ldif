@@ -1,0 +1,33 @@
+version: 1
+
+dn: dc=hitchhiker,dc=com
+objectClass: domain
+objectClass: top
+dc: hitchhiker
+
+dn: ou=People,dc=hitchhiker,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: People
+
+dn: uid=dent,ou=People,dc=hitchhiker,dc=com
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: top
+uid: dent
+givenName: Arthur
+sn: Dent
+cn: Arthur Dent
+mail: arthur.dent@hitchhiker.com
+
+dn: uid=trillian,ou=People,dc=hitchhiker,dc=com
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: top
+uid: trillian
+givenName: Tricia
+sn: McMillan
+cn: Tricia McMillan
+mail: tricia.mcmillan@hitchhiker.com

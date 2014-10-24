@@ -183,16 +183,30 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   }
 
   /**
-   * Method description
+   * Remove user from ldap.
    *
    *
-   * @param user
+   * @param user user to remove
    */
   @Override
   public void remove(User user)
   {
-    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
+    Subject subject = SecurityUtils.getSubject();
+
+    subject.checkRole(Roles.ADMINISTRATOR);
     Preconditions.checkNotNull(user, "user is required");
+
+    Object principal = subject.getPrincipal();
+
+    if (principal.equals(user.getUsername()))
+    {
+      //J-
+      throw new UserSelfRemoveException(
+        String.format("user %s has tried to remove himself", principal), 
+        principal
+      );
+      //J+
+    }
 
     mapping.remove(user);
     eventBus.post(new UserEvent(user, EventType.REMOVE));
@@ -263,7 +277,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
    *
    *
    * @version        Enter version here..., 14/08/20
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class UserMappingHandler extends MappingHandler<User>
   {

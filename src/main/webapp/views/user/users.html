@@ -52,7 +52,7 @@
         </a>
       </td>
       <td class="hidden-xs">
-        <button class="btn btn-warning" href="" ng-click="remove(user)">
+        <button class="btn btn-warning" href="" ng-click="remove(user)" ng-disabled="{{isSelf(user)}}">
           Remove
         </button>
       </td>

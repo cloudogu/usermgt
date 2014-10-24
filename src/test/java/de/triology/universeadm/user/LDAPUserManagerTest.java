@@ -74,6 +74,7 @@ public class LDAPUserManagerTest
   private static final String LDIF_001 = "/de/triology/universeadm/user/test.001.ldif";
   private static final String LDIF_002 = "/de/triology/universeadm/user/test.002.ldif";
   private static final String LDIF_003 = "/de/triology/universeadm/user/test.003.ldif";
+  private static final String LDIF_004 = "/de/triology/universeadm/user/test.004.ldif";
   private static final String MAPPING_001 = "de/triology/universeadm/user/mapping.001.xml";
 
   private EventBus eventBus;
@@ -138,6 +139,16 @@ public class LDAPUserManagerTest
     assertNull(entry);
     UserEvent event = new UserEvent(user, EventType.REMOVE);
     verify(eventBus, times(1)).post(event);
+  }
+  
+  @LDAP(baseDN = BASEDN, ldif = LDIF_004)
+  @Test(expected = UserSelfRemoveException.class)
+  public void testRemoveHimSelf() throws LDAPException
+  {
+    LDAPUserManager manager = createUserManager();
+    User user = manager.get("trillian");
+    assertNotNull(user);
+    manager.remove(user);
   }
 
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)

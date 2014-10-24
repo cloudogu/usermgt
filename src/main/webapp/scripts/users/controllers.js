@@ -40,6 +40,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.pageRange = pagingService.pageRange(page, 10, $scope.pages);
     }
     
+    $scope.isSelf = function(user){
+      return $scope.subject.principal === user.username;
+    };
+    
     $scope.search = function(query){
       $location.search({q: query});
       $location.path('/users/1');
@@ -93,6 +97,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     
     $scope.isUnchanged = function(user){
       return angular.equals(user, $scope.master);
+    };
+    
+    $scope.isSelf = function(user){
+      return $scope.subject.principal === user.username;
     };
     
     $scope.addGroup = function(group){
