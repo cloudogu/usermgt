@@ -1,3 +1,14 @@
+1.1.0
+=====
+- use ServiceLoader for loading guice modules, this should drill down package cycles
+- SingleSignOut support, see http://192.168.115.124:8080/browse/PESCMMU-190
+- fix flickering menu on ui bootstrap
+- prevent self remove of users, see http://192.168.115.124:8080/browse/PESCMMU-183
+- groups can not be removed from the edit view, see http://192.168.115.124:8080/browse/PESCMMU-181
+- remove hamcreset library from war file
+- angular 1.2.26
+- resteasy 3.0.10.Final
+
 1.0.1
 =====
 - show error page, if ldap is disabled
