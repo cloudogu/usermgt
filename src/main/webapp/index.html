@@ -71,7 +71,7 @@ http://www.scm-manager.com
           <a class="navbar-brand" href="#">User Management</a>
         </div>
         <div collapse="navCollapsed" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav" ng-cloak="">
             <li ng-repeat="nav in navItems" ng-class="navClass(nav.url)">
               <a ng-href="#{{nav.url}}">
                 {{nav.label}}
