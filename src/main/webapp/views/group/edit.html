@@ -45,7 +45,7 @@
       <button type="submit" class="btn btn-primary" ng-click="save(group)" ng-disabled="form.$invalid || isUnchanged(group)">
         Save
       </button>
-      <button  class="btn btn-warning" ng-click="remove(group)">
+      <button  class="btn btn-warning" ng-click="remove(group)" ng-if="! create">
         Remove
       </button>
       <a ng-if="backEnabled" class="btn btn-default" ng-href="#/groups">
