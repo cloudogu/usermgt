@@ -34,18 +34,15 @@ package de.triology.universeadm;
 import com.github.legman.EventBus;
 import com.github.legman.guice.LegmanModule;
 
+import com.google.inject.Module;
 import com.google.inject.servlet.ServletModule;
-
-import de.triology.universeadm.account.AccountModule;
-import de.triology.universeadm.backup.BackupModule;
-import de.triology.universeadm.group.GroupModule;
-import de.triology.universeadm.mapping.MappingModule;
-import de.triology.universeadm.settings.SettingsModule;
-import de.triology.universeadm.user.UserModule;
-import de.triology.universeadm.validation.ValidationModule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.ServiceLoader;
 
 /**
  *
@@ -86,9 +83,6 @@ public class MainModule extends ServletModule
 
     bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
 
-    // validation
-    install(new ValidationModule());
-
     // events
     EventBus eventBus = new EventBus();
 
@@ -99,23 +93,14 @@ public class MainModule extends ServletModule
     bind(LDAPHasher.class).toInstance(new LDAPHasher());
     bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
 
-    // mapping
-    install(new MappingModule());
+    // install package modules
+    logger.info("load modules from classpath and install them");
 
-    // accont
-    install(new AccountModule());
-
-    // users
-    install(new UserModule());
-
-    // groups
-    install(new GroupModule());
-
-    // backup
-    install(new BackupModule());
-
-    // settings
-    install(new SettingsModule());
+    for (Module module : ServiceLoader.load(Module.class))
+    {
+      logger.info("install module {}", module.getClass());
+      install(module);
+    }
 
     // other jax-rs stuff
     bind(DisableCacheResponseFilter.class);
