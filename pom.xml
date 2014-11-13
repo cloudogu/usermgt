@@ -18,9 +18,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:http://universe.triology.de/scm/git/SCM-Manager/universeadm</connection>
-    <developerConnection>scm:git:http://universe.triology.de/scm/git/SCM-Manager/universeadm</developerConnection>
-    <url>http://universe.triology.de/scm/git/scm/git/SCM-Manager/universeadm</url>
+    <connection>scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm</connection>
+    <developerConnection>scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm</developerConnection>
+    <url>https://universe.triology.de/scm/git/SCM-Manager/universeadm</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -546,13 +546,13 @@
     <repository>
       <id>universe.triology.de</id>
       <name>Triology Nexus Release Repository</name>
-      <url>http://universe.triology.de/nexus/content/repositories/releases/</url>
+      <url>https://universe.triology.de/nexus/content/repositories/releases/</url>
     </repository>
     
     <snapshotRepository>
       <id>universe.triology.de</id>
       <name>Triology Nexus Snapshot Repository</name>
-      <url>http://universe.triology.de/nexus/content/repositories/snapshots/</url>
+      <url>https://universe.triology.de/nexus/content/repositories/snapshots/</url>
     </snapshotRepository>
     
   </distributionManagement>
