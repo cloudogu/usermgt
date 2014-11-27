@@ -7,7 +7,7 @@
   <version>1.1.2-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>universeadm</name>
-  
+
   <developers>
     <developer>
       <id>sdorra</id>
@@ -32,7 +32,7 @@
       <version>3.0.1</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- injection -->
 
     <dependency>
@@ -46,53 +46,53 @@
       <artifactId>guice-servlet</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-multibindings</artifactId>
       <version>${guice.version}</version>
     </dependency>
-    
+
     <!-- security -->
-    
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-core</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-web</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-guice</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-cas</artifactId>
       <version>${shiro.version}</version>
     </dependency>
-    
+
     <!-- saml to get cas shiro attributes -->
-    
+
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.9</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.opensaml</groupId>
       <artifactId>opensaml</artifactId>
       <version>1.1</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.santuario</groupId>
       <artifactId>xmlsec</artifactId>
@@ -126,29 +126,29 @@
       <artifactId>unboundid-ldapsdk</artifactId>
       <version>2.3.7</version>
     </dependency>
-    
+
     <!-- events -->
-    
+
     <dependency>
       <groupId>com.github.legman</groupId>
       <artifactId>core</artifactId>
       <version>${legman.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.github.legman.support</groupId>
       <artifactId>guice</artifactId>
       <version>${legman.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.github.legman.support</groupId>
       <artifactId>shiro</artifactId>
       <version>${legman.version}</version>
     </dependency>
-    
+
     <!-- validation -->
-    
+
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
@@ -162,9 +162,9 @@
       <artifactId>guava</artifactId>
       <version>18.0</version>
     </dependency>
-    
+
     <!-- date and time -->
-    
+
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
@@ -196,13 +196,13 @@
       <artifactId>logback-classic</artifactId>
       <version>1.1.2</version>
     </dependency>
-    
+
     <!-- services -->
-    
+
     <dependency>
       <groupId>org.kohsuke.metainf-services</groupId>
       <artifactId>metainf-services</artifactId>
-      <version>1.5</version>  
+      <version>1.5</version>
       <optional>true</optional>
     </dependency>
 
@@ -215,7 +215,7 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
@@ -236,48 +236,48 @@
       <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
       <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
-    
+
     <!-- hibernate validator dependencies -->
-    
+
     <dependency>
       <groupId>javax.el</groupId>
       <artifactId>javax.el-api</artifactId>
       <version>2.2.4</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.glassfish.web</groupId>
       <artifactId>javax.el</artifactId>
       <version>2.2.4</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>uk.org.lidalia</groupId>
       <artifactId>slf4j-test</artifactId>
       <version>1.1.0</version>
       <scope>test</scope>
     </dependency>
-    
+
     <!--
     use provided scope to create a global exclude
     -->
-    
+
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1.1</version>
       <scope>provided</scope>
     </dependency>
-    
+
   </dependencies>
 
   <build>
@@ -303,7 +303,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -320,7 +320,7 @@
           </compilerArguments>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -344,7 +344,7 @@
         <artifactId>maven-source-plugin</artifactId>
         <version>2.2.1</version>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
@@ -423,7 +423,7 @@
           </systemProperties>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -434,7 +434,7 @@
           </classpathDependencyExcludes>
         </configuration>
       </plugin>
-      
+
       <!--
          fix maven troubleshooting part on
          https://bitbucket.org/sdorra/scm-manager/wiki/configure-eclipse
@@ -445,7 +445,24 @@
         <artifactId>maven-eclipse-plugin</artifactId>
         <version>2.6</version>
       </plugin>
-      
+
+      <!-- maven wrapper -->
+      <plugin>
+        <groupId>com.rimerosolutions.maven.plugins</groupId>
+        <artifactId>wrapper-maven-plugin</artifactId>
+        <version>0.0.2</version>
+        <configuration>
+          <!-- optional base distribution url -->
+          <baseDistributionUrl>http://mirrors.ibiblio.org/maven2/org/apache/maven/apache-maven</baseDistributionUrl>
+          <!-- optional folder for generated scripts -->
+          <wrapperScriptDirectory>${basedir}</wrapperScriptDirectory>
+          <!-- optional wrapper support folder - subfolder of wrapperScriptDirectory -->
+          <wrapperDirectory>${basedir}/wrapper</wrapperDirectory>
+          <!-- optional specific maven version - autodetected -->
+          <mavenVersion>3.2.3</mavenVersion>
+        </configuration>
+      </plugin>
+
       <!-- reporting -->
 
       <plugin>
@@ -504,7 +521,7 @@
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
-    
+
     <repository>
       <id>oss.sonatype.org</id>
       <name>oss.sonatype.org snapshot repository</name>
@@ -529,7 +546,7 @@
         <updatePolicy>never</updatePolicy>
       </releases>
     </pluginRepository>
-    
+
     <pluginRepository>
       <id>oss.sonatype.org</id>
       <name>oss.sonatype.org snapshot repository</name>
@@ -540,21 +557,21 @@
     </pluginRepository>
 
   </pluginRepositories>
-  
+
   <distributionManagement>
-    
+
     <repository>
       <id>universe.triology.de</id>
       <name>Triology Nexus Release Repository</name>
       <url>https://universe.triology.de/nexus/content/repositories/releases/</url>
     </repository>
-    
+
     <snapshotRepository>
       <id>universe.triology.de</id>
       <name>Triology Nexus Snapshot Repository</name>
       <url>https://universe.triology.de/nexus/content/repositories/snapshots/</url>
     </snapshotRepository>
-    
+
   </distributionManagement>
 
   <profiles>
@@ -565,7 +582,7 @@
       </activation>
       <build>
         <plugins>
-          
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -579,7 +596,7 @@
               </webResources>
             </configuration>
           </plugin>
-          
+
           <plugin>
             <groupId>com.github.sdorra</groupId>
             <artifactId>buildfrontend-maven-plugin</artifactId>
@@ -609,7 +626,7 @@
               </execution>
             </executions>
           </plugin>
-      
+
         </plugins>
       </build>
     </profile>
