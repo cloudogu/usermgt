@@ -19,3 +19,5 @@ src/main/webapp/components/
 src/main/webapp/style/css/
 # dynamic settings
 env/data/settings/
+# vagrant
+.vagrant
