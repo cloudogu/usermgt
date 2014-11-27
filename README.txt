@@ -3,13 +3,12 @@ universeadm
 
 1. Requirements
  - Oracle JDK >= 7
- - Apache Maven >= 3
  - Vagrant >= 1.6
  - Windows: VirtualBox
  - Linux: Docker
 
 2. Build project
- - mvn clean install
+ - ./mvnw clean install
 
 3. start development environment (requires vagrant)
  - vagrant up
