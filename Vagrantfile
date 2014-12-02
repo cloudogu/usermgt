@@ -9,15 +9,9 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "phusion/ubuntu-14.04-amd64"
+  config.vm.box_url = "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
 
-  config.vm.provision 'docker', run: "always" do |d|
-    # ldap
-    d.build_image '/vagrant/env/docker/ldap', args: '-t scmmu/ldap'
-    d.run 'ldap', image: 'scmmu/ldap', args: '-p 1389:389'
-    # cas
-    d.build_image '/vagrant/env/docker/cas', args: '-t scmmu/cas'
-    d.run 'cas', image: 'scmmu/cas', args: '-p 8443:8443 --link ldap:ldap'
-  end
+  config.vm.provision "shell", path: "env/provision.sh"
 
   # expose ldap port
   config.vm.network :forwarded_port, host: 1389, guest: 1389

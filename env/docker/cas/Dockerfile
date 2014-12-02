@@ -4,7 +4,7 @@
 # inspired by https://registry.hub.docker.com/u/wnameless/cas-mysql/dockerfile
 
 ## Use the official docker ubuntu distribution ##
-FROM ubuntu:12.04
+FROM debian:wheezy
 
 ## Get some karma ##
 MAINTAINER Sebastian Sdorra <sebastian.sdorra@triology.de>
