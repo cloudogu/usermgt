@@ -600,7 +600,7 @@
           <plugin>
             <groupId>com.github.sdorra</groupId>
             <artifactId>buildfrontend-maven-plugin</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
             <configuration>
               <karmaVersion>0.12.24</karmaVersion>
               <karmaConfig>karma.conf.js</karmaConfig>
