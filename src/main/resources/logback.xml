@@ -40,9 +40,8 @@
 
   <logger name="de.triology" level="TRACE" />
   
-  <!-- Security 
+  <!-- Security -->
   <logger name="org.apache.shiro" level="TRACE" />
-  -->
   
   <!-- Rest
   <logger name="org.jboss" level="TRACE" />

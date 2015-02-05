@@ -102,6 +102,10 @@ public class SecurityModule extends ShiroWebModule
     config(CAS_SERVICE, cas.getService());
     config(CAS_VALIDATION_PROTOCOL, CAS_VALIDATION_PROTOCOL_VALUE);
 
+    // cas realm which uses the cas rest api
+    // https://wiki.jasig.org/display/casum/restful+api
+    // this is required for basic authentication against the api
+    bindRealm().to(CasRestAuthenticationRealm.class);
     // use provider to configure realm, 
     // beacuse it looks like guice does not set constants for multi binding
     bindRealm().toProvider(CasRealmProvider.class).in(Singleton.class);
@@ -112,8 +116,9 @@ public class SecurityModule extends ShiroWebModule
     addFilterChain("/components/**", ANON);
     addFilterChain("/login/cas", ANON, Key.get(CasFilter.class));
     addFilterChain("/api/logout", ANON);
-    addFilterChain("/api/users**", config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/groups**", config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/users**", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/groups**", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api**", AUTHC_BASIC);
     addFilterChain("/**", AUTHC);
   }
 
@@ -159,6 +164,7 @@ public class SecurityModule extends ShiroWebModule
     @SuppressWarnings("unchecked")
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)
     {
+      logger.trace("resolve authorization info");
       // retrieve user information
       SimplePrincipalCollection principalCollection = (SimplePrincipalCollection) principals;
       List<Object> listPrincipals = principalCollection.asList();
