@@ -30,20 +30,19 @@ RUN sed -i "s#</Server>##g" /etc/tomcat7/server.xml; \
     echo '</Server>' >> /etc/tomcat7/server.xml
 
 # install cas
-RUN cd /tmp; \
-    wget http://downloads.jasig.org/cas/cas-server-3.5.2-release.tar.gz;\
-    tar xzf cas-server-3.5.2-release.tar.gz;\
-    mkdir /var/lib/tomcat7/webapps/cas;\
+RUN wget http://universe.triology.de/nexus/content/repositories/snapshots/de/triology/scm/universe/scmm-universe-cas/1.0-SNAPSHOT/scmm-universe-cas-1.0-20150205.073803-1.war -O /tmp/cas.war
+RUN mkdir /var/lib/tomcat7/webapps/cas;\
     cd /var/lib/tomcat7/webapps/cas;\
-    jar xf /tmp/cas-server-3.5.2/modules/cas-server-uber-webapp-3.5.2.war;\
-    chown -R tomcat7:tomcat7 /var/lib/tomcat7;\
-    rm -rf /tmp/cas-server-*
+    jar xf /tmp/cas.war;\
+    rm -rf /tmp/cas.war
 
 ADD cas.properties /root/cas.properties
 ADD deployerConfigContext.xml /var/lib/tomcat7/webapps/cas/WEB-INF/deployerConfigContext.xml
+ADD ticketRegistry.xml /var/lib/tomcat7/webapps/cas/WEB-INF/spring-configuration/ticketRegistry.xml
 ADD run.sh /root/run.sh
 RUN chmod +x /root/run.sh
 ADD supervisord.conf /etc/supervisord.conf
+RUN chown -R tomcat7:tomcat7 /var/lib/tomcat7
 
 EXPOSE 8443
 
