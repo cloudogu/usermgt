@@ -32,12 +32,15 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import de.triology.universeadm.Resources;
+import de.triology.universeadm.RestError;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
@@ -61,8 +64,8 @@ public class UserSelfRemoveExceptionMapperTest
 
   /**
    *   Method description
-   *  
-   *  
+   *
+   *
    *   @throws IOException
    *   @throws URISyntaxException
    */
@@ -72,6 +75,10 @@ public class UserSelfRemoveExceptionMapperTest
     MockHttpResponse response = dispatch("/a/ex");
 
     assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
+
+    RestError err = Resources.parseJson(response, RestError.class);
+
+    assertThat(err.getMessage(), containsString("my principal"));
   }
 
   /**

@@ -27,33 +27,55 @@
 
 
 
-package de.triology.universeadm.user;
+package de.triology.universeadm;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-
-import org.kohsuke.MetaInfServices;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@MetaInfServices(Module.class)
-public class UserModule extends AbstractModule
+@XmlRootElement(name = "error")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class RestError
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public RestError() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public RestError(String message)
+  {
+    this.message = message;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @return
    */
-  @Override
-  protected void configure()
+  public String getMessage()
   {
-    bind(UserManager.class).to(LDAPUserManager.class);
-    bind(MemberListener.class).asEagerSingleton();
-    bind(UserResource.class);
-    bind(UserSelfRemoveExceptionMapper.class);
+    return message;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String message;
 }

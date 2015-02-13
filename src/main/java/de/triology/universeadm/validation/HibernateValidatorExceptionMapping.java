@@ -28,6 +28,7 @@
 package de.triology.universeadm.validation;
 
 import com.google.common.collect.Lists;
+import de.triology.universeadm.RestError;
 import java.util.List;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -67,31 +68,27 @@ public class HibernateValidatorExceptionMapping implements ExceptionMapper<Const
     return Response
       .status(Response.Status.BAD_REQUEST)
       .type(MediaType.APPLICATION_JSON_TYPE)
-      .entity(new ValidationFailure(exception.getMessage(), violations))
+      .entity(new ValidationError(exception.getMessage(), violations))
       .build();
   }
   
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "validation-failure")
-  public static class ValidationFailure {
+  public static class ValidationError extends RestError {
     
-    private String message;
     @XmlElement(name = "violation")
     @XmlElementWrapper(name = "violations")
     private List<ConstraintViolationBean> violoations;
 
-    ValidationFailure(){}
+    ValidationError(){}
     
-    public ValidationFailure(String message, List<ConstraintViolationBean> violoations)
+    public ValidationError(String message, List<ConstraintViolationBean> violoations)
     {
-      this.message = message;
+      super(message);
       this.violoations = violoations;
     }
 
-    public String getMessage()
-    {
-      return message;
-    }
+
 
     public List<ConstraintViolationBean> getVioloations()
     {
