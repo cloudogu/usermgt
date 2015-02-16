@@ -57,6 +57,9 @@ import org.slf4j.LoggerFactory;
  */
 public class SecurityModule extends ShiroWebModule
 {
+  
+  private static final Key<CasFilter> CAS = Key.get(CasFilter.class);
+  private static final Key<ApiAuthenticationFilter> API = Key.get(ApiAuthenticationFilter.class);
 
   private static final String CAS_VALIDATION_PROTOCOL = "shiro.validationProtocol";
   private static final String CAS_VALIDATION_PROTOCOL_VALUE = "SAML";
@@ -114,12 +117,12 @@ public class SecurityModule extends ShiroWebModule
     addFilterChain("/error/*", ANON);
     addFilterChain("/style/**", ANON);
     addFilterChain("/components/**", ANON);
-    addFilterChain("/login/cas", ANON, Key.get(CasFilter.class));
+    addFilterChain("/login/cas", ANON, CAS);
     addFilterChain("/api/logout", ANON);
-    addFilterChain("/api/users", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/users/*", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/groups", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/groups/*", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/users", API, config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/users/*", API, config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/groups", API, config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/groups/*", API, config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/**", AUTHC);
   }
 
