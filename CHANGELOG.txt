@@ -1,3 +1,8 @@
+1.2.0
+=====
+- fix wrong status code and missing content on user self removal
+- implement basic authentication against the cas rest api
+
 1.1.1
 =====
 - do not display remove button on group create view, see http://192.168.115.124:8080/browse/PESCMMU-194
