@@ -4,7 +4,7 @@
 
   <groupId>de.triology.scm.universe</groupId>
   <artifactId>universeadm</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.2.0</version>
   <packaging>war</packaging>
   <name>universeadm</name>
 
@@ -21,7 +21,7 @@
     <connection>scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm</connection>
     <developerConnection>scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm</developerConnection>
     <url>https://universe.triology.de/scm/git/SCM-Manager/universeadm</url>
-    <tag>HEAD</tag>
+    <tag>1.2.0</tag>
   </scm>
 
   <dependencies>
