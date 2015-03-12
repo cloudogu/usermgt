@@ -95,6 +95,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     }
     $scope.user = user;
     
+    $scope.containsIllegalChar = function(username){
+      return /^[a-zA-Z0-9-_@\.]+$/.test(username);
+    };
+    
     $scope.isUnchanged = function(user){
       return angular.equals(user, $scope.master);
     };
