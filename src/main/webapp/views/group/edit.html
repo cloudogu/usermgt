@@ -74,7 +74,7 @@
     <table class="table">
       <tr ng-repeat="member in group.members | simpleSort">
         <td>
-          <a ng-href="#/users/{{member}}">{{member}}</a>
+          <a ng-href="#/user/{{member}}">{{member}}</a>
         </td>
         <td class="text-right">
           <button class="btn btn-warning" href="" ng-click="removeMember(member)">

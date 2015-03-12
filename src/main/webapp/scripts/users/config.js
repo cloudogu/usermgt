@@ -71,7 +71,7 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
         }
       })
       .state('usersEdit', {
-        url: '/users/:username',
+        url: '/user/:username',
         controller: 'userEditController',
         templateUrl: 'views/user/edit.html',
         resolve: {

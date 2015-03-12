@@ -71,7 +71,7 @@ angular.module('universeadm.groups.config', ['ui.router',
         }
       })
       .state('groupsEdit', {
-        url: '/groups/:name',
+        url: '/group/:name',
         controller: 'groupEditController',
         templateUrl: 'views/group/edit.html',
         resolve: {

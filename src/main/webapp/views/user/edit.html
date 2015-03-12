@@ -113,7 +113,7 @@
     <table class="table">
       <tr ng-repeat="group in user.memberOf | simpleSort">
         <td>
-          <a ng-href="#/groups/{{group}}">{{group}}</a>
+          <a ng-href="#/group/{{group}}">{{group}}</a>
         </td>
         <td class="text-right">
           <button class="btn btn-warning" href="" ng-click="removeGroup(group)">
