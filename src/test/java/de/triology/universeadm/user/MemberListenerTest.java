@@ -28,6 +28,7 @@
 package de.triology.universeadm.user;
 
 import de.triology.universeadm.EventType;
+import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupEvent;
@@ -46,8 +47,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class MemberListenerTest
 {
-  
-  @Mock
+  @Mock 
+  private LDAPConfiguration configuration;
+          
+  @Mock 
   private LDAPConnectionStrategy strategy;
   
   @Mock
@@ -61,7 +64,7 @@ public class MemberListenerTest
   
   @Before
   public void prepareTest(){
-    listener = new MemberListener(strategy, userManager);
+    listener = new MemberListener(configuration, strategy, userManager);
     user = new User("dent");
     group = new Group("Heart Of Gold");
     when(userManager.get("dent")).thenReturn(user);
@@ -101,6 +104,15 @@ public class MemberListenerTest
     listener.handleGroupEvent(new GroupEvent(group, oldGroup));
     assertFalse(user.getMemberOf().contains("Heart Of Gold"));
     verify(userManager).modify(user, false);
+  }
+  
+  @Test
+  public void testDisabled(){
+    when(configuration.isDisableMemberListener()).thenReturn(Boolean.TRUE);
+    Group oldGroup = new Group(group.getName());
+    group.getMembers().add("dent");
+    listener.handleGroupEvent(new GroupEvent(group, oldGroup));
+    verify(userManager, never()).modify(user, false);
   }
   
 }

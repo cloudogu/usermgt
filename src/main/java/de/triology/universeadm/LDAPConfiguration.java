@@ -175,8 +175,16 @@ public class LDAPConfiguration
     return requirePreEncodedPasswords;
   }
 
+  public boolean isDisableMemberListener() 
+  {
+    return disableMemberListener;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
+  @XmlElement(name = "disable-member-listener")
+  private boolean disableMemberListener = false;
+  
   /**
    * Field description
    */

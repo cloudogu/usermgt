@@ -13,27 +13,13 @@ MAINTAINER Sebastian Sdorra <sebastian.sdorra@triology.de>
 # install slapd
 RUN apt-get update -qq && apt-get install -y supervisor slapd ldap-utils -qq && apt-get clean
 
-# Default password is trio123
-RUN sed -i 's/^olcRootPW:.*$/olcRootPW: {SSHA}rH06nxWDFjgcSZdK7VJyb9VPRHNzl0qR/g' /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{1\}hdb.ldif
-RUN sed -i 's/cn=admin,dc=nodomain/cn=Directory Manager,dc=triology,dc=de/g' /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{1\}hdb.ldif
-RUN sed -i 's/dc=nodomain/dc=triology,dc=de/g' /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{1\}hdb.ldif
+ADD resources /resources
 
-ADD sample.ldif /root/sample.ldif
-ADD user.ldif /root/user.ldif
-
-RUN service slapd start;\
-    sleep 3;\
-    ldapadd -f /root/sample.ldif -D "cn=Directory Manager,dc=triology,dc=de" -w trio123;\
-    ldapadd -f /root/user.ldif -D "cn=Directory Manager,dc=triology,dc=de" -w trio123;\
-    service slapd stop
-
-ADD supervisord.conf /etc/supervisord.conf
-
-ADD run.sh /root/run.sh
-RUN chmod +x /root/run.sh
+ADD startup.sh /startup.sh
+RUN chmod +x /startup.sh
 
 EXPOSE 389
 
 VOLUME [ "/data" ]
 
-CMD ["/root/run.sh"]
+CMD ["/startup.sh"]

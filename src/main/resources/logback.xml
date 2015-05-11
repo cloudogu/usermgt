@@ -41,7 +41,7 @@
   <logger name="de.triology" level="TRACE" />
   
   <!-- Security -->
-  <logger name="org.apache.shiro" level="TRACE" />
+  <logger name="org.apache.shiro" level="INFO" />
   
   <!-- Rest
   <logger name="org.jboss" level="TRACE" />

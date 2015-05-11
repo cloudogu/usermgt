@@ -32,6 +32,7 @@ import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.triology.universeadm.DoesNotContainPredicate;
+import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupEvent;
@@ -51,12 +52,14 @@ public class MemberListener
 
   private static final Logger logger = LoggerFactory.getLogger(MemberListener.class);
 
+  private final LDAPConfiguration configuration;
   private final LDAPConnectionStrategy strategy;
   private final UserManager userManger;
 
   @Inject
-  public MemberListener(LDAPConnectionStrategy strategy, UserManager userManger)
+  public MemberListener(LDAPConfiguration configuration, LDAPConnectionStrategy strategy, UserManager userManger)
   {
+    this.configuration = configuration;
     this.strategy = strategy;
     this.userManger = userManger;
   }
@@ -64,16 +67,25 @@ public class MemberListener
   @Subscribe
   public void handleGroupEvent(GroupEvent groupEvent)
   {
-    // we are asynchronous, so we have to bind and release the connection 
-    // strategy manually. TODO find a better automatically way.
-    strategy.bind();
-    try
+    if (!configuration.isDisableMemberListener())
     {
-      doHandleGroupEvent(groupEvent);
+      logger.debug("execute member listener");
+      
+      // we are asynchronous, so we have to bind and release the connection 
+      // strategy manually. TODO find a better automatically way.
+      strategy.bind();
+      try
+      {
+        doHandleGroupEvent(groupEvent);
+      }
+      finally
+      {
+        strategy.release();
+      }
     }
-    finally
+    else
     {
-      strategy.release();
+      logger.debug("member listener is disabled");
     }
   }
 

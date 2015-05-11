@@ -2,9 +2,30 @@
 <ldap>
   <host>localhost</host>
   <port>1389</port>
+  <!--
+  <bind-dn>cn=admin,dc=cloudogu,dc=com</bind-dn>
+  <bind-password>bJ3VoW2iMEgsj+misqcY7z4rdVJwSuSxDwlIcaPYYAx+nBScxbFvI1ISihDRio/F</bind-password>
+  -->
+  <bind-dn>cn=admin,dc=cloudogu,dc=com</bind-dn>
+  
+  <!--<bind-dn>cn=Directory Manager,dc=cloudogu,dc=com</bind-dn>-->
+  <bind-password>3Ac27YzsvT6cqoK8IZQIyn9qAwP0BwfMiOCVay+d2Qw=</bind-password>
+  
+  <user-base-dn>ou=People,o=ces.local,dc=cloudogu,dc=com</user-base-dn>
+  <group-base-dn>ou=Groups,o=ces.local,dc=cloudogu,dc=com</group-base-dn>
+  
+  <disable-member-listener>true</disable-member-listener>
+  
+  <disabled>false</disabled>
+</ldap>
+
+<!--<?xml version="1.0" encoding="UTF-8"?>
+<ldap>
+  <host>localhost</host>
+  <port>1389</port>
   <bind-dn>cn=Directory Manager,dc=triology,dc=de</bind-dn>
-  <bind-password>ObZCgb216HvcGNEnJ9Avt9ethiiWuOzzXhFSo+d32f8=</bind-password>
+  <bind-password>3Ac27YzsvT6cqoK8IZQIyn9qAwP0BwfMiOCVay+d2Qw=</bind-password>
   <user-base-dn>ou=People,dc=triology,dc=de</user-base-dn>
   <group-base-dn>ou=Groups,dc=triology,dc=de</group-base-dn>
   <disabled>false</disabled>
-</ldap>
+</ldap>-->

@@ -1,0 +1,107 @@
+# extended LDIF
+#
+# LDAPv3
+# base <dc=cloudogu,dc=com> with scope subtree
+# filter: (objectClass=*)
+# requesting: ALL
+#
+
+# ces.local, cloudogu.com
+dn: o=ces.local,dc=cloudogu,dc=com
+o: ces.local
+objectClass: top
+objectClass: organization
+description: Root entry for domain ces.local
+
+# People, ces.local, cloudogu.com
+dn: ou=People,o=ces.local,dc=cloudogu,dc=com
+ou: People
+description: Root entry for persons
+objectClass: top
+objectClass: organizationalUnit
+
+# admin, People, ces.local, cloudogu.com
+dn: uid=admin,ou=People,o=ces.local,dc=cloudogu,dc=com
+uid: admin
+description: Universe Administrator
+givenName: Universe
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+sn: Administrator
+cn: Universe Administrator
+mail: admin@ces.local
+userPassword:: e1NTSEF9bjJjNXl5YmdCaXRwb0xJWkVqZWlySVMzdzRqcDNpRW0=
+
+# system, People, ces.local, cloudogu.com
+dn: uid=system,ou=People,o=ces.local,dc=cloudogu,dc=com
+uid: system
+description: Universe system account
+givenName: Universe
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+sn: System
+cn: Universe System
+mail: system@ces.local
+userPassword:: e1NTSEF9YjRmNkM4bCtDN2JKQ05LOHIxOFJNSURIZU83R0VUU28=
+
+# Groups, ces.local, cloudogu.com
+dn: ou=Groups,o=ces.local,dc=cloudogu,dc=com
+ou: Groups
+description: Root entry for groups
+objectClass: top
+objectClass: organizationalUnit
+
+# UniverseAdministrators, Groups, ces.local, cloudogu.com
+dn: cn=UniverseAdministrators,ou=Groups,o=ces.local,dc=cloudogu,dc=com
+cn: UniverseAdministrators
+description: Members of the UniverseAdministrators have full access to the uni
+ verse administration application
+member: uid=admin,ou=People,o=ces.local,dc=cloudogu,dc=com
+member: cn=__dummy
+objectClass: top
+objectClass: groupOfNames
+
+# universalAdmin, Groups, ces.local, cloudogu.com
+dn: cn=universalAdmin,ou=Groups,o=ces.local,dc=cloudogu,dc=com
+cn: universalAdmin
+description: This group grants administrative rights to all development applic
+ ations of SCM-Manager Universe (except Bugzilla)
+member: cn=__dummy
+objectClass: top
+objectClass: groupOfNames
+
+# universalWrite, Groups, ces.local, cloudogu.com
+dn: cn=universalWrite,ou=Groups,o=ces.local,dc=cloudogu,dc=com
+cn: universalWrite
+description: This group grants write permissions to all projects in SCM-Manage
+ r Universe
+member: cn=__dummy
+objectClass: top
+objectClass: groupOfNames
+
+# universalRead, Groups, ces.local, cloudogu.com
+dn: cn=universalRead,ou=Groups,o=ces.local,dc=cloudogu,dc=com
+cn: universalRead
+description: This group grants read access to all projects in SCM-Manager Univ
+ erse
+member: cn=__dummy
+objectClass: top
+objectClass: groupOfNames
+
+# Special Users, ces.local, cloudogu.com
+dn: ou=Special Users,o=ces.local,dc=cloudogu,dc=com
+ou: Special Users
+description: Root entry for persons
+objectClass: top
+objectClass: organizationalUnit
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 13
+# numEntries: 12
