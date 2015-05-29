@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,45 +24,21 @@
  * 
  * http://www.scm-manager.com
  */
-
-package de.triology.universeadm.settings;
-
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+package de.triology.universeadm.update;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author mbehlendorf
  */
-@Path("settings")
-public class SettingsResource
-{
+public class ResultVersionCheck {
+  public String version;
 
-  private final SettingsStore store;
-
-  @Inject
-  public SettingsResource(SettingsStore store)
-  {
-    this.store = store;
+  public String getVersion() {
+    return version;
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
-  {
-    this.store.set(settings);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
+  public void setVersion(String version) {
+    this.version = version;
   }
   
 }

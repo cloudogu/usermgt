@@ -34,7 +34,7 @@
     Fill in the support ID and password you received after booking one of the 
     mentioned support packages.
   </p>
-  
+
   <alert ng-if="invalidCredentials" type="danger">Invalid credentials</alert>
 
   <div class="form-group">
@@ -74,4 +74,28 @@
   <button type="submit" class="btn btn-primary" ng-click="update(settings)" ng-disabled="settingsForm.$invalid || isUnchanged(settings)">
     Save
   </button>
-</form>
+
+  <button id="updateButton" class="tt-element tt-button yellow large" ng-click="startUpdate();
+    checkUpdateStatus();" ng-disabled="buttonDisabled">
+
+    <span id = "updateNow">Update now</span><br>
+    <span id = "availableVersion"><b>SCM-Manager Universe</b><br>
+    <b>{{availableVersion}}</b>
+    
+    </span>
+</button>
+
+        <!-- PreCheck Result Table -->
+        <div ng-controller="ModalCtrl">
+          <button type="submit" class="btn btn-primary" ng-click="openPCResult()">
+            Open PreCheckResult
+          </button>
+          <button type="submit" class="btn btn-primary" ng-click="openUserInput()">
+            Open UserInputForm
+          </button>
+
+        </div>
+        
+        
+
+        </form>

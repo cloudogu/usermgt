@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,45 +24,25 @@
  * 
  * http://www.scm-manager.com
  */
+package de.triology.universeadm.update;
 
-package de.triology.universeadm.settings;
-
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.parser.ParseException;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author mbehlendorf
  */
-@Path("settings")
-public class SettingsResource
-{
-
-  private final SettingsStore store;
-
-  @Inject
-  public SettingsResource(SettingsStore store)
-  {
-    this.store = store;
-  }
-
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
-  {
-    this.store.set(settings);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
-  }
-  
+public abstract class JsonUtils {
+    
+    public static JsonNode loadJsonFile(File f) throws FileNotFoundException, IOException, ParseException{
+      ObjectMapper mapper= new ObjectMapper();
+      JsonNode rootNode=mapper.readTree(f);
+      return rootNode;
+    }
+    
 }

@@ -73,13 +73,15 @@ public enum Stage
 
     if (Strings.isNullOrEmpty(stage))
     {
-      current = Stage.PRODUCTION;
+      //WORKAROUND
+      //current = Stage.PRODUCTION;  
+      current = Stage.DEVELOPMENT;
     }
     else
     {
       current = Stage.valueOf(stage.toUpperCase(Locale.ENGLISH));
     }
-
+    
     logger.info("start with stage {}", stage);
   }
 

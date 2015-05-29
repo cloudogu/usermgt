@@ -49,4 +49,7 @@ angular.module('universeadm.settings.config', ['ui.router',
           }
         }
       });
+      
+     
+
   });

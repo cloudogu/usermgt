@@ -21,3 +21,4 @@ src/main/webapp/style/css/
 env/data/settings/
 # vagrant
 .vagrant
+/.project

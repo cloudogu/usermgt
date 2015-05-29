@@ -25,44 +25,34 @@
  * http://www.scm-manager.com
  */
 
-package de.triology.universeadm.settings;
+package de.triology.universeadm;
 
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.servlet.ServletContext;
+import org.apache.shiro.guice.web.ShiroWebModule;
 
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@Path("settings")
-public class SettingsResource
+public abstract class BaseSecurityModule extends ShiroWebModule
 {
 
-  private final SettingsStore store;
-
-  @Inject
-  public SettingsResource(SettingsStore store)
+  protected BaseSecurityModule(ServletContext context)
   {
-    this.store = store;
+    super(context);
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
+  @Override
+  @SuppressWarnings("unchecked")
+  protected void configureShiroWeb()
   {
-    this.store.set(settings);
+    addFilterChain("/error/*", ANON);
+    addFilterChain("/style/**", ANON);
+    addFilterChain("/components/**", ANON);
+    addFilterChain("/api/logout", ANON);
+    configureRealm();
   }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
-  }
+  
+  protected abstract void configureRealm();
   
 }

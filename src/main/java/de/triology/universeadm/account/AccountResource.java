@@ -28,6 +28,7 @@
 package de.triology.universeadm.account;
 
 import com.google.inject.Inject;
+import de.triology.universeadm.Manager;
 import de.triology.universeadm.user.User;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

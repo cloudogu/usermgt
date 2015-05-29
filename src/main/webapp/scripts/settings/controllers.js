@@ -26,28 +26,199 @@
  */
 
 
-angular.module('universeadm.settings.controllers', [ 
+angular.module('universeadm.settings.controllers', [
   'universeadm.validation.directives', 'universeadm.settings.services'])
-  .controller('settingsController', function($scope, settingsService, settings){
-    
-    $scope.master = angular.copy(settings);
-    $scope.settings = settings;
-    $scope.invalidCredentials = false;
-    
-    $scope.isUnchanged = function(settings){
-      return angular.equals(settings, $scope.master);
-    };
-    
-    $scope.update = function(settings){
-      settingsService.update(settings).then(function(){
-        $scope.master = angular.copy(settings);
-        $scope.settings = settings;
-        $scope.invalidCredentials = false;
-      }, function(e){
-        if (e.status === 400){
-          $scope.invalidCredentials = true;
-        }
-      });
-    };
-    
-  });
+        .controller('settingsController', function ($scope, $http, settingsService, settings) {
+          $scope.master = angular.copy(settings);
+          $scope.settings = settings;
+          $scope.invalidCredentials = false;
+          $http.get('/universeadm/api/update/versionCheck', {}).
+                  success(function (data, status, headers, config) {
+                    $scope.availableVersion = data.version;
+
+                  }).
+                  error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                  });
+          $scope.updateScheduled = false;
+          $scope.updateInProgress = false;
+          $scope.updatePrecheck = false;
+          $scope.buttonDisabled = true;
+
+
+
+
+          $scope.checkUpdateStatus = function () {
+
+            $http.post('/universeadm/api/update/check', {}).success(function (data, status, headers, config) {
+              if (data.status == "scheduled") {
+                $scope.updateScheduled = true;
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+              else if (data.status = "precheck") {
+                $scope.updateScheduled = false;
+                $scope.updatePrecheck = true;
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+              else if (data.status = "in progress") {
+                $scope.updateScheduled = false;
+                $scope.updatePrecheck = false;
+                $scope.updateInProgress = true;
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+              else if (data.status = "preCheckResult") {
+                $scope.updatePrecheck = false;
+
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+              else if (data.status = "updateFormAvailable") {
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+              else if (data.status = "done") {
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+              else if (data.status = "no update") {
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+              else {
+                window.setTimeout($scope.checkUpdateStatus, 1000);
+              }
+
+            }).
+                    error(function (data, status, headers, config) {
+                      // called asynchronously if an error occurs
+                      // or server returns response with an error status.
+                    });
+          }
+
+
+          $scope.isUnchanged = function (settings) {
+            return angular.equals(settings, $scope.master);
+          };
+
+          $scope.update = function (settings) {
+            settingsService.update(settings).then(function () {
+              $scope.master = angular.copy(settings);
+              $scope.settings = settings;
+              $scope.invalidCredentials = false;
+            }, function (e) {
+              if (e.status === 400) {
+                $scope.invalidCredentials = true;
+              }
+            });
+          };
+
+          $scope.startUpdate = function () {
+            $http.post('/universeadm/api/update/start', {}).
+                    success(function (data, status, headers, config) {
+
+                    }).
+                    error(function (data, status, headers, config) {
+                      // called asynchronously if an error occurs
+                      // or server returns response with an error status.
+                    });
+          };
+
+        });
+
+angular.module('universeadm.settings.controllers')
+        .controller('ModalCtrl', function ($scope, $modal, $log) {
+
+          $scope.animationsEnabled = true;
+
+          $scope.openPCResult = function (size) {
+
+            var modalInstance = $modal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'views/settings/preCheckResult.dialog.html',
+              controller: 'PCResultCtrl',
+              size: size,
+              resolve: {
+                items: function () {
+                  return $scope.items;
+                }
+              }
+            });
+
+
+
+            modalInstance.result.then(function (selectedItem) {
+              $scope.selected = selectedItem;
+            }, function () {
+              $log.info('Modal dismissed at: ' + new Date());
+            });
+          };
+
+          $scope.openUserInput = function (size) {
+
+            var modalInstance = $modal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'views/settings/userInput.dialog.html',
+              controller: 'UserInputCtrl',
+              size: size,
+              resolve: {
+                items: function () {
+                  return $scope.items;
+                }
+              }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+              $scope.selected = selectedItem;
+            }, function () {
+              $log.info('Modal dismissed at: ' + new Date());
+            });
+          };
+
+          $scope.toggleAnimation = function () {
+            $scope.animationsEnabled = !$scope.animationsEnabled;
+          };
+
+        });
+
+angular.module('universeadm.settings.controllers')
+        .controller('PCResultCtrl', function ($scope, $http, $modalInstance, items) {
+
+          $http.get('/universeadm/api/update/preCheckResult', {}).
+                  success(function (data, status, headers, config) {
+                    $scope.items = data;
+                  }).
+                  error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                  });
+          $scope.ok = function () {
+            $modalInstance.close();
+          };
+
+          $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+          };
+
+        });
+
+angular.module('universeadm.settings.controllers')
+        .controller('UserInputCtrl', function ($scope, $http, $modalInstance, $log, items) {
+
+          $scope.objectKeys = function (obj) {
+            return Object.keys(obj);
+          }
+
+          $http.get('/universeadm/api/update/userInput', {}).
+                  success(function (data, status, headers, config) {
+                    $scope.items = data;
+                  }).
+                  error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                  });
+          $scope.ok = function () {
+            $modalInstance.close();
+          };
+
+          $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+          };
+
+        });
