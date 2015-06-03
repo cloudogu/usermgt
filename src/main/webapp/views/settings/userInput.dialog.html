@@ -37,9 +37,10 @@ http://www.scm-manager.com
     <div ng-repeat="key in objectKeys(items.LDAPconfig.fields)" ng-init="x=items.LDAPconfig.fields[key]">
       <br>
       <b>{{x.title}}</b>
-      <img ng-if="x.hint" alt='hint' style='width: 16px; height: 16px' title = '{{x.hint}}' src='style/img/symbol_info.png'><br>
+      <img ng-if='x.hint' alt='hint' style='width: 16px; height: 16px' title = '{{x.hint}}' src='style/img/symbol_info.png'><br>
       <input type='text' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'/><br>
       <!-- TODO: MaxLength MinLength-->
+      <!-- TODO: Input types-->
       
     </div>
     <br>

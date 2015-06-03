@@ -75,18 +75,22 @@
     Save
   </button>
 
-  <button id="updateButton" class="tt-element tt-button yellow large" ng-click="startUpdate();
-    checkUpdateStatus();" ng-disabled="buttonDisabled">
+  <button id="updateButton" ng-show="updateAvailable && !updateScheduled && !updateInProgress &&!updatePrecheck" ng-click="startUpdate();
+    checkUpdateStatus();" ng-disabled="buttonDisabled || invalidCredentials">
 
     <span id = "updateNow">Update now</span><br>
     <span id = "availableVersion"><b>SCM-Manager Universe</b><br>
     <b>{{availableVersion}}</b>
-    
-    </span>
-</button>
-
+    </span>  
+  </button>
+  
+  <div ng-if="updateScheduled" id="update-scheduled" ><img src="style/img/ajax-loader-clock.gif"><br>Update scheduled</div>
+  <div ng-if="updateInProgress" id="update-progress-bar" ><img src="style/img/ajax-loader-bar.gif"><br>Update in progress</div>
+  <div ng-if="updatePrecheck" id="update-precheck" ><img alt="" src="style/img/symbol_stethoscope.png"><br>Checking your environment...</div>
+  
+  
         <!-- PreCheck Result Table -->
-        <div ng-controller="ModalCtrl">
+        <div>
           <button type="submit" class="btn btn-primary" ng-click="openPCResult()">
             Open PreCheckResult
           </button>
@@ -95,7 +99,4 @@
           </button>
 
         </div>
-        
-        
-
         </form>

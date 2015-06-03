@@ -37,4 +37,18 @@ angular.module('universeadm.settings.services', ['restangular'])
         return settings.post();
       }
     };
+  })
+  .factory('updateService', function(Restangular){
+    var update = Restangular.one('update');
+    return {
+      versionCheck: function(){
+        return update.one('versionCheck').get();
+      },
+      updateAvailable: function(){
+        return update.one('updateCheck').post();
+      },
+      start: function(){
+        return update.one('start').post();
+      }
+    };
   });

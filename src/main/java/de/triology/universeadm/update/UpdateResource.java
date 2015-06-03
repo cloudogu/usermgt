@@ -165,8 +165,11 @@ public class UpdateResource {
   @Produces(MediaType.APPLICATION_JSON)
   public ResultUpdateCheck updateCheck() {
     Status status = updateService.checkUpdate();
-    ResultUpdateCheck  result = new ResultUpdateCheck ();
+    ResultUpdateCheck result = new ResultUpdateCheck();
     // update check status
+    if (status.updateAvailable) {
+      result.setUpdateAvailable(true);
+    }
     if (status.updateCheckToggleBusy) {
       result.setSuccess(true);
       result.setStatus("waiting");
@@ -182,59 +185,59 @@ public class UpdateResource {
     }
     return result;
   }
-  
+
   @GET
   @Path("versionCheck")
   @Produces(MediaType.APPLICATION_JSON)
   public ResultVersionCheck versionCheck() {
-    ResultVersionCheck  result = new ResultVersionCheck ();
+    ResultVersionCheck result = new ResultVersionCheck();
     result.setVersion("unknown version");
-    if(SCM_UPDATE_AVAILABLE_FLAG.exists()){
+    if (SCM_UPDATE_AVAILABLE_FLAG.exists()) {
       FileReader fr;
       try {
         fr = new FileReader(SCM_UPDATE_AVAILABLE_FLAG);
-        BufferedReader br= new BufferedReader(fr);
+        BufferedReader br = new BufferedReader(fr);
         result.setVersion(br.readLine());
       }
       catch (FileNotFoundException ex) {
         logger.error("Can not read File: ", SCM_UPDATE_AVAILABLE_FLAG);
-        
+
       }
       catch (IOException ex) {
-        logger.error("Can not read Line in File: ",SCM_UPDATE_AVAILABLE_FLAG);
+        logger.error("Can not read Line in File: ", SCM_UPDATE_AVAILABLE_FLAG);
       }
-      
+
     }
     return result;
   }
-  
+
   @GET
   @Path("preCheckResult")
   @Produces(MediaType.TEXT_PLAIN)
   public String preCheckResult() {
-    String result ="";
-    if(SCM_UPDATE_PRECHECK_RESULT_FILE.exists()){
+    String result = "";
+    if (SCM_UPDATE_PRECHECK_RESULT_FILE.exists()) {
       try {
         result = FileUtils.readFileToString(SCM_UPDATE_PRECHECK_RESULT_FILE);
       }
       catch (IOException ex) {
-        logger.error("Can not read File: ",SCM_UPDATE_PRECHECK_RESULT_FILE);
+        logger.error("Can not read File: ", SCM_UPDATE_PRECHECK_RESULT_FILE);
       }
     }
     return result;
   }
-  
-    @GET
+
+  @GET
   @Path("userInput")
   @Produces(MediaType.TEXT_PLAIN)
   public String userInput() {
-    String result ="";
-    if(SCM_UPDATE_FORM_DATA.exists()){
+    String result = "";
+    if (SCM_UPDATE_FORM_DATA.exists()) {
       try {
         result = FileUtils.readFileToString(SCM_UPDATE_FORM_DATA);
       }
       catch (IOException ex) {
-        logger.error("Can not read File: ",SCM_UPDATE_FORM_DATA);
+        logger.error("Can not read File: ", SCM_UPDATE_FORM_DATA);
       }
     }
     return result;
@@ -242,9 +245,9 @@ public class UpdateResource {
 
   @POST
   @Path("preCheckAction")
-  @Consumes(MediaType.TEXT_PLAIN)
+  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Result preCheckAction(String action) throws IOException {
+  public Result preCheckAction(String action) {
     Result result = new Result();
     result.setResult("");
     switch (action) {
@@ -258,16 +261,18 @@ public class UpdateResource {
       case "recheck":
         result.setResult("recheck");
         break;
-
     }
     if (!result.getResult().isEmpty()) {
-
-      BufferedWriter writer = Files.newWriter(UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG, Charsets.UTF_8);
-      UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG.setReadable(true);
-      writer.write(result.getResult());
-      return Result.getSuccessMessage();
+      try {
+        FileUtils.writeStringToFile(UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG, result.getResult());
+        return Result.getSuccessMessage();
+      }
+      catch (IOException ex) {
+        logger.error("Unable to write in ", UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG);
+      }
 
     }
+
     return Result.getFailMessage();
   }
 

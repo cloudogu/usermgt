@@ -40,18 +40,6 @@ import java.nio.charset.Charset;
  */
 public class UpdateService {
 
-    private static final String FLAG_TRUE = "1";
-
-    private static final String FLAG_FALSE = "0";
-
-    private static final String FLAG_VALID = "valid";
-
-    private static final String FLAG_INVALID = "invalid";
-
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
-
-    private static final Charset UTF8 = Charsets.UTF_8;
-
     @VisibleForTesting
     static final String DEFAULT_UPDATE_WEBSITE = "https://www.scm-manager.com/applupdateservice/applupdate.php";
 

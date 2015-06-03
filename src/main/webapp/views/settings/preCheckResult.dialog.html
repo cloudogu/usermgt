@@ -26,46 +26,47 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 http://www.scm-manager.com
 -->
 <html>
-<!-- PreCheck Result Table -->
-<div class="modal-header">
-            <h3 class="modal-title">Result List</h3>
-        </div>
-        <div class="modal-body">
-            <table id="precheck-result-content">
-    	<thead>
-    		<tr>
-    			<th>Item</th>
-    			<th>Expected</th>
-    			<th>Found</th>
-    			<th>Status</th>
-    			<th>Information</th>
-    	</thead>
-        <tr ng-repeat="x in items">
-    <td>{{ x.title }}</td>
-    <td>{{ x.expected }}</td>
-    <td>{{ x.found }}</td>
-    <td>{{ x.state }}</td>
-    <td>{{ x.message }}</td>
-  </tr>
-        
+  <!-- PreCheck Result Table -->
+  <div class="modal-header">
+    <h3 class="modal-title">Result List</h3>
+  </div>
+  <div class="modal-body">
+    <table id="precheck-result-content">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Expected</th>
+          <th>Found</th>
+          <th>Status</th>
+          <th>Information</th>
+      </thead>
+      <tr ng-repeat="x in items">
+        <td>{{ x.title}}</td>
+        <td>{{ x.expected}}</td>
+        <td>{{ x.found}}</td>
+        <td>{{ x.state}}</td>
+        <td>{{ x.message}}</td>
+      </tr>
+
     </table>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
-            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        </div>
- 
-    <p id="precheck-error-message" style="display:none;">
-    	<strong>Attention:</strong> The update precheck found errors on your system configuration. Please fix that
-    	issues and start the precheck again.
-    </p>
-    <p id="precheck-warning-message" style="display:none;">
-    	<strong>Attention:</strong> The update precheck found warnings on your system configuration. You can ignore them
-    	and proceed with the update but keep in mind, that there is a potentially risc of damaging your system. We
-    	recommand to fix the issues and start the precheck again.
-    </p>
-    <p id="precheck-success-message" style="display:none;">
-    	Precheck passed. The update will continue in
-    	<strong><span id="precheck-success-message-countdown">#</span></strong> seconds.
-    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="ignore()" ng-disabled="btnIgnoreDisabled">Ignore and proceed</button>
+    <button type="button" class="btn btn-info" ng-click="recheck()" ng-disabled="btnRecheckDisabled">Recheck</button>
+    <button type="button" class="btn btn-warning" ng-click="cancel()" ng-disabled="btnCancelDisabled">Cancel</button>
+  </div>
+
+  <p id="precheck-error-message" ng-show="pcerror">
+    <strong>Attention:</strong> The update precheck found errors on your system configuration. Please fix that
+    issues and start the precheck again.
+  </p>
+  <p id="precheck-warning-message" ng-show="pcwarning">
+    <strong>Attention:</strong> The update precheck found warnings on your system configuration. You can ignore them
+    and proceed with the update but keep in mind, that there is a potentially risc of damaging your system. We
+    recommand to fix the issues and start the precheck again.
+  </p>
+  <p id="precheck-success-message" ng-show="pcsuccess">
+    Precheck passed. The update will continue in
+    <strong><span id="precheck-success-message-countdown">{{updateCountdown}}</span></strong> seconds.
+  </p>
 </html>
