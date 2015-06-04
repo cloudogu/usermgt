@@ -27,9 +27,15 @@
 package de.triology.universeadm.update;
 
 import static de.triology.universeadm.update.UpdateConstants.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -38,6 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "Status")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Status {
+  private static final Logger logger = LoggerFactory.getLogger(Status.class);
 
     public boolean scmUpdateInProgress;
     public boolean updateScheduled;
@@ -53,6 +60,7 @@ public class Status {
     public boolean scmUpdatePreCheckDone;
     public boolean scmUpdatePreCheckUserDecisionNeeded;
     public boolean scmUpdateFormAvailable;
+    public boolean validCreds;
     
     public Status(){
         this.updateStatusVars();
@@ -73,7 +81,26 @@ public class Status {
         scmUpdatePreCheckDone = SCM_UPDATE_PRECHECK_DONE_FLAG.exists();
         scmUpdatePreCheckUserDecisionNeeded = SCM_UPDATE_PRECHECK_USER_DECISION_NEEDED_FLAG.exists();
         scmUpdateFormAvailable = SCM_UPDATE_FORM_AVAILABLE_FLAG.exists() && !SCM_UPDATE_FORM_DATA_OUTPUT_FILE.exists();
+        validCredsStatus();
+        
+    }
+    private void validCredsStatus(){
+      FileReader fr;
+      validCreds=false;
+      try {
+        fr = new FileReader(SCM_UPDATE_CREDENTIALS_FILE);
+        BufferedReader br = new BufferedReader(fr);
+        if(!"invalid".equals(br.readLine())){
+          validCreds=true;
+        }
+      }
+      catch (FileNotFoundException ex) {
+        logger.error("Can not read File: ", SCM_UPDATE_CREDENTIALS_FILE);
 
+      }
+      catch (IOException ex) {
+        logger.error("Can not read Line in File: ", SCM_UPDATE_CREDENTIALS_FILE);
+      }
     }
 
 }

@@ -111,7 +111,7 @@ public final class UpdateConstants {
   /**
    * Path to the credentials file.
    */
-  static final File SCM_UPDATE_CREDENTIALS_FILE = new File("/etc/scmcreds");
+  static final File SCM_UPDATE_CREDENTIALS_FILE = new File("/etc/scmmu/scmcreds");
   /**
    * Path to file containing actual version name.
    */

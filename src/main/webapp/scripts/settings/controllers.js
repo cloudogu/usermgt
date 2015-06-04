@@ -81,8 +81,9 @@ angular.module('universeadm.settings.controllers', [
           };
 
           $scope.checkUpdateCheckStatus = function () {
-            updateService.updateAvailable().then(function (e) {
+            updateService.updateCheck().then(function (e) {
               $scope.updateAvailable = e.updateAvailable;
+              $scope.validCreds = e.validCreds;
             },
                     function () {
                     });
@@ -112,12 +113,32 @@ angular.module('universeadm.settings.controllers', [
           $scope.animationsEnabled = true;
 
           // Modals:
+          $scope.openUpdateStartConfirmation = function (size) {
+
+            var modalInstance = $modal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'views/settings/updateStartConfirmation.dialog.html',
+              controller: 'updateStartConfirmationCtrl',
+              size: size,
+              backdrop: 'static',
+              resolve: {
+                
+              }
+            });
+
+            modalInstance.result.then(function () {
+              $scope.startUpdate();
+              $scope.checkUpdateStatus();
+            }, function () {
+              $log.info('Modal dismissed at: ' + new Date());
+            });
+          };
           $scope.openPCResult = function (data, size) {
 
             var modalInstance = $modal.open({
               animation: $scope.animationsEnabled,
               templateUrl: 'views/settings/preCheckResult.dialog.html',
-              controller: 'PCResultCtrl',
+              controller: 'pcResultCtrl',
               size: size,
               backdrop: 'static',
               resolve: {
@@ -139,7 +160,7 @@ angular.module('universeadm.settings.controllers', [
             var modalInstance = $modal.open({
               animation: $scope.animationsEnabled,
               templateUrl: 'views/settings/userInput.dialog.html',
-              controller: 'UserInputCtrl',
+              controller: 'userInputCtrl',
               size: size,
               backdrop: 'static',
               resolve: {
@@ -161,53 +182,55 @@ angular.module('universeadm.settings.controllers', [
           };
         })
 
-        .controller('PCResultCtrl', function ($scope, $http, $log, $modalInstance, items) {
+        .controller('pcResultCtrl', function ($scope, $http, $log, $modalInstance, items) {
           $scope.items = items;
-          
-          $scope.preCheckGlobalState= function(data){
-            $scope.globalState='ok';
-            angular.forEach(data,function(d){
-              if(d.state=='error'|| (d.state=='warning'&& $scope.globalState !='error')){
-                $scope.globalState=d.state;
+
+          $scope.preCheckGlobalState = function (data) {
+            $scope.globalState = 'ok';
+            angular.forEach(data, function (d) {
+              if (d.state == 'error' || (d.state == 'warning' && $scope.globalState != 'error')) {
+                $scope.globalState = d.state;
               }
             })
           };
-          
-          $scope.continueWithUpdateAfterDelay= function(seconds){
-            $scope.updateCountdown= seconds;
-            if(seconds>0){
-              window.setTimeout(function(){$scope.continueWithUpdateAfterDelay(seconds -1)},1000);
-            }else{
-             $scope.action('ok');
-             $modalInstance.close(); 
+
+          $scope.continueWithUpdateAfterDelay = function (seconds) {
+            $scope.updateCountdown = seconds;
+            if (seconds > 0) {
+              window.setTimeout(function () {
+                $scope.continueWithUpdateAfterDelay(seconds - 1)
+              }, 1000);
+            } else {
+              $scope.action('ok');
+              $modalInstance.close();
             }
-            
+
           }
-          
-          $scope.updateResult =function(data){
+
+          $scope.updateResult = function (data) {
             $scope.preCheckGlobalState(data);
-            if($scope.globalState=='ok'){
-              $scope.pcsuccess=true;
-              $scope.pcwarning=false;
-              $scope.pcerror=false;
-              
-              $scope.btnIgnoreDisabled=true;
-              $scope.btnRecheckDisabled=true;
-              $scope.btnCancelDisabled=true;
+            if ($scope.globalState == 'ok') {
+              $scope.pcsuccess = true;
+              $scope.pcwarning = false;
+              $scope.pcerror = false;
+
+              $scope.btnIgnoreDisabled = true;
+              $scope.btnRecheckDisabled = true;
+              $scope.btnCancelDisabled = true;
               $scope.continueWithUpdateAfterDelay(10);
             }
-            else if($scope.globalState=='warning'){
-              $scope.pcsuccess=false;
-              $scope.pcwarning=true;
-              $scope.pcerror=false;
+            else if ($scope.globalState == 'warning') {
+              $scope.pcsuccess = false;
+              $scope.pcwarning = true;
+              $scope.pcerror = false;
             }
-            else{
-              $scope.pcsuccess=false;
-              $scope.pcwarning=false;
-              $scope.pcerror=true;
+            else {
+              $scope.pcsuccess = false;
+              $scope.pcwarning = false;
+              $scope.pcerror = true;
             }
           }
-          
+
           $scope.updateResult($scope.items);
           $scope.ignore = function () {
             $scope.action('ignore');
@@ -233,12 +256,12 @@ angular.module('universeadm.settings.controllers', [
                     });
 
           };
-          
-          
+
+
         })
 
 
-        .controller('UserInputCtrl', function ($scope, $http, $modalInstance, $log, items) {
+        .controller('userInputCtrl', function ($scope, $http, $modalInstance, $log, items) {
 
           $scope.objectKeys = function (obj) {
             return Object.keys(obj);
@@ -258,6 +281,18 @@ angular.module('universeadm.settings.controllers', [
 
           $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
+          };
+
+        })
+        
+        .controller('updateStartConfirmationCtrl', function ($scope, $http, $modalInstance, $log) {
+          
+          $scope.yes = function () {
+            $modalInstance.close();
+          };
+
+          $scope.no = function () {
+            $modalInstance.dismiss();
           };
 
         });

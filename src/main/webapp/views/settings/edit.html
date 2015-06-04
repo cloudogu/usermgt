@@ -75,8 +75,8 @@
     Save
   </button>
 
-  <button id="updateButton" ng-show="updateAvailable && !updateScheduled && !updateInProgress &&!updatePrecheck" ng-click="startUpdate();
-    checkUpdateStatus();" ng-disabled="buttonDisabled || invalidCredentials">
+  <button id="updateButton" ng-show="updateAvailable && !updateScheduled && !updateInProgress &&!updatePrecheck"
+          ng-click="openUpdateStartConfirmation()" ng-disabled="buttonDisabled || !validCreds">
 
     <span id = "updateNow">Update now</span><br>
     <span id = "availableVersion"><b>SCM-Manager Universe</b><br>

@@ -44,7 +44,7 @@ angular.module('universeadm.settings.services', ['restangular'])
       versionCheck: function(){
         return update.one('versionCheck').get();
       },
-      updateAvailable: function(){
+      updateCheck: function(){
         return update.one('updateCheck').post();
       },
       start: function(){

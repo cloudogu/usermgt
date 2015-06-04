@@ -45,6 +45,15 @@ class ResultUpdateCheck {
     private boolean success;
     private String status;
     private boolean updateAvailable;
+    private boolean validCreds;
+
+  public boolean isValidCreds() {
+    return validCreds;
+  }
+
+  public void setValidCreds(boolean validCreds) {
+    this.validCreds = validCreds;
+  }
 
     public boolean isUpdateAvailable() {
         return updateAvailable;

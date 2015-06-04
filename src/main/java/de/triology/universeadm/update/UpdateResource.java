@@ -167,6 +167,7 @@ public class UpdateResource {
     Status status = updateService.checkUpdate();
     ResultUpdateCheck result = new ResultUpdateCheck();
     // update check status
+    result.setValidCreds(status.validCreds);
     if (status.updateAvailable) {
       result.setUpdateAvailable(true);
     }
@@ -264,6 +265,7 @@ public class UpdateResource {
     }
     if (!result.getResult().isEmpty()) {
       try {
+        updateService.touchFlag(UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG);
         FileUtils.writeStringToFile(UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG, result.getResult());
         return Result.getSuccessMessage();
       }
