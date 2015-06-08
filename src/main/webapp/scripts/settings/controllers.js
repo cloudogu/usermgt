@@ -45,7 +45,7 @@ angular.module('universeadm.settings.controllers', [
                 $scope.updateScheduled = true;
                 window.setTimeout($scope.checkUpdateStatus, 1000);
               }
-              else if (data.status == "precheck") {
+              else if (data.status == "preCheck") {
                 $scope.updateScheduled = false;
                 $scope.updatePrecheck = true;
                 window.setTimeout($scope.checkUpdateStatus, 1000);
@@ -182,7 +182,7 @@ angular.module('universeadm.settings.controllers', [
           };
         })
 
-        .controller('pcResultCtrl', function ($scope, $http, $log, $modalInstance, items) {
+        .controller('pcResultCtrl', function ($scope, $http, $log,$timeout, $modalInstance, items) {
           $scope.items = items;
 
           $scope.preCheckGlobalState = function (data) {
@@ -197,9 +197,7 @@ angular.module('universeadm.settings.controllers', [
           $scope.continueWithUpdateAfterDelay = function (seconds) {
             $scope.updateCountdown = seconds;
             if (seconds > 0) {
-              window.setTimeout(function () {
-                $scope.continueWithUpdateAfterDelay(seconds - 1)
-              }, 1000);
+              $timeout(function(){$scope.continueWithUpdateAfterDelay($scope.updateCountdown-1);},1000);
             } else {
               $scope.action('ok');
               $modalInstance.close();
