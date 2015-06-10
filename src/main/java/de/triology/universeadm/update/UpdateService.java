@@ -41,7 +41,7 @@ import java.nio.charset.Charset;
 public class UpdateService {
 
     @VisibleForTesting
-    static final String DEFAULT_UPDATE_WEBSITE = "https://www.scm-manager.com/applupdateservice/applupdate.php";
+    static final String DEFAULT_UPDATE_WEBSITE = "http://192.168.115.80/applupdateservice/applupdate.php";
 
     public void startUpdate() {
         

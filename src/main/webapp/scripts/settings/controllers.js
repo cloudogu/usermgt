@@ -30,6 +30,7 @@ angular.module('universeadm.settings.controllers', [
   'universeadm.validation.directives', 'universeadm.settings.services'])
         .controller('settingsController', function ($scope, $http, $log, $modal, settingsService, settings, updateService, update) {
           $scope.master = angular.copy(settings);
+          $scope.user = angular.copy($scope.master);
           $scope.settings = settings;
           $scope.availableVersion = update.version;
           $scope.invalidCredentials = false;
@@ -88,6 +89,7 @@ angular.module('universeadm.settings.controllers', [
                     function () {
                     });
           };
+
           $scope.checkUpdateCheckStatus();
 
           $scope.isUnchanged = function (settings) {
@@ -122,7 +124,6 @@ angular.module('universeadm.settings.controllers', [
               size: size,
               backdrop: 'static',
               resolve: {
-                
               }
             });
 
@@ -133,6 +134,7 @@ angular.module('universeadm.settings.controllers', [
               $log.info('Modal dismissed at: ' + new Date());
             });
           };
+
           $scope.openPCResult = function (data, size) {
 
             var modalInstance = $modal.open({
@@ -182,7 +184,7 @@ angular.module('universeadm.settings.controllers', [
           };
         })
 
-        .controller('pcResultCtrl', function ($scope, $http, $log,$timeout, $modalInstance, items) {
+        .controller('pcResultCtrl', function ($scope, $http, $log, $timeout, $modalInstance, items) {
           $scope.items = items;
 
           $scope.preCheckGlobalState = function (data) {
@@ -197,7 +199,9 @@ angular.module('universeadm.settings.controllers', [
           $scope.continueWithUpdateAfterDelay = function (seconds) {
             $scope.updateCountdown = seconds;
             if (seconds > 0) {
-              $timeout(function(){$scope.continueWithUpdateAfterDelay($scope.updateCountdown-1);},1000);
+              $timeout(function () {
+                $scope.continueWithUpdateAfterDelay($scope.updateCountdown - 1);
+              }, 1000);
             } else {
               $scope.action('ok');
               $modalInstance.close();
@@ -260,14 +264,19 @@ angular.module('universeadm.settings.controllers', [
 
 
         .controller('userInputCtrl', function ($scope, $http, $modalInstance, $log, items) {
-
+          $scope.inputName="test";
           $scope.objectKeys = function (obj) {
+            if (!obj) {
+              return [];
+            }
             return Object.keys(obj);
-          }
+          };
 
           $http.get('/universeadm/api/update/userInput', {}).
                   success(function (data, status, headers, config) {
-                    $scope.items = data;
+                    $scope.inputName= $scope.objectKeys(data)[0];
+                    $scope.fieldsName=$scope.objectKeys(data[$scope.inputName])[0];
+                    $scope.items = data[$scope.inputName][$scope.fieldsName];
                   }).
                   error(function (data, status, headers, config) {
                     // called asynchronously if an error occurs
@@ -282,9 +291,9 @@ angular.module('universeadm.settings.controllers', [
           };
 
         })
-        
+
         .controller('updateStartConfirmationCtrl', function ($scope, $http, $modalInstance, $log) {
-          
+
           $scope.yes = function () {
             $modalInstance.close();
           };

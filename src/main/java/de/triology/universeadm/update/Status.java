@@ -31,6 +31,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -90,7 +92,15 @@ public class Status {
       try {
         fr = new FileReader(SCM_UPDATE_CREDENTIALS_FILE);
         BufferedReader br = new BufferedReader(fr);
-        if(!"invalid".equals(br.readLine())){
+        String content="";
+        String line;
+        while((line=br.readLine())!=null){
+          content+=line;
+        }
+        Pattern pattern = Pattern.compile( "\\s+" );
+        Matcher matcher = pattern.matcher( content);
+        content=matcher.replaceAll("");
+        if(!"invalid".equals(content)){
           validCreds=true;
         }
       }

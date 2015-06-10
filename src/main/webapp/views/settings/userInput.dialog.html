@@ -32,71 +32,68 @@ http://www.scm-manager.com
   </div>
   <div class="modal-body" style="padding-bottom: 50px">
     <p>Before we can proceed with the update we need some information from you. Please check the following form for
-  	correctness.</p>
-    <b style="font-size: large">LDAPConfig</b>
-    
-    <form name="form" role="form" novalidate>
-    <div ng-repeat="key in objectKeys(items.LDAPconfig.fields)" ng-init="x=items.LDAPconfig.fields[key]">
-      <br>
+      correctness.</p>
+    <b style="font-size: large">{{inputName}}</b>
 
+    <form name="form" role="form" novalidate>
+      <div ng-repeat="key in objectKeys(items)" ng-init="field = items[key]">
+        <!--<div ng-repeat="x in items.LDAPconfig.fields"> -->
+        <br>
+        <div class="form-group has-feedback" data-uadm-validate>
+          <label class="control-label" for={{key}}>{{field.title}}</label>
+          <img ng-if='field.hint' alt='hint' style='width: 16px; height: 16px' title = '{{field.hint}}' src='style/img/symbol_info.png'>
+          <input 
+            id={{key}}
+            name={{key}}
+            type="text" 
+            class="form-control" 
+            placeholder={{field.default}}
+            ng-minlength="2"
+            ng-maxlength="32" 
+            ng-required={{field.required}}
+            >
+          <span class="fa fa-check fa-2x form-control-feedback"></span>
+          <span class="fa fa-times fa-2x form-control-feedback"></span>
+          <strong ng-show="form.{{key}}.$error.required" class="text-danger help-block">
+            Username is required
+          </strong>
+          <strong ng-show="form.{{key}}.$error.minlength" class="text-danger help-block">
+            Username must have at least 2 characters
+          </strong>
+          <strong ng-show="form.{{key}}.$error.maxlength" class="text-danger help-block">
+            Username is longer than 32 characters
+          </strong>
+        </div>
+
+
+        <!--   
+           <input ng-if='x.type=="text"' type='text' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}' ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}" />
+           <input ng-if='x.type=="password"' type='password' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
+           <input ng-if='x.type=="url"' type='url' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
+           <input ng-if='x.type=="email"' type='email' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
+           
+           <div ng-if='x.type=="radio"' ng-repeat="value in x.values" ng-required="{{x.required}}">
+             <input type='radio' name='{{x.id}}' value='{{value}}'/>{{value}}
+           </div>
+           
+           <div ng-if='x.type=="checkbox"' ng-repeat="value in x.values" ng-required="{{x.required}}">
+             <input type='checkbox' name='{{x.id}}' value='{{value}}'/>{{value}}
+           </div>
+           
+           <textarea ng-if='x.type=="textArea"' id='{{x.id}}' cols="50" rows="10" ng-required="{{x.required}}"/>{{x.default}}</textarea>
+         
+           <div ng-if='x.type=="option"'>
+             <select name="{{x.id}}" id="{{x.id}}" size="{{x.size}}" ng-repeat="value in x.values" ng-required="{{x.required}}">
+               <option value="{{value}}">{{value}}</option>
+             </select>
+           </div>
+        
+        -->
+        <!-- TODO: MaxLength MinLength-->
+
+      </div>
       <br>
-      <div class="form-group has-feedback" data-uadm-validate>
-      <label class="control-label" for={{key}}>{{x.title}}</label>
-      <img ng-if='x.hint' alt='hint' style='width: 16px; height: 16px' title = '{{x.hint}}' src='style/img/symbol_info.png'>
-        <input id={{key}}
-               name={{key}}
-               type="text" 
-               class="form-control" 
-               placeholder={{x.default}} 
-               ng-model=user.key
-               ng-minlength="2"
-               ng-maxlength="32" 
-               ng-required={{x.required}}
-        >
-      
-      
-      <span class="fa fa-check fa-2x form-control-feedback"></span>
-        <span class="fa fa-times fa-2x form-control-feedback"></span>
-        <strong ng-show="form.key.$error.required" class="text-danger help-block">
-          Username is required
-        </strong>
-        <strong ng-show="form.{{key}}.$error.minlength" class="text-danger help-block">
-          Username must have at least 2 characters
-        </strong>
-        <strong ng-show="form.{{key}}.$error.maxlength" class="text-danger help-block">
-          Username is longer than 32 characters
-        </strong>
-      </div>
-      
-      
-   <!--   
-      <input ng-if='x.type=="text"' type='text' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}' ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}" />
-      <input ng-if='x.type=="password"' type='password' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
-      <input ng-if='x.type=="url"' type='url' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
-      <input ng-if='x.type=="email"' type='email' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
-      
-      <div ng-if='x.type=="radio"' ng-repeat="value in x.values" ng-required="{{x.required}}">
-        <input type='radio' name='{{x.id}}' value='{{value}}'/>{{value}}
-      </div>
-      
-      <div ng-if='x.type=="checkbox"' ng-repeat="value in x.values" ng-required="{{x.required}}">
-        <input type='checkbox' name='{{x.id}}' value='{{value}}'/>{{value}}
-      </div>
-      
-      <textarea ng-if='x.type=="textArea"' id='{{x.id}}' cols="50" rows="10" ng-required="{{x.required}}"/>{{x.default}}</textarea>
-    
-      <div ng-if='x.type=="option"'>
-        <select name="{{x.id}}" id="{{x.id}}" size="{{x.size}}" ng-repeat="value in x.values" ng-required="{{x.required}}">
-          <option value="{{value}}">{{value}}</option>
-        </select>
-      </div>
-   
-   -->
-      <!-- TODO: MaxLength MinLength-->
-      
-    </div>
-    <br>
-    <button type="submit" class="btn btn-primary" style="float:right;" ng-disabled="form.$invalid">Continue</button>
-     </form>
+      <button type="submit" class="btn btn-primary" style="float:right;" ng-disabled="form.$invalid">Continue</button>
+    </form>
   </div>
 </html>

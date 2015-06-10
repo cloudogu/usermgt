@@ -119,7 +119,7 @@ public final class UpdateConstants {
   /**
    * Hostname of the SCM Managers Website (@since 13.9.3 as fallback)
    */
-  static final File SCM_UPDATE_WEBSITE = new File("https://www.scm-manager.com/applupdateservice/applupdate.php");
+  static final File SCM_UPDATE_WEBSITE = new File("http://192.168.115.80/applupdateservice/applupdate.php");
   /**
    * Path to file containing the update server URL. @since 13.9.3)
    */

@@ -75,7 +75,7 @@ public class DefaultSettingsStore implements SettingsStore
   private static final String FILENAME = "settings.xml";
   
   @VisibleForTesting
-  static final String DEFAULT_UPDATE_WEBSITE = "https://www.scm-manager.com/applupdateservice/applupdate.php";
+  static final String DEFAULT_UPDATE_WEBSITE = "http://192.168.115.80/applupdateservice/applupdate.php";
 
   private static final Logger logger = LoggerFactory.getLogger(DefaultSettingsStore.class);
   
