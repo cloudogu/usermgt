@@ -27,17 +27,22 @@ http://www.scm-manager.com
 -->
 <html>
   <div id="update-confirmation" style="font-size:14px;">
-    <img src="" style="float:left; padding: 15px 15px 15px 0px; margin-left:-5px;">
-    <p>
-      <strong>Attention!</strong> Take care you have backed up your files or made at least a snapshot of the VM
-      <strong>before</strong> you start the update. Do not power off the machine during the update proccess while this
-      may harm or destroy your system. Note that the provided services may be unaccessible until the update process
-      finished. Further information about the performed updates are given in the release notes.
-    </p>
-    <p>Do you want to proceed with the update?</p>
+    <div class="modal-header">
+      <h3 class="modal-title">Confirm Update</h3>
+    </div>
+    <div class="modal-body">
+      <img src="style/img/symbol_attention.png" style="float:left; padding: 15px 15px 15px 0px; margin-left:-5px;">
+      <p>
+        <strong>Attention!</strong> Take care you have backed up your files or made at least a snapshot of the VM
+        <strong>before</strong> you start the update. Do not power off the machine during the update proccess while this
+        may harm or destroy your system. Note that the provided services may be unaccessible until the update process
+        finished. Further information about the performed updates are given in the release notes.
+      </p>
+      <p>Do you want to proceed with the update?</p>
+    </div>
     <div class="modal-footer">
-    <button type="button" class="btn btn-warning" ng-click="yes()" >Yes</button>
-    <button type="button" class="btn btn-primary" ng-click="no()">No</button>
+      <button type="button" class="btn btn-warning" ng-click="yes()" >Yes,I know the risk.</button>
+      <button type="button" class="btn btn-primary" ng-click="no()">No</button>
     </div>
   </div>
 </html>

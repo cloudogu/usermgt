@@ -39,93 +39,48 @@ import org.codehaus.jackson.JsonNode;
 @XmlRootElement(name = "resultCheck")
 @XmlAccessorType(XmlAccessType.FIELD)
 
-class ResultCheck {
+class ResultCheck extends Result {
 
-    private boolean success;
-    private String status;
-    private String result;
-    private DateFormat datetime;
-    private JsonNode syscheck;
-    private String inventory;
-    private String rules;
-    
-    public String getMessage() {
-        return message;
-    }
+  private String result;
+  private DateFormat datetime;
+  private JsonNode syscheck;
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    private String message;
+  public static ResultCheck getFailMessage() {
+    ResultCheck failMessage = new ResultCheck();
+    failMessage.setSuccess(false);
+    failMessage.setMessage("Operation failed!");
+    return failMessage;
+  }
 
-    public static ResultCheck getFailMessage() {
-        ResultCheck failMessage = new ResultCheck();
-        failMessage.setSuccess(false);
-        failMessage.setMessage("Operation failed!");
-        return failMessage;
-    }
-    
-    public static ResultCheck getSuccessMessage() {
-        ResultCheck failMessage = new ResultCheck();
-        failMessage.setSuccess(true);
-        failMessage.setMessage("Operation successfully terminated!");
-        return failMessage;
-    }
+  public static ResultCheck getSuccessMessage() {
+    ResultCheck failMessage = new ResultCheck();
+    failMessage.setSuccess(true);
+    failMessage.setMessage("Operation successfully terminated!");
+    return failMessage;
+  }
 
-    public String getInventory() {
-        return inventory;
-    }
+  public JsonNode getSyscheck() {
+    return syscheck;
+  }
 
-    public void setInventory(String inventory) {
-        this.inventory = inventory;
-    }
+  public void setSyscheck(JsonNode syscheck) {
+    this.syscheck = syscheck;
+  }
 
-    public String getRules() {
-        return rules;
-    }
+  public String getResult() {
+    return result;
+  }
 
-    public void setRules(String rules) {
-        this.rules = rules;
-    }
+  public void setResult(String result) {
+    this.result = result;
+  }
 
-    public JsonNode getSyscheck() {
-        return syscheck;
-    }
+  public DateFormat getDatetime() {
+    return datetime;
+  }
 
-    public void setSyscheck(JsonNode syscheck) {
-        this.syscheck = syscheck;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public DateFormat getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(DateFormat datetime) {
-        this.datetime = datetime;
-    }
+  public void setDatetime(DateFormat datetime) {
+    this.datetime = datetime;
+  }
 
 }

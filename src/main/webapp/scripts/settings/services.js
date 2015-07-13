@@ -27,28 +27,44 @@
 
 
 angular.module('universeadm.settings.services', ['restangular'])
-  .factory('settingsService', function(Restangular){
-    var settings = Restangular.one('settings');
-    return {
-      get: function(){
-        return settings.get();
-      },
-      update: function(settings){
-        return settings.post();
-      }
-    };
-  })
-  .factory('updateService', function(Restangular){
-    var update = Restangular.one('update');
-    return {
-      versionCheck: function(){
-        return update.one('versionCheck').get();
-      },
-      updateCheck: function(){
-        return update.one('updateCheck').post();
-      },
-      start: function(){
-        return update.one('start').post();
-      }
-    };
-  });
+        .factory('settingsService', function (Restangular) {
+          var settings = Restangular.one('settings');
+          return {
+            get: function () {
+              return settings.get();
+            },
+            update: function (settings) {
+              return settings.post();
+            }
+          };
+        })
+        .factory('updateService', function (Restangular) {
+          var update = Restangular.one('update');
+          return {
+            versionCheck: function () {
+              return update.one('versionCheck').get();
+            },
+            updateCheck: function () {
+              return update.post('updateCheck');
+            },
+            check: function () {
+              return update.post('check');
+            },
+            start: function () {
+              return update.post('start');
+            },
+            sendUserInput: function (input) {
+              return update.post('sendUserInput', input);
+            },
+            preCheckAction: function (input) {
+              return update.post('preCheckAction', input);
+            },
+            userInput: function () {
+              return update.one('userInput').get();
+            },
+            preCheckResult: function(){
+              return update.one('preCheckResult').get();
+            }
+            
+          };
+        });

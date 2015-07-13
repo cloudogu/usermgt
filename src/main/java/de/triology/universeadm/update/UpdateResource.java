@@ -26,22 +26,20 @@
  */
 package de.triology.universeadm.update;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import static com.google.common.io.Files.touch;
 import com.google.inject.Inject;
 import static de.triology.universeadm.update.JsonUtils.loadJsonFile;
 import static de.triology.universeadm.update.UpdateConstants.DATE_TIME_FORMAT;
+import static de.triology.universeadm.update.UpdateConstants.SCM_ACTUAL_VERSION_FILE;
 import static de.triology.universeadm.update.UpdateConstants.SCM_UPDATE_AVAILABLE_FLAG;
 import static de.triology.universeadm.update.UpdateConstants.SCM_UPDATE_FORM_DATA;
+import static de.triology.universeadm.update.UpdateConstants.SCM_UPDATE_FORM_DATA_OUTPUT_FILE;
 import static de.triology.universeadm.update.UpdateConstants.SCM_UPDATE_PRECHECK_RESULT_FILE;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -49,7 +47,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.FileUtils;
-import org.codehaus.jackson.JsonNode;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,21 +99,8 @@ public class UpdateResource {
         }
       }
       else if (status.scmUpdateFormAvailable) {
-
-        JsonNode userInputObj = (loadJsonFile(SCM_UPDATE_FORM_DATA));
-
-        // TODO: Generate Form
-        String userInputForm = "";
-        if (!userInputForm.isEmpty() && (null != userInputForm)) {
           result.setSuccess(true);
           result.setStatus("updateFormAvailable");
-          result.setInventory(userInputForm);
-          result.setRules("");
-
-        }
-        else {
-          result = ResultCheck.getFailMessage();
-        }
       }
       else {
         result.setSuccess(true);
@@ -193,12 +177,21 @@ public class UpdateResource {
   public ResultVersionCheck versionCheck() {
     ResultVersionCheck result = new ResultVersionCheck();
     result.setVersion("unknown version");
-    if (SCM_UPDATE_AVAILABLE_FLAG.exists()) {
+    
       FileReader fr;
       try {
-        fr = new FileReader(SCM_UPDATE_AVAILABLE_FLAG);
-        BufferedReader br = new BufferedReader(fr);
-        result.setVersion(br.readLine());
+        if (SCM_UPDATE_AVAILABLE_FLAG.exists()) {
+          fr = new FileReader(SCM_UPDATE_AVAILABLE_FLAG);
+          BufferedReader br = new BufferedReader(fr);
+          result.setNewVersion(br.readLine());
+        }
+        
+        if (SCM_ACTUAL_VERSION_FILE.exists()) {
+          fr = new FileReader(SCM_ACTUAL_VERSION_FILE);
+          BufferedReader br = new BufferedReader(fr);
+          result.setVersion(br.readLine());
+        }
+        
       }
       catch (FileNotFoundException ex) {
         logger.error("Can not read File: ", SCM_UPDATE_AVAILABLE_FLAG);
@@ -208,7 +201,7 @@ public class UpdateResource {
         logger.error("Can not read Line in File: ", SCM_UPDATE_AVAILABLE_FLAG);
       }
 
-    }
+    
     return result;
   }
 
@@ -243,13 +236,36 @@ public class UpdateResource {
     }
     return result;
   }
+  
+  @POST
+  @Path("sendUserInput")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Result sendUserInput(String input) {
+    if (!SCM_UPDATE_FORM_DATA_OUTPUT_FILE.exists()) {
+      try {
+        touch(SCM_UPDATE_FORM_DATA_OUTPUT_FILE);
+      }
+      catch (IOException ex) {
+        logger.error("Can not touch File: ", SCM_UPDATE_FORM_DATA_OUTPUT_FILE);
+      }
+    }
+    try {
+      FileUtils.writeStringToFile(SCM_UPDATE_FORM_DATA_OUTPUT_FILE,input);
+      return Result.getSuccessMessage();
+    }
+    catch (IOException ex) {
+      logger.error("Unable to write in: ",SCM_UPDATE_FORM_DATA_OUTPUT_FILE);
+    }
+    return Result.getFailMessage();
+  }
 
   @POST
   @Path("preCheckAction")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Result preCheckAction(String action) {
-    Result result = new Result();
+    ResultPreCheckAction result = new ResultPreCheckAction();
     result.setResult("");
     switch (action) {
       case "ignore":
@@ -270,7 +286,7 @@ public class UpdateResource {
         return Result.getSuccessMessage();
       }
       catch (IOException ex) {
-        logger.error("Unable to write in ", UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG);
+        logger.error("Unable to write in: ", UpdateConstants.SCM_UPDATE_PRECHECK_DONE_FLAG);
       }
 
     }

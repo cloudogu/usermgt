@@ -26,26 +26,21 @@
  */
 package de.triology.universeadm.update;
 
-import java.text.DateFormat;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.codehaus.jackson.JsonNode;
 
 /**
  *
  * @author mbehlendorf
  */
-
 @XmlRootElement(name = "result")
 @XmlAccessorType(XmlAccessType.FIELD)
 
-class ResultUpdateCheck {
+class ResultUpdateCheck extends Result {
 
-    private boolean success;
-    private String status;
-    private boolean updateAvailable;
-    private boolean validCreds;
+  private boolean updateAvailable;
+  private boolean validCreds;
 
   public boolean isValidCreds() {
     return validCreds;
@@ -55,51 +50,25 @@ class ResultUpdateCheck {
     this.validCreds = validCreds;
   }
 
-    public boolean isUpdateAvailable() {
-        return updateAvailable;
-    }
+  public boolean isUpdateAvailable() {
+    return updateAvailable;
+  }
 
-    public void setUpdateAvailable(boolean updateAvailable) {
-        this.updateAvailable = updateAvailable;
-    }
+  public void setUpdateAvailable(boolean updateAvailable) {
+    this.updateAvailable = updateAvailable;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public static ResultUpdateCheck getFailMessage() {
+    ResultUpdateCheck failMessage = new ResultUpdateCheck();
+    failMessage.setSuccess(false);
+    failMessage.setMessage("Operation failed!");
+    return failMessage;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    private String message;
-
-    public static ResultUpdateCheck getFailMessage() {
-        ResultUpdateCheck failMessage = new ResultUpdateCheck();
-        failMessage.setSuccess(false);
-        failMessage.setMessage("Operation failed!");
-        return failMessage;
-    }
-    
-    public static ResultUpdateCheck getSuccessMessage() {
-        ResultUpdateCheck failMessage = new ResultUpdateCheck();
-        failMessage.setSuccess(true);
-        failMessage.setMessage("Operation successfully terminated!");
-        return failMessage;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
+  public static ResultUpdateCheck getSuccessMessage() {
+    ResultUpdateCheck failMessage = new ResultUpdateCheck();
+    failMessage.setSuccess(true);
+    failMessage.setMessage("Operation successfully terminated!");
+    return failMessage;
+  }
 }

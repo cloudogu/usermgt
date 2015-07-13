@@ -26,43 +26,16 @@
  */
 package de.triology.universeadm.update;
 
-import com.google.common.annotations.VisibleForTesting;
-import de.triology.universeadm.settings.SettingsException;
-import static de.triology.universeadm.update.UpdateConstants.*;
-import java.io.File;
-import java.io.IOException;
-
+import org.junit.Test;
 /**
  *
  * @author mbehlendorf
  */
-public class UpdateService {
 
-    @VisibleForTesting
-    static final String DEFAULT_UPDATE_WEBSITE = "http://192.168.115.80/applupdateservice/applupdate.php";
-
-    public void startUpdate() {
-        
-        touchFlag(SCM_UPDATE_EXECUTOR_FLAG);
-    }
-    
-    public Status checkUpdate() {
-        return new Status();
-        
-    }
-    
-    public void touchFlag(File flag) {
-        try {
-            File parent = flag.getParentFile();
-            if (!parent.exists() && !parent.mkdirs()) {
-                throw new SettingsException("could not create directory ".concat(flag.getPath()));
-            }
-            flag.createNewFile();
-
-        } catch (IOException ex) {
-            throw new SettingsException("could not store file ".concat(flag.getPath()), ex);
-        }
-
-    }   
-    
+public class UpdateResourceTest {
+  
+  @Test
+  public void testUpdateCheck(){
+  
+  }
 }

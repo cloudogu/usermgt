@@ -1,4 +1,4 @@
-/* 
++/* 
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -26,60 +26,97 @@
  */
 
 
-angular.module('universeadm.settings.controllers', [
-  'universeadm.validation.directives', 'universeadm.settings.services'])
-        .controller('settingsController', function ($scope, $http, $log, $modal, settingsService, settings, updateService, update) {
+        angular.module('universeadm.settings.controllers', [
+          'universeadm.validation.directives', 'universeadm.settings.services'])
+        .controller('settingsController', function ($scope, $log, $modal,$interval, settingsService, settings, updateService, update) {
           $scope.master = angular.copy(settings);
           $scope.user = angular.copy($scope.master);
           $scope.settings = settings;
-          $scope.availableVersion = update.version;
-          $scope.invalidCredentials = false;
-          $scope.updateScheduled = false;
-          $scope.updateInProgress = false;
-          $scope.updatePrecheck = false;
-          $scope.buttonDisabled = false;
+          $scope.availableVersion = update.newVersion;
+          $scope.version = update.version;
+          $scope.animationsEnabled = true;
+          
+          $scope.test={ "java": {"title": "Java Version", "expected": "1.7.0_60", "found": "1.7.0_60", "state": "ok", "message": "Found a supported version"},
+"tomcat": {"title": "Apache Tomcat", "expected": "7.0.26-1ubuntu1.2", "found": "7.0.26-1ubuntu1.2", "state": "false", "message": "Found a supported version"},
 
-          $scope.checkUpdateStatus = function () {
 
-            $http.post('/universeadm/api/update/check', {}).success(function (data, status, headers, config) {
+"apache": {"title": "Apache Webserver", "expected": "2.2.22", "found": "2.2.22", "state": "ok", "message": "Found a supported version"},
+"sonarQube": {"title": "SonarQube", "expected": "3.7.4", "found": "3.7.4", "state": "ok", "message": "Found the right version"},
+"bugzilla": {"title": "Bugzilla", "expected": "4.4.6", "found": "4.4.6", "state": "ok", "message": "Found the right version"},
+"SCMManager": {"title": "SCM-Manager", "expected": "1.43", "found": "1.43", "state": "ok", "message": "Found the right version"},
+"wordpress":{"title": "WordPress", "expected": "3.9", "found": "3.9.6", "state": "ok", "message": "Found a supported version"},
+"sonatypeNexus": {"title": "Sonatype Nexus", "expected": "2.10.0-02", "found": "2.10.0-02", "state": "ok", "message": "Found the right version"},
+"MYSQL":{"title": "MySQLServer", "expected": "5.5.37", "found": "5.5.40", "state": "ok", "message": "Found a supported version"},
+"jenkins": {"title": "Jenkins", "expected": "1.565.3", "found": "1.565.3", "state": "ok", "message": "Found the right version"},
+"diskspace": {"title": "Harddrive (MByte)", "expected": 159, "found": 13522, "state": "ok", "message": "Enough hard drive space available"},
+"Resource-Servers": {"title": "Resource-Servers", "expected": "connected", "found": "connected", "state": "ok", "message": "OK"},
+"PHP": {"title": "PHP Version", "expected": "5.3.10-1ubuntu3.13", "found": "5.3.10-1ubuntu3.15", "state": "ok", "message": "Found a supported version"}};
+
+          $scope.detectStatus= function(data){
               if (data.status == "scheduled") {
                 $scope.updateScheduled = true;
-                window.setTimeout($scope.checkUpdateStatus, 1000);
               }
               else if (data.status == "preCheck") {
                 $scope.updateScheduled = false;
                 $scope.updatePrecheck = true;
-                window.setTimeout($scope.checkUpdateStatus, 1000);
               }
               else if (data.status == "in progress") {
                 $scope.updateScheduled = false;
                 $scope.updatePrecheck = false;
                 $scope.updateInProgress = true;
-                window.setTimeout($scope.checkUpdateStatus, 1000);
               }
               else if (data.status == "preCheckResult") {
                 $scope.updatePrecheck = false;
+                $interval.cancel(intervalPromise); 
                 $scope.openPCResult(data.syscheck);
               }
               else if (data.status == "updateFormAvailable") {
-                window.setTimeout($scope.checkUpdateStatus, 1000);
+                $interval.cancel(intervalPromise); 
+                $scope.openUserInput();
               }
               else if (data.status == "done") {
-                window.setTimeout($scope.checkUpdateStatus, 1000);
+                $interval.cancel(intervalPromise); 
+                $scope.checkUpdateCheckStatus();
+                $scope.updateInProgress = false;
+                updateService.versionCheck().then(function(data){
+                  $scope.availableVersion = data.newVersion;
+                  $scope.version = data.version;
+                });
+                if (data.result == "successful") { 
+                  $scope.updateSuccessful = true;
+                }
+                else if (data.result == "failed") {
+                  $scope.updateFailed = true;
+                }
+                else if (data.result == "unknown") {
+                }
+                else {
+                  $scope.updateFailedUnexpected = true;
+                }
               }
               else if (data.status == "no update") {
-                window.setTimeout($scope.checkUpdateStatus, 1000);
+                $scope.noUpdate = true;
+                $interval.cancel(intervalPromise); 
+                $scope.checkUpdateCheckStatus();
               }
-              else {
-                window.setTimeout($scope.checkUpdateStatus, 1000);
+              else if (data.status == "wrong credentials") {
+                $scope.wrongCreds = true;
+                $interval.cancel(intervalPromise); 
+                $scope.checkUpdateCheckStatus();
               }
+            };
 
-            }).
-                    error(function (data, status, headers, config) {
-                      // called asynchronously if an error occurs
-                      // or server returns response with an error status.
-                    });
-          };
+          $scope.checkUpdateStatus = function () {
+
+            updateService.check().then(function(d){$scope.detectStatus(d);},
+                    function () {
+                      $log.error("Cant check update status");
+                    }
+            );
+          }
+          
+          var intervalPromise =$interval(function(){$scope.checkUpdateStatus();},2000);
+          $scope.$on('$destroy', function () { $interval.cancel(intervalPromise); });
 
           $scope.checkUpdateCheckStatus = function () {
             updateService.updateCheck().then(function (e) {
@@ -87,9 +124,9 @@ angular.module('universeadm.settings.controllers', [
               $scope.validCreds = e.validCreds;
             },
                     function () {
+                      $log.error("Cant check if update is possible.");
                     });
           };
-
           $scope.checkUpdateCheckStatus();
 
           $scope.isUnchanged = function (settings) {
@@ -112,8 +149,6 @@ angular.module('universeadm.settings.controllers', [
             updateService.start();
           };
 
-          $scope.animationsEnabled = true;
-
           // Modals:
           $scope.openUpdateStartConfirmation = function (size) {
 
@@ -129,7 +164,7 @@ angular.module('universeadm.settings.controllers', [
 
             modalInstance.result.then(function () {
               $scope.startUpdate();
-              $scope.checkUpdateStatus();
+              var intervalPromise =$interval(function(){$scope.checkUpdateStatus();},2000);
             }, function () {
               $log.info('Modal dismissed at: ' + new Date());
             });
@@ -151,7 +186,8 @@ angular.module('universeadm.settings.controllers', [
             });
 
             modalInstance.result.then(function () {
-              window.setTimeout($scope.checkUpdateStatus, 1000);
+              // time to recognize and delete preCheckDone
+              window.setTimeout($scope.checkUpdateStatus, 10000);
             }, function () {
               $log.info('Modal dismissed at: ' + new Date());
             });
@@ -174,6 +210,7 @@ angular.module('universeadm.settings.controllers', [
 
             modalInstance.result.then(function (selectedItem) {
               $scope.selected = selectedItem;
+              window.setTimeout($scope.checkUpdateStatus, 15000);
             }, function () {
               $log.info('Modal dismissed at: ' + new Date());
             });
@@ -184,8 +221,10 @@ angular.module('universeadm.settings.controllers', [
           };
         })
 
-        .controller('pcResultCtrl', function ($scope, $http, $log, $timeout, $modalInstance, items) {
+
+        .controller('pcResultCtrl', function ($scope, $log, $timeout, $modalInstance, updateService, items) {
           $scope.items = items;
+
 
           $scope.preCheckGlobalState = function (data) {
             $scope.globalState = 'ok';
@@ -193,7 +232,7 @@ angular.module('universeadm.settings.controllers', [
               if (d.state == 'error' || (d.state == 'warning' && $scope.globalState != 'error')) {
                 $scope.globalState = d.state;
               }
-            })
+            });
           };
 
           $scope.continueWithUpdateAfterDelay = function (seconds) {
@@ -231,9 +270,9 @@ angular.module('universeadm.settings.controllers', [
               $scope.pcwarning = false;
               $scope.pcerror = true;
             }
-          }
-
+          };
           $scope.updateResult($scope.items);
+
           $scope.ignore = function () {
             $scope.action('ignore');
             $modalInstance.close();
@@ -248,23 +287,35 @@ angular.module('universeadm.settings.controllers', [
             $scope.action('abort');
             $modalInstance.close();
           };
+
           $scope.action = function (action) {
-            $http.post('/universeadm/api/update/preCheckAction', action).
-                    success(function (data, status, headers, config) {
-                    }).
-                    error(function (data, status, headers, config) {
-                      // called asynchronously if an error occurs
-                      // or server returns response with an error status.
-                    });
-
+            updateService.preCheckAction(action).then(function (e) {
+            }, function () {
+              $log.error("Error at preCheckAction");
+            });
           };
-
-
         })
 
 
-        .controller('userInputCtrl', function ($scope, $http, $modalInstance, $log, items) {
-          $scope.inputName="test";
+        .controller('userInputCtrl', function ($scope, $modalInstance, $log, updateService) {
+
+          updateService.userInput().then(function (data) {
+            $scope.inputName = $scope.objectKeys(data)[0];
+            $scope.fieldsName = $scope.objectKeys(data[$scope.inputName])[0];
+            $scope.items = data[$scope.inputName][$scope.fieldsName];
+            angular.forEach($scope.items, function (value, key) {
+              if (value.minLength == null) {
+                value.minLength = 0;
+              }
+              if (value.maxLength == null) {
+                value.maxLength = 1024;
+              }
+            });
+          }, function () {
+            $log.error("Cant get userInput");
+          });
+          $scope.input = {};
+
           $scope.objectKeys = function (obj) {
             if (!obj) {
               return [];
@@ -272,16 +323,6 @@ angular.module('universeadm.settings.controllers', [
             return Object.keys(obj);
           };
 
-          $http.get('/universeadm/api/update/userInput', {}).
-                  success(function (data, status, headers, config) {
-                    $scope.inputName= $scope.objectKeys(data)[0];
-                    $scope.fieldsName=$scope.objectKeys(data[$scope.inputName])[0];
-                    $scope.items = data[$scope.inputName][$scope.fieldsName];
-                  }).
-                  error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                  });
           $scope.ok = function () {
             $modalInstance.close();
           };
@@ -290,9 +331,18 @@ angular.module('universeadm.settings.controllers', [
             $modalInstance.dismiss('cancel');
           };
 
+          $scope.send = function (input) {
+            var promise = updateService.sendUserInput(input);
+            promise.then(function () {
+              $modalInstance.close();
+            }, function () {
+            });
+          };
+
         })
 
-        .controller('updateStartConfirmationCtrl', function ($scope, $http, $modalInstance, $log) {
+
+        .controller('updateStartConfirmationCtrl', function ($scope, $modalInstance) {
 
           $scope.yes = function () {
             $modalInstance.close();

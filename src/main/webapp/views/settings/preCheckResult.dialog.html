@@ -44,7 +44,9 @@ http://www.scm-manager.com
         <td>{{ x.title}}</td>
         <td>{{ x.expected}}</td>
         <td>{{ x.found}}</td>
-        <td>{{ x.state}}</td>
+        <td><img class="h5" ng-if="x.state=='ok'" src="style/img/symbol_ok.png">
+            <img class="h5" ng-if="x.state!='ok'" src="style/img/symbol_cancel.png">
+        </td>
         <td>{{ x.message}}</td>
       </tr>
 

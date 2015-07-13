@@ -36,64 +36,93 @@ http://www.scm-manager.com
     <b style="font-size: large">{{inputName}}</b>
 
     <form name="form" role="form" novalidate>
+      <br>
       <div ng-repeat="key in objectKeys(items)" ng-init="field = items[key]">
-        <!--<div ng-repeat="x in items.LDAPconfig.fields"> -->
-        <br>
-        <div class="form-group has-feedback" data-uadm-validate>
-          <label class="control-label" for={{key}}>{{field.title}}</label>
-          <img ng-if='field.hint' alt='hint' style='width: 16px; height: 16px' title = '{{field.hint}}' src='style/img/symbol_info.png'>
-          <input 
-            id={{key}}
-            name={{key}}
-            type="text" 
-            class="form-control" 
-            placeholder={{field.default}}
-            ng-minlength="2"
-            ng-maxlength="32" 
-            ng-required={{field.required}}
-            >
-          <span class="fa fa-check fa-2x form-control-feedback"></span>
-          <span class="fa fa-times fa-2x form-control-feedback"></span>
-          <strong ng-show="form.{{key}}.$error.required" class="text-danger help-block">
-            Username is required
-          </strong>
-          <strong ng-show="form.{{key}}.$error.minlength" class="text-danger help-block">
-            Username must have at least 2 characters
-          </strong>
-          <strong ng-show="form.{{key}}.$error.maxlength" class="text-danger help-block">
-            Username is longer than 32 characters
-          </strong>
-        </div>
+
+        <ng-form name="innerForm">
+          <div ng-if="field.type == 'text' || field.type == 'password' || field.type == 'url' || field.type == 'email'"
+               class="form-group has-feedback" 
+               ng-class="{ 'has-error': innerForm.input.$invalid && innerForm.input.$dirty}">
+            <label class="control-label" for={{key}}>{{field.title}}</label>
+            <img ng-if='field.hint' alt='hint' style='width: 16px; height: 16px' title = '{{field.hint}}' src='style/img/symbol_info.png'>
+            <input
+              id={{key}}
+              name=input
+              type={{field.type}} 
+              class="form-control" 
+              placeholder={{field.default}}
+              ng-model=input[key]
+              ng-minlength={{field.minLength}}
+              ng-maxlength={{field.maxLength}}
+              ng-required={{field.required}}
+              >
+            <span class="fa fa-check fa-2x form-control-feedback"></span>
+            <span class="fa fa-times fa-2x form-control-feedback"></span>
+            <strong ng-show="innerForm.input.$error.required && innerForm.input.$dirty" class="text-danger help-block">
+              is required
+            </strong>
+            <strong ng-show="innerForm.input.$error.minlength && innerForm.input.$dirty" class="text-danger help-block">
+              must have at least {{field.minLength}} characters
+            </strong>
+            <strong ng-show="innerForm.input.$error.maxlength && innerForm.input.$dirty" class="text-danger help-block">
+              is longer than {{field.maxLength}} characters
+            </strong> 
+          </div>
 
 
-        <!--   
-           <input ng-if='x.type=="text"' type='text' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}' ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}" />
-           <input ng-if='x.type=="password"' type='password' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
-           <input ng-if='x.type=="url"' type='url' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
-           <input ng-if='x.type=="email"' type='email' id='{{x.id}}' name='{{x.id}}' value='{{x.default}}'ng-required="{{x.required}}" ng-minlength="{{x.minLength}}" ng-maxlength="{{x.maxLength}}"/>
-           
-           <div ng-if='x.type=="radio"' ng-repeat="value in x.values" ng-required="{{x.required}}">
-             <input type='radio' name='{{x.id}}' value='{{value}}'/>{{value}}
-           </div>
-           
-           <div ng-if='x.type=="checkbox"' ng-repeat="value in x.values" ng-required="{{x.required}}">
-             <input type='checkbox' name='{{x.id}}' value='{{value}}'/>{{value}}
-           </div>
-           
-           <textarea ng-if='x.type=="textArea"' id='{{x.id}}' cols="50" rows="10" ng-required="{{x.required}}"/>{{x.default}}</textarea>
-         
-           <div ng-if='x.type=="option"'>
-             <select name="{{x.id}}" id="{{x.id}}" size="{{x.size}}" ng-repeat="value in x.values" ng-required="{{x.required}}">
-               <option value="{{value}}">{{value}}</option>
-             </select>
-           </div>
-        
-        -->
-        <!-- TODO: MaxLength MinLength-->
 
+          <div ng-if="field.type == 'radio'">
+            <label class="control-label" for={{key}}>{{field.title}}</label>
+            <img ng-if='field.hint' alt='hint' style='width: 16px; height: 16px' title = '{{field.hint}}' src='style/img/symbol_info.png'>
+
+            <div ng-repeat="value in field.values">
+              <ng-form name="innerForm">
+                <input
+                  type={{field.type}} 
+                  ng-model=input[key]
+                  ng-value="value"
+                  >
+                {{value}}
+              </ng-form>
+            </div>
+          </div>
+
+          <div ng-if="field.type == 'checkbox'">
+            <label class="control-label" for={{key}}>{{field.title}}</label>
+            <img ng-if='field.hint' alt='hint' style='width: 16px; height: 16px' title = '{{field.hint}}' src='style/img/symbol_info.png'>
+
+            <div ng-repeat="value in field.values">
+              <input
+                type={{field.type}} 
+                ng-model=input[key][value]
+                >
+              {{value}}
+            </div>
+          </div>
+
+          <div ng-if="field.type == 'textarea'" ng-class="{ 'has-error': innerForm.input.$invalid && innerForm.input.$dirty}">
+            <label class="control-label" for={{key}}>{{field.title}}</label>
+            <textarea style="height:200px; width:100%; overflow:scroll;"        
+                      name=input
+                      ng-model=input[key]
+                      ng-minlength={{field.minLength}}
+                      ng-maxlength={{field.maxLength}}
+                      ng-required={{field.required}}>{{field.default}}</textarea>
+
+          </div>
+          
+          <div ng-if="field.type == 'option'">
+            <label class="control-label" for={{key}}>{{field.title}}</label>
+            <select class="form-control"
+                    ng-model=input[key]>
+              <option ng-repeat="value in field.values">{{value}}</option>
+            </select>
+          </div>
+          
+        </ng-form>
       </div>
       <br>
-      <button type="submit" class="btn btn-primary" style="float:right;" ng-disabled="form.$invalid">Continue</button>
+      <button type="submit" class="btn btn-primary" style="float:right;" ng-click="send(input)" ng-disabled="form.$invalid">Continue</button>
     </form>
   </div>
 </html>

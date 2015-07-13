@@ -31,8 +31,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -67,12 +65,34 @@ public class Status {
     public Status(){
         this.updateStatusVars();
     }
+    
+    public Status(boolean scmUpdateInProgress,boolean updateScheduled,boolean wrongUserOrPassword,
+            boolean noUpdateForVersion,boolean updateAvailable,boolean noFileForVersion,boolean checkForUpdates,
+            boolean updateSuccess,boolean updateFailed,boolean updateCheckToggleBusy,boolean scmUpdatePreCheckRunning,
+            boolean scmUpdatePreCheckDone,boolean scmUpdatePreCheckUserDecisionNeeded,boolean scmUpdateFormAvailable,
+            boolean validCreds){
+      this.scmUpdateInProgress=scmUpdateInProgress;
+      this.updateScheduled=updateScheduled;
+      this.wrongUserOrPassword=wrongUserOrPassword;
+      this.noUpdateForVersion=noUpdateForVersion;
+      this.updateAvailable=updateAvailable;
+      this.noFileForVersion=noFileForVersion;
+      this.checkForUpdates=checkForUpdates;
+      this.updateSuccess=updateSuccess;
+      this.updateFailed=updateFailed;
+      this.updateCheckToggleBusy=updateCheckToggleBusy;
+      this.scmUpdatePreCheckRunning=scmUpdatePreCheckRunning;
+      this.scmUpdatePreCheckDone=scmUpdatePreCheckDone;
+      this.scmUpdatePreCheckUserDecisionNeeded=scmUpdatePreCheckUserDecisionNeeded;
+      this.scmUpdateFormAvailable=scmUpdateFormAvailable;
+      this.validCreds=validCreds;
+    }
 
     private void updateStatusVars() {
         scmUpdateInProgress = SCM_UPDATE_IN_PROGRESS_FLAG.exists();
         updateScheduled = SCM_UPDATE_EXECUTOR_FLAG.exists() && SCM_UPDATE_AVAILABLE_FLAG.exists();
         wrongUserOrPassword = SCM_UPDATE_WRONG_CREDENTIALS_FLAG.exists();
-        noUpdateForVersion = SCM_UPDATE_NO_UPDATE_FOR_VERSION_FLAG.exists() && !SCM_UPDATE_SUCCESS_FLAG.exists() || SCM_UPDATE_FAIL_FLAG.exists();
+        noUpdateForVersion = SCM_UPDATE_NO_UPDATE_FOR_VERSION_FLAG.exists() && ( !SCM_UPDATE_SUCCESS_FLAG.exists() || SCM_UPDATE_FAIL_FLAG.exists());
         updateAvailable = SCM_UPDATE_AVAILABLE_FLAG.exists();
         noFileForVersion = SCM_UPDATE_NO_FILE_FOR_VERSION_FLAG.exists();
         checkForUpdates = !SCM_UPDATE_DISABLE_CHECK_FOR_UPDATES_FLAG.exists() && SCM_UPDATE_CRONJOB.exists() || SCM_UPDATE_ACTIVATE_CHECK_FOR_UPDATES_FLAG.exists();
@@ -92,15 +112,12 @@ public class Status {
       try {
         fr = new FileReader(SCM_UPDATE_CREDENTIALS_FILE);
         BufferedReader br = new BufferedReader(fr);
-        String content="";
+        String lastLine="";
         String line;
         while((line=br.readLine())!=null){
-          content+=line;
+          lastLine=line;
         }
-        Pattern pattern = Pattern.compile( "\\s+" );
-        Matcher matcher = pattern.matcher( content);
-        content=matcher.replaceAll("");
-        if(!"invalid".equals(content)){
+        if(!"invalid".equals(lastLine)){
           validCreds=true;
         }
       }

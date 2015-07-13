@@ -38,11 +38,11 @@ import org.json.simple.parser.ParseException;
  * @author mbehlendorf
  */
 public abstract class JsonUtils {
-    
-    public static JsonNode loadJsonFile(File f) throws FileNotFoundException, IOException, ParseException{
-      ObjectMapper mapper= new ObjectMapper();
-      JsonNode rootNode=mapper.readTree(f);
-      return rootNode;
-    }
-    
+
+  public static JsonNode loadJsonFile(File f) throws FileNotFoundException, IOException, ParseException {
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode rootNode = mapper.readTree(f);
+    return rootNode;
+  }
+
 }

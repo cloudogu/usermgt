@@ -31,8 +31,17 @@ package de.triology.universeadm.update;
  * @author mbehlendorf
  */
 public class ResultVersionCheck {
+  
   public String version;
+  public String newVersion;
 
+  public String getNewVersion() {
+    return newVersion;
+  }
+
+  public void setNewVersion(String newVersion) {
+    this.newVersion = newVersion;
+  }
   public String getVersion() {
     return version;
   }

@@ -27,8 +27,6 @@
 package de.triology.universeadm.update;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  *
@@ -115,7 +113,7 @@ public final class UpdateConstants {
   /**
    * Path to file containing actual version name.
    */
-  static final File SCM_ACTUAL_VERSION_FILE = new File("/etc/scmissuename");
+  static final File SCM_ACTUAL_VERSION_FILE = new File("/etc/scmmu/scmissuename");
   /**
    * Hostname of the SCM Managers Website (@since 13.9.3 as fallback)
    */

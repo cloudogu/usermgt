@@ -26,48 +26,25 @@
  */
 package de.triology.universeadm.update;
 
-import java.io.IOException;
-import org.codehaus.jackson.map.ObjectMapper;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author mbehlendorf
  */
-public class App {
+@XmlRootElement(name = "resultPreCheckAction")
+@XmlAccessorType(XmlAccessType.FIELD)
+class ResultPreCheckAction extends Result{
+  private String result;
   
-  
-  public static void main(String[] args) throws IOException{
-    
-    ObjectMapper mapper = new ObjectMapper();
-    Person person = new Person("sorbot", "haxor");
-    String json = mapper.writeValueAsString(person);
-    System.out.println(json);
-    Person personFromJson = mapper.readValue(json, Person.class);
-    System.out.println(personFromJson.getGivenname());
-    System.out.println(personFromJson.getSurname());
+  public String getResult() {
+    return result;
   }
-  
-  public static class Person {
-    
-    private String givenname;
-    private String surname;
 
-    Person() {
-    }
-    
-    public Person(String givenname, String surname) {
-      this.givenname = givenname;
-      this.surname = surname;
-    }
-
-    public String getGivenname() {
-      return givenname;
-    }
-
-    public String getSurname() {
-      return surname;
-    }
-    
+  public void setResult(String result) {
+    this.result = result;
   }
-  
+
 }

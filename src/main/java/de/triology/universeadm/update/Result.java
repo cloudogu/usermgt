@@ -26,116 +26,58 @@
  */
 package de.triology.universeadm.update;
 
-import java.text.DateFormat;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.codehaus.jackson.JsonNode;
 
 /**
  *
  * @author mbehlendorf
  */
-
 @XmlRootElement(name = "result")
 @XmlAccessorType(XmlAccessType.FIELD)
 
 class Result {
 
-    private boolean success;
-    private String status;
-    private String result;
-    private DateFormat datetime;
-    private JsonNode syscheck;
-    private String inventory;
-    private String rules;
-    private boolean updateAvailable;
+  private boolean success;
+  private String status;
+  private String message;
+  
+  public String getMessage() {
+    return message;
+  }
 
-    public boolean isUpdateAvailable() {
-        return updateAvailable;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public void setUpdateAvailable(boolean updateAvailable) {
-        this.updateAvailable = updateAvailable;
-    }
+  public static Result getFailMessage() {
+    Result failMessage = new Result();
+    failMessage.setSuccess(false);
+    failMessage.setMessage("Operation failed!");
+    return failMessage;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public static Result getSuccessMessage() {
+    Result failMessage = new Result();
+    failMessage.setSuccess(true);
+    failMessage.setMessage("Operation successfully terminated!");
+    return failMessage;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    private String message;
+  public boolean isSuccess() {
+    return success;
+  }
 
-    public static Result getFailMessage() {
-        Result failMessage = new Result();
-        failMessage.setSuccess(false);
-        failMessage.setMessage("Operation failed!");
-        return failMessage;
-    }
-    
-    public static Result getSuccessMessage() {
-        Result failMessage = new Result();
-        failMessage.setSuccess(true);
-        failMessage.setMessage("Operation successfully terminated!");
-        return failMessage;
-    }
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
 
-    public String getInventory() {
-        return inventory;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setInventory(String inventory) {
-        this.inventory = inventory;
-    }
-
-    public String getRules() {
-        return rules;
-    }
-
-    public void setRules(String rules) {
-        this.rules = rules;
-    }
-
-    public JsonNode getSyscheck() {
-        return syscheck;
-    }
-
-    public void setSyscheck(JsonNode syscheck) {
-        this.syscheck = syscheck;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public DateFormat getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(DateFormat datetime) {
-        this.datetime = datetime;
-    }
-
+  public void setStatus(String status) {
+    this.status = status;
+  }
 }
