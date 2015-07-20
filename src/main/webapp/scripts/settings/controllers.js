@@ -28,14 +28,16 @@
 
         angular.module('universeadm.settings.controllers', [
           'universeadm.validation.directives', 'universeadm.settings.services'])
-        .controller('settingsController', function ($scope, $log, $modal,$interval, settingsService, settings, updateService, update) {
+        .controller('settingsController', function ($scope, $log, $modal,$interval,$timeout, settingsService, settings, updateService, update) {
           $scope.master = angular.copy(settings);
           $scope.user = angular.copy($scope.master);
           $scope.settings = settings;
           $scope.availableVersion = update.newVersion;
           $scope.version = update.version;
           $scope.animationsEnabled = true;
-          
+          $scope.pcDialogOpen=false;
+          $scope.uiDialogOpen=false;
+          var intervalPromise;
           $scope.test={ "java": {"title": "Java Version", "expected": "1.7.0_60", "found": "1.7.0_60", "state": "ok", "message": "Found a supported version"},
 "tomcat": {"title": "Apache Tomcat", "expected": "7.0.26-1ubuntu1.2", "found": "7.0.26-1ubuntu1.2", "state": "false", "message": "Found a supported version"},
 
@@ -51,7 +53,9 @@
 "diskspace": {"title": "Harddrive (MByte)", "expected": 159, "found": 13522, "state": "ok", "message": "Enough hard drive space available"},
 "Resource-Servers": {"title": "Resource-Servers", "expected": "connected", "found": "connected", "state": "ok", "message": "OK"},
 "PHP": {"title": "PHP Version", "expected": "5.3.10-1ubuntu3.13", "found": "5.3.10-1ubuntu3.15", "state": "ok", "message": "Found a supported version"}};
-
+          $scope.startInterval=function(){
+              intervalPromise =$interval(function(){$scope.checkUpdateStatus();},2000);
+          }
           $scope.detectStatus= function(data){
               if (data.status == "scheduled") {
                 $scope.updateScheduled = true;
@@ -115,8 +119,8 @@
             );
           }
           
-          var intervalPromise =$interval(function(){$scope.checkUpdateStatus();},2000);
-          $scope.$on('$destroy', function () { $interval.cancel(intervalPromise); });
+          $scope.startInterval();
+          $scope.$on("$destroy", function () { $interval.cancel(intervalPromise); });
 
           $scope.checkUpdateCheckStatus = function () {
             updateService.updateCheck().then(function (e) {
@@ -127,7 +131,6 @@
                       $log.error("Cant check if update is possible.");
                     });
           };
-          $scope.checkUpdateCheckStatus();
 
           $scope.isUnchanged = function (settings) {
             return angular.equals(settings, $scope.master);
@@ -164,14 +167,16 @@
 
             modalInstance.result.then(function () {
               $scope.startUpdate();
-              var intervalPromise =$interval(function(){$scope.checkUpdateStatus();},2000);
+              $scope.startInterval();
             }, function () {
               $log.info('Modal dismissed at: ' + new Date());
             });
           };
 
           $scope.openPCResult = function (data, size) {
-
+            $interval.cancel(intervalPromise);
+            if(!$scope.pcDialogOpen){
+              $scope.pcDialogOpen=true;
             var modalInstance = $modal.open({
               animation: $scope.animationsEnabled,
               templateUrl: 'views/settings/preCheckResult.dialog.html',
@@ -186,15 +191,22 @@
             });
 
             modalInstance.result.then(function () {
+              
+              $scope.pcDialogOpen=false;
               // time to recognize and delete preCheckDone
-              window.setTimeout($scope.checkUpdateStatus, 10000);
+              $timeout($scope.startInterval(),10000);
             }, function () {
+              
+              $scope.pcDialogOpen=false;
               $log.info('Modal dismissed at: ' + new Date());
             });
+          }
           };
 
           $scope.openUserInput = function (size) {
-
+            $interval.cancel(intervalPromise);
+            if(!$scope.uiDialogOpen){
+              $scope.uiDialogOpen=true;
             var modalInstance = $modal.open({
               animation: $scope.animationsEnabled,
               templateUrl: 'views/settings/userInput.dialog.html',
@@ -206,15 +218,18 @@
                   return $scope.items;
                 }
               }
+            
             });
 
             modalInstance.result.then(function (selectedItem) {
+              $scope.uiDialogOpen=false;
               $scope.selected = selectedItem;
-              window.setTimeout($scope.checkUpdateStatus, 15000);
+              $scope.startInterval();
             }, function () {
+              $scope.uiDialogOpen=false;
               $log.info('Modal dismissed at: ' + new Date());
             });
-          };
+            }};
 
           $scope.toggleAnimation = function () {
             $scope.animationsEnabled = !$scope.animationsEnabled;

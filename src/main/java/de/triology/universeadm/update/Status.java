@@ -104,6 +104,9 @@ public class Status {
         scmUpdatePreCheckUserDecisionNeeded = SCM_UPDATE_PRECHECK_USER_DECISION_NEEDED_FLAG.exists();
         scmUpdateFormAvailable = SCM_UPDATE_FORM_AVAILABLE_FLAG.exists() && !SCM_UPDATE_FORM_DATA_OUTPUT_FILE.exists();
         validCredsStatus();
+        if(updateSuccess){
+          SCM_UPDATE_SUCCESS_FLAG.delete();
+        }
         
     }
     private void validCredsStatus(){
