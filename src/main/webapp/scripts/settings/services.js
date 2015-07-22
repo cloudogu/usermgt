@@ -62,9 +62,54 @@ angular.module('universeadm.settings.services', ['restangular'])
             userInput: function () {
               return update.one('userInput').get();
             },
-            preCheckResult: function(){
+            preCheckResult: function () {
               return update.one('preCheckResult').get();
             }
-            
+
           };
+        })
+        .factory('modalService', function ($modal, $log) {
+          return{
+            pcResult: function (data, size) {
+              var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'views/settings/preCheckResult.dialog.html',
+                controller: 'pcResultCtrl',
+                size: size,
+                backdrop: 'static',
+                resolve: {
+                  items: function () {
+                    return data;
+                  }
+                }
+              });
+              modalInstance.result.then(function () {
+                return 0;
+              }, function () {
+                return 1;
+                $log.info('Modal dismissed at: ' + new Date());
+              });
+           
+            },
+          userInput: function (size) {
+            var modalInstance = $modal.open({
+              animation: true,
+              templateUrl: 'views/settings/userInput.dialog.html',
+              controller: 'userInputCtrl',
+              size: size,
+              backdrop: 'static',
+              resolve: {
+                items: function () {
+                  return $scope.items;
+                }
+              }            
+            });
+            modalInstance.result.then(function () {
+              return 0;
+            }, function () {
+              $log.info('Modal dismissed at: ' + new Date());
+              return 1;
+            });             
+           }            
+          }
         });

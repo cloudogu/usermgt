@@ -28,7 +28,7 @@
 
         angular.module('universeadm.settings.controllers', [
           'universeadm.validation.directives', 'universeadm.settings.services'])
-        .controller('settingsController', function ($scope, $log, $modal,$interval,$timeout, settingsService, settings, updateService, update) {
+        .controller('settingsController', function ($scope, $log, $modal,$interval,$timeout, settingsService, settings, updateService,modalService, update) {
           $scope.master = angular.copy(settings);
           $scope.user = angular.copy($scope.master);
           $scope.settings = settings;
@@ -38,10 +38,10 @@
           $scope.pcDialogOpen=false;
           $scope.uiDialogOpen=false;
           var intervalPromise;
-          $scope.test={ "java": {"title": "Java Version", "expected": "1.7.0_60", "found": "1.7.0_60", "state": "ok", "message": "Found a supported version"},
+           $scope.test={ "java": {"title": "Java Version", "expected": "1.7.0_60", "found": "1.7.0_60", "state": "ok", "message": "Found a supported version"},
 "tomcat": {"title": "Apache Tomcat", "expected": "7.0.26-1ubuntu1.2", "found": "7.0.26-1ubuntu1.2", "state": "false", "message": "Found a supported version"},
-
-
+ 
+ 
 "apache": {"title": "Apache Webserver", "expected": "2.2.22", "found": "2.2.22", "state": "ok", "message": "Found a supported version"},
 "sonarQube": {"title": "SonarQube", "expected": "3.7.4", "found": "3.7.4", "state": "ok", "message": "Found the right version"},
 "bugzilla": {"title": "Bugzilla", "expected": "4.4.6", "found": "4.4.6", "state": "ok", "message": "Found the right version"},
@@ -53,9 +53,14 @@
 "diskspace": {"title": "Harddrive (MByte)", "expected": 159, "found": 13522, "state": "ok", "message": "Enough hard drive space available"},
 "Resource-Servers": {"title": "Resource-Servers", "expected": "connected", "found": "connected", "state": "ok", "message": "OK"},
 "PHP": {"title": "PHP Version", "expected": "5.3.10-1ubuntu3.13", "found": "5.3.10-1ubuntu3.15", "state": "ok", "message": "Found a supported version"}};
+          $scope.$on("$destroy", function () {$interval.cancel(intervalPromise);});
+          
           $scope.startInterval=function(){
               intervalPromise =$interval(function(){$scope.checkUpdateStatus();},2000);
-          }
+          };
+          
+          $scope.startInterval();
+          
           $scope.detectStatus= function(data){
               if (data.status == "scheduled") {
                 $scope.updateScheduled = true;
@@ -81,6 +86,8 @@
               else if (data.status == "done") {
                 $interval.cancel(intervalPromise); 
                 $scope.checkUpdateCheckStatus();
+                $scope.updateScheduled = false;
+                $scope.updatePrecheck = false;
                 $scope.updateInProgress = false;
                 updateService.versionCheck().then(function(data){
                   $scope.availableVersion = data.newVersion;
@@ -108,28 +115,24 @@
                 $interval.cancel(intervalPromise); 
                 $scope.checkUpdateCheckStatus();
               }
-            };
+          };
 
           $scope.checkUpdateStatus = function () {
-
-            updateService.check().then(function(d){$scope.detectStatus(d);},
-                    function () {
-                      $log.error("Cant check update status");
-                    }
+            updateService.check().then(function(data){
+              $scope.detectStatus(data);
+            },function (){
+                $log.error("Cant check update status");
+              }
             );
           }
           
-          $scope.startInterval();
-          $scope.$on("$destroy", function () { $interval.cancel(intervalPromise); });
-
-          $scope.checkUpdateCheckStatus = function () {
-            updateService.updateCheck().then(function (e) {
+          $scope.checkUpdateCheckStatus = function (){
+            updateService.updateCheck().then(function (e){
               $scope.updateAvailable = e.updateAvailable;
               $scope.validCreds = e.validCreds;
-            },
-                    function () {
+            },function () {
                       $log.error("Cant check if update is possible.");
-                    });
+            });
           };
 
           $scope.isUnchanged = function (settings) {
@@ -177,194 +180,29 @@
             $interval.cancel(intervalPromise);
             if(!$scope.pcDialogOpen){
               $scope.pcDialogOpen=true;
-            var modalInstance = $modal.open({
-              animation: $scope.animationsEnabled,
-              templateUrl: 'views/settings/preCheckResult.dialog.html',
-              controller: 'pcResultCtrl',
-              size: size,
-              backdrop: 'static',
-              resolve: {
-                items: function () {
-                  return $scope.items = data;
-                }
+              if(modalService.pcResult(data,size)==0){
+                $scope.pcDialogOpen=false;
+                $timeout($scope.startInterval(),10000);
+               }
+              else{
+                $scope.pcDialogOpen=false;
               }
-            });
-
-            modalInstance.result.then(function () {
-              
-              $scope.pcDialogOpen=false;
-              // time to recognize and delete preCheckDone
-              $timeout($scope.startInterval(),10000);
-            }, function () {
-              
-              $scope.pcDialogOpen=false;
-              $log.info('Modal dismissed at: ' + new Date());
-            });
-          }
+            }
           };
 
           $scope.openUserInput = function (size) {
             $interval.cancel(intervalPromise);
             if(!$scope.uiDialogOpen){
               $scope.uiDialogOpen=true;
-            var modalInstance = $modal.open({
-              animation: $scope.animationsEnabled,
-              templateUrl: 'views/settings/userInput.dialog.html',
-              controller: 'userInputCtrl',
-              size: size,
-              backdrop: 'static',
-              resolve: {
-                items: function () {
-                  return $scope.items;
-                }
+              var result=modalService.userInput(size);
+              if(result==0){
+                $scope.uiDialogOpen=false;
+                $scope.startInterval();                
+              }else{
+                $scope.uiDialogOpen=false;
               }
             
-            });
-
-            modalInstance.result.then(function (selectedItem) {
-              $scope.uiDialogOpen=false;
-              $scope.selected = selectedItem;
-              $scope.startInterval();
-            }, function () {
-              $scope.uiDialogOpen=false;
-              $log.info('Modal dismissed at: ' + new Date());
-            });
             }};
 
-          $scope.toggleAnimation = function () {
-            $scope.animationsEnabled = !$scope.animationsEnabled;
-          };
-        })
-
-
-        .controller('pcResultCtrl', function ($scope, $log, $timeout, $modalInstance, updateService, items) {
-          $scope.items = items;
-
-
-          $scope.preCheckGlobalState = function (data) {
-            $scope.globalState = 'ok';
-            angular.forEach(data, function (d) {
-              if (d.state == 'error' || (d.state == 'warning' && $scope.globalState != 'error')) {
-                $scope.globalState = d.state;
-              }
-            });
-          };
-
-          $scope.continueWithUpdateAfterDelay = function (seconds) {
-            $scope.updateCountdown = seconds;
-            if (seconds > 0) {
-              $timeout(function () {
-                $scope.continueWithUpdateAfterDelay($scope.updateCountdown - 1);
-              }, 1000);
-            } else {
-              $scope.action('ok');
-              $modalInstance.close();
-            }
-
-          }
-
-          $scope.updateResult = function (data) {
-            $scope.preCheckGlobalState(data);
-            if ($scope.globalState == 'ok') {
-              $scope.pcsuccess = true;
-              $scope.pcwarning = false;
-              $scope.pcerror = false;
-
-              $scope.btnIgnoreDisabled = true;
-              $scope.btnRecheckDisabled = true;
-              $scope.btnCancelDisabled = true;
-              $scope.continueWithUpdateAfterDelay(10);
-            }
-            else if ($scope.globalState == 'warning') {
-              $scope.pcsuccess = false;
-              $scope.pcwarning = true;
-              $scope.pcerror = false;
-            }
-            else {
-              $scope.pcsuccess = false;
-              $scope.pcwarning = false;
-              $scope.pcerror = true;
-            }
-          };
-          $scope.updateResult($scope.items);
-
-          $scope.ignore = function () {
-            $scope.action('ignore');
-            $modalInstance.close();
-          };
-
-          $scope.recheck = function () {
-            $scope.action('recheck');
-            $modalInstance.close();
-          };
-
-          $scope.cancel = function () {
-            $scope.action('abort');
-            $modalInstance.close();
-          };
-
-          $scope.action = function (action) {
-            updateService.preCheckAction(action).then(function (e) {
-            }, function () {
-              $log.error("Error at preCheckAction");
-            });
-          };
-        })
-
-
-        .controller('userInputCtrl', function ($scope, $modalInstance, $log, updateService) {
-
-          updateService.userInput().then(function (data) {
-            $scope.inputName = $scope.objectKeys(data)[0];
-            $scope.fieldsName = $scope.objectKeys(data[$scope.inputName])[0];
-            $scope.items = data[$scope.inputName][$scope.fieldsName];
-            angular.forEach($scope.items, function (value, key) {
-              if (value.minLength == null) {
-                value.minLength = 0;
-              }
-              if (value.maxLength == null) {
-                value.maxLength = 1024;
-              }
-            });
-          }, function () {
-            $log.error("Cant get userInput");
-          });
-          $scope.input = {};
-
-          $scope.objectKeys = function (obj) {
-            if (!obj) {
-              return [];
-            }
-            return Object.keys(obj);
-          };
-
-          $scope.ok = function () {
-            $modalInstance.close();
-          };
-
-          $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-          };
-
-          $scope.send = function (input) {
-            var promise = updateService.sendUserInput(input);
-            promise.then(function () {
-              $modalInstance.close();
-            }, function () {
-            });
-          };
-
-        })
-
-
-        .controller('updateStartConfirmationCtrl', function ($scope, $modalInstance) {
-
-          $scope.yes = function () {
-            $modalInstance.close();
-          };
-
-          $scope.no = function () {
-            $modalInstance.dismiss();
-          };
-
         });
+        
