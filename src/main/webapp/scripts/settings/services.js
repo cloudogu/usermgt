@@ -83,13 +83,7 @@ angular.module('universeadm.settings.services', ['restangular'])
                   }
                 }
               });
-              modalInstance.result.then(function () {
-                return 0;
-              }, function () {
-                return 1;
-                $log.info('Modal dismissed at: ' + new Date());
-              });
-           
+              return modalInstance;
             },
           userInput: function (size) {
             var modalInstance = $modal.open({
@@ -104,12 +98,7 @@ angular.module('universeadm.settings.services', ['restangular'])
                 }
               }            
             });
-            modalInstance.result.then(function () {
-              return 0;
-            }, function () {
-              $log.info('Modal dismissed at: ' + new Date());
-              return 1;
-            });             
+            return modalInstance;             
            }            
           }
         });

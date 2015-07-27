@@ -178,15 +178,13 @@
 
           $scope.openPCResult = function (data, size) {
             $interval.cancel(intervalPromise);
-            if(!$scope.pcDialogOpen){
-              $scope.pcDialogOpen=true;
-              if(modalService.pcResult(data,size)==0){
-                $scope.pcDialogOpen=false;
-                $timeout($scope.startInterval(),10000);
-               }
-              else{
-                $scope.pcDialogOpen=false;
-              }
+            if (!$scope.pcDialogOpen){
+              $scope.pcDialogOpen = true;
+              modalService.pcResult(data, size).result.then(function(response){
+                $scope.pcDialogOpen = false;
+                $timeout($scope.startInterval(), 10000); 
+              });
+              $scope.pcDialogOpen = false;
             }
           };
 
@@ -194,15 +192,13 @@
             $interval.cancel(intervalPromise);
             if(!$scope.uiDialogOpen){
               $scope.uiDialogOpen=true;
-              var result=modalService.userInput(size);
-              if(result==0){
+              modalService.userInput(size).result.then(function(response){
                 $scope.uiDialogOpen=false;
-                $scope.startInterval();                
-              }else{
-                $scope.uiDialogOpen=false;
-              }
-            
-            }};
+                $scope.startInterval();   
+              });
+             $scope.uiDialogOpen=false;  
+            }
+          };
 
         });
         
