@@ -73,9 +73,7 @@ public enum Stage
 
     if (Strings.isNullOrEmpty(stage))
     {
-      //WORKAROUND
-      //current = Stage.PRODUCTION;  
-      current = Stage.DEVELOPMENT;
+      current = Stage.PRODUCTION;
     }
     else
     {
