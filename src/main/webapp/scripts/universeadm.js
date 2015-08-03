@@ -27,7 +27,7 @@
 
 
 angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular',
-  'ui.router', 'universeadm.navigation', 'universeadm.account.config', 
+  'ui.router', 'universeadm.navigation','universeadm.dashboard.config', 'universeadm.account.config', 
   'universeadm.users.config', 'universeadm.groups.config', 'universeadm.backup.config',
   'universeadm.settings.config'])
   .config(function(RestangularProvider, $stateProvider, $urlRouterProvider, $logProvider){
@@ -59,8 +59,8 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
       });
 
     // redirect start page to account
-    $urlRouterProvider.when('', '/account');
-    $urlRouterProvider.when('/', '/account');
+    $urlRouterProvider.when('', '/dashboard');
+    $urlRouterProvider.when('/', '/dashboard');
 
     // diplay error 404 for unmatched routes
     $urlRouterProvider.otherwise(function($injector){
