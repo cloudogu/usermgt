@@ -22,8 +22,8 @@
                ng-required="true"
                ng-pattern="/^[a-zA-Z0-9]+[-_@\.]*[a-zA-Z0-9]+[-_@\.]*[a-zA-Z0-9-_@\.]*$/"
         >
-        <span class="fa fa-check fa-2x form-control-feedback"></span>
-        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <strong ng-show="form.username.$error.required" class="text-danger help-block">
           Username is required
         </strong>
@@ -48,8 +48,8 @@
       <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="surname">Surname</label>
         <input id="surname" name="surname" type="text" class="form-control" placeholder="Enter surname" ng-required="true" ng-model="user.surname">
-        <span class="fa fa-check fa-2x form-control-feedback"></span>
-        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <strong class="text-danger help-block">
           Surname is required
         </strong>
@@ -57,8 +57,8 @@
       <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="displayName">Display name</label>
         <input id="displayName" name="displayName" type="text" class="form-control" placeholder="Enter display name" ng-required="true" ng-model="user.displayName">
-        <span class="fa fa-check fa-2x form-control-feedback"></span>
-        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <strong class="text-danger help-block">
           Display name is required
         </strong>
@@ -66,8 +66,8 @@
       <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="email">Email address</label>
         <input id="email" name="email" type="email" class="form-control" placeholder="Enter email" ng-required="true" ng-model="user.mail">
-        <span class="fa fa-check fa-2x form-control-feedback"></span>
-        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <strong class="text-danger help-block">
           E-Mail address is invalid
         </strong>
@@ -79,8 +79,8 @@
       <div class="form-group has-feedback" data-uadm-validate>
         <label for="confirmPassword">Confirm password</label>
         <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Password" ng-model="confirmPassword" uadm-password-match="user.password">
-        <span class="fa fa-check fa-2x form-control-feedback"></span>
-        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <strong class="text-danger help-block">
           Passwords do not match
         </strong>
