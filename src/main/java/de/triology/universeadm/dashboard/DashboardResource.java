@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,29 +24,44 @@
  * 
  * http://www.scm-manager.com
  */
+package de.triology.universeadm.dashboard;
 
-angular.module('universeadm.dashboard.config', ['ui.router',
-  'universeadm.navigation', 'universeadm.dashboard.controllers', 'universeadm.dashboard.services']).config(function ($stateProvider, navigationProvider) {
-  // registar navigation
-  navigationProvider.add({
-    url: '/dashboard',
-    label: 'Dashboard',
-    requireAdminPrivileges: true
-  });
+import com.google.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-  // configure routes
-  $stateProvider
-          .state('dashboard', {
-            url: '/dashboard',
-            controller: 'dashboardController',
-            templateUrl: 'views/dashboard/dashboard.html',
-            resolve: {
-              config: function (dashboardService) {
-                return dashboardService.get();
-              }
-            }
-          });
+/**
+ *
+ * @author mbehlendorf
+ */
+@Path("dashboard")
+public class DashboardResource {
+
+  private static final Logger logger = LoggerFactory.getLogger(DashboardResource.class);
+
+  private final DashboardStore store;
+
+  @Inject
+  public DashboardResource(DashboardStore store) {
+    this.store = store;
+  }
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  public void setDashboard(String data) {
+    store.set(data);
+  }
+
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public String getDashboard() {
+    return store.get();
+  }
+
 }
-);
-
-

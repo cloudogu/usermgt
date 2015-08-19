@@ -25,16 +25,16 @@
  * http://www.scm-manager.com
  */
 
-angular.module('universeadm.dashboard.controllers', ['universeadm.dashboard.services','adf','LocalStorageModule','adf.structures.base',
-  'adf.widget.clock','adf.widget.linklist','adf.widget.github','adf.widget.markdown', 'adf.widget.news', 'adf.widget.randommsg', 'adf.widget.version',
-'adf.widget.weather'])
-  .controller('dashboardController', function($scope, localStorageService){
-    var name = 'dashboard';
-    var model = localStorageService.get(name);
-    $scope.name = name;
-    $scope.model = model;
-    $scope.$on('adfDashboardChanged', function (event, name, model) {
-      localStorageService.set(name, model);
-    });
-  }
-);
+angular.module('universeadm.dashboard.controllers', ['universeadm.dashboard.services', 'adf', 'LocalStorageModule', 'adf.structures.base',
+  'adf.widget.clock', 'adf.widget.linklist', 'adf.widget.github', 'adf.widget.markdown', 'adf.widget.news', 'adf.widget.randommsg', 'adf.widget.version',
+  'adf.widget.weather'])
+        .controller('dashboardController', function ($scope, $log, dashboardService, config) {
+          $scope.model = config
+
+          $scope.$on('adfDashboardChanged', function (event, name, model) {
+            dashboardService.set(model).then(function () {
+            }, function () {
+              $log.error("Cant set dashboard data.");
+            })
+          });
+        });

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,29 +24,21 @@
  * 
  * http://www.scm-manager.com
  */
+package de.triology.universeadm.dashboard;
 
-angular.module('universeadm.dashboard.config', ['ui.router',
-  'universeadm.navigation', 'universeadm.dashboard.controllers', 'universeadm.dashboard.services']).config(function ($stateProvider, navigationProvider) {
-  // registar navigation
-  navigationProvider.add({
-    url: '/dashboard',
-    label: 'Dashboard',
-    requireAdminPrivileges: true
-  });
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import org.kohsuke.MetaInfServices;
 
-  // configure routes
-  $stateProvider
-          .state('dashboard', {
-            url: '/dashboard',
-            controller: 'dashboardController',
-            templateUrl: 'views/dashboard/dashboard.html',
-            resolve: {
-              config: function (dashboardService) {
-                return dashboardService.get();
-              }
-            }
-          });
+/**
+ *
+ * @author mbehlendorf
+ */
+@MetaInfServices(Module.class)
+public class DashboardModule extends AbstractModule {
+
+  @Override
+  protected void configure() {
+    bind(DashboardResource.class);
+  }
 }
-);
-
-

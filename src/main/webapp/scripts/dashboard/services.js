@@ -26,9 +26,13 @@
  */
 
 angular.module('universeadm.dashboard.services', ['restangular'])
-  .factory('dashboardService', function(Restangular){
-    var dashboard = Restangular.all('dashboard');
-    return {
-      
-    };
-  });
+        .factory('dashboardService', function (Restangular) {
+          return {
+            get: function () {
+              return Restangular.one('dashboard').get();
+            },
+            set: function (input) {
+              return Restangular.one('dashboard').post('', input);
+            }
+          };
+        });
