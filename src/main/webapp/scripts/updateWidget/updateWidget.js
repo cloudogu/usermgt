@@ -25,16 +25,20 @@
  * http://www.scm-manager.com
  */
 
-angular.module('universeadm.dashboard.controllers', ['universeadm.dashboard.services', 'adf', 'LocalStorageModule', 'adf.structures.base',
-  'adf.widget.clock', 'adf.widget.linklist', 'adf.widget.github', 'adf.widget.markdown', 'adf.widget.news', 'adf.widget.randommsg', 'adf.widget.version',
-  'adf.widget.weather','adf.widget.update'])
-        .controller('dashboardController', function ($scope, $log, dashboardService, config) {
-          $scope.model = config
+angular.module('adf.widget.update', ['adf.provider'])
+  .config(function(dashboardProvider){
+    dashboardProvider
+      .widget('test', {
+        title: 'Update',
+        description: 'Update',
+        templateUrl: '{widgetsPath}/views/updateWidget/view.html',
+        edit: {
+          templateUrl: '{widgetsPath}/views/updateWidget/edit.html'
+        }
+      });
+  }).controller('widgetCtrl',function($scope){
+    $scope.version= "14.11.4 - Stern";
+    $scope.updateAvailable= true;
+    $scope.availableVersion= "14.11.5 - Stern2";
+  });
 
-          $scope.$on('adfDashboardChanged', function (event, name, model) {
-            dashboardService.set(model).then(function () {
-            }, function () {
-              $log.error("Cant set dashboard data.");
-            })
-          });
-        });

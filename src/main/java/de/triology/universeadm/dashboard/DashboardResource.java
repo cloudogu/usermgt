@@ -46,7 +46,7 @@ public class DashboardResource {
   private static final Logger logger = LoggerFactory.getLogger(DashboardResource.class);
 
   private final DashboardStore store;
-
+  
   @Inject
   public DashboardResource(DashboardStore store) {
     this.store = store;
@@ -63,5 +63,5 @@ public class DashboardResource {
   public String getDashboard() {
     return store.get();
   }
-
+  
 }

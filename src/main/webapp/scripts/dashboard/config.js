@@ -31,7 +31,7 @@ angular.module('universeadm.dashboard.config', ['ui.router',
   navigationProvider.add({
     url: '/dashboard',
     label: 'Dashboard',
-    requireAdminPrivileges: true
+    requireAdminPrivileges: false
   });
 
   // configure routes
