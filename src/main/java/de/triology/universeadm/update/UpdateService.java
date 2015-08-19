@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,45 +24,45 @@
  * 
  * http://www.scm-manager.com
  */
+package de.triology.universeadm.update;
 
-package de.triology.universeadm.settings;
-
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import com.google.common.annotations.VisibleForTesting;
+import de.triology.universeadm.settings.SettingsException;
+import static de.triology.universeadm.update.UpdateConstants.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author mbehlendorf
  */
-@Path("settings")
-public class SettingsResource
-{
+public class UpdateService {
 
-  private final SettingsStore store;
+    @VisibleForTesting
+    static final String DEFAULT_UPDATE_WEBSITE = "http://192.168.115.80/applupdateservice/applupdate.php";
 
-  @Inject
-  public SettingsResource(SettingsStore store)
-  {
-    this.store = store;
-  }
+    public void startUpdate() {
+        
+        touchFlag(SCM_UPDATE_EXECUTOR_FLAG);
+    }
+    
+    public Status checkUpdate() {
+        return new Status();
+        
+    }
+    
+    public void touchFlag(File flag) {
+        try {
+            File parent = flag.getParentFile();
+            if (!parent.exists() && !parent.mkdirs()) {
+                throw new SettingsException("could not create directory ".concat(flag.getPath()));
+            }
+            flag.createNewFile();
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
-  {
-    this.store.set(settings);
-  }
+        } catch (IOException ex) {
+            throw new SettingsException("could not store file ".concat(flag.getPath()), ex);
+        }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
-  }
-  
+    }   
+    
 }

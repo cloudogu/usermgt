@@ -25,44 +25,14 @@
  * http://www.scm-manager.com
  */
 
-package de.triology.universeadm.settings;
 
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
-/**
- *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
- */
-@Path("settings")
-public class SettingsResource
-{
-
-  private final SettingsStore store;
-
-  @Inject
-  public SettingsResource(SettingsStore store)
-  {
-    this.store = store;
-  }
-
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
-  {
-    this.store.set(settings);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
-  }
-  
-}
+angular.module('universeadm.settings.controllers')
+        .controller('updateStartConfirmationCtrl', function ($scope, $modalInstance) {
+          $scope.yes = function () {
+            $modalInstance.close();
+          };
+          $scope.no = function () {
+            $modalInstance.dismiss();
+          };
+        });

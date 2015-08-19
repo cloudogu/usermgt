@@ -25,44 +25,47 @@
  * http://www.scm-manager.com
  */
 
-package de.triology.universeadm.settings;
+angular.module('universeadm.settings.controllers')
+        .controller('userInputCtrl', function ($scope, $modalInstance, $log, updateService) {
 
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+          updateService.userInput().then(function (data) {
+            $scope.inputName = $scope.objectKeys(data)[0];
+            $scope.fieldsName = $scope.objectKeys(data[$scope.inputName])[0];
+            $scope.items = data[$scope.inputName][$scope.fieldsName];
+            angular.forEach($scope.items, function (value, key) {
+              if (value.minLength == null) {
+                value.minLength = 0;
+              }
+              if (value.maxLength == null) {
+                value.maxLength = 1024;
+              }
+            });
+          }, function () {
+            $log.error("Cant get userInput");
+          });
+          $scope.input = {};
 
-/**
- *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
- */
-@Path("settings")
-public class SettingsResource
-{
+          $scope.objectKeys = function (obj) {
+            if (!obj) {
+              return [];
+            }
+            return Object.keys(obj);
+          };
 
-  private final SettingsStore store;
+          $scope.ok = function () {
+            $modalInstance.close();
+          };
 
-  @Inject
-  public SettingsResource(SettingsStore store)
-  {
-    this.store = store;
-  }
+          $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+          };
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
-  {
-    this.store.set(settings);
-  }
+          $scope.send = function (input) {
+            var promise = updateService.sendUserInput(input);
+            promise.then(function () {
+              $modalInstance.close();
+            }, function () {
+            });
+          };
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
-  }
-  
-}
+        });

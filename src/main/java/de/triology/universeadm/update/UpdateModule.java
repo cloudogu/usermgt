@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,45 +24,23 @@
  * 
  * http://www.scm-manager.com
  */
+package de.triology.universeadm.update;
 
-package de.triology.universeadm.settings;
-
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import org.kohsuke.MetaInfServices;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author mbehlendorf
  */
-@Path("settings")
-public class SettingsResource
-{
+@MetaInfServices(Module.class)
+public class UpdateModule extends AbstractModule{
 
-  private final SettingsStore store;
-
-  @Inject
-  public SettingsResource(SettingsStore store)
-  {
-    this.store = store;
-  }
-
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
-  {
-    this.store.set(settings);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
-  }
-  
+    @Override
+    protected void configure() {
+        bind(UpdateResource.class);
+        bind(UpdateService.class);
+    }
+    
 }

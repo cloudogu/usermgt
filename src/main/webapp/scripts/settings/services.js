@@ -27,14 +27,78 @@
 
 
 angular.module('universeadm.settings.services', ['restangular'])
-  .factory('settingsService', function(Restangular){
-    var settings = Restangular.one('settings');
-    return {
-      get: function(){
-        return settings.get();
-      },
-      update: function(settings){
-        return settings.post();
-      }
-    };
-  });
+        .factory('settingsService', function (Restangular) {
+          var settings = Restangular.one('settings');
+          return {
+            get: function () {
+              return settings.get();
+            },
+            update: function (settings) {
+              return settings.post();
+            }
+          };
+        })
+        .factory('updateService', function (Restangular) {
+          var update = Restangular.one('update');
+          return {
+            versionCheck: function () {
+              return update.one('versionCheck').get();
+            },
+            updateCheck: function () {
+              return update.post('updateCheck');
+            },
+            check: function () {
+              return update.post('check');
+            },
+            start: function () {
+              return update.post('start');
+            },
+            sendUserInput: function (input) {
+              return update.post('sendUserInput', input);
+            },
+            preCheckAction: function (input) {
+              return update.post('preCheckAction', input);
+            },
+            userInput: function () {
+              return update.one('userInput').get();
+            },
+            preCheckResult: function () {
+              return update.one('preCheckResult').get();
+            }
+
+          };
+        })
+        .factory('modalService', function ($modal, $log) {
+          return{
+            pcResult: function (data, size) {
+              var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'views/settings/preCheckResult.dialog.html',
+                controller: 'pcResultCtrl',
+                size: size,
+                backdrop: 'static',
+                resolve: {
+                  items: function () {
+                    return data;
+                  }
+                }
+              });
+              return modalInstance;
+            },
+          userInput: function (size) {
+            var modalInstance = $modal.open({
+              animation: true,
+              templateUrl: 'views/settings/userInput.dialog.html',
+              controller: 'userInputCtrl',
+              size: size,
+              backdrop: 'static',
+              resolve: {
+                items: function () {
+                  return $scope.items;
+                }
+              }            
+            });
+            return modalInstance;             
+           }            
+          }
+        });

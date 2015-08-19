@@ -79,7 +79,7 @@ public enum Stage
     {
       current = Stage.valueOf(stage.toUpperCase(Locale.ENGLISH));
     }
-
+    
     logger.info("start with stage {}", stage);
   }
 

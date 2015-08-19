@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,45 +24,51 @@
  * 
  * http://www.scm-manager.com
  */
+package de.triology.universeadm.update;
 
-package de.triology.universeadm.settings;
-
-import com.google.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author mbehlendorf
  */
-@Path("settings")
-public class SettingsResource
-{
+@XmlRootElement(name = "result")
+@XmlAccessorType(XmlAccessType.FIELD)
 
-  private final SettingsStore store;
+class ResultUpdateCheck extends Result {
 
-  @Inject
-  public SettingsResource(SettingsStore store)
-  {
-    this.store = store;
+  private boolean updateAvailable;
+  private boolean validCreds;
+
+  public boolean isValidCreds() {
+    return validCreds;
   }
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  public void updateSettings(Settings settings)
-  {
-    this.store.set(settings);
+  public void setValidCreds(boolean validCreds) {
+    this.validCreds = validCreds;
   }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Settings getSettings()
-  {
-    return store.get();
+  public boolean isUpdateAvailable() {
+    return updateAvailable;
   }
-  
+
+  public void setUpdateAvailable(boolean updateAvailable) {
+    this.updateAvailable = updateAvailable;
+  }
+
+  public static ResultUpdateCheck getFailMessage() {
+    ResultUpdateCheck failMessage = new ResultUpdateCheck();
+    failMessage.setSuccess(false);
+    failMessage.setMessage("Operation failed!");
+    return failMessage;
+  }
+
+  public static ResultUpdateCheck getSuccessMessage() {
+    ResultUpdateCheck failMessage = new ResultUpdateCheck();
+    failMessage.setSuccess(true);
+    failMessage.setMessage("Operation successfully terminated!");
+    return failMessage;
+  }
 }
