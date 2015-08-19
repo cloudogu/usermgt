@@ -23,6 +23,8 @@
 @font-family-sans-serif:  Exo, "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-serif:       Exo, Georgia, "Times New Roman", Times, serif;
 
+// icon font
+@icon-font-path: "../../components/bootstrap/fonts/";
 
 // angular stuff
 
@@ -106,7 +108,7 @@ h1,h2,h3,h4,h5,h6 {
 .has-feedback.has-error .text-danger {
   display: block;
 }
-
+/* font-awesome
 .has-feedback .fa-check {
   display: none;
 }
@@ -122,7 +124,22 @@ h1,h2,h3,h4,h5,h6 {
 .has-feedback.has-error .fa-times {
   display: block;
 }
+*/
+.has-feedback .glyphicon-ok {
+  display: none;
+}
 
+.has-feedback.has-success .glyphicon-ok {
+  display: block;
+}
+
+.has-feedback .glyphicon-remove {
+  display: none;
+}
+
+.has-feedback.has-error .glyphicon-remove {
+  display: block;
+}
 /** tabs **/
 .nav-tabs {
   margin-bottom: 10px;
