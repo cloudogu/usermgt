@@ -74,12 +74,11 @@
     <table class="table">
       <tr ng-repeat="member in group.members | simpleSort">
         <td>
-          <a ng-href="#/user/{{member}}">{{member}}</a>
+          <b>{{member}}</b>
         </td>
         <td class="text-right">
-          <button class="btn btn-warning" href="" ng-click="removeMember(member)">
-            Remove
-          </button>
+          <a class="glyphicon glyphicon-pencil edit" ng-href="#/user/{{member}}"></a>
+          <span class="glyphicon glyphicon-remove remove" href="" ng-click="removeMember(member)"></span> 
         </td>
       </tr>
     </table>
