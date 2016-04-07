@@ -1,30 +1,3 @@
-// base gray-dark 363636
-@gray-darker:            darken(#363636, 20%);
-@gray-dark:              #363636;
-@gray:                   lighten(#363636, 20%);
-@gray-light:             lighten(#363636, 40%);
-@gray-lighter:           lighten(#363636, 60%);
-
-// scmmu light blue
-@brand-primary:         #00A5E2;
-
-// scmmu yellow
-@brand-warning:         #fcc917;
-
-@body-bg:               #F7F7F7;
-
-@navbar-inverse-color:                      @gray-light;
-@navbar-inverse-link-color:                 @gray-light;
-
-// scmmu dark blue
-@navbar-inverse-bg:     #30343F;
-@navbar-inverse-link-active-bg:             darken(@navbar-inverse-bg, 5%);
-
-@font-family-sans-serif:  Exo, "Helvetica Neue", Helvetica, Arial, sans-serif;
-@font-family-serif:       Exo, Georgia, "Times New Roman", Times, serif;
-
-// icon font
-@icon-font-path: "../../components/bootstrap/fonts/";
 
 // angular stuff
 
@@ -108,23 +81,7 @@ h1,h2,h3,h4,h5,h6 {
 .has-feedback.has-error .text-danger {
   display: block;
 }
-/* font-awesome
-.has-feedback .fa-check {
-  display: none;
-}
 
-.has-feedback.has-success .fa-check {
-  display: block;
-}
-
-.has-feedback .fa-times {
-  display: none;
-}
-
-.has-feedback.has-error .fa-times {
-  display: block;
-}
-*/
 .has-feedback .glyphicon-ok {
   display: none;
 }
@@ -149,10 +106,10 @@ h1,h2,h3,h4,h5,h6 {
   cursor: pointer;
 }
 
-#updateButton{
-  background-color: yellow;
+.table th {
+    border-bottom-color: #23A3DD !important;    
 }
 
-#updateButton:disabled{
-  background-color: gray;
+.table td {
+    border-top-color: #ECDADA !important;    
 }
