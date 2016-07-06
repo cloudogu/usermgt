@@ -1,5 +1,5 @@
 {
-  "name": "universeadm",
+  "name": "usermgt",
   "dependencies": {},
   "devDependencies": {
     "bower": "^1.3.12",
