@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,7 +24,6 @@
  * 
  * http://www.scm-manager.com
  */
-
 package de.triology.universeadm;
 
 import com.google.inject.Inject;
@@ -42,7 +41,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cas.CasFilter;
 import org.apache.shiro.cas.CasRealm;
 import org.apache.shiro.cas.CasSubjectFactory;
-import org.apache.shiro.guice.web.ShiroWebModule;
 import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -53,11 +51,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author mbehlendorf
  */
-public class SecurityModule extends ShiroWebModule
-{
+public class CasSecurityModule extends BaseSecurityModule {
   
+  private static final Logger logger = LoggerFactory.getLogger(CasSecurityModule.class);
+    
   private static final Key<CasFilter> CAS = Key.get(CasFilter.class);
   private static final Key<ApiAuthenticationFilter> API = Key.get(ApiAuthenticationFilter.class);
 
@@ -68,19 +67,10 @@ public class SecurityModule extends ShiroWebModule
   private static final String CAS_FAILURE_URL = "shiro.failureUrl";
   private static final String CAS_SERVICE = "shiro.casService";
 
-  private static final Logger logger = LoggerFactory.getLogger(SecurityModule.class);
-
-  public SecurityModule(ServletContext context)
-  {
+  public CasSecurityModule(ServletContext context) {
     super(context);
   }
-
-  private void config(String key, String value)
-  {
-    logger.debug("bind config {} to {}", key, value);
-    bindConstant().annotatedWith(Names.named(key)).to(value);
-  }
-
+  
   private CasConfiguration getCasConfiguration()
   {
     CasConfiguration casConfiguration = BaseDirectory.getConfiguration(CasConfiguration.FILE, CasConfiguration.class);
@@ -91,10 +81,14 @@ public class SecurityModule extends ShiroWebModule
     return casConfiguration;
   }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  protected void configureShiroWeb()
+  private void config(String key, String value)
   {
+    logger.debug("bind config {} to {}", key, value);
+    bindConstant().annotatedWith(Names.named(key)).to(value);
+  }
+
+  @Override
+  protected void configureRealm() {
     CasConfiguration cas = getCasConfiguration();
     bind(CasConfiguration.class).toInstance(cas);
     expose(CasConfiguration.class);
@@ -113,19 +107,16 @@ public class SecurityModule extends ShiroWebModule
     // beacuse it looks like guice does not set constants for multi binding
     bindRealm().toProvider(CasRealmProvider.class).in(Singleton.class);
     bind(SubjectFactory.class).to(CasSubjectFactory.class);
-
-    addFilterChain("/error/*", ANON);
-    addFilterChain("/style/**", ANON);
-    addFilterChain("/components/**", ANON);
+    
+    // protect uris
     addFilterChain("/login/cas", ANON, CAS);
-    addFilterChain("/api/logout", ANON);
     addFilterChain("/api/users", API, config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/users/*", API, config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/groups", API, config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/groups/*", API, config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/**", AUTHC);
   }
-
+  
   private static class CasRealmProvider implements Provider<Realm>
   {
 
@@ -144,8 +135,8 @@ public class SecurityModule extends ShiroWebModule
     }
 
   }
-
-  /**
+  
+/**
    * CasRealm with fixed support for multi value attributes
    * 
    * @see https://issues.apache.org/jira/browse/SHIRO-442
@@ -276,5 +267,5 @@ public class SecurityModule extends ShiroWebModule
     }
 
   }
-
+  
 }

@@ -81,11 +81,24 @@ public class BootstrapContextListener
     else
     {
       logger.info("load injection modules");
+      
+      Module securityModule;
+      if (Stage.get() == Stage.PRODUCTION)
+      {
+        logger.info("load cas security module for production stage");
+        securityModule = new CasSecurityModule(context);
+      }
+      else 
+      {
+        logger.info("load development security module for development stage");
+        securityModule = new DevelopmentSecurityModule(context);
+      }
+      
       //J-
       modules = ImmutableList.of(
         ShiroWebModule.guiceFilterModule(),
         new MainModule(ldapConfiguration),
-        new SecurityModule(context)
+        securityModule
       );  
       //J+
     }

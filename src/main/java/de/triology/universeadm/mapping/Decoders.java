@@ -79,12 +79,12 @@ public final class Decoders
     int i = string.indexOf('=');
     if ( i <= 0 || i+1 >= string.length() )
     {
-      throw new MappingException("string is not a valid dn, no equal found");
+      throw new MappingException("string " + string + " is not a valid dn, no equal found");
     }
     int j = string.indexOf(',');
     if ( j <= 0 || j <= (i+1) || j >= string.length() )
     {
-      throw new MappingException("string is not a valid dn, no or misplaced comma found");
+      throw new MappingException("string " + string + " is not a valid dn, no or misplaced comma found");
     }
     return string.substring(i+1, j);
   }

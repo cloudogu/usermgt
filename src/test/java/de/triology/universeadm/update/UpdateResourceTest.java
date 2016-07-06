@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -24,33 +24,18 @@
  * 
  * http://www.scm-manager.com
  */
+package de.triology.universeadm.update;
 
-package de.triology.universeadm.settings;
-
+import org.junit.Test;
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author mbehlendorf
  */
-public class CredentialsInvalidSettingsException extends SettingsException
-{
 
-  public CredentialsInvalidSettingsException()
-  {
-  }
-
-  public CredentialsInvalidSettingsException(String message)
-  {
-    super(message);
-  }
-
-  public CredentialsInvalidSettingsException(String message, Throwable cause)
-  {
-    super(message, cause);
-  }
-
-  public CredentialsInvalidSettingsException(Throwable cause)
-  {
-    super(cause);
-  }
+public class UpdateResourceTest {
   
+  @Test
+  public void testUpdateCheck(){
+  
+  }
 }

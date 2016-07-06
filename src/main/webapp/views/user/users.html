@@ -3,7 +3,7 @@
     <h1>Users</h1>
   </div>
   <div class="col-sm-2">
-    <a class="btn btn-primary pull-right" style="margin-top: 20px;" ng-href="#/user/">Create</a>
+    <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/user/">Create</a>
   </div>
   <div class="col-sm-4">
 
@@ -11,7 +11,7 @@
       <div class="form-group">
         <div class="input-group">
           <a class="input-group-addon pointer" ng-click="search(nonSubmittedQuery)" ng-disabled="searchForm.$invalid">
-            <i class="fa">&#xf002;</i>
+            <i class="glyphicon glyphicon-search"></i>
           </a>
           <input name="query" 
                  type="text" 
@@ -41,9 +41,9 @@
   <tbody>
     <tr ng-repeat="user in users">
       <td>
-        <a ng-href="#/user/{{user.username}}">
+        <b>
           {{user.username}}
-        </a>
+        </b>
       </td>
       <td>{{user.displayName}}</td>
       <td class="hidden-xs">
@@ -52,9 +52,8 @@
         </a>
       </td>
       <td class="hidden-xs">
-        <button class="btn btn-warning" href="" ng-click="remove(user)" ng-disabled="{{isSelf(user)}}">
-          Remove
-        </button>
+          <a class="glyphicon glyphicon-pencil edit" ng-href="#/user/{{user.username}}"></a>
+          <span class="glyphicon glyphicon-trash remove" href="" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></span>           
       </td>
     </tr>
   </tbody>

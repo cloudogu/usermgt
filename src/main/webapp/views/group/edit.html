@@ -17,12 +17,12 @@
                class="form-control" 
                placeholder="Enter name" 
                ng-model="group.name" 
-               ng-pattern="/^[a-zA-Z0-9-_@\.]+$/"
+               ng-pattern="/^[a-zA-Z0-9-_@\. ]+$/"
                ng-minlength="2"
                ng-maxlength="32"
                ng-required="true">
-        <span class="fa fa-check fa-2x form-control-feedback"></span>
-        <span class="fa fa-times fa-2x form-control-feedback"></span>
+        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <strong ng-show="form.name.$error.required" class="text-danger help-block">
           Name is required
         </strong>
@@ -74,12 +74,11 @@
     <table class="table">
       <tr ng-repeat="member in group.members | simpleSort">
         <td>
-          <a ng-href="#/user/{{member}}">{{member}}</a>
+          <b>{{member}}</b>
         </td>
         <td class="text-right">
-          <button class="btn btn-warning" href="" ng-click="removeMember(member)">
-            Remove
-          </button>
+          <a class="glyphicon glyphicon-pencil edit" ng-href="#/user/{{member}}"></a>
+          <span class="glyphicon glyphicon-remove remove" href="" ng-click="removeMember(member)"></span> 
         </td>
       </tr>
     </table>
