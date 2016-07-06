@@ -1,5 +1,5 @@
 {
-  "name": "universeadm",
+  "name": "usermgt",
   "dependencies": {
     "angular": "1.2.26",
     "angular-i18n": "1.2.26",

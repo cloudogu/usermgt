@@ -1,3 +1,9 @@
+1.3.0
+=====
+- using ces-theme now
+- removed backup and settings
+- changed name to usermgt
+
 1.2.0
 =====
 - fix wrong status code and missing content on user self removal
