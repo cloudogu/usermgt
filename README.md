@@ -2,7 +2,7 @@
 # Usermgt
 https://cloudogu.com
 
-This repository contains the usermgt an maven project written in java.
+This repository contains the usermgt, an maven project written in java.
 
 ### Quick start
 * Following prerequisites have to be met:
@@ -19,9 +19,6 @@ This repository contains the usermgt an maven project written in java.
 * Use CAS Account
   - username: admin
   - password: admin  
-
-### Development
-* todo...  
 
 ---
 ### What is Cloudogu?
