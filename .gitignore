@@ -22,3 +22,6 @@ env/data/settings/
 # vagrant
 .vagrant
 /.project
+# ignore idea files
+.idea
+*.iml
