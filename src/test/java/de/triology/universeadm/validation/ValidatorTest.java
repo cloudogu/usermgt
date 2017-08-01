@@ -73,6 +73,7 @@ public class ValidatorTest
   @Test
   public void testRDNValid()
   {
+    validator.validate(new RDNObject("trillian.mcmillan.ford.prefect.arthur.dent@hitchhiker.com"), "not valid");
     validator.validate(new RDNObject("dent"), "not valid");
   }
   
@@ -91,9 +92,15 @@ public class ValidatorTest
   @Test(expected = ConstraintViolationException.class)
   public void testRDNInvalidMaxLength()
   {
-    validator.validate(new RDNObject("dentdentdentdentdentdentdentdentd"), "not valid");
+    StringBuilder builder = new StringBuilder("d");
+    for (int i=0; i<32; i++) {
+      builder.append("dent");
+    }
+    System.out.println(builder.toString().length());
+    validator.validate(new RDNObject(builder.toString()), "not valid");
   }
-  
+
+  @Test
   public void testRDNMaxLength()
   {
     validator.validate(new RDNObject("dentdentdentdentdentdentdentdent"), "not valid");
@@ -105,6 +112,7 @@ public class ValidatorTest
     validator.validate(new RDNObject("a"), "not valid");
   }
 
+  @Test
   public void testRDNMinLength()
   {
     validator.validate(new RDNObject("as"), "not valid");
