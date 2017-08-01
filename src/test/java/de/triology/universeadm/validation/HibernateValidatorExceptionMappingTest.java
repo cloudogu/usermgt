@@ -55,11 +55,31 @@ public class HibernateValidatorExceptionMappingTest
     MockHttpResponse response = validate(new VObject("dent"));
     assertEquals(204, response.getStatus());
   }
+
+  @Test
+  public void validWithLongEmail() throws IOException, URISyntaxException
+  {
+    MockHttpResponse response = validate(new VObject("trillian.mcmillan.ford.prefect.arthur.dent@hitchhiker.com"));
+    assertEquals(204, response.getStatus());
+  }
   
   @Test
   public void testInvalid() throws IOException, URISyntaxException
   {
     MockHttpResponse response = validate(new VObject("uid=dent,ou=People"));
+    assertEquals(400, response.getStatus());
+    JsonNode node = Resources.parseJson(response);
+    assertEquals("is not valid", node.path("message").asText());
+  }
+
+  @Test
+  public void testInvalidWithTooLongUsername() throws IOException, URISyntaxException
+  {
+    StringBuilder builder = new StringBuilder("a");
+    for (int i=0; i<128; i++) {
+      builder.append("c");
+    }
+    MockHttpResponse response = validate(new VObject(builder.toString()));
     assertEquals(400, response.getStatus());
     JsonNode node = Resources.parseJson(response);
     assertEquals("is not valid", node.path("message").asText());
