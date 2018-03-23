@@ -1,15 +1,24 @@
+FROM maven:3.3-jdk-8 as builder
+COPY app/ /usermgt
+RUN set -x \
+ && cd /usermgt \
+ && mvn package
+
+
 FROM registry.cloudogu.com/official/java:8u121-4
 MAINTAINER Sebastian Sdorra <sebastian.sdorra@cloudogu.com>
-
 # mark as webapp for nginx
 ENV SERVICE_TAGS=webapp \
 	# tomcat version
 	TOMCAT_MAJOR_VERSION=8 \
 	TOMCAT_VERSION=8.0.45 \
 	# usermgt version
+	# TODO remove version ?
 	USERMGT_VERSION=1.3.2 \
 	# home directory
 	UNIVERSEADM_HOME=/var/lib/usermgt/conf
+
+COPY --from=builder /usermgt/target/usermgt-${USERMGT_VERSION}.war /
 
 # create user
 RUN set -x \
@@ -32,7 +41,7 @@ RUN set -x \
 	# install usermgt
 	&& mkdir -p /opt/apache-tomcat/webapps/usermgt \
     && cd /opt/apache-tomcat/webapps/usermgt \
-    && curl -L https://github.com/cloudogu/usermgt/releases/download/v${USERMGT_VERSION}/usermgt-${USERMGT_VERSION}.war -o usermgt-${USERMGT_VERSION}.war \
+    && mv /usermgt-${USERMGT_VERSION}.war . \
 	&& unzip usermgt-${USERMGT_VERSION}.war \
 	&& rm -f usermgt-${USERMGT_VERSION}.war \
 	&& chmod +x WEB-INF/cipher.sh \
