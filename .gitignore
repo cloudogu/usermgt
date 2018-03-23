@@ -1,5 +1,5 @@
 # netbeans temp & private files
-target/
+app/target/
 # MacOS X Files
 .DS_Store
 ._.DS_Store
@@ -14,14 +14,14 @@ Desktop DF
 *.rej
 *.conflict
 # web components
-node_modules/
-src/main/webapp/components/
-src/main/webapp/style/css/
+app/node_modules/
+app/src/main/webapp/components/
+app/src/main/webapp/style/css/
 # dynamic settings
-env/data/settings/
+app/env/data/settings/
 # vagrant
-.vagrant
-/.project
+app/.vagrant
+app/.project
 # ignore idea files
 .idea
 *.iml
