@@ -6,5 +6,5 @@
   <login-url>https://{{ .GlobalConfig.Get "fqdn" }}/cas/login?service=https://{{ .GlobalConfig.Get "fqdn" }}/usermgt/login/cas</login-url>
   <logout-url>https://{{ .GlobalConfig.Get "fqdn" }}/cas/logout</logout-url>
   <role-attribute-names>groups</role-attribute-names>
-  <administrator-role>cesManager</administrator-role>
+  <administrator-role>{{ .GlobalConfig.GetOrDefault "manager_group" "cesManager" }}</administrator-role>
 </cas>
