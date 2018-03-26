@@ -12,13 +12,10 @@ ENV SERVICE_TAGS=webapp \
     # tomcat version
     TOMCAT_MAJOR_VERSION=8 \
     TOMCAT_VERSION=8.0.45 \
-    # usermgt version
-    # TODO remove version ?
-    USERMGT_VERSION=1.3.2 \
     # home directory
     UNIVERSEADM_HOME=/var/lib/usermgt/conf
 
-COPY --from=builder /usermgt/target/usermgt-${USERMGT_VERSION}.war /
+COPY --from=builder /usermgt/target/usermgt-*.war /usermgt.war
 
 # create user
 RUN set -x \
@@ -41,9 +38,9 @@ RUN set -x \
     # install usermgt
     && mkdir -p /opt/apache-tomcat/webapps/usermgt \
     && cd /opt/apache-tomcat/webapps/usermgt \
-    && mv /usermgt-${USERMGT_VERSION}.war . \
-    && unzip usermgt-${USERMGT_VERSION}.war \
-    && rm -f usermgt-${USERMGT_VERSION}.war \
+    && mv /usermgt.war . \
+    && unzip usermgt.war \
+    && rm -f usermgt.war \
     && chmod +x WEB-INF/cipher.sh \
 
     # fix permissions
