@@ -9,8 +9,9 @@ export LDAP_BIND_PASSWORD=$(/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh
 # copy resources
 if [ ! -d "/var/lib/usermgt/conf" ]; then
 	mkdir -p /var/lib/usermgt/conf
-	cp -rf /resources/* /var/lib/usermgt/conf/
 fi
+
+cp -rf /resources/* /var/lib/usermgt/conf/
 
 # create log directory
 if [ ! -d "/var/lib/usermgt/logs" ]; then
