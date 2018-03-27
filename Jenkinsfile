@@ -2,7 +2,7 @@
 @Library('github.com/cloudogu/ces-build-lib@8dd2371')
 import com.cloudogu.ces.cesbuildlib.*
 
-node() { // No specific label
+node('docker') {
 
     properties([
             // Keep only the last 10 build to preserve space
@@ -20,26 +20,34 @@ node() { // No specific label
 
         stage('Checkout') {
             checkout scm
-            git.clean("")
+            //  Don't remove folders starting in "." like * .m2 (maven), .npm, .cache, .local (bower)
+            git.clean('".*/"')
         }
 
-        dir('app') {
+        // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
+        // builds run concurrently (e.g. feature branch, PR and develop)
+        new Docker(this).image('openjdk:8-jdk')
+                .mountJenkinsUser()
+                .inside {
 
-            stage('Build') {
-                mvn 'clean install -DskipTests'
-                archive '**/target/*.jar,**/target/*.zip'
-            }
+            dir('app') {
 
-            stage('Unit Test') {
-                mvn 'test'
-            }
+                stage('Build') {
+                    mvn 'clean install -DskipTests'
+                    archive '**/target/*.jar,**/target/*.zip'
+                }
 
-            stage('SonarQube') {
-                def sonarQube = new SonarQube(this, 'ces-sonar')
-                sonarQube.updateAnalysisResultOfPullRequestsToGitHub('sonarqube-gh-token')
+                stage('Unit Test') {
+                    mvn 'test'
+                }
 
-                mvn.additionalArgs += ' -Dsonar.exclusions=target/**,src/main/webapp/components/** '
-                sonarQube.analyzeWith(mvn)
+                stage('SonarQube') {
+                    def sonarQube = new SonarQube(this, 'ces-sonar')
+                    sonarQube.updateAnalysisResultOfPullRequestsToGitHub('sonarqube-gh-token')
+
+                    mvn.additionalArgs += ' -Dsonar.exclusions=target/**,src/main/webapp/components/** '
+                    sonarQube.analyzeWith(mvn)
+                }
             }
         }
     }
