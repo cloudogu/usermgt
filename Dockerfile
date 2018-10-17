@@ -1,11 +1,11 @@
-FROM openjdk:8u151-jdk as builder
+FROM openjdk:8u171-jdk as builder
 COPY app/ /usermgt
 RUN set -x \
  && cd /usermgt \
  && ./mvnw package
 
 
-FROM registry.cloudogu.com/official/java:8u151-3
+FROM registry.cloudogu.com/official/java:8u171-1
 MAINTAINER Sebastian Sdorra <sebastian.sdorra@cloudogu.com>
 # mark as webapp for nginx
 ENV SERVICE_TAGS=webapp \
