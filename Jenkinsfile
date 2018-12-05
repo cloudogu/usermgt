@@ -15,9 +15,11 @@ node('docker') {
 
     catchError {
 
-        def javaHome = tool 'JDK8'
-        Maven mvn = new MavenWrapper(this, javaHome)
+        Maven mvn = new MavenWrapper(this)
         Git git = new Git(this)
+
+        // Workaround SUREFIRE-1588 on Debian/Ubuntu. Should be fixed in Surefire 3.0.0
+        mvn.additionalArgs = '-DargLine="-Djdk.net.URLClassPath.disableClassPathURLCheck=true"'
 
         stage('Checkout') {
             checkout scm
