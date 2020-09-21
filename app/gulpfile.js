@@ -53,29 +53,27 @@ gulp.task('build-template-cache', function(){
       .pipe(gulp.dest('target/gulptmp/scripts'));
 });
 
-gulp.task('default', ['lessc', 'build-template-cache'], function(){
+gulp.task('default', gulp.series('lessc', 'build-template-cache', function(){
   // copy index.html for debugging purposes
   gulp.src('src/main/webapp/*.html')
       .pipe($.rename({suffix: '-debug'}))
       .pipe(gulp.dest('target/gulp'));
 
-  var assets = $.useref.assets({searchPath: '{target/gulp,target/gulptmp,src/main/webapp}'});
-
   // concat, compress and rename resources from index.html
-  gulp.src('src/main/webapp/index.html')
-      .pipe(assets)
+  return gulp.src('src/main/webapp/index.html')
+      .pipe($.useref({searchPath: '{target/gulp,target/gulptmp,src/main/webapp}'}))
       .pipe($.filesize())
-      // .pipe($.if('*.js', $.ngAnnotate()))
-      // .pipe($.if('*.js', $.uglify()))
+      .pipe($.if('*.js', $.ngAnnotate()))
+      .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.minifyCss()))
       .pipe($.rev())
       .pipe($.rename({suffix: '.min'}))
-      .pipe(assets.restore())
+      .pipe($.useref.restore())
       .pipe($.useref())
       .pipe($.revReplace())
       //.pipe($.if('*.html', $.minifyHtml()))
       .pipe(gulp.dest('target/gulp'));
-});
+}));
 
 gulp.on('err', function (err) {
   throw err;
