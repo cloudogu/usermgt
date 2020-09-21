@@ -66,12 +66,10 @@ gulp.task('default', gulp.series('lessc', 'build-template-cache', function(){
       .pipe($.if('*.js', $.ngAnnotate()))
       .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.minifyCss()))
-      .pipe($.rev())
-      .pipe($.rename({suffix: '.min'}))
-      .pipe($.useref.restore())
-      .pipe($.useref())
+      .pipe($.if('!*.html', $.rev()))
+      .pipe($.if('!*.html', $.rename({suffix: '.min'})))
       .pipe($.revReplace())
-      //.pipe($.if('*.html', $.minifyHtml()))
+      .pipe($.filesize())
       .pipe(gulp.dest('target/gulp'));
 }));
 
