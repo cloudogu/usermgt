@@ -45,11 +45,11 @@ node('docker') {
                 }
 
                 stage('SonarQube') {
-                    def sonarQube = new SonarQube(this, 'ces-sonar')
-                    sonarQube.updateAnalysisResultOfPullRequestsToGitHub('sonarqube-gh-token')
-
-                    mvn.additionalArgs += ' -Dsonar.exclusions=target/**,src/main/webapp/components/** '
-                    sonarQube.analyzeWith(mvn)
+//                    def sonarQube = new SonarQube(this, 'ces-sonar')
+//                    sonarQube.updateAnalysisResultOfPullRequestsToGitHub('sonarqube-gh-token')
+//
+//                    mvn.additionalArgs += ' -Dsonar.exclusions=target/**,src/main/webapp/components/** '
+//                    sonarQube.analyzeWith(mvn)
                 }
             }
         }
