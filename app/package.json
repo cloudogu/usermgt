@@ -26,5 +26,10 @@
     "karma-jasmine": "~0.1",
     "karma-junit-reporter": "~0.2",
     "karma-phantomjs-launcher": "~0.1"
+  },
+  "scripts": {
+    "run": "npm install",
+    "bower": "bower install",
+    "gulp": "gulp"
   }
 }
