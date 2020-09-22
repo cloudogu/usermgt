@@ -5,11 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- added modular makefiles
 ### Changed
 - update dependencies in package.json
 - update maven version
+- lint dockerfile in jenkins build
+- do shell check in jenkins build
 ### Fixed
-- Fixed broken build
+- fixed broken build
+- fixed shellcheck findings in startup.sh
+- fixed sonarqube check
 
 ## [1.3.0]
 ### Changed
