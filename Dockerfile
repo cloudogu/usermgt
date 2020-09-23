@@ -6,7 +6,11 @@ RUN set -x \
 
 
 FROM registry.cloudogu.com/official/java:8u171-1
-MAINTAINER Sebastian Sdorra <sebastian.sdorra@cloudogu.com>
+
+LABEL NAME="official/usermgt" \
+   VERSION="1.3.0" \
+   maintainer="sebastian.sdorra@cloudogu.com"
+
 # mark as webapp for nginx
 ENV SERVICE_TAGS=webapp \
     # tomcat version
