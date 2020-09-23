@@ -30,7 +30,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
   'universeadm.validation.directives', 'universeadm.users.services', 
   'universeadm.util.services', 'universeadm.groups.services'])
   .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
-    
+
     function setUsers(users){
       if (!users.meta){
         users.meta = {totalEntries: 0, limit: 10};
@@ -106,7 +106,38 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.isSelf = function(user){
       return $scope.subject.principal === user.username;
     };
-    
+
+
+    $scope.applyPasswordPolicy = function(){
+      console.log("validate password");
+      // hey its 2020 would be nice if i could use let and const
+      var rules = [{Description: "Should start with Capital Letter", Regex: "^[A-Z].*"},
+        {Description: "Should contain at least 6 characters", Regex: ".*(.*[a-z]){6}.*"},
+        {Description: "Should contain a at least one digit", Regex: ".*[0-9].*"}];
+      var violations = [];
+      var configError = false;
+      rules.forEach(function(rule){
+        try{
+          var regEx = new RegExp(rule.Regex);
+          if (!regEx.test($scope.user.password)){
+            violations.push(rule.Description);
+          }
+        } catch (e) {
+          configError = true;
+        }
+      });
+
+      if (configError){
+        $scope.user.passwordPolicy = {status: "invalid", msg: "Password-Policy misconfigured"};
+      }else{
+      if (Array.isArray(violations) && violations.length){
+        $scope.user.passwordPolicy = {status: "violated", msg: violations.join('; ')};
+      }else{
+        $scope.user.passwordPolicy = {status: "fulfilled", msg: ''};
+      }
+    }};
+
+
     $scope.addGroup = function(group){
       if ( group ){
         var promise = null;
