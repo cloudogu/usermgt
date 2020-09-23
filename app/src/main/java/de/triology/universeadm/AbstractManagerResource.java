@@ -29,6 +29,7 @@ package de.triology.universeadm;
 
 import com.google.common.base.Strings;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -46,8 +47,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * @param <T>
@@ -89,6 +88,7 @@ public abstract class AbstractManagerResource<T> {
    */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
   public Response create(@Context UriInfo uriInfo, T object) {
     Response.ResponseBuilder builder;
 
@@ -102,7 +102,7 @@ public abstract class AbstractManagerResource<T> {
       builder = Response.created(uriBuilder.build());
     } catch (ConstraintViolationException e) {
       logger.warn("entity {} violates constraints", id);
-      builder = Response.status(Response.Status.CONFLICT);
+      builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
     }
 
     return builder.build();
