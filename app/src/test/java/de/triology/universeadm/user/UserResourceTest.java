@@ -34,7 +34,7 @@ package de.triology.universeadm.user;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
-import de.triology.universeadm.EntityAlreadyExistsException;
+import de.triology.universeadm.ConstraintViolationException;
 import de.triology.universeadm.EntityNotFoundException;
 import de.triology.universeadm.PagedResultList;
 import de.triology.universeadm.Resources;
@@ -157,7 +157,7 @@ public class UserResourceTest
   {
     User dent = Users.createDent();
 
-    doThrow(EntityAlreadyExistsException.class).when(userManager).create(dent);
+    doThrow(ConstraintViolationException.class).when(userManager).create(dent);
 
     MockHttpRequest request = MockHttpRequest.post("/users");
     MockHttpResponse response = Resources.dispatch(resource, request, dent);

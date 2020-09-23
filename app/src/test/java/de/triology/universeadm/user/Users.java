@@ -44,6 +44,14 @@ public final class Users
       Lists.newArrayList("Hitchhiker")
     );
   }
+
+  public static User createDent2(){
+    return new User(
+      "dent2", "Arthur Dent", "Arthur", "Dent",
+      "arthur.dent@hitchhiker.com", "hitchhiker123",
+      Lists.newArrayList("Hitchhiker")
+    );
+  }
   
   public static User createTrillian(){
     return new User(
