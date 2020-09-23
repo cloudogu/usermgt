@@ -176,6 +176,27 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);
     };
+
+    $scope.createMessage = function(constraints) {
+      var msg = '';
+
+      for (var i = 0; i < constraints.length; i++) {
+        var c = constraints[i];
+        switch(c){
+          case 'UNIQUE_EMAIL':
+            msg += 'A User with that mail already exists. ';
+            break;
+          case 'UNIQUE_USERNAME':
+            msg += 'A User with that Username already exists. ';
+            break;
+          default:
+            msg += 'An unexpected error occured. ';
+            break;
+        }
+      }
+
+      return msg;
+    };
     
     $scope.save = function(user){
       var promise;
@@ -190,7 +211,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         if ( error.status === 409 ){
           $scope.alerts = [{
             type: 'danger',
-            msg: 'The user ' + user.username + ' already exists'
+            msg: $scope.createMessage(error.data.constraints)
           }];
         } else {
           $scope.alerts = [{
