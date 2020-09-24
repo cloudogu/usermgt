@@ -27,6 +27,7 @@
 
 package de.triology.universeadm.user;
 
+import ch.qos.logback.core.joran.util.StringToObjectConverter;
 import com.github.legman.EventBus;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
@@ -193,9 +194,11 @@ public class LDAPUserManagerTest
   @SubjectAware(username = "dent", password = "secret")
   public void testModifyOtherUserUnprivileged() throws LDAPException
   {
-    User tricia = Users.createTrillian();
-    tricia.setDisplayName("Tricia");
-    createUserManager().modify(tricia);
+    LDAPUserManager manager = createUserManager();
+    User trillian = Users.createTrillian();
+    trillian.setDisplayName("Tricia");
+    trillian.setMail("tricia@hitchhiker.com");
+    manager.modify(trillian);
   }
   
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
