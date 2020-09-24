@@ -127,15 +127,22 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
     user.setPassword(DUMMY_PASSWORD);
   }
 
+  /**
+   * Checks if any constraints are violated.
+   * If so, throws ConstraintViolationException containing all violations.
+   * @param user
+   * @param category
+   * @throws ConstraintViolationException
+   */
   private void checkConstraints(final User user, final Constraint.Category category) {
-    final List<Constraint.Type> violatedConstraints = new ArrayList<>();
+    final List<Constraint.ID> violatedConstraints = new ArrayList<>();
     for (Constraint<User> constraint : this.constraints) {
       if (constraint.violatedBy(user, category)) {
-        violatedConstraints.add(constraint.getType());
+        violatedConstraints.add(constraint.getUniqueID());
       }
     }
     if (violatedConstraints.size() > 0) {
-      throw new ConstraintViolationException(violatedConstraints.toArray(new Constraint.Type[0]));
+      throw new ConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[0]));
     }
   }
 

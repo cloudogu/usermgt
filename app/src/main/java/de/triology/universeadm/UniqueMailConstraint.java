@@ -37,7 +37,7 @@ public class UniqueMailConstraint extends Constraint<User> {
   }
 
   @Override
-  public Type getType() {
-    return Type.UNIQUE_EMAIL;
+  public ID getUniqueID() {
+    return ID.UNIQUE_EMAIL;
   }
 }

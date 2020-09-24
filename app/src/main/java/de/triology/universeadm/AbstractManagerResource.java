@@ -28,8 +28,6 @@
 package de.triology.universeadm;
 
 import com.google.common.base.Strings;
-
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -162,7 +160,6 @@ public abstract class AbstractManagerResource<T> {
   }
 
   //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *

@@ -33,9 +33,9 @@ import java.util.Arrays;
  * @author Simon Klein <sklein@cloudogu.com>
  */
 public class ConstraintViolationException extends EntityException {
-  public final Constraint.Type[] violated;
+  public final Constraint.ID[] violated;
 
-  public ConstraintViolationException(final Constraint.Type... constraints) {
+  public ConstraintViolationException(final Constraint.ID... constraints) {
     super("Constraints violated: " + Arrays.toString(constraints));
     this.violated = constraints;
   }

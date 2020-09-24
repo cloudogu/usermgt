@@ -154,7 +154,7 @@ public class UserResourceTest
   {
     User dent = Users.createDent();
 
-    doThrow(new ConstraintViolationException(Constraint.Type.UNIQUE_USERNAME)).when(userManager).create(dent);
+    doThrow(new ConstraintViolationException(Constraint.ID.UNIQUE_USERNAME)).when(userManager).create(dent);
 
     MockHttpRequest request = MockHttpRequest.post("/users");
     MockHttpResponse response = Resources.dispatch(resource, request, dent);

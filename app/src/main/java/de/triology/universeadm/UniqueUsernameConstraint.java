@@ -28,8 +28,8 @@ public class UniqueUsernameConstraint extends Constraint<User> {
   }
 
   @Override
-  public Type getType() {
-    return Type.UNIQUE_USERNAME;
+  public ID getUniqueID() {
+    return ID.UNIQUE_USERNAME;
   }
 
 }
