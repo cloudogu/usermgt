@@ -126,7 +126,11 @@ public abstract class AbstractManagerResource<T> {
       prepareForModify(id, object);
       manager.modify(object);
       builder = Response.noContent();
-    } catch (EntityNotFoundException ex) {
+    }
+    catch (ConstraintViolationException e){
+      builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
+    }
+    catch (EntityNotFoundException ex) {
       builder = Response.status(Response.Status.NOT_FOUND);
     }
 

@@ -13,12 +13,23 @@ public class UniqueMailConstraint extends Constraint<User> {
   }
 
   @Override
-  public boolean violatedBy(final User user) {
+  public boolean violatedBy(final User user, final Category category) {
     final List<User> results = this.mapping.search(user.getMail());
 
     for (User u : results) {
-      if (u.getMail().equals(user.getMail())){
-        return true;
+      boolean hasSameEMail = u.getMail().equals(user.getMail());
+      boolean isSameUser = u.getUsername().equals(user.getUsername());
+
+      switch (category){
+        case CREATE:
+          if (hasSameEMail){
+            return true;
+          }
+        case MODIFY:
+          if (!isSameUser && hasSameEMail){
+            return true;
+          }
+        default:
       }
     }
 

@@ -120,17 +120,17 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   public void create(User user) {
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
     Preconditions.checkNotNull(user, "user is required");
-    checkConstraints(user);
+    checkConstraints(user, Constraint.Category.CREATE);
 
     mapping.create(user);
     eventBus.post(new UserEvent(user, EventType.CREATE));
     user.setPassword(DUMMY_PASSWORD);
   }
 
-  private void checkConstraints(User user) {
+  private void checkConstraints(final User user, final Constraint.Category category) {
     final List<Constraint.Type> violatedConstraints = new ArrayList<>();
     for (Constraint<User> constraint : this.constraints) {
-      if (constraint.violatedBy(user)) {
+      if (constraint.violatedBy(user, category)) {
         violatedConstraints.add(constraint.getType());
       }
     }
@@ -148,6 +148,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   @Override
   public void modify(User user, boolean fireEvent) {
     Preconditions.checkNotNull(user, "user is required");
+    checkConstraints(user, Constraint.Category.MODIFY);
 
     Subject subject = SecurityUtils.getSubject();
 

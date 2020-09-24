@@ -28,6 +28,8 @@
 package de.triology.universeadm.account;
 
 import com.google.inject.Inject;
+import de.triology.universeadm.ConstraintViolationException;
+import de.triology.universeadm.ConstraintViolationResponse;
 import de.triology.universeadm.Manager;
 import de.triology.universeadm.user.User;
 import javax.ws.rs.Consumes;
@@ -78,7 +80,12 @@ public class AccountResource
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   public Response modifyAccount(User user){
-    accountManager.modifyCurrentUser(user);
+    try {
+      accountManager.modifyCurrentUser(user);
+    }
+    catch (ConstraintViolationException e){
+      return Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e)).build();
+    }
     return Response.noContent().build();
   }
   

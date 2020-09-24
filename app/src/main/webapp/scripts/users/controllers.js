@@ -78,11 +78,15 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.nonSubmittedQuery = query;
     setUsers(users);
   })
+
   .controller('userEditController', function($scope, $location, $modal, groupService, userService, user){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
-    
+    $scope.setForm = function(form){
+      $scope.form = form;
+    };
+
     $scope.create = false;
     if (user === null){
       $scope.create = true;
@@ -197,7 +201,51 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
 
       return msg;
     };
-    
+
+    $scope.createErrorMessage = function(constraints) {
+      var msg = '';
+
+      for (var i = 0; i < constraints.length; i++) {
+        var c = constraints[i];
+        switch(c){
+          case 'UNIQUE_EMAIL':
+            msg += 'A User with that mail already exists. ';
+            break;
+          case 'UNIQUE_USERNAME':
+            msg += 'A User with that Username already exists. ';
+            break;
+          default:
+            msg += 'An unexpected error occured. ';
+            break;
+        }
+      }
+
+      return msg;
+    };
+
+    $scope.setConstraintValidation = function(constraint, val) {
+      console.log($scope.form);
+      switch(constraint){
+        case 'UNIQUE_EMAIL':
+          if ($scope.form.email !== undefined) {
+            $scope.form.email.$setValidity('A User with that mail already exists.', val);
+          }
+          break;
+        case 'UNIQUE_USERNAME':
+          if ($scope.form.username !== undefined) {
+            $scope.form.username.$setValidity('A User with that Username already exists.', val);
+          }
+          break;
+      }
+    };
+
+    $scope.setConstraintErrors = function(constraints) {
+      for (var i = 0; i < constraints.length; i++) {
+        var c = constraints[i];
+        $scope.setConstraintValidation(c, false);
+      }
+    };
+
     $scope.save = function(user){
       var promise;
       if ($scope.create){
@@ -209,9 +257,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         $location.path('/users');
       }, function(error){
         if ( error.status === 409 ){
+          $scope.setConstraintErrors(error.data.constraints);
           $scope.alerts = [{
             type: 'danger',
-            msg: $scope.createMessage(error.data.constraints)
+            msg: $scope.createErrorMessage(error.data.constraints)
           }];
         } else {
           $scope.alerts = [{
