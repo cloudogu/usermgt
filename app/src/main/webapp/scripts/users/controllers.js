@@ -181,27 +181,6 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.alerts.splice(index, 1);
     };
 
-    $scope.createMessage = function(constraints) {
-      var msg = '';
-
-      for (var i = 0; i < constraints.length; i++) {
-        var c = constraints[i];
-        switch(c){
-          case 'UNIQUE_EMAIL':
-            msg += 'A User with that mail already exists. ';
-            break;
-          case 'UNIQUE_USERNAME':
-            msg += 'A User with that Username already exists. ';
-            break;
-          default:
-            msg += 'An unexpected error occured. ';
-            break;
-        }
-      }
-
-      return msg;
-    };
-
     $scope.createErrorMessage = function(constraints) {
       var msg = '';
 
@@ -223,17 +202,18 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       return msg;
     };
 
-    $scope.setConstraintValidation = function(constraint, val) {
-      console.log($scope.form);
+    $scope.setConstraintValidation = function(constraint) {
       switch(constraint){
         case 'UNIQUE_EMAIL':
-          if ($scope.form.email !== undefined) {
-            $scope.form.email.$setValidity('A User with that mail already exists.', val);
+          var emailField = $scope.form.email;
+          if (emailField !== undefined && emailField !== null) {
+            emailField.previousUniqueValue = emailField.$viewValue;
           }
           break;
         case 'UNIQUE_USERNAME':
-          if ($scope.form.username !== undefined) {
-            $scope.form.username.$setValidity('A User with that Username already exists.', val);
+          var usernameField = $scope.form.username;
+          if (usernameField !== undefined && usernameField !== null) {
+            usernameField.previousUniqueValue = usernameField.$viewValue;
           }
           break;
       }
@@ -242,7 +222,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.setConstraintErrors = function(constraints) {
       for (var i = 0; i < constraints.length; i++) {
         var c = constraints[i];
-        $scope.setConstraintValidation(c, false);
+        $scope.setConstraintValidation(c);
       }
     };
 

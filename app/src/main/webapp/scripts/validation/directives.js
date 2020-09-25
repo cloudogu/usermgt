@@ -72,6 +72,21 @@ angular.module('universeadm.validation.directives', [])
       }
     };
   })
+  .directive('uniqueConstraintChecker', function() {
+    return {
+      restrict: 'A',
+      scope: true,
+      require: 'ngModel',
+      link: function(scope, elem, attrs, control) {
+        var checker = function() {
+          return control.$modelValue !== control.previousUniqueValue;
+        };
+        scope.$watch(checker, function(n) {
+          control.$setValidity('uniqueConstraint', n);
+        });
+      }
+    };
+  })
   .directive('uadmError', function(){
     return {
       restrict: 'AE',
