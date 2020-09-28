@@ -73,7 +73,7 @@
         <input id="email" name="email" type="email" class="form-control" placeholder="Enter email" ng-required="true" ng-model="user.mail" unique-constraint-checker>
         <span class="glyphicon glyphicon-ok form-control-feedback"></span>
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-        <strong class="text-danger help-block">
+        <strong ng-show="form.email.$error.email" class="text-danger help-block">
           E-Mail address is invalid
         </strong>
         <strong ng-show="form.email.$error.uniqueConstraint" class="text-danger help-block">

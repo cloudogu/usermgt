@@ -208,12 +208,18 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
           var emailField = $scope.form.email;
           if (emailField !== undefined && emailField !== null) {
             emailField.previousUniqueValue = emailField.$viewValue;
+            setTimeout(function(){
+              emailField.executeValidatorCheck();
+            }, 1);
           }
           break;
         case 'UNIQUE_USERNAME':
           var usernameField = $scope.form.username;
           if (usernameField !== undefined && usernameField !== null) {
             usernameField.previousUniqueValue = usernameField.$viewValue;
+            setTimeout(function(){
+              usernameField.executeValidatorCheck();
+            }, 1);
           }
           break;
       }
