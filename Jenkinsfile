@@ -8,7 +8,12 @@ node('docker') {
             // Keep only the last 10 build to preserve space
             buildDiscarder(logRotator(numToKeepStr: '10')),
             // Don't run concurrent builds for a branch, because they use the same workspace directory
-            disableConcurrentBuilds()
+            disableConcurrentBuilds(),
+            // Parameter to activate dogu upgrade test on demand
+            parameters([
+              booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
+              string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest')
+            ])
     ])
 
     String defaultEmailRecipients = env.EMAIL_RECIPIENTS
@@ -17,6 +22,11 @@ node('docker') {
     branch = "${env.BRANCH_NAME}"
     Maven mvn = new MavenWrapper(this)
     Git git = new Git(this, "cesmarvin")
+    git.committerName = 'cesmarvin'
+    git.committerEmail = 'cesmarvin@cloudogu.com'
+    GitFlow gitflow = new GitFlow(this, git)
+    GitHub github = new GitHub(this, git)
+    Changelog changelog = new Changelog(this)
 
     // Workaround SUREFIRE-1588 on Debian/Ubuntu. Should be fixed in Surefire 3.0.0
     mvn.additionalArgs = '-DargLine="-Djdk.net.URLClassPath.disableClassPathURLCheck=true"'
@@ -113,6 +123,47 @@ node('docker') {
 
       stage('Integration Tests') {
         echo "No integration test exists."
+      }
+
+      if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
+        stage('Upgrade dogu') {
+          // Remove new dogu that has been built and tested above
+          ecoSystem.purgeDogu(doguName)
+
+          if (params.OldDoguVersionForUpgradeTest != '' && !params.OldDoguVersionForUpgradeTest.contains('v')){
+            println "Installing user defined version of dogu: " + params.OldDoguVersionForUpgradeTest
+            ecoSystem.installDogu("official/" + doguName + " " + params.OldDoguVersionForUpgradeTest)
+          } else {
+            println "Installing latest released version of dogu..."
+            ecoSystem.installDogu("official/" + doguName)
+          }
+          ecoSystem.startDogu(doguName)
+          ecoSystem.waitForDogu(doguName)
+          ecoSystem.upgradeDogu(ecoSystem)
+
+          // Wait for upgraded dogu to get healthy
+          ecoSystem.waitForDogu(doguName)
+        }
+
+        stage('Integration Tests - After Upgrade') {
+          echo "No integration test exists."
+        }
+      }
+
+      if (gitflow.isReleaseBranch()) {
+        String releaseVersion = git.getSimpleBranchName();
+
+        stage('Finish Release') {
+          gitflow.finishRelease(releaseVersion)
+        }
+
+        stage('Push Dogu to registry') {
+          ecoSystem.push("/dogu")
+        }
+
+        stage ('Add Github-Release'){
+          github.createReleaseWithChangelog(releaseVersion, changelog)
+        }
       }
 
     } finally {
