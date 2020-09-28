@@ -85,6 +85,42 @@ node('docker') {
       }
     }
 
+    EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
+    try {
+
+      stage('Provision') {
+        ecoSystem.provision("/dogu");
+      }
+
+      stage('Setup') {
+        ecoSystem.loginBackend('cesmarvin-setup')
+        ecoSystem.setup()
+      }
+
+      stage('Wait for dependencies') {
+        timeout(15) {
+          ecoSystem.waitForDogu("cas")
+        }
+      }
+
+      stage('Build') {
+        ecoSystem.build("/dogu")
+      }
+
+      stage('Verify') {
+        ecoSystem.verify("/dogu")
+      }
+
+      stage('Integration Tests') {
+        echo "No integration test exists."
+      }
+
+    } finally {
+      stage('Clean') {
+        ecoSystem.destroy()
+      }
+    }
+
     // Archive Unit and integration test results, if any
     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/surefire-reports/TEST-*.xml,**/target/jest-reports/TEST-*.xml'
 
