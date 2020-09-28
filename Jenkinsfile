@@ -18,7 +18,7 @@ node('docker') {
 
     String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 
-    projectName = 'usermgt'
+    doguName = 'usermgt'
     branch = "${env.BRANCH_NAME}"
     Maven mvn = new MavenWrapper(this)
     Git git = new Git(this, "cesmarvin")
