@@ -12,7 +12,7 @@ user:
     gid: 1000
     groups:
     - tomcat
-    home: /opt/sonar
+    home: /opt/apache-tomcat
     shell: /bin/bash
 group:
   tomcat:
