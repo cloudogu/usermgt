@@ -1,0 +1,24 @@
+file:
+  /startup.sh:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+user:
+  tomcat:
+    exists: true
+    uid: 1000
+    gid: 1000
+    groups:
+    - tomcat
+    home: /opt/sonar
+    shell: /bin/bash
+group:
+  tomcat:
+    exists: true
+    gid: 1000
+process:
+  java:
+    running: true
+
