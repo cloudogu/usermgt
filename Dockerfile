@@ -1,9 +1,4 @@
 FROM openjdk:8u171-jdk as builder
-
-COPY app/pom.xml app/mvnw /
-COPY app/.mvn /.mvn
-RUN /mvnw dependency:go-offline
-
 COPY app/ /usermgt
 RUN set -x \
  && cd /usermgt \

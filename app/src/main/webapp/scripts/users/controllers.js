@@ -203,25 +203,22 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     };
 
     $scope.setConstraintValidation = function(constraint) {
+      var currentField = undefined;
+
       switch(constraint){
         case 'UNIQUE_EMAIL':
-          var emailField = $scope.form.email;
-          if (emailField !== undefined && emailField !== null) {
-            emailField.previousUniqueValue = emailField.$viewValue;
-            setTimeout(function(){
-              emailField.executeValidatorCheck();
-            }, 1);
-          }
+          currentField = $scope.form.email;
           break;
         case 'UNIQUE_USERNAME':
-          var usernameField = $scope.form.username;
-          if (usernameField !== undefined && usernameField !== null) {
-            usernameField.previousUniqueValue = usernameField.$viewValue;
-            setTimeout(function(){
-              usernameField.executeValidatorCheck();
-            }, 1);
-          }
+          currentField = $scope.form.username;
           break;
+      }
+
+      if (currentField !== undefined && currentField !== null) {
+        currentField.previousUniqueValue = currentField.$viewValue;
+        setTimeout(function(){
+          currentField.executeValidatorCheck();
+        }, 1);
       }
     };
 
