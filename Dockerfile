@@ -53,5 +53,8 @@ COPY resources /
 # expose port
 EXPOSE 8080
 
+# healtcheck
+HEALTHCHECK CMD [ $(doguctl healthy usermgt; echo $?) == 0 ]
+
 # execution
 CMD /startup.sh
