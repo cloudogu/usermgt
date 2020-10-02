@@ -28,7 +28,6 @@
 package de.triology.universeadm.account;
 
 import com.google.inject.Inject;
-import de.triology.universeadm.Manager;
 import de.triology.universeadm.user.User;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -72,6 +71,24 @@ public class AccountResource
       builder = Response.status(Response.Status.FORBIDDEN);
     }
     
+    return builder.build();
+  }
+
+  @GET
+  @Path("passwordpolicy")
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response getConfig()
+  {
+    Response.ResponseBuilder builder;
+    User account = accountManager.getCurrentUser();
+    if ( account != null ){
+      Configuration conf = Configuration.getInstance();
+      builder = Response.ok(conf.getContent(), MediaType.TEXT_PLAIN);
+    } else {
+      logger.error("call /api/conf/passwordpolicy without prior authentication");
+      builder = Response.status(Response.Status.FORBIDDEN);
+    }
+
     return builder.build();
   }
   
