@@ -29,6 +29,7 @@
 angular.module('universeadm.users.services', ['restangular'])
   .factory('userService', function(Restangular){
     var users = Restangular.all('users');
+    var config = Restangular.all('account/passwordpolicy');
     return {
       getAll: function(start, limit){
         return users.getList({start: start, limit: limit});
@@ -56,6 +57,9 @@ angular.module('universeadm.users.services', ['restangular'])
       },
       removeGroup: function(user, group){
         return user.one('groups/' + group).remove();
-      }
+      },
+      /*getAllConfig: function (){
+        return config.getAll();
+      },*/
     };
   });

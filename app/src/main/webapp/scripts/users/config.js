@@ -51,7 +51,10 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
           },
           page: function(){
             return 1;
-          }
+          },
+          /*config: function (userService){
+            return userService.getAllConfig();
+          },*/
         }
       })
       .state('usersPage', {

@@ -29,7 +29,7 @@
 angular.module('universeadm.users.controllers', ['ui.bootstrap', 
   'universeadm.validation.directives', 'universeadm.users.services', 
   'universeadm.util.services', 'universeadm.groups.services'])
-  .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
+  .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query, config){
 
     function setUsers(users){
       if (!users.meta){
@@ -75,6 +75,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     
     $scope.page = page;
     $scope.query = query;
+    //$scope.config = config;
     $scope.nonSubmittedQuery = query;
     setUsers(users);
   })
@@ -82,6 +83,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
+
     
     $scope.create = false;
     if (user === null){
@@ -109,11 +111,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
 
 
     $scope.applyPasswordPolicy = function(){
-      console.log("validate password");
-      // hey its 2020 would be nice if i could use let and const
-      var rules = [{Description: "Should start with Capital Letter", Regex: "^[A-Z].*"},
-        {Description: "Should contain at least 6 characters", Regex: ".*(.*[a-z]){6}.*"},
-        {Description: "Should contain a at least one digit", Regex: ".*[0-9].*"}];
+      console.log($scope.config);
+      var rules = [{Description: "Should start with Capital Letter", Rule: "^[A-Z].*"},
+        {Description: "Should contain at least 6 characters", Rule: ".*(.*[a-z]){6}.*"},
+        {Description: "Should contain at least one digit", Rule: ".*[0-9].*", Type: "regex"}];
       var violations = [];
       var configError = false;
       rules.forEach(function(rule){
@@ -131,7 +132,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         $scope.user.passwordPolicy = {status: "invalid", msg: "Password-Policy misconfigured"};
       }else{
       if (Array.isArray(violations) && violations.length){
-        $scope.user.passwordPolicy = {status: "violated", msg: violations.join('; ')};
+        $scope.user.passwordPolicy = {status: "invalid", msg: violations.join('; ')};
       }else{
         $scope.user.passwordPolicy = {status: "fulfilled", msg: ''};
       }
