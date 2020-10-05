@@ -27,18 +27,17 @@
 
 package de.triology.universeadm.user;
 
-import ch.qos.logback.core.joran.util.StringToObjectConverter;
 import com.github.legman.EventBus;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.triology.universeadm.*;
-import de.triology.universeadm.mapping.DefaultMapper;
-import de.triology.universeadm.mapping.Mapper;
-import de.triology.universeadm.mapping.MapperFactory;
-import de.triology.universeadm.mapping.Mapping;
-import de.triology.universeadm.mapping.SimpleMappingConverterFactory;
+import de.triology.universeadm.mapping.*;
 import de.triology.universeadm.validation.Validator;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.bind.JAXB;
 import org.apache.shiro.authz.AuthorizationException;
@@ -51,7 +50,6 @@ import com.github.sdorra.ldap.LDAP;
 import com.github.sdorra.ldap.LDAPRule;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import de.triology.universeadm.mapping.IllegalQueryException;
 import org.junit.rules.ExpectedException;
 
 /**
@@ -129,7 +127,47 @@ public class LDAPUserManagerTest
     manager.create(user1);
     manager.create(user2);
   }
-  
+
+  /**
+   * This test checks whether it is possible to change attributes for users, with duplicated mail addresses.
+   * This is necessary because in older versions duplicate mail addresses were possible.
+   * If this would not be possible, existing users with duplicate mail addresses would not be able to be changed
+   * until their mail is changed.
+   */
+  @Test()
+  @LDAP(baseDN = BASEDN, ldif = LDIF_001)
+  public void testChangeSomething() throws LDAPException, NoSuchFieldException, IllegalAccessException {
+    final LDAPUserManager manager = createUserManager();
+
+    // Make a copy of the constraints and clear the constraints
+    final Field constraintsField = AbstractLDAPManager.class.getDeclaredField("constraints");
+    constraintsField.setAccessible(true);
+    final List<Constraint<User>> constraints = (List<Constraint<User>>)constraintsField.get(manager);
+    final List<Constraint<User>> constraintsCopy = new ArrayList<>(constraints);
+    constraints.clear();
+
+    // Create two users with identical emails
+    User user1 = Users.createDent();
+    User user2 = Users.createDent2();
+    manager.create(user1);
+    manager.create(user2);
+
+    // Re-Add all constraints
+    constraints.addAll(constraintsCopy);
+
+    // Try to change the groups of a user. Should be successful
+    user1.setMemberOf(Arrays.asList("group1", "group2"));
+    manager.modify(user1);
+
+    // To make sure the constraints are applied correctly, try to trigger the exception
+    expectedException.expect(ConstraintViolationException.class);
+    expectedException.expectMessage("Constraints violated: ");
+    expectedException.expectMessage("UNIQUE_EMAIL");
+    User user3 = Users.createDent();
+    user3.setUsername("user3name");
+    manager.create(user3);
+  }
+
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_002)
   public void testGet() throws LDAPException{

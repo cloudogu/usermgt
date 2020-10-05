@@ -16,6 +16,18 @@ public class UniqueMailConstraint extends Constraint<User> {
   public boolean violatedBy(final User user, final Category category) {
     final List<User> results = this.mapping.search(user.getMail());
 
+    // Check whether the email was changed in this request. This is done because it should not be possible
+    // to change the email to an already existing email. But it should be possible if there are two users
+    // with the same email, to change any other attribute of them.
+    // This can occur when migrating from an old version (where duplicate mail addresses were possible) to this version.
+    boolean hasChangedEmailInThisRequest = true;
+    for (User u : results) {
+      boolean isSameUser = u.getUsername().equals(user.getUsername());
+      if (isSameUser){
+        hasChangedEmailInThisRequest = !(u.getMail().equals(user.getMail()));
+      }
+    }
+
     for (User u : results) {
       boolean hasSameEMail = u.getMail().equals(user.getMail());
       boolean isSameUser = u.getUsername().equals(user.getUsername());
@@ -26,7 +38,7 @@ public class UniqueMailConstraint extends Constraint<User> {
             return true;
           }
         case MODIFY:
-          if (!isSameUser && hasSameEMail){
+          if (!isSameUser && hasSameEMail && hasChangedEmailInThisRequest){
             return true;
           }
         default:
