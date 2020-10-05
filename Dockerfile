@@ -54,7 +54,7 @@ COPY resources /
 EXPOSE 8080
 
 # healtcheck
-HEALTHCHECK CMD [ $(doguctl healthy usermgt; echo $?) == 0 ]
+HEALTHCHECK CMD doguctl healthy ldap || exit 1
 
 # execution
 CMD /startup.sh
