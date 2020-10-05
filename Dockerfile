@@ -5,7 +5,7 @@ RUN set -x \
  && ./mvnw package
 
 
-FROM registry.cloudogu.com/official/java:8u242-1
+FROM registry.cloudogu.com/official/java:8u242-3
 
 LABEL NAME="official/usermgt" \
    VERSION="1.3.0" \
