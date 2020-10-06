@@ -29,7 +29,7 @@
 angular.module('universeadm.users.controllers', ['ui.bootstrap', 
   'universeadm.validation.directives', 'universeadm.users.services', 
   'universeadm.util.services', 'universeadm.groups.services'])
-  .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query, config){
+  .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
 
     function setUsers(users){
       if (!users.meta){
@@ -75,9 +75,11 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     
     $scope.page = page;
     $scope.query = query;
-    //$scope.config = config;
     $scope.nonSubmittedQuery = query;
     setUsers(users);
+    userService.getPasswordPolicy().then(function(policies){
+      $scope.policies = policies;
+    });
   })
   .controller('userEditController', function($scope, $location, $modal, groupService, userService, user){
     $scope.alerts = [];
@@ -111,32 +113,39 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
 
 
     $scope.applyPasswordPolicy = function(){
-      console.log($scope.config);
-      var rules = [{Description: "Should start with Capital Letter", Rule: "^[A-Z].*"},
-        {Description: "Should contain at least 6 characters", Rule: ".*(.*[a-z]){6}.*"},
-        {Description: "Should contain at least one digit", Rule: ".*[0-9].*", Type: "regex"}];
-      var violations = [];
-      var configError = false;
-      rules.forEach(function(rule){
-        try{
-          var regEx = new RegExp(rule.Regex);
-          if (!regEx.test($scope.user.password)){
-            violations.push(rule.Description);
+      userService.getPasswordPolicy().then(function(policy){
+        // var rules = [{Description: "Should start with Capital Letter", Rule: "^[A-Z].*"},
+        //   {Description: "Should contain at least 6 characters", Rule: ".*(.*[a-z]){6}.*"},
+        //   {Description: "Should contain at least one digit", Rule: ".*[0-9].*", Type: "regex"}];
+        var rules = policy.Rules;
+        console.log(policy.Rules);
+        var violations = [];
+        var configError = false;
+        rules.forEach(function(rule){
+          console.log("rule");
+          try{
+            var regEx = new RegExp(rule.Regex);
+            if (!regEx.test($scope.user.password)){
+              violations.push(rule.Description);
+            }
+          } catch (e) {
+            configError = true;
           }
-        } catch (e) {
-          configError = true;
+        });
+
+        console.log(violations);
+
+        if (configError){
+          $scope.user.passwordPolicy = {status: 'invalid', msg: 'Password-Policy misconfigured'};
+        }else {
+          if (Array.isArray(violations) && violations.length) {
+            $scope.user.passwordPolicy = {status: 'invalid', msg: violations.join('; ')};
+          } else {
+            $scope.user.passwordPolicy = {status: 'fulfilled', msg: ''};
+          }
         }
       });
-
-      if (configError){
-        $scope.user.passwordPolicy = {status: "invalid", msg: "Password-Policy misconfigured"};
-      }else{
-      if (Array.isArray(violations) && violations.length){
-        $scope.user.passwordPolicy = {status: "invalid", msg: violations.join('; ')};
-      }else{
-        $scope.user.passwordPolicy = {status: "fulfilled", msg: ''};
-      }
-    }};
+    };
 
 
     $scope.addGroup = function(group){
