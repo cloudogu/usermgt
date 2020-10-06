@@ -58,7 +58,7 @@ angular.module('universeadm.users.services', ['restangular'])
         return user.one('groups/' + group).remove();
       },
       getPasswordPolicy: function (){
-        return Restangular.one('account/passwordpolicy').get();
+        return Restangular.one('account/passwordpolicy').withHttpConfig({ cache: true}).get();
       },
     };
   });

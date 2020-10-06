@@ -125,7 +125,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
           try{
             var regEx = new RegExp(rule.Rule);
             if (!regEx.test($scope.user.password)){
-              violations.push(rule.Description);
+              violations.push(rule);
             }
           } catch (e) {
             configError = true;
@@ -138,9 +138,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
           $scope.user.passwordPolicy = {status: 'invalid', msg: 'Password-Policy misconfigured'};
         }else {
           if (Array.isArray(violations) && violations.length) {
-            $scope.user.passwordPolicy = {status: 'invalid', msg: violations.join('; ')};
+            var statisfactions = rules.filter(function(e) { return violations.indexOf(e) < 0 });
+            $scope.user.passwordPolicy = {status: 'invalid', violations: violations, satisfactions: statisfactions};
           } else {
-            $scope.user.passwordPolicy = {status: 'fulfilled', msg: ''};
+            $scope.user.passwordPolicy = {status: 'fulfilled', violations: [], satisfactions: rules};
           }
         }
       });
