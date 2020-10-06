@@ -122,9 +122,8 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         var violations = [];
         var configError = false;
         rules.forEach(function(rule){
-          console.log("rule");
           try{
-            var regEx = new RegExp(rule.Regex);
+            var regEx = new RegExp(rule.Rule);
             if (!regEx.test($scope.user.password)){
               violations.push(rule.Description);
             }

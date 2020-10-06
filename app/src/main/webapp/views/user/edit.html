@@ -88,7 +88,7 @@
           Passwords do not match
         </strong>
       </div>
-      <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user)">
+      <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user) || user.passwordPolicy.status==='invalid'">
         Save
       </button>
       <button ng-if="!create && removeEnabled" class="btn btn-warning" ng-click="remove(user)" ng-disabled="{{isSelf(user)}}">
