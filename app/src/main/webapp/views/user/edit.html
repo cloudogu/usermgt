@@ -72,12 +72,13 @@
           E-Mail address is invalid
         </strong>
       </div>
-      <div class="form-group password-field" ng-class="{true: 'has-success'}[user.passwordPolicy.status=='fulfilled']">
-        <label for="password">Password</label>
+      <div class="form-group has-feedback password-field" data-uadm-validate style="margin-bottom: 25px;" ng-class="{true: 'has-error'}[user.passwordPolicy.status=='invalid']">
+        <label class="control-label" for="password">Password</label>
         <input id="password" name="password" type="password" class="form-control" placeholder="Password" ng-required="true" ng-model="user.password" ng-change="applyPasswordPolicy()">
-        <strong ng-if='user.passwordPolicy.status === "violated" || user.passwordPolicy.status === "invalid"' class="danger text-danger help-block">
-          {{user.passwordPolicy.msg}}
-        </strong>
+        <span class="glyphicon glyphicon-ok form-control-feedback "></span>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+        <strong ng-repeat="violation in user.passwordPolicy.violations" class="text-danger pull-left">{{violation.Description}}.&nbsp;</strong>
+          <strong ng-repeat="satisfaction in user.passwordPolicy.satisfactions " class="text-success pull-left">{{satisfaction.Description}}.&nbsp;</strong>
       </div>
       <div class="form-group has-feedback" data-uadm-validate>
         <label for="confirmPassword">Confirm password</label>
