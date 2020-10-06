@@ -118,7 +118,6 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         //   {Description: "Should contain at least 6 characters", Rule: ".*(.*[a-z]){6}.*"},
         //   {Description: "Should contain at least one digit", Rule: ".*[0-9].*", Type: "regex"}];
         var rules = policy.Rules;
-        console.log(policy.Rules);
         var violations = [];
         var configError = false;
         rules.forEach(function(rule){
@@ -131,9 +130,6 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
             configError = true;
           }
         });
-
-        console.log(violations);
-
         if (configError){
           $scope.user.passwordPolicy = {status: 'invalid', msg: 'Password-Policy misconfigured'};
         }else {
