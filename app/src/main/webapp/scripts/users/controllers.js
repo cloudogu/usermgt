@@ -77,9 +77,6 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.query = query;
     $scope.nonSubmittedQuery = query;
     setUsers(users);
-    userService.getPasswordPolicy().then(function(policies){
-      $scope.policies = policies;
-    });
   })
   .controller('userEditController', function($scope, $location, $modal, groupService, userService, user){
     $scope.alerts = [];
@@ -111,38 +108,9 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       return $scope.subject.principal === user.username;
     };
 
-
     $scope.applyPasswordPolicy = function(){
-      userService.getPasswordPolicy().then(function(policy){
-        // var rules = [{Description: "Should start with Capital Letter", Rule: "^[A-Z].*"},
-        //   {Description: "Should contain at least 6 characters", Rule: ".*(.*[a-z]){6}.*"},
-        //   {Description: "Should contain at least one digit", Rule: ".*[0-9].*", Type: "regex"}];
-        var rules = policy.Rules;
-        var violations = [];
-        var configError = false;
-        rules.forEach(function(rule){
-          try{
-            var regEx = new RegExp(rule.Rule);
-            if (!regEx.test($scope.user.password)){
-              violations.push(rule);
-            }
-          } catch (e) {
-            configError = true;
-          }
-        });
-        if (configError){
-          $scope.user.passwordPolicy = {status: 'invalid', msg: 'Password-Policy misconfigured'};
-        }else {
-          if (Array.isArray(violations) && violations.length) {
-            var statisfactions = rules.filter(function(e) { return violations.indexOf(e) < 0 });
-            $scope.user.passwordPolicy = {status: 'invalid', violations: violations, satisfactions: statisfactions};
-          } else {
-            $scope.user.passwordPolicy = {status: 'fulfilled', violations: [], satisfactions: rules};
-          }
-        }
-      });
+      userService.applyPasswordPolicy($scope);
     };
-
 
     $scope.addGroup = function(group){
       if ( group ){
