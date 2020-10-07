@@ -57,32 +57,5 @@ angular.module('universeadm.users.services', ['restangular'])
       removeGroup: function(user, group){
         return user.one('groups/' + group).remove();
       },
-      applyPasswordPolicy: function ($scope){
-        Restangular.one('account/passwordpolicy').withHttpConfig({ cache: true}).get().then(function(policy){
-          var rules = policy.Rules;
-          var violations = [];
-          var configError = false;
-          rules.forEach(function(rule){
-            try{
-              var regEx = new RegExp(rule.Rule);
-              if (!regEx.test($scope.user.password)){
-                violations.push(rule);
-              }
-            } catch (e) {
-              configError = true;
-            }
-          });
-          if (configError){
-            $scope.user.passwordPolicy = {status: 'invalid', msg: 'Password-Policy misconfigured'};
-          }else {
-            if (Array.isArray(violations) && violations.length) {
-              var statisfactions = rules.filter(function(e) { return violations.indexOf(e) < 0 });
-              $scope.user.passwordPolicy = {status: 'invalid', violations: violations, satisfactions: statisfactions};
-            } else {
-              $scope.user.passwordPolicy = {status: 'fulfilled', violations: [], satisfactions: rules};
-            }
-          }
-        });
-      }
     };
   });
