@@ -78,9 +78,11 @@
         <input id="password" name="password" type="password" class="form-control" placeholder="Password" ng-required="true" ng-model="user.password" ng-change="applyPasswordPolicy()">
         <span  class="glyphicon glyphicon-remove form-control-feedback "></span>
         <span  class="glyphicon glyphicon-ok form-control-feedback"></span>
-        <p><strong ng-repeat="violation in user.passwordPolicy.violations" class="text-danger ">{{violation.Description}}.&nbsp;</strong></p>
-        <p><strong ng-repeat="satisfaction in user.passwordPolicy.satisfactions " class="text-success">{{satisfaction.Description}}.&nbsp;</strong></p>
       </div>
+      <p>
+        <span ng-repeat="violation in user.passwordPolicy.violations" class="text-danger display-block"><strong>{{violation.Description}}.&nbsp;</strong></span>
+        <span ng-repeat="satisfaction in user.passwordPolicy.satisfactions " class="text-success display-block"><strong>{{satisfaction.Description}}.&nbsp;</strong></span>
+      </p>
       <div class="form-group has-feedback" data-uadm-validate>
         <label for="confirmPassword">Confirm password</label>
         <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Password" ng-model="confirmPassword" uadm-password-match="user.password">
