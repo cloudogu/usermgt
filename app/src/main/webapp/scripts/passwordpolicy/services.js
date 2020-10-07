@@ -33,7 +33,7 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
         Restangular.one('account/passwordpolicy').withHttpConfig({ cache: true}).get().then(function(policy){
           var rules = policy.Rules;
           var violations = [];
-          var configError = false;
+          var invalidRules = [];
           rules.forEach(function(rule){
             try{
               var regEx = new RegExp(rule.Rule);
@@ -41,17 +41,22 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
                 violations.push(rule);
               }
             } catch (e) {
-              configError = true;
+              rule.Description = rule.Description + ': invalid password policy configured - please contact the administrator';
+              invalidRules.push(rule);
             }
           });
-          if (configError){
-            $scope.user.passwordPolicy = {status: 'invalid', msg: 'Password-Policy misconfigured'};
-          }else {
+          if (Array.isArray(invalidRules) && invalidRules.length) {
+            $scope.user.passwordPolicy = {status: 'invalid', violations: invalidRules, satisfactions: []};
+            //$scope.form.password.$setValidity('password-policy',false);
+          } else{
             if (Array.isArray(violations) && violations.length) {
               var statisfactions = rules.filter(function(e) { return violations.indexOf(e) < 0 });
               $scope.user.passwordPolicy = {status: 'invalid', violations: violations, satisfactions: statisfactions};
+              //$scope.form.password.$setValidity('password-policy',false);
             } else {
               $scope.user.passwordPolicy = {status: 'fulfilled', violations: [], satisfactions: rules};
+              //$scope.form.password.$setValidity('password-policy',true);
+
             }
           }
         });
