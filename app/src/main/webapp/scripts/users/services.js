@@ -56,6 +56,6 @@ angular.module('universeadm.users.services', ['restangular'])
       },
       removeGroup: function(user, group){
         return user.one('groups/' + group).remove();
-      },
+      }
     };
   });
