@@ -46,15 +46,15 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
             }
           });
           if (Array.isArray(invalidRules) && invalidRules.length) {
-            $scope.user.passwordPolicy = {status: 'invalid', violations: invalidRules, satisfactions: []};
+            $scope.passwordPolicy = {status: 'invalid', violations: invalidRules, satisfactions: []};
             $scope.form.password.$setValidity('password-policy',false);
           } else{
             if (Array.isArray(violations) && violations.length) {
               var statisfactions = rules.filter(function(e) { return violations.indexOf(e) < 0 });
-              $scope.user.passwordPolicy = {status: 'invalid', violations: violations, satisfactions: statisfactions};
+              $scope.passwordPolicy = {status: 'invalid', violations: violations, satisfactions: statisfactions};
               $scope.form.password.$setValidity('password-policy',false);
             } else {
-              $scope.user.passwordPolicy = {status: 'fulfilled', violations: [], satisfactions: rules};
+              $scope.passwordPolicy = {status: 'fulfilled', violations: [], satisfactions: rules};
               $scope.form.password.$setValidity('password-policy',true);
             }
           }

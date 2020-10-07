@@ -80,8 +80,8 @@
         <span  class="glyphicon glyphicon-ok form-control-feedback"></span>
       </div>
       <p>
-        <span ng-repeat="violation in user.passwordPolicy.violations" class="text-danger display-block"><strong>{{violation.Description}}.&nbsp;</strong></span>
-        <span ng-repeat="satisfaction in user.passwordPolicy.satisfactions " class="text-success display-block"><strong>{{satisfaction.Description}}.&nbsp;</strong></span>
+        <span ng-repeat="violation in passwordPolicy.violations" class="text-danger display-block"><strong>{{violation.Description}}.&nbsp;</strong></span>
+        <span ng-repeat="satisfaction in passwordPolicy.satisfactions " class="text-success display-block"><strong>{{satisfaction.Description}}.&nbsp;</strong></span>
       </p>
       <div class="form-group has-feedback" data-uadm-validate>
         <label for="confirmPassword">Confirm password</label>
