@@ -27,8 +27,8 @@
 
 
 angular.module('universeadm.account.controllers', ['universeadm.validation.directives', 
-  'universeadm.account.services', 'universeadm.groups.services', 'universeadm.users.services'])
-  .controller('accountController', function($scope, accountService, groupService, account, userService) {
+  'universeadm.account.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services'])
+  .controller('accountController', function($scope, accountService, groupService, account, passwordPolicyService) {
 
     function setAccount(account) {
       $scope.user = account;
@@ -60,7 +60,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     };
 
     $scope.applyPasswordPolicy = function(){
-      userService.applyPasswordPolicy($scope);
+      passwordPolicyService.applyPasswordPolicy($scope);
     };
 
     function addError(e, group){

@@ -28,7 +28,7 @@
 
 angular.module('universeadm.users.controllers', ['ui.bootstrap', 
   'universeadm.validation.directives', 'universeadm.users.services', 
-  'universeadm.util.services', 'universeadm.groups.services'])
+  'universeadm.util.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services'])
   .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
 
     function setUsers(users){
@@ -78,7 +78,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.nonSubmittedQuery = query;
     setUsers(users);
   })
-  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user){
+  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
@@ -109,7 +109,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     };
 
     $scope.applyPasswordPolicy = function(){
-      userService.applyPasswordPolicy($scope);
+      passwordPolicyService.applyPasswordPolicy($scope);
     };
 
     $scope.addGroup = function(group){
