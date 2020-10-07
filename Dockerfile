@@ -5,8 +5,12 @@ RUN set -x \
  && ./mvnw package
 
 
-FROM registry.cloudogu.com/official/java:8u171-1
-MAINTAINER Sebastian Sdorra <sebastian.sdorra@cloudogu.com>
+FROM registry.cloudogu.com/official/java:8u242-3
+
+LABEL NAME="official/usermgt" \
+   VERSION="1.3.0" \
+   maintainer="sebastian.sdorra@cloudogu.com"
+
 # mark as webapp for nginx
 ENV SERVICE_TAGS=webapp \
     # tomcat version
@@ -20,7 +24,6 @@ COPY --from=builder /usermgt/target/usermgt-*.war /usermgt.war
 # create user
 RUN set -x \
     && addgroup -S -g 1000 tomcat \
-    && mkdir /opt \
     && adduser -S -h /opt/apache-tomcat -s /bin/bash -G tomcat -u 1000 tomcat \
     # install tomcat
     && curl --fail --location --retry 3 \

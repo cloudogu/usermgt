@@ -25,3 +25,5 @@ app/.project
 # ignore idea files
 .idea
 *.iml
+**/target/**
+**/build/tmp/**

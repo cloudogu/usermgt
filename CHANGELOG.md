@@ -1,0 +1,58 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+### Added
+- added modular makefiles
+### Changed
+- update dependencies in package.json
+- update maven version
+- lint dockerfile in jenkins build
+- do shell check in jenkins build
+### Fixed
+- fixed broken build
+- fixed shellcheck findings in startup.sh
+- fixed sonarqube check
+
+## [1.3.0]
+### Changed
+- using ces-theme now
+- removed backup and settings
+- changed name to usermgt
+
+## [1.2.0]
+### Changed
+- do not display remove button on group create view, see http://192.168.115.124:8080/browse/PESCMMU-194
+
+## [1.1.1]
+### Changed
+- do not display remove button on group create view, see http://192.168.115.124:8080/browse/PESCMMU-194
+
+## [1.1.0]
+### Changed
+- use ServiceLoader for loading guice modules, this should drill down package cycles
+- SingleSignOut support, see http://192.168.115.124:8080/browse/PESCMMU-190
+- prevent self remove of users, see http://192.168.115.124:8080/browse/PESCMMU-183
+- groups can not be removed from the edit view, see http://192.168.115.124:8080/browse/PESCMMU-181
+- remove hamcreset library from war file
+- angular 1.2.26
+- resteasy 3.0.10.Final
+
+### Fixed
+- fix flickering menu on ui bootstrap
+
+## [1.0.1]
+### Changed
+- show error page, if ldap is disabled
+- update web components
+
+### Fixed 
+- fix password validation error message
+- fix hardcoded admin role in SecurityModule
+
+## [1.0.0]
+### Added
+- Initial release

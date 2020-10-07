@@ -20,6 +20,11 @@
     "Group": "1000",
     "NeedsBackup": false
   }],
+  "Configuration":[{
+    "Name": "password_policy",
+    "Description": "Configure a password policy for users passwords, based on a set of rules",
+    "Optional": true
+  }],
   "ServiceAccounts": [{
     "Type": "ldap",
     "Params": ["rw"]

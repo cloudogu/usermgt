@@ -27,8 +27,8 @@
 
 
 angular.module('universeadm.account.controllers', ['universeadm.validation.directives', 
-  'universeadm.account.services', 'universeadm.groups.services'])
-  .controller('accountController', function($scope, accountService, groupService, account) {
+  'universeadm.account.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services'])
+  .controller('accountController', function($scope, accountService, groupService, account, passwordPolicyService) {
 
     function setAccount(account) {
       $scope.user = account;
@@ -37,6 +37,10 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     }
 
     setAccount(account);
+
+    $scope.setForm = function(form){
+      $scope.form = form;
+    };
 
     $scope.isUnchanged = function(account) {
       return angular.equals(account, $scope.master);
@@ -58,7 +62,11 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);
     };
-    
+
+    $scope.applyPasswordPolicy = function(){
+      passwordPolicyService.applyPasswordPolicy($scope);
+    };
+
     function addError(e, group){
       // ?? do not clear, mark as dirty ?
       if (e.status === 400 || e.status === 404){
