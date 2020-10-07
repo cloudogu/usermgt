@@ -8,6 +8,7 @@
   <tab heading="Options">
 
     <form name="form" role="form" novalidate>
+      <div ng-init="setForm(form)"></div>
       <!-- TODO: Aussagekraeftige Fehlermeldung wenn username mit ._-@ beginnt -->
       <div class="form-group has-feedback" ng-if="create" data-uadm-validate>
         <label class="control-label" for="username">Username</label>
@@ -77,10 +78,8 @@
         <input id="password" name="password" type="password" class="form-control" placeholder="Password" ng-required="true" ng-model="user.password" ng-change="applyPasswordPolicy()">
         <span  class="glyphicon glyphicon-remove form-control-feedback "></span>
         <span  class="glyphicon glyphicon-ok form-control-feedback"></span>
-        <p>
-          <strong ng-repeat="violation in user.passwordPolicy.violations" class="text-danger ">{{violation.Description}}.&nbsp;</strong>
-          <strong ng-repeat="satisfaction in user.passwordPolicy.satisfactions " class="text-success">{{satisfaction.Description}}.&nbsp;</strong>
-        </p>
+        <p><strong ng-repeat="violation in user.passwordPolicy.violations" class="text-danger ">{{violation.Description}}.&nbsp;</strong></p>
+        <p><strong ng-repeat="satisfaction in user.passwordPolicy.satisfactions " class="text-success">{{satisfaction.Description}}.&nbsp;</strong></p>
       </div>
       <div class="form-group has-feedback" data-uadm-validate>
         <label for="confirmPassword">Confirm password</label>

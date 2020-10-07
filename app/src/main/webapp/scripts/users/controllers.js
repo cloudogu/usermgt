@@ -82,6 +82,9 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
+    $scope.setForm = function(form){
+      $scope.form = form;
+    };
 
     
     $scope.create = false;

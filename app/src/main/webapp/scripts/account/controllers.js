@@ -38,6 +38,10 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
 
     setAccount(account);
 
+    $scope.setForm = function(form){
+      $scope.form = form;
+    };
+
     $scope.isUnchanged = function(account) {
       return angular.equals(account, $scope.master);
     };
