@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - prevent adding new users with an email address that is already in use by another user (#22)
 - prevent changing the email address of a user to an email address that is already in use by another user (#22)
   - existing users cannot update their account until they change their email address, if the address is already taken by another user
+- the ldap now also does not allow duplicated mails (see https://github.com/cloudogu/ldap/issues/8)
 ### Fixed
 - fixed broken build
 - fixed shellcheck findings in startup.sh
