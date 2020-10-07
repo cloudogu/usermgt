@@ -28,9 +28,9 @@
 
 angular.module('universeadm.users.controllers', ['ui.bootstrap', 
   'universeadm.validation.directives', 'universeadm.users.services', 
-  'universeadm.util.services', 'universeadm.groups.services'])
+  'universeadm.util.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services'])
   .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
-    
+
     function setUsers(users){
       if (!users.meta){
         users.meta = {totalEntries: 0, limit: 10};
@@ -79,14 +79,13 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     setUsers(users);
   })
 
-  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user){
+  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
     $scope.setForm = function(form){
       $scope.form = form;
     };
-
     $scope.create = false;
     if (user === null){
       $scope.create = true;
@@ -110,7 +109,11 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.isSelf = function(user){
       return $scope.subject.principal === user.username;
     };
-    
+
+    $scope.applyPasswordPolicy = function(){
+      passwordPolicyService.applyPasswordPolicy($scope);
+    };
+
     $scope.addGroup = function(group){
       if ( group ){
         var promise = null;

@@ -76,6 +76,24 @@ public class AccountResource
     
     return builder.build();
   }
+
+  @GET
+  @Path("passwordpolicy")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getConfig()
+  {
+    Response.ResponseBuilder builder;
+    User account = accountManager.getCurrentUser();
+    if ( account != null ){
+      final Configuration conf = Configuration.getInstance();
+      builder = Response.ok(conf.getContent(), MediaType.APPLICATION_JSON);
+    } else {
+      logger.error("call /api/conf/passwordpolicy without prior authentication");
+      builder = Response.status(Response.Status.FORBIDDEN);
+    }
+
+    return builder.build();
+  }
   
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
