@@ -30,6 +30,9 @@ package de.triology.universeadm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
@@ -43,6 +46,12 @@ public abstract class AbstractLDAPManager<T> implements Manager<T>
   public static final String EQUAL = "=";
   
   private static final Logger logger = LoggerFactory.getLogger(AbstractLDAPManager.class);
+
+  protected List<Constraint<T>> constraints;
+
+  public AbstractLDAPManager(){
+    this.constraints = new ArrayList<>();
+  }
 
   @Override
   public void modify(T object)

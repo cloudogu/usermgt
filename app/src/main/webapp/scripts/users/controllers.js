@@ -28,9 +28,9 @@
 
 angular.module('universeadm.users.controllers', ['ui.bootstrap', 
   'universeadm.validation.directives', 'universeadm.users.services', 
-  'universeadm.util.services', 'universeadm.groups.services'])
+  'universeadm.util.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services', 'universeadm.constrainthandling.services'])
   .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
-    
+
     function setUsers(users){
       if (!users.meta){
         users.meta = {totalEntries: 0, limit: 10};
@@ -78,11 +78,14 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.nonSubmittedQuery = query;
     setUsers(users);
   })
-  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user){
+
+  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
-    
+    $scope.setForm = function(form){
+      $scope.form = form;
+    };
     $scope.create = false;
     if (user === null){
       $scope.create = true;
@@ -106,7 +109,11 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.isSelf = function(user){
       return $scope.subject.principal === user.username;
     };
-    
+
+    $scope.applyPasswordPolicy = function(){
+      passwordPolicyService.applyPasswordPolicy($scope);
+    };
+
     $scope.addGroup = function(group){
       if ( group ){
         var promise = null;
@@ -176,7 +183,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);
     };
-    
+
     $scope.save = function(user){
       var promise;
       if ($scope.create){
@@ -188,9 +195,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         $location.path('/users');
       }, function(error){
         if ( error.status === 409 ){
+          constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
           $scope.alerts = [{
             type: 'danger',
-            msg: 'The user ' + user.username + ' already exists'
+            msg: constraintHandlingService.createErrorMessage(error.data.constraints, $scope)
           }];
         } else {
           $scope.alerts = [{

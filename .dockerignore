@@ -1,0 +1,4 @@
+**/app.vagrant/**
+**/app/node_modules/**
+**/app/target/**
+**/usermgt.iml

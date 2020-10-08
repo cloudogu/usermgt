@@ -41,10 +41,13 @@ angular.module('universeadm.validation.directives', [])
         var inputName = inputNgEl.attr('name');
 
         // only apply the has-error class after the user leaves the text box
-        inputNgEl.bind('blur', function() {
+        var triggerFunc = function() {
           el.toggleClass('has-error', formCtrl[inputName].$invalid);
           el.toggleClass('has-success', formCtrl[inputName].$valid);
-        });
+        };
+
+        inputNgEl.bind('blur', triggerFunc);
+        formCtrl[inputName].executeValidatorCheck = triggerFunc;
       }
     };
   })
@@ -64,10 +67,24 @@ angular.module('universeadm.validation.directives', [])
           return e1 === e2;
         };
         scope.$watch(checker, function(n) {
-
-          //set the form control to valid if both 
+          //set the form control to valid if both
           //passwords are the same, else invalid
           control.$setValidity('passwordMatch', n);
+        });
+      }
+    };
+  })
+  .directive('uniqueConstraintChecker', function() {
+    return {
+      restrict: 'A',
+      scope: true,
+      require: 'ngModel',
+      link: function(scope, elem, attrs, control) {
+        var checker = function() {
+          return control.previousUniqueValue === undefined || control.$modelValue !== control.previousUniqueValue;
+        };
+        scope.$watch(checker, function(n) {
+          control.$setValidity('uniqueConstraint', n);
         });
       }
     };

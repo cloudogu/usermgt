@@ -27,8 +27,8 @@
 
 
 angular.module('universeadm.account.controllers', ['universeadm.validation.directives', 
-  'universeadm.account.services', 'universeadm.groups.services'])
-  .controller('accountController', function($scope, accountService, groupService, account) {
+  'universeadm.account.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services', 'universeadm.constrainthandling.services'])
+  .controller('accountController', function($scope, accountService, groupService, account, passwordPolicyService, constraintHandlingService) {
 
     function setAccount(account) {
       $scope.user = account;
@@ -38,6 +38,10 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
 
     setAccount(account);
 
+    $scope.setForm = function(form){
+      $scope.form = form;
+    };
+
     $scope.isUnchanged = function(account) {
       return angular.equals(account, $scope.master);
     };
@@ -46,11 +50,22 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       accountService.modify(account).then(function() {
         setAccount(account);
         $scope.form.$setPristine();
-      }, function() {
-
+      }, function(error){
+        if ( error.status === 409 ){
+          constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
+          $scope.alerts = [{
+            type: 'danger',
+            msg: constraintHandlingService.createErrorMessage(error.data.constraints, $scope)
+          }];
+        } else {
+          $scope.alerts = [{
+            type: 'danger',
+            msg: 'The user could not be saved'
+          }];
+        }
       });
     };
-    
+
     $scope.searchGroups = function(value){
       return groupService.search(value, 0, 5);
     };
@@ -58,7 +73,11 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);
     };
-    
+
+    $scope.applyPasswordPolicy = function(){
+      passwordPolicyService.applyPasswordPolicy($scope);
+    };
+
     function addError(e, group){
       // ?? do not clear, mark as dirty ?
       if (e.status === 400 || e.status === 404){
