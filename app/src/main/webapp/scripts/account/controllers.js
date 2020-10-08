@@ -27,8 +27,8 @@
 
 
 angular.module('universeadm.account.controllers', ['universeadm.validation.directives', 
-  'universeadm.account.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services'])
-  .controller('accountController', function($scope, accountService, groupService, account, passwordPolicyService) {
+  'universeadm.account.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services', 'universeadm.constrainthandling.services'])
+  .controller('accountController', function($scope, accountService, groupService, account, passwordPolicyService, constraintHandlingService) {
 
     function setAccount(account) {
       $scope.user = account;
@@ -50,11 +50,22 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       accountService.modify(account).then(function() {
         setAccount(account);
         $scope.form.$setPristine();
-      }, function() {
-
+      }, function(error){
+        if ( error.status === 409 ){
+          constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
+          $scope.alerts = [{
+            type: 'danger',
+            msg: constraintHandlingService.createErrorMessage(error.data.constraints, $scope)
+          }];
+        } else {
+          $scope.alerts = [{
+            type: 'danger',
+            msg: 'The user could not be saved'
+          }];
+        }
       });
     };
-    
+
     $scope.searchGroups = function(value){
       return groupService.search(value, 0, 5);
     };

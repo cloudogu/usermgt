@@ -28,7 +28,7 @@
 
 angular.module('universeadm.users.controllers', ['ui.bootstrap', 
   'universeadm.validation.directives', 'universeadm.users.services', 
-  'universeadm.util.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services'])
+  'universeadm.util.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services', 'universeadm.constrainthandling.services'])
   .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
 
     function setUsers(users){
@@ -79,7 +79,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     setUsers(users);
   })
 
-  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService){
+  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
@@ -184,54 +184,6 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.alerts.splice(index, 1);
     };
 
-    $scope.createErrorMessage = function(constraints) {
-      var msg = '';
-
-      for (var i = 0; i < constraints.length; i++) {
-        var c = constraints[i];
-        switch(c){
-          case 'UNIQUE_EMAIL':
-            msg += 'A User with that mail already exists. ';
-            break;
-          case 'UNIQUE_USERNAME':
-            msg += 'A User with that Username already exists. ';
-            break;
-          default:
-            msg += 'An unexpected error occured. ';
-            break;
-        }
-      }
-
-      return msg;
-    };
-
-    $scope.setConstraintValidation = function(constraint) {
-      var currentField = undefined;
-
-      switch(constraint){
-        case 'UNIQUE_EMAIL':
-          currentField = $scope.form.email;
-          break;
-        case 'UNIQUE_USERNAME':
-          currentField = $scope.form.username;
-          break;
-      }
-
-      if (currentField !== undefined && currentField !== null) {
-        currentField.previousUniqueValue = currentField.$viewValue;
-        setTimeout(function(){
-          currentField.executeValidatorCheck();
-        }, 1);
-      }
-    };
-
-    $scope.setConstraintErrors = function(constraints) {
-      for (var i = 0; i < constraints.length; i++) {
-        var c = constraints[i];
-        $scope.setConstraintValidation(c);
-      }
-    };
-
     $scope.save = function(user){
       var promise;
       if ($scope.create){
@@ -243,10 +195,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         $location.path('/users');
       }, function(error){
         if ( error.status === 409 ){
-          $scope.setConstraintErrors(error.data.constraints);
+          constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
           $scope.alerts = [{
             type: 'danger',
-            msg: $scope.createErrorMessage(error.data.constraints)
+            msg: constraintHandlingService.createErrorMessage(error.data.constraints, $scope)
           }];
         } else {
           $scope.alerts = [{
