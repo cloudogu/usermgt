@@ -81,7 +81,7 @@ angular.module('universeadm.validation.directives', [])
       require: 'ngModel',
       link: function(scope, elem, attrs, control) {
         var checker = function() {
-          return control.$modelValue !== control.previousUniqueValue;
+          return control.previousUniqueValue !== undefined && control.$modelValue !== control.previousUniqueValue;
         };
         scope.$watch(checker, function(n) {
           control.$setValidity('uniqueConstraint', n);
