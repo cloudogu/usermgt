@@ -650,6 +650,16 @@
                   <script>gulp</script>
                 </configuration>
               </execution>
+              <execution>
+                <id>karma</id>
+                <phase>default-test</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <script>test</script>
+                </configuration>
+              </execution>
             </executions>
           </plugin>
 

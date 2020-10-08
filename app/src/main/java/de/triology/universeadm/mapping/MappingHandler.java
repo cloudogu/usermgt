@@ -30,22 +30,12 @@ package de.triology.universeadm.mapping;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.unboundid.ldap.sdk.Entry;
-import com.unboundid.ldap.sdk.Filter;
-import com.unboundid.ldap.sdk.LDAPException;
-import com.unboundid.ldap.sdk.LDAPSearchException;
-import com.unboundid.ldap.sdk.Modification;
-import com.unboundid.ldap.sdk.ResultCode;
-import com.unboundid.ldap.sdk.SearchResult;
-import com.unboundid.ldap.sdk.SearchResultEntry;
-import com.unboundid.ldap.sdk.SearchScope;
+import com.unboundid.ldap.sdk.*;
+
 import static de.triology.universeadm.AbstractLDAPManager.EQUAL;
 import static de.triology.universeadm.AbstractLDAPManager.WILDCARD;
-import de.triology.universeadm.EntityAlreadyExistsException;
-import de.triology.universeadm.EntityException;
-import de.triology.universeadm.EntityNotFoundException;
-import de.triology.universeadm.LDAPConnectionStrategy;
-import de.triology.universeadm.LDAPUtil;
+
+import de.triology.universeadm.*;
 import de.triology.universeadm.validation.Validator;
 import java.util.Collection;
 import java.util.Collections;
@@ -107,15 +97,7 @@ public class MappingHandler<T extends Comparable<T>>
     }
     catch (LDAPException ex)
     {
-      if (ex.getResultCode() == ResultCode.ENTRY_ALREADY_EXISTS)
-      {
-        throw new EntityAlreadyExistsException(
-                String.format("entity %s already exists", id), ex);
-      }
-      else
-      {
-        throw new EntityException("could not create entity ".concat(entry.getDN()), ex);
-      }
+      throw new EntityException("could not create entity ".concat(entry.getDN()), ex);
     }
   }
 

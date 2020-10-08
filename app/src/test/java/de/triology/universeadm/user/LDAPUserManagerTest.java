@@ -27,16 +27,12 @@
 
 package de.triology.universeadm.user;
 
+import ch.qos.logback.core.joran.util.StringToObjectConverter;
 import com.github.legman.EventBus;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
-import de.triology.universeadm.EntityAlreadyExistsException;
-import de.triology.universeadm.EventType;
-import de.triology.universeadm.LDAPConfiguration;
-import de.triology.universeadm.LDAPConnectionStrategy;
-import de.triology.universeadm.LDAPHasher;
-import de.triology.universeadm.PagedResultList;
+import de.triology.universeadm.*;
 import de.triology.universeadm.mapping.DefaultMapper;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
@@ -55,8 +51,8 @@ import com.github.sdorra.ldap.LDAP;
 import com.github.sdorra.ldap.LDAPRule;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import de.triology.universeadm.PlainLDAPHasher;
 import de.triology.universeadm.mapping.IllegalQueryException;
+import org.junit.rules.ExpectedException;
 
 /**
  *
@@ -69,6 +65,8 @@ import de.triology.universeadm.mapping.IllegalQueryException;
 )
 public class LDAPUserManagerTest
 {
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   private static final String BASEDN = "dc=hitchhiker,dc=com";
   private static final String LDIF_001 = "/de/triology/universeadm/user/test.001.ldif";
@@ -102,14 +100,34 @@ public class LDAPUserManagerTest
     verify(eventBus, times(1)).post(event);
   }
   
-  @Test(expected = EntityAlreadyExistsException.class)
+  @Test()
   @LDAP(baseDN = BASEDN, ldif = LDIF_001)
   public void testCreateAlreadyExists() throws LDAPException
   {
+    expectedException.expect(ConstraintViolationException.class);
+    expectedException.expectMessage("Constraints violated: ");
+    expectedException.expectMessage("UNIQUE_EMAIL");
+    expectedException.expectMessage("UNIQUE_USERNAME");
+
     LDAPUserManager manager = createUserManager();
     User user = Users.createDent();
     manager.create(user);
     manager.create(user);
+  }
+
+  @Test()
+  @LDAP(baseDN = BASEDN, ldif = LDIF_001)
+  public void testCreateEmailAlreadyExists() throws LDAPException
+  {
+    expectedException.expect(ConstraintViolationException.class);
+    expectedException.expectMessage("Constraints violated: ");
+    expectedException.expectMessage("UNIQUE_EMAIL");
+
+    LDAPUserManager manager = createUserManager();
+    User user1 = Users.createDent();
+    User user2 = Users.createDent2();
+    manager.create(user1);
+    manager.create(user2);
   }
   
   @Test
@@ -176,9 +194,11 @@ public class LDAPUserManagerTest
   @SubjectAware(username = "dent", password = "secret")
   public void testModifyOtherUserUnprivileged() throws LDAPException
   {
-    User tricia = Users.createTrillian();
-    tricia.setDisplayName("Tricia");
-    createUserManager().modify(tricia);
+    LDAPUserManager manager = createUserManager();
+    User trillian = Users.createTrillian();
+    trillian.setDisplayName("Tricia");
+    trillian.setMail("tricia@hitchhiker.com");
+    manager.modify(trillian);
   }
   
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)

@@ -52,5 +52,8 @@ COPY resources /
 # expose port
 EXPOSE 8080
 
+# healtcheck
+HEALTHCHECK CMD doguctl healthy ldap || exit 1
+
 # execution
 CMD /startup.sh

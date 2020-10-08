@@ -26,7 +26,6 @@
  */
 
 
-
 package de.triology.universeadm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,12 +42,7 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
 
-import de.triology.universeadm.AbstractLDAPManager;
-import de.triology.universeadm.EventType;
-import de.triology.universeadm.LDAPConfiguration;
-import de.triology.universeadm.LDAPConnectionStrategy;
-import de.triology.universeadm.LDAPHasher;
-import de.triology.universeadm.Roles;
+import de.triology.universeadm.*;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingHandler;
@@ -63,20 +57,23 @@ import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
 public class LDAPUserManager extends AbstractLDAPManager<User>
-  implements UserManager
-{
+  implements UserManager {
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private static final String ATTRIBUTE_PASSWORD = "userPassword";
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private static final String DUMMY_PASSWORD = "__dummypassword";
 
   /**
@@ -90,7 +87,6 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Constructs ...
    *
-   *
    * @param strategy
    * @param configuration
    * @param hasher
@@ -100,15 +96,17 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
    */
   @Inject
   public LDAPUserManager(LDAPConnectionStrategy strategy,
-    LDAPConfiguration configuration, LDAPHasher hasher,
-    MapperFactory mapperFactory, Validator validator, EventBus eventBus)
-  {
+                         LDAPConfiguration configuration, LDAPHasher hasher,
+                         MapperFactory mapperFactory, Validator validator, EventBus eventBus) {
     Mapper<User> mapper = mapperFactory.createMapper(User.class,
-                            configuration.getUserBaseDN());
+      configuration.getUserBaseDN());
 
     this.mapping = new UserMappingHandler(strategy, configuration, mapper,
       hasher, validator);
     this.eventBus = eventBus;
+
+    this.constraints.add(new UniqueMailConstraint(this.mapping));
+    this.constraints.add(new UniqueUsernameConstraint(this.mapping));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -116,14 +114,13 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Method description
    *
-   *
    * @param user
    */
   @Override
-  public void create(User user)
-  {
+  public void create(User user) {
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
     Preconditions.checkNotNull(user, "user is required");
+    checkConstraints(user, Constraint.Category.CREATE);
 
     mapping.create(user);
     eventBus.post(new UserEvent(user, EventType.CREATE));
@@ -131,34 +128,47 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   }
 
   /**
+   * Checks if any constraints are violated.
+   * If so, throws ConstraintViolationException containing all violations.
+   * @param user
+   * @param category
+   * @throws ConstraintViolationException
+   */
+  private void checkConstraints(final User user, final Constraint.Category category) {
+    final List<Constraint.ID> violatedConstraints = new ArrayList<>();
+    for (Constraint<User> constraint : this.constraints) {
+      if (constraint.violatedBy(user, category)) {
+        violatedConstraints.add(constraint.getUniqueID());
+      }
+    }
+    if (violatedConstraints.size() > 0) {
+      throw new ConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[0]));
+    }
+  }
+
+  /**
    * Method description
-   *
    *
    * @param user
    * @param fireEvent
    */
   @Override
-  public void modify(User user, boolean fireEvent)
-  {
+  public void modify(User user, boolean fireEvent) {
     Preconditions.checkNotNull(user, "user is required");
+    checkConstraints(user, Constraint.Category.MODIFY);
 
     Subject subject = SecurityUtils.getSubject();
 
-    if (!subject.hasRole(Roles.ADMINISTRATOR))
-    {
-      if (user.getUsername().equals(subject.getPrincipal().toString()))
-      {
+    if (!subject.hasRole(Roles.ADMINISTRATOR)) {
+      if (user.getUsername().equals(subject.getPrincipal().toString())) {
         User ldapUser = get(user.getUsername());
 
         if (!Iterables.elementsEqual(user.getMemberOf(),
-          ldapUser.getMemberOf()))
-        {
+          ldapUser.getMemberOf())) {
           throw new AuthorizationException(
             "user has not enough privileges, to modify group membership");
         }
-      }
-      else
-      {
+      } else {
         throw new AuthorizationException(
           "user has not enough privileges, to modify other users");
       }
@@ -168,14 +178,11 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
 
     mapping.modify(user);
 
-    if (fireEvent)
-    {
+    if (fireEvent) {
 
       // clone user ??
       eventBus.post(new UserEvent(user, oldUser));
-    }
-    else
-    {
+    } else {
       logger.trace("events are disabled for this modification");
     }
 
@@ -185,12 +192,10 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Remove user from ldap.
    *
-   *
    * @param user user to remove
    */
   @Override
-  public void remove(User user)
-  {
+  public void remove(User user) {
     Subject subject = SecurityUtils.getSubject();
 
     subject.checkRole(Roles.ADMINISTRATOR);
@@ -198,11 +203,10 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
 
     Object principal = subject.getPrincipal();
 
-    if (principal.equals(user.getUsername()))
-    {
+    if (principal.equals(user.getUsername())) {
       //J-
       throw new UserSelfRemoveException(
-        String.format("user %s has tried to remove himself", principal), 
+        String.format("user %s has tried to remove himself", principal),
         principal
       );
       //J+
@@ -215,14 +219,11 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Method description
    *
-   *
-   *
    * @param query
    * @return
    */
   @Override
-  public List<User> search(String query)
-  {
+  public List<User> search(String query) {
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 
     return mapping.search(query);
@@ -233,22 +234,18 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Method description
    *
-   *
    * @param username
-   *
    * @return
    */
   @Override
-  public User get(String username)
-  {
+  public User get(String username) {
     Preconditions.checkNotNull(username, "username is required");
     logger.debug("get user {}", username);
 
     Subject subject = SecurityUtils.getSubject();
 
     if (!subject.hasRole(Roles.ADMINISTRATOR)
-      &&!username.equals(subject.getPrincipal().toString()))
-    {
+      && !username.equals(subject.getPrincipal().toString())) {
       throw new AuthorizationException("user has not enough privileges");
     }
 
@@ -258,12 +255,10 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Method description
    *
-   *
    * @return
    */
   @Override
-  public List<User> getAll()
-  {
+  public List<User> getAll() {
     logger.debug("get all users");
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 
@@ -275,16 +270,13 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Class description
    *
-   *
-   * @version        Enter version here..., 14/08/20
-   * @author         Enter your name here...
+   * @author Enter your name here...
+   * @version Enter version here..., 14/08/20
    */
-  private static class UserMappingHandler extends MappingHandler<User>
-  {
+  private static class UserMappingHandler extends MappingHandler<User> {
 
     /**
      * Constructs ...
-     *
      *
      * @param strategy
      * @param configuration
@@ -293,9 +285,8 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
      * @param validator
      */
     public UserMappingHandler(LDAPConnectionStrategy strategy,
-      LDAPConfiguration configuration, Mapper<User> mapper, LDAPHasher hasher,
-      Validator validator)
-    {
+                              LDAPConfiguration configuration, Mapper<User> mapper, LDAPHasher hasher,
+                              Validator validator) {
       super(strategy, mapper, validator);
       this.configuration = configuration;
       this.hasher = hasher;
@@ -306,15 +297,12 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
     /**
      * Method description
      *
-     *
      * @param entry
      * @param user
-     *
      * @return
      */
     @Override
-    protected User consume(Entry entry, User user)
-    {
+    protected User consume(Entry entry, User user) {
       user.setPassword(DUMMY_PASSWORD);
 
       return user;
@@ -323,25 +311,18 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
     /**
      * Method description
      *
-     *
      * @param user
      * @param entry
-     *
      * @return
      */
     @Override
-    protected Entry consume(User user, Entry entry)
-    {
+    protected Entry consume(User user, Entry entry) {
       String password = user.getPassword();
 
-      if (!Strings.isNullOrEmpty(password))
-      {
-        if (configuration.isRequirePreEncodedPasswords())
-        {
+      if (!Strings.isNullOrEmpty(password)) {
+        if (configuration.isRequirePreEncodedPasswords()) {
           entry.setAttribute(ATTRIBUTE_PASSWORD, encodePassword(password));
-        }
-        else
-        {
+        } else {
           entry.setAttribute(ATTRIBUTE_PASSWORD, password);
         }
       }
@@ -352,29 +333,22 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
     /**
      * Method description
      *
-     *
      * @param user
      * @param mods
-     *
      * @return
      */
     @Override
-    protected List<Modification> consume(User user, List<Modification> mods)
-    {
+    protected List<Modification> consume(User user, List<Modification> mods) {
       List<Modification> modifications = mods;
       String password = user.getPassword();
 
-      if (!DUMMY_PASSWORD.equals(password))
-      {
+      if (!DUMMY_PASSWORD.equals(password)) {
         modifications = Lists.newArrayList(mods);
 
-        if (configuration.isRequirePreEncodedPasswords())
-        {
+        if (configuration.isRequirePreEncodedPasswords()) {
           modifications.add(new Modification(ModificationType.REPLACE,
             ATTRIBUTE_PASSWORD, encodePassword(password)));
-        }
-        else
-        {
+        } else {
           modifications.add(new Modification(ModificationType.REPLACE,
             ATTRIBUTE_PASSWORD, password));
         }
@@ -386,17 +360,13 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
     /**
      * Method description
      *
-     *
      * @param password
-     *
      * @return
      */
-    private byte[] encodePassword(String password)
-    {
+    private byte[] encodePassword(String password) {
       byte[] bytes = null;
 
-      if (password != null)
-      {
+      if (password != null) {
         bytes = hasher.hash(password);
       }
 
@@ -405,10 +375,14 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private final LDAPConfiguration configuration;
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private final LDAPHasher hasher;
   }
 
