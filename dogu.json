@@ -1,37 +1,48 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.3.4-3",
+  "Version": "1.4.0-1",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
   "Tags": [
-    "warp", "users", "groups"
+    "warp",
+    "users",
+    "groups"
   ],
   "Logo": "https://cloudogu.com/images/dogus/usermanagement.png",
   "Url": "https://github.com/cloudogu/usermgt",
   "Image": "registry.cloudogu.com/official/usermgt",
   "Dependencies": [
-    "cas", "ldap", "nginx"
+    "cas",
+    "ldap",
+    "nginx"
   ],
-  "Volumes": [{
-    "Name": "data",
-    "Path": "/var/lib/usermgt",
-    "Owner": "1000",
-    "Group": "1000",
-    "NeedsBackup": false
-  }],
-  "Configuration":[{
-    "Name": "password_policy",
-    "Description": "Configure a password policy for users passwords, based on a set of rules",
-    "Optional": true
-  }],
-  "ServiceAccounts": [{
-    "Type": "ldap",
-    "Params": ["rw"]
-  }],
+  "Volumes": [
+    {
+      "Name": "data",
+      "Path": "/var/lib/usermgt",
+      "Owner": "1000",
+      "Group": "1000",
+      "NeedsBackup": false
+    }
+  ],
+  "Configuration": [
+    {
+      "Name": "password_policy",
+      "Description": "Configure a password policy for users passwords, based on a set of rules",
+      "Optional": true
+    }
+  ],
+  "ServiceAccounts": [
+    {
+      "Type": "ldap",
+      "Params": [
+        "rw"
+      ]
+    }
+  ],
   "HealthCheck": {
     "Type": "tcp",
     "Port": 8080
   }
-
 }
