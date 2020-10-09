@@ -31,7 +31,7 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
     return {
       applyPasswordPolicy: function ($scope){
         Restangular.one('account/passwordpolicy').withHttpConfig({ cache: true}).get().then(function(policy){
-          var passwordPolicyError = 'Invalid password policy configured - please contact the administrator';
+          var passwordPolicyError = 'Password policy configuration is not valid. Please contact the system administrator';
           var rules = policy.Rules;
           var violations = [];
           var invalidRules = [];
@@ -65,7 +65,7 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
           }
         }, function(){
           var invalidRules = [];
-          invalidRules.push({Description: 'Could not reach password policy endpoint - please try again later or contact the administrator', Rule: '', Type: ''});
+          invalidRules.push({Description: 'Could not reach password policy endpoint. Please try again later or contact the administrator', Rule: '', Type: ''});
           $scope.passwordPolicy = {status: 'invalid', violations: invalidRules, satisfactions: []};
           $scope.form.password.$setValidity('password-policy',false);
         });
