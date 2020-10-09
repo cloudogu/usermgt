@@ -57,10 +57,10 @@ angular.module('universeadm.constrainthandling.services', [])
           var c = constraints[i];
           switch(c){
             case 'UNIQUE_EMAIL':
-              msg += 'A User with that mail already exists. ';
+              msg += 'A user with that e-mail already exists. ';
               break;
             case 'UNIQUE_USERNAME':
-              msg += 'A User with that Username already exists. ';
+              msg += 'A user with that username already exists. ';
               break;
             default:
               msg += 'An unexpected error occured. ';
