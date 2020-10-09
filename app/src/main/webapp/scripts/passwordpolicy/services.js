@@ -31,20 +31,25 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
     return {
       applyPasswordPolicy: function ($scope){
         Restangular.one('account/passwordpolicy').withHttpConfig({ cache: true}).get().then(function(policy){
+          var passwordPolicyError = 'Invalid password policy configured - please contact the administrator';
           var rules = policy.Rules;
           var violations = [];
           var invalidRules = [];
-          rules.forEach(function(rule){
-            try{
-              var regEx = new RegExp(rule.Rule);
-              if (!regEx.test($scope.user.password)){
-                violations.push(rule);
+          try {
+            rules.forEach(function (rule) {
+              try {
+                var regEx = new RegExp(rule.Rule);
+                if (!regEx.test($scope.user.password)) {
+                  violations.push(rule);
+                }
+              } catch (e) {
+                rule.Description = rule.Description + ': ' + passwordPolicyError;
+                invalidRules.push(rule);
               }
-            } catch (e) {
-              rule.Description = rule.Description + ': invalid password policy configured - please contact the administrator';
-              invalidRules.push(rule);
-            }
-          });
+            });
+          } catch (e){
+            invalidRules.push({Description: passwordPolicyError, Rule: '', Type: ''});
+          }
           if (Array.isArray(invalidRules) && invalidRules.length) {
             $scope.passwordPolicy = {status: 'invalid', violations: invalidRules, satisfactions: []};
             $scope.form.password.$setValidity('password-policy',false);
@@ -58,6 +63,11 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
               $scope.form.password.$setValidity('password-policy',true);
             }
           }
+        }, function(){
+          var invalidRules = [];
+          invalidRules.push({Description: 'Could not reach password policy endpoint - please try again later or contact the administrator', Rule: '', Type: ''});
+          $scope.passwordPolicy = {status: 'invalid', violations: invalidRules, satisfactions: []};
+          $scope.form.password.$setValidity('password-policy',false);
         });
       }
     };
