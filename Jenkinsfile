@@ -87,6 +87,9 @@ node('docker') {
             } else if (branch.startsWith("bugfix/")) {
               echo "This branch has been detected as a bugfix branch."
               sh "sonar-scanner -Dsonar.branch.name=${branch} -Dsonar.branch.target=develop " + sonarParameters
+            } else if (branch.startsWith("release/")) {
+              echo "This branch has been detected as a release branch."
+              sh "sonar-scanner -Dsonar.branch.name=${branch} -Dsonar.branch.target=master " + sonarParameters
             } else {
               echo "The branch type of branch ${branch} could not be detected"
             }
