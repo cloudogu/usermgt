@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed bug where no error was shown on invalid password policy or when the endpoint could not be reached
 - Fixed misspelled error messages
+- Fixed bug where sonar build was not possible for bugfix branch
 
 ## [v1.4.0-1] - 2020-10-08
 ### Added
