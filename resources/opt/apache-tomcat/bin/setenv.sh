@@ -5,3 +5,7 @@ JAVA_OPTS="$JAVA_OPTS -Duniverseadm.stage=PRODUCTION"
 JAVA_OPTS="$JAVA_OPTS -Duniverseadm.home=/var/lib/usermgt/conf"
 JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStore=/etc/ssl/truststore.jks"
 JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStorePassword=changeit"
+if [ "$(doguctl config "container_config/memory_limit" -d "empty")" != "empty" ];  then
+  JAVA_OPTS="$JAVA_OPTS -XX:MaxRAMPercentage=85.0"
+  JAVA_OPTS="$JAVA_OPTS -XX:MinRAMPercentage=50.0"
+fi
