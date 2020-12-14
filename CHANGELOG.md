@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Ability to set memory limit via `cesapp edit-config`
-- Optimized max heap size in limited dockerized environments (#27)
+- Ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the PlantUML process inside the container via `cesapp edit-conf` (#27)
 
 ## [v1.4.1-1] - 2020-10-09
 ### Fixed

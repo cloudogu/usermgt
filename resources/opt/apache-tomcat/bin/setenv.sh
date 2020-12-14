@@ -6,6 +6,11 @@ JAVA_OPTS="$JAVA_OPTS -Duniverseadm.home=/var/lib/usermgt/conf"
 JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStore=/etc/ssl/truststore.jks"
 JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStorePassword=changeit"
 if [ "$(doguctl config "container_config/memory_limit" -d "empty")" != "empty" ];  then
-  JAVA_OPTS="$JAVA_OPTS -XX:MaxRAMPercentage=85.0"
-  JAVA_OPTS="$JAVA_OPTS -XX:MinRAMPercentage=50.0"
+  # Retrieve configurable java limits from etcd, valid default values exist
+  MEMORY_LIMIT_MAX_PERCENTAGE=$(doguctl config "container_config/java_max_ram_percentage")
+  MEMORY_LIMIT_MIN_PERCENTAGE=$(doguctl config "container_config/java_min_ram_percentage")
+
+  echo "Setting memory limits to MaxRAMPercentage: ${MEMORY_LIMIT_MAX_PERCENTAGE} and MinRAMPercentage: ${MEMORY_LIMIT_MIN_PERCENTAGE}..."
+  JAVA_OPTS="$JAVA_OPTS -XX:MaxRAMPercentage=${MEMORY_LIMIT_MAX_PERCENTAGE}"
+  JAVA_OPTS="$JAVA_OPTS -XX:MinRAMPercentage=${MEMORY_LIMIT_MIN_PERCENTAGE}"
 fi
