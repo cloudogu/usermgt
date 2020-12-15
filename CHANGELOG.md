@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Ability to set memory limit via `cesapp edit-config`
+- Ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the PlantUML process inside the container via `cesapp edit-conf` (#27)
+
 ## [v1.4.1-1] - 2020-10-09
 ### Fixed
 - Fixed bug where no error was shown on invalid password policy or when the endpoint could not be reached
