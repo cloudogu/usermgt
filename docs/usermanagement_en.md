@@ -1,10 +1,7 @@
----
-title: "User Management
----
+# User Management
 
 Translated with www.DeepL.com/Translator
 
-# User Management
 If no external directory service is configured for the Cloudogu EcoSystem, the Dogu "User Management" can be used to create users, manage rights and administer groups. If an external directory service is connected, the management of master data will be done through it.
 \newline
 
