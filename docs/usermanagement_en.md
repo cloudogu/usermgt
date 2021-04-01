@@ -1,4 +1,4 @@
-# User Management
+# GUI
 
 Translated with www.DeepL.com/Translator
 
