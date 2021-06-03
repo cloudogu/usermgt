@@ -44,18 +44,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0]
 ### Changed
-- do not display remove button on group create view, see http://192.168.115.124:8080/browse/PESCMMU-194
+- do not display remove button on group create view, see `http://192.168.115.124:8080/browse/PESCMMU-194`
 
 ## [1.1.1]
 ### Changed
-- do not display remove button on group create view, see http://192.168.115.124:8080/browse/PESCMMU-194
+- do not display remove button on group create view, see `http://192.168.115.124:8080/browse/PESCMMU-194`
 
 ## [1.1.0]
 ### Changed
 - use ServiceLoader for loading guice modules, this should drill down package cycles
-- SingleSignOut support, see http://192.168.115.124:8080/browse/PESCMMU-190
-- prevent self remove of users, see http://192.168.115.124:8080/browse/PESCMMU-183
-- groups can not be removed from the edit view, see http://192.168.115.124:8080/browse/PESCMMU-181
+- SingleSignOut support, see `http://192.168.115.124:8080/browse/PESCMMU-190`
+- prevent self remove of users, see `http://192.168.115.124:8080/browse/PESCMMU-183`
+- groups can not be removed from the edit view, see `http://192.168.115.124:8080/browse/PESCMMU-181`
 - remove hamcreset library from war file
 - angular 1.2.26
 - resteasy 3.0.10.Final
