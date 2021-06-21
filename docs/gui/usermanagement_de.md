@@ -1,4 +1,5 @@
-# Oberfläche
+# User Management
+
 Wenn kein externer Verzeichnisdienst für das Cloudogu EcoSystem konfiguriert ist, kann das Dogu "User Management" benutzt werden, um Nutzerinnen und Nutzer anzulegen, Rechte zu verwalten und Gruppen zu administrieren. Wenn ein externer Verzeichnisdienst angebunden ist, wird die Verwaltung der Stammdaten darüber erfolgen.
 \newline
 
