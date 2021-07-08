@@ -48,9 +48,9 @@
       <td>{{group.description}}</td>
       <td>{{group.members.length}}</td>
       <td class="hidden-xs element-interactions">
-          <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-href="#/group/{{group.name}}">
+          <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
           </button>
-          <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" href="" ng-click="remove(group)">
+          <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
           </button>
       </td>
     </tr>

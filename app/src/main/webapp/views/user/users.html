@@ -52,7 +52,7 @@
         </a>
       </td>
       <td class="hidden-xs element-interactions">
-          <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-href="#/user/{{user.username}}"></button>
+          <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editUser(user.username)"></button>
           <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" href="" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></button>
       </td>
     </tr>

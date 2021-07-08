@@ -39,6 +39,11 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.pages = Math.ceil(users.meta.totalEntries / users.meta.limit);
       $scope.pageRange = pagingService.pageRange(page, 10, $scope.pages);
     }
+
+    $scope.editUser = function(username){
+      var redirectURL='#/user/'+username;
+      window.location.replace(redirectURL);
+    };
     
     $scope.isSelf = function(user){
       return $scope.subject.principal === user.username;
@@ -157,7 +162,12 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         });
       }
     };
-    
+
+    $scope.editGroup = function(group){
+      var redirectURL='#/group/'+group;
+      window.location.replace(redirectURL);
+    };
+
     $scope.searchGroups = function(value){
       return groupService.search(value, 0, 5);
     };
