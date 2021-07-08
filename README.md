@@ -29,17 +29,16 @@ This repository contains the usermgt, an maven project written in java.
 ### Setup Usermgt Development Mode
 * `export UNIVERSEADM_STAGE=DEVELOPMENT`
 
-### Build the project and start the development server
+### Build the project and start the server
 * `mvn -DskipTests -P'!webcomponents' package jetty:run-war `
 
-* Build project:
+### Open the application
+* `http://localhost:8084/universeadm/`
+- Use Base Authentication `User: admin | Password: admin`
+
+### Build project:
   - `./mvnw clean install`
-* Start application for development (Port 8084) with `mvn package jetty:run-war`
-* Fast development application start (port 8084) with `mvn -DskipTests -P'!webcomponents' package jetty:run-war`
-* Start application with release configuration (port 8084) with `mvn package jetty:run-war`
-* Use CAS Account
-  - username: admin
-  - password: admin  
+
 
 ---
 ### What is Cloudogu?
