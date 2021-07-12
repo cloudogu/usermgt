@@ -88,6 +88,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .has-feedback.has-success .glyphicon-ok {
   display: block;
+  color: #707D00;
 }
 
 .has-feedback .glyphicon-remove {
@@ -111,16 +112,22 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .table td {
-    border-top-color: #ECDADA !important;
+    border-top-color: #1b7daa !important;
 }
 
 .functions {
     font-size: 20px;
-    color: grey;
+    color: #086690;
+}
+
+.element-interactions button{
+  background: none;
+  border: none;
 }
 
 .remove {
     .functions;
+
 }
 
 .remove:hover {
@@ -143,4 +150,53 @@ h1,h2,h3,h4,h5,h6 {
     border-right-color: #8D8F90;
     border-left-color: #8D8F90;
     border-bottom-color: #8D8F90;
+}
+
+.has-success .checkbox, .has-success .checkbox-inline, .has-success .control-label, .has-success .help-block, .has-success .radio, .has-success .radio-inline, .has-success.checkbox label, .has-success.checkbox-inline label, .has-success.radio label, .has-success.radio-inline label{
+  color: #707D00;
+}
+
+.has-success .form-control {
+  border-color: #707D00;
+}
+
+.btn-default {
+  color: #767676;
+  border-color: #767676;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default.fokus {
+  color: #333;
+}
+
+.btn-danger {
+  background-color: #D93850;
+}
+
+.btn-warning {
+  //background-color: #A16B00;
+  color: #523600;
+  border-color: #A16B00;
+}
+
+.btn-warning.focus, .btn-warning:focus, .btn-warning:hover {
+  background-color: #A16B00;
+  color: #fff;
+}
+
+.search {
+  color: #086690;
+}
+
+.input-group-addon {
+  border-color: #1b7daa !important;
+}
+
+.form-control {
+  box-shadow: none;
+  border-color: #1b7daa !important;
+}
+
+.has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label, .has-error .form-control-feedback {
+  color: #D93850;
 }
