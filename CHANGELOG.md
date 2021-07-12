@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ###Changed
+- Added alternative tags for controls (#29)
 - Enhance Color Contrast (#31)
 
 ## [v1.4.1-2] - 2020-12-15
