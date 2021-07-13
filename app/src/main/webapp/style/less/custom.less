@@ -110,8 +110,20 @@ h1,h2,h3,h4,h5,h6 {
     border-bottom-color: #23A3DD !important;
 }
 
+@media screen and (max-width: 480px) {
+  .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 2px;
+    min-width: 45px;
+  }
+
+}
 .table td {
     border-top-color: #ECDADA !important;
+}
+
+td, th {
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .functions {
