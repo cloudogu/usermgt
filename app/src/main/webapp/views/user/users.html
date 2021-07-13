@@ -34,10 +34,8 @@
     <tr>
       <th>Username</th>
       <th>Display Name</th>
-<!--      <th class="hidden-xs">E-Mail</th>-->
-<!--      <th class="hidden-xs">Functions</th>-->
-      <th class="">E-Mail</th>
-      <th class="">Functions</th>
+      <th>E-Mail</th>
+      <th>Functions</th>
     </tr>
   </thead>
   <tbody>
@@ -48,16 +46,14 @@
         </b>
       </td>
       <td>{{user.displayName}}</td>
-<!--      <td class="hidden-xs">-->
-      <td class="">
+      <td>
         <a ng-href="mailto:{{user.mail}}">
           {{user.mail}}
         </a>
       </td>
-<!--      <td class="hidden-xs">-->
-      <td class="">
-          <a class="glyphicon glyphicon-pencil edit" ng-href="#/user/{{user.username}}"></a>
-          <span class="glyphicon glyphicon-trash remove" href="" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></span>           
+      <td class="element-interactions">
+        <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editUser(user.username)"></button>
+        <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" href="" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></button>
       </td>
     </tr>
   </tbody>

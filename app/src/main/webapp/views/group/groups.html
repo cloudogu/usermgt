@@ -36,7 +36,7 @@
       <th>Description</th>
       <th class="hidden-xs hidden-sm">Users</th>
       <th class="hidden-md hidden-lg"><i class="glyphicon glyphicon-user" title="users"></i></th>
-      <th class="">Functions</th>
+      <th>Functions</th>
     </tr>
   </thead>
   <tbody>
@@ -48,11 +48,11 @@
       </td>
       <td>{{group.description}}</td>
       <td>{{group.members.length}}</td>
-      <td class="">
-          <a class="glyphicon glyphicon-pencil edit" ng-href="#/group/{{group.name}}">              
-          </a>
-          <span class="glyphicon glyphicon-trash remove" href="" ng-click="remove(group)">
-          </span>           
+      <td class="element-interactions">
+        <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
+        </button>
+        <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
+        </button>
       </td>
     </tr>
   </tbody>
