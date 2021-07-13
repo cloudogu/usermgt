@@ -2,10 +2,10 @@
   <div class="col-sm-6">
     <h1>Groups</h1>
   </div>
-  <div class="col-sm-2">
+  <div class="col-sm-2 col-xs-5">
     <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/group/">Create</a>
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-4 col-xs-7">
     
     <form class="form pull-right" style="margin-top: 20px;" role="form" name="searchForm" ng-submit="search(nonSubmittedQuery)" novalidate>
       <div class="form-group">
@@ -34,8 +34,9 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
-      <th>Users</th>
-      <th class="hidden-xs">Functions</th>
+      <th class="hidden-xs hidden-sm">Users</th>
+      <th class="hidden-md hidden-lg"><i class="glyphicon glyphicon-user" title="users"></i></th>
+      <th>Functions</th>
     </tr>
   </thead>
   <tbody>
@@ -47,11 +48,11 @@
       </td>
       <td>{{group.description}}</td>
       <td>{{group.members.length}}</td>
-      <td class="hidden-xs element-interactions">
-          <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
-          </button>
-          <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
-          </button>
+      <td class="element-interactions">
+        <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
+        </button>
+        <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
+        </button>
       </td>
     </tr>
   </tbody>

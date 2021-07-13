@@ -2,10 +2,10 @@
   <div class="col-sm-6">
     <h1>Users</h1>
   </div>
-  <div class="col-sm-2">
+  <div class="col-sm-2 col-xs-5">
     <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/user/">Create</a>
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-4 col-xs-7">
 
     <form class="form pull-right" style="margin-top: 20px;" role="form" name="searchForm" ng-submit="search(nonSubmittedQuery)" novalidate>
       <div class="form-group">
@@ -34,8 +34,8 @@
     <tr>
       <th>Username</th>
       <th>Display Name</th>
-      <th class="hidden-xs">E-Mail</th>
-      <th class="hidden-xs">Functions</th>
+      <th>E-Mail</th>
+      <th>Functions</th>
     </tr>
   </thead>
   <tbody>
@@ -46,14 +46,14 @@
         </b>
       </td>
       <td>{{user.displayName}}</td>
-      <td class="hidden-xs">
+      <td>
         <a ng-href="mailto:{{user.mail}}">
           {{user.mail}}
         </a>
       </td>
-      <td class="hidden-xs element-interactions">
-          <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editUser(user.username)"></button>
-          <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" href="" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></button>
+      <td class="element-interactions">
+        <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editUser(user.username)"></button>
+        <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" href="" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></button>
       </td>
     </tr>
   </tbody>
