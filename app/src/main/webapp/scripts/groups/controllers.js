@@ -40,7 +40,12 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
       $scope.pages = Math.ceil(groups.meta.totalEntries / groups.meta.limit);
       $scope.pageRange = pagingService.pageRange(page, 10, $scope.pages);
     }
-    
+
+    $scope.editGroup = function(group){
+      var redirectURL='#/group/'+group;
+      window.location.replace(redirectURL);
+    };
+
     $scope.search = function(query){
       $location.search({q: query});
       $location.path('/groups/1');
@@ -69,7 +74,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
       };
 
     };
-    
+
     $scope.page = page;
     $scope.query = query;
     $scope.nonSubmittedQuery = query;
@@ -143,6 +148,12 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
           group.members.splice(group.members.indexOf(member), 1);
         });
       }
+    };
+
+    $scope.editMember = function(member){
+      var redirectURL='#/user/'+member;
+      console.log(redirectURL);
+      window.location.replace(redirectURL);
     };
     
     $scope.searchUsers = function(value){

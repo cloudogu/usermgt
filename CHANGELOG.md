@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Display all options on small screens and at zoom 400% (#32)
+- Enhance Color Contrast (#31)
+### Added
+- Added alternative tags for controls (#29)
 
 ## [v1.4.1-2] - 2020-12-15
 ### Added
