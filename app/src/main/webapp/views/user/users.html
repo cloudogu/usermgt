@@ -10,15 +10,17 @@
     <form class="form pull-right" style="margin-top: 20px;" role="form" name="searchForm" ng-submit="search(nonSubmittedQuery)" novalidate>
       <div class="form-group">
         <div class="input-group">
-          <a class="input-group-addon pointer" ng-click="search(nonSubmittedQuery)" ng-disabled="searchForm.$invalid">
-            <i class="glyphicon glyphicon-search search"></i>
-          </a>
           <input name="query" 
                  type="text" 
                  class="form-control" 
                  placeholder="Search" 
                  ng-model="nonSubmittedQuery" 
                  ng-pattern="/^[^\(\)]+$/">
+          <span class="input-group-btn">
+          <button class="btn btn-default" ng-click="search(nonSubmittedQuery)" ng-disabled="searchForm.$invalid">
+            <i class="glyphicon glyphicon-search search"></i>
+          </button>
+        </span>
         </div>
         <strong ng-show="searchForm.query.$error.pattern" class="text-danger">
           Query contains illegal characters
