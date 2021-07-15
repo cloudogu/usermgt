@@ -90,9 +90,9 @@
         <span ng-repeat="violation in passwordPolicy.violations" class="text-danger display-block"><strong>{{violation.Description}}.&nbsp;</strong></span>
         <span ng-repeat="satisfaction in passwordPolicy.satisfactions" class="text-success display-block"><strong>{{satisfaction.Description}}.&nbsp;</strong></span>
       </p>
-      <div class="form-group has-feedback" data-uadm-validate>
+      <div class="form-group password-field has-feedback" data-uadm-validate>
         <label for="confirmPassword">Confirm password</label>
-        <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" placeholder="Password" ng-model="confirmPassword" uadm-password-match="user.password">
+        <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" ng-required="true" placeholder="Password" ng-model="confirmPassword" uadm-password-match="user.password">
         <span class="glyphicon glyphicon-ok form-control-feedback"></span>
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         <strong class="text-danger help-block">
