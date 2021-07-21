@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Display all options on small screens and at zoom 400% (#32)
 - Enhance Color Contrast (#31)
+- Make forms more accessible (#34)
+
 ### Added
 - Added alternative tags for controls (#29)
 

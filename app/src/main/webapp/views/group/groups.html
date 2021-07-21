@@ -3,22 +3,25 @@
     <h1>Groups</h1>
   </div>
   <div class="col-sm-2 col-xs-5">
-    <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/group/">Create</a>
+    <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/group/">Create Group</a>
   </div>
   <div class="col-sm-4 col-xs-7">
     
     <form class="form pull-right" style="margin-top: 20px;" role="form" name="searchForm" ng-submit="search(nonSubmittedQuery)" novalidate>
       <div class="form-group">
         <div class="input-group">
-          <a class="input-group-addon pointer" ng-click="search(nonSubmittedQuery)" ng-disabled="searchForm.$invalid">
-            <i class="glyphicon glyphicon-search search"></i>
-          </a>
-          <input name="query" 
+          <input name="query"
                  type="text" 
                  class="form-control" 
                  placeholder="Search" 
                  ng-model="nonSubmittedQuery" 
-                 ng-pattern="/^[^\(\)]+$/">
+                 ng-pattern="/^[^\(\)]+$/"
+                 title="Search groups">
+          <span class="input-group-btn">
+          <button class="btn btn-default" ng-click="search(nonSubmittedQuery)" ng-disabled="searchForm.$invalid" type="button">
+            <i class="glyphicon glyphicon-search search"></i>
+          </button>
+          </span>
         </div>
         <strong ng-show="searchForm.query.$error.pattern" class="text-danger">
           Query contains illegal characters
@@ -49,9 +52,9 @@
       <td>{{group.description}}</td>
       <td>{{group.members.length}}</td>
       <td class="element-interactions">
-        <button aria-label="edit" title="edit" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
+        <button aria-label="edit" title="edit group" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
         </button>
-        <button aria-label="remove" title="remove" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
+        <button aria-label="remove" title="remove group" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
         </button>
       </td>
     </tr>
