@@ -69,6 +69,11 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     $scope.searchGroups = function(value){
       return groupService.search(value, 0, 5);
     };
+
+    $scope.editGroup = function(group){
+      var redirectURL='#/group/'+group;
+      window.location.replace(redirectURL);
+    };
     
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);

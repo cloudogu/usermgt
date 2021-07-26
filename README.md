@@ -3,26 +3,20 @@
 [![GitHub license](https://img.shields.io/github/license/cloudogu/usermgt.svg)](https://github.com/cloudogu/usermgt/blob/develop/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/cloudogu/usermgt.svg)](https://github.com/cloudogu/usermgt/releases)
 
-# Usermgt
+# User Management Dogu
 https://cloudogu.com
 
 This repository contains the usermgt, an maven project written in java.
 
-### Quick start
-* Following prerequisites have to be met:
-  - Install Oracle JDK >= 7
-  - Install Vagrant
-  - On Windows: Install VirtualBox
-  - On Linux: Install Docker
-* Build project:
-  - `./mvnw clean install`
-* Start development environment with `vagrant up`
-* Start application for development (Port 8084) with `mvn package jetty:run`
-* Fast development application start (port 8084) with `mvn -DskipTests -P'!webcomponents' package jetty:run`
-* Start application with release configuration (port 8084) with `mvn package jetty:run-war`
-* Use CAS Account
-  - username: admin
-  - password: admin  
+### Developers Guide
+
+- [Entwickler Dokumentation DE](docs/development/Developers_Guide_de.md)
+- [Developers Guide EN](docs/development/Developers_Guide_en.md)
+
+### Where do I find more information about the Cockpit dogu?
+
+- [Deutsch] [Dokumentation](docs/getting_started_de.md)
+- [English] [Documentation](docs/getting_started_en.md)
 
 ---
 ### What is Cloudogu?

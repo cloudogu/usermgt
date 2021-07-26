@@ -2,23 +2,26 @@
   <div class="col-sm-6">
     <h1>Users</h1>
   </div>
-  <div class="col-sm-2">
-    <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/user/">Create</a>
+  <div class="col-sm-2 col-xs-5">
+    <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/user/">Create User</a>
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-4 col-xs-7">
 
     <form class="form pull-right" style="margin-top: 20px;" role="form" name="searchForm" ng-submit="search(nonSubmittedQuery)" novalidate>
       <div class="form-group">
         <div class="input-group">
-          <a class="input-group-addon pointer" ng-click="search(nonSubmittedQuery)" ng-disabled="searchForm.$invalid">
-            <i class="glyphicon glyphicon-search"></i>
-          </a>
           <input name="query" 
                  type="text" 
                  class="form-control" 
                  placeholder="Search" 
                  ng-model="nonSubmittedQuery" 
-                 ng-pattern="/^[^\(\)]+$/">
+                 ng-pattern="/^[^\(\)]+$/"
+                 title="Search users">
+          <span class="input-group-btn">
+          <button class="btn btn-default" ng-click="search(nonSubmittedQuery)" ng-disabled="searchForm.$invalid">
+            <i class="glyphicon glyphicon-search search"><span class="sr-only">Search Users</span></i>
+          </button>
+        </span>
         </div>
         <strong ng-show="searchForm.query.$error.pattern" class="text-danger">
           Query contains illegal characters
@@ -34,8 +37,8 @@
     <tr>
       <th>Username</th>
       <th>Display Name</th>
-      <th class="hidden-xs">E-Mail</th>
-      <th class="hidden-xs">Functions</th>
+      <th>E-Mail</th>
+      <th>Functions</th>
     </tr>
   </thead>
   <tbody>
@@ -46,14 +49,14 @@
         </b>
       </td>
       <td>{{user.displayName}}</td>
-      <td class="hidden-xs">
+      <td>
         <a ng-href="mailto:{{user.mail}}">
           {{user.mail}}
         </a>
       </td>
-      <td class="hidden-xs">
-          <a class="glyphicon glyphicon-pencil edit" ng-href="#/user/{{user.username}}"></a>
-          <span class="glyphicon glyphicon-trash remove" href="" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></span>           
+      <td class="element-interactions">
+        <button aria-label="edit" title="edit user" class="glyphicon glyphicon-pencil edit" ng-click="editUser(user.username)"></button>
+        <button aria-label="remove" title="remove user" class="glyphicon glyphicon-trash remove" ng-click="remove(user)" ng-hide="{{isSelf(user)}}"></button>
       </td>
     </tr>
   </tbody>

@@ -76,9 +76,9 @@
         <td>
           <b>{{member}}</b>
         </td>
-        <td class="text-right">
-          <a class="glyphicon glyphicon-pencil edit" ng-href="#/user/{{member}}"></a>
-          <span class="glyphicon glyphicon-remove remove" href="" ng-click="removeMember(member)"></span> 
+        <td class="text-right element-interactions">
+          <button aria-label="edit" title="edit member" class="glyphicon glyphicon-pencil edit" ng-click="editMember(member)"></button>
+          <button aria-label="remove" title="remove member" class="glyphicon glyphicon-trash remove" ng-click="removeMember(member)"></button>
         </td>
       </tr>
     </table>
