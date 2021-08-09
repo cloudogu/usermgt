@@ -114,15 +114,15 @@ Select the "Groups" tab in User Management. 2.
 There are two ways to make the assignment:
 
 1. by changing the data of a user:
-* In the "Users" tab, select the "Pen" icon in the "Functions" column for the corresponding user.
-* Anschlie\ss end select the "Groups" tab and enter the corresponding group name.
-* Then click on the "Options" tab and there on "Save" to save your assignment.
+   * In the "Users" tab, select the "Pen" icon in the "Functions" column for the corresponding user.
+   * Anschlie\ss end select the "Groups" tab and enter the corresponding group name.
+   * Then click on the "Options" tab and there on "Save" to save your assignment.
 
 2. via the group properties:
-* In the "Groups" tab, select the "Pen" icon in the "Functions" column for the appropriate group.
-* Click on the "Members" tab.
-* Enter the appropriate username under "Add member".
-* Click on the "Options" tab and then on "Save" to complete your assignment.
+   * In the "Groups" tab, select the "Pen" icon in the "Functions" column for the appropriate group.
+   * Click on the "Members" tab.
+   * Enter the appropriate username under "Add member".
+   * Click on the "Options" tab and then on "Save" to complete your assignment.
 
 ### Delete groups
 To do this, click on the "Trash can" icon for the relevant group in the "Groups" area under "Functions" and confirm the security prompt.
