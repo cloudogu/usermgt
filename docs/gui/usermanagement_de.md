@@ -114,14 +114,14 @@ Es gibt zwei Wege, die Zuordnung vorzunehmen:
 1. Über die Änderung der Daten einer Nutzerin oder eines Nutzers:
 
 * Im Reiter "Users" wählen Sie für die entsprechende Nutzerin und den Nutzer in der Spalte "Functions" das Symbol "Stift" aus.
-* Danach wählen Sie den Reiter "Groups" und geben den entsprechenden Gruppennamen ein.
+* Danach wählen Sie den Reiter "Groups" und geben den entsprechenden Gruppennamen ein, nach der Eingabe von mindestens zwei Buchstaben werden alle passenden Gruppennamen angezeigt.
 * Hiernach klicken Sie auf den Reiter "Options" und dort auf "Save", um Ihre Zuordnung zu speichern.
 
 2. Über die Gruppeneigenschaften:
 
 * Im Reiter "Groups" wählen Sie für die entsprechende Gruppe in der Spalte "Functions" das Symbol "Stift" aus.
 * Klicken Sie auf den Reiter "Members".
-* Geben Sie unter "Add member" den entsprechenden Username ein.
+* Geben Sie unter "Add member" den entsprechenden Username ein, nach der Eingabe von mindestens zwei Buchstaben werden alle passenden Usernamen angezeigt.
 * Klicken Sie auf den Reiter "Options" und dort auf "Save", um Ihre Zuordnung zu speichern.
 
 ### Gruppen löschen
