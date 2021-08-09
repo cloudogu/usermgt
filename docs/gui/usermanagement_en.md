@@ -115,13 +115,13 @@ There are two ways to make the assignment:
 
 1. by changing the data of a user:
    * In the "Users" tab, select the "Pen" icon in the "Functions" column for the corresponding user.
-   * Anschlie\ss end select the "Groups" tab and enter the corresponding group name.
+   * Next select the "Groups" tab and enter the corresponding group name, after entering at least two letters, all matching group names will be displayed.
    * Then click on the "Options" tab and there on "Save" to save your assignment.
 
 2. via the group properties:
    * In the "Groups" tab, select the "Pen" icon in the "Functions" column for the appropriate group.
    * Click on the "Members" tab.
-   * Enter the appropriate username under "Add member".
+   * Enter the appropriate username under "Add member", after entering at least two letters, all matching member names will be displayed.
    * Click on the "Options" tab and then on "Save" to complete your assignment.
 
 ### Delete groups
