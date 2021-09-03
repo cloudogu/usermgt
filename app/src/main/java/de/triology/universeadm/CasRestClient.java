@@ -396,7 +396,7 @@ public class CasRestClient
     connection.setRequestMethod("POST");
     connection.setDoInput(true);
     connection.setDoOutput(true);
-    connection.setRequestProperty("Content-Type", "text/xml");
+    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
     return connection;
 

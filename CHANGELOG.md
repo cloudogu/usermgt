@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.4.2-1] - 2021-09-03
+### Fixed
+- Incorrect content type when connecting to the CAS. Changed the content type from `text/xml` to `application/x-www-form-urlencoded` as it supposed to be (#37)
+
 ## [v1.4.1-3] - 2021-07-26
 ### Changed
 - Display all options on small screens and at zoom 400% (#32)
