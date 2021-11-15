@@ -26,7 +26,7 @@
  */
 
 
-angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation', 'universeadm.users.controllers'])
+angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation', 'universeadm.users.controllers', 'ui.router.title'])
   .config(function($stateProvider, navigationProvider){
     
     // register navigation item
@@ -51,7 +51,8 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
           },
           page: function(){
             return 1;
-          }
+          },
+          $title: function() { return 'Users | User Management'; }
         }
       })
       .state('usersPage', {
@@ -67,7 +68,8 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
           },
           users: function(userService, page, query){
             return userService.search(query, (page-1) * 20, 20);
-          }
+          },
+          $title: function() { return 'Users | User Management'; }
         }
       })
       .state('usersEdit', {
@@ -78,7 +80,8 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
           user: function(userService, $stateParams){
             var username = $stateParams.username;
             return username !== null && username.length > 0 ? userService.get(username) : null;
-          }
+          },
+          $title: function() { return 'Edit User | User Management'; }
         }
       });
   });

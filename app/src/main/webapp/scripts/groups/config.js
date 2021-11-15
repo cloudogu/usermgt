@@ -27,7 +27,7 @@
 
 
 angular.module('universeadm.groups.config', ['ui.router',
-  'universeadm.navigation', 'universeadm.groups.controllers'])
+  'universeadm.navigation', 'universeadm.groups.controllers', 'ui.router.title'])
   .config(function($stateProvider, navigationProvider){
     // registar navigation
     navigationProvider.add({
@@ -51,7 +51,8 @@ angular.module('universeadm.groups.config', ['ui.router',
           },
           page: function(){
             return 1;
-          }
+          },
+          $title: function() { return 'Groups | User Management'; }
         }
       })
       .state('groupsPage', {
@@ -67,7 +68,8 @@ angular.module('universeadm.groups.config', ['ui.router',
           },
           groups: function(groupService, page, query){
             return groupService.search(query, (page-1) * 20, 20);
-          }
+          },
+          $title: function() { return 'Groups | User Management'; }
         }
       })
       .state('groupsEdit', {
@@ -78,7 +80,8 @@ angular.module('universeadm.groups.config', ['ui.router',
           group: function(groupService, $stateParams){
             var name = $stateParams.name;
             return name !== null && name.length > 0 ? groupService.get(name) : null;
-          }
+          },
+          $title: function() { return 'Edit Group | User Management'; }
         }
       });
   });
