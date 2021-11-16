@@ -28,7 +28,7 @@
 
 angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular',
   'ui.router', 'universeadm.navigation', 'universeadm.account.config', 
-  'universeadm.users.config', 'universeadm.groups.config'])
+  'universeadm.users.config', 'universeadm.groups.config', 'ui.router.title'])
   .config(function(RestangularProvider, $stateProvider, $urlRouterProvider, $logProvider){
     // configure restangular
     RestangularProvider.setBaseUrl(_contextPath + '/api');
