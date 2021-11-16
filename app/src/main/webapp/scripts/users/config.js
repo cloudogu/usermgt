@@ -81,7 +81,16 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
             var username = $stateParams.username;
             return username !== null && username.length > 0 ? userService.get(username) : null;
           },
-          $title: function() { return 'Edit User | User Management'; }
+          $title: function($stateParams) {
+            var username = $stateParams.username;
+            var title;
+            if (username !== null && username.length > 0) {
+              title = 'Edit User | User Management';
+            } else {
+              title = 'Create User | User Management';
+            }
+            return title;
+          }
         }
       });
   });

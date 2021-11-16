@@ -81,7 +81,16 @@ angular.module('universeadm.groups.config', ['ui.router',
             var name = $stateParams.name;
             return name !== null && name.length > 0 ? groupService.get(name) : null;
           },
-          $title: function() { return 'Edit Group | User Management'; }
+          $title: function($stateParams) {
+            var username = $stateParams.username;
+            var title;
+            if (username !== null && username.length > 0) {
+              title = 'Edit Group | User Management';
+            } else {
+              title = 'Create Group | User Management';
+            }
+            return title;
+          }
         }
       });
   });
