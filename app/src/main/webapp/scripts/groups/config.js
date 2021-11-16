@@ -82,9 +82,9 @@ angular.module('universeadm.groups.config', ['ui.router',
             return name !== null && name.length > 0 ? groupService.get(name) : null;
           },
           $title: function($stateParams) {
-            var username = $stateParams.username;
+            var name = $stateParams.name;
             var title;
-            if (username !== null && username.length > 0) {
+            if (name !== null && name.length > 0) {
               title = 'Edit Group | User Management';
             } else {
               title = 'Create Group | User Management';
