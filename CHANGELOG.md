@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.4.3-1] - 2021-11-17
+### Added
+- module angular-ui-router-title  and configuration to display individual titels for major views (#39)
+
 ## [v1.4.2-1] - 2021-09-03
 ### Fixed
 - Incorrect content type when connecting to the CAS. Changed the content type from `text/xml` to `application/x-www-form-urlencoded` as it supposed to be (#37)

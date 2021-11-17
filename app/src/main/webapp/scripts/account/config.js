@@ -28,7 +28,7 @@
 
 angular.module('universeadm.account.config', ['ui.router', 
   'universeadm.account.controllers', 'universeadm.account.services', 
-  'universeadm.navigation'])
+  'universeadm.navigation', 'ui.router.title'])
   .config(function($stateProvider, navigationProvider){
     // registar navigation
     navigationProvider.add({
@@ -44,7 +44,8 @@ angular.module('universeadm.account.config', ['ui.router',
       resolve: {
         account: function(accountService){
           return accountService.get();
-        }
+        },
+        $title: function() { return 'Account | User Management'; }
       }
     });
   });
