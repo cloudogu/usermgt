@@ -112,8 +112,11 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
         groupService.exists(group.newGroup).then(function(){
           account.memberOf.push(group.newGroup);
           accountService.modify(account).then(function(){
+            $scope.alerts = [{
+              type: 'info',
+              msg: 'added group "' + group.newGroup + '"'
+            }];
             group.newGroup = null;
-            $scope.alerts.splice(0, $scope.alerts.length);
           }, function(e){
             addError(e, group);
             group.newGroup = null;
@@ -134,5 +137,9 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     $scope.removeGroup = function(group) {
       account.memberOf.splice(account.memberOf.indexOf(group), 1);
       accountService.modify(account);
+      $scope.alerts = [{
+        type: 'info',
+        msg: 'removed group "' + group + '"'
+      }];
     };
   });
