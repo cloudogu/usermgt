@@ -50,6 +50,10 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       accountService.modify(account).then(function() {
         setAccount(account);
         $scope.form.$setPristine();
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'Saved account information successfully.'
+        }];
       }, function(error){
         if ( error.status === 409 ){
           constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
