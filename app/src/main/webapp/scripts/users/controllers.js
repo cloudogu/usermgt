@@ -85,7 +85,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
   })
 
   .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService){
-    $scope.alerts = [];
+    $scope.alerts = [{
+      type: 'info',
+      msg: 'Saved account information successfully.'
+    }];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
     $scope.setForm = function(form){
@@ -180,10 +183,15 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         scope: removeScope
       });
       removeScope.remove = function(user){              
-        userService.remove(user).then(function(){
+        userService.remove(user).then(function()
+        {
           instance.close();
           $location.path('/users');
         });
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'Saved account information successfully.'
+        }];
       };
       removeScope.cancel = function(){
         instance.close();
@@ -203,6 +211,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       }
       promise.then(function(){
         $location.path('/users');
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'Saved account information successfully.'
+        }];
       }, function(error){
         if ( error.status === 409 ){
           constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
