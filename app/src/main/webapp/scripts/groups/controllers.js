@@ -72,8 +72,16 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
       removeScope.cancel = function(){
         instance.close();
       };
-
     };
+
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
+    };
+
+    var groupAlert = groupService.getGroupAlert();
+    if (groupAlert) {
+      $scope.alerts = [groupAlert];
+    }
 
     $scope.page = page;
     $scope.query = query;
@@ -131,6 +139,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
       removeScope.remove = function(group){
         groupService.remove(group).then(function(){
           instance.close();
+          groupService.addGroupAlert('info', 'Removed group successfully');
           $location.path('/groups');
         });
       };
@@ -176,6 +185,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         promise = groupService.modify(group);
       }
       promise.then(function(){
+        groupService.addGroupAlert('info', 'Saved group information successfully');
         $location.path('/groups');
       }, function(error){
         if ( error.status === 409 ){

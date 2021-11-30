@@ -40,6 +40,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.pageRange = pagingService.pageRange(page, 10, $scope.pages);
     }
 
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
+    };
+
     $scope.editUser = function(username){
       var redirectURL='#/user/'+username;
       window.location.replace(redirectURL);
@@ -77,7 +81,12 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       };
 
     };
-    
+
+    var userAlert = userService.getUserAlert();
+    if (userAlert) {
+      $scope.alerts = [userAlert];
+    }
+
     $scope.page = page;
     $scope.query = query;
     $scope.nonSubmittedQuery = query;
@@ -85,10 +94,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
   })
 
   .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService){
-    $scope.alerts = [{
-      type: 'info',
-      msg: 'Saved account information successfully.'
-    }];
+    $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
     $scope.setForm = function(form){
@@ -183,15 +189,11 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         scope: removeScope
       });
       removeScope.remove = function(user){              
-        userService.remove(user).then(function()
-        {
+        userService.remove(user).then(function(){
           instance.close();
+          userService.addUserAlert('info', 'Removed user successfully');
           $location.path('/users');
         });
-        $scope.alerts = [{
-          type: 'info',
-          msg: 'Saved account information successfully.'
-        }];
       };
       removeScope.cancel = function(){
         instance.close();
@@ -210,11 +212,8 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         promise = userService.modify(user);
       }
       promise.then(function(){
+        userService.addUserAlert('info', 'Saved account information successfully');
         $location.path('/users');
-        $scope.alerts = [{
-          type: 'info',
-          msg: 'Saved account information successfully.'
-        }];
       }, function(error){
         if ( error.status === 409 ){
           constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
