@@ -52,7 +52,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
         $scope.form.$setPristine();
         $scope.alerts = [{
           type: 'info',
-          msg: 'Account information saved successfully.'
+          msg: 'Account information saved successfully'
         }];
       }, function(error){
         if ( error.status === 409 ){

@@ -175,14 +175,14 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         user.memberOf.splice(user.memberOf.indexOf(group), 1);
         $scope.alerts = [{
           type: 'info',
-          msg: 'Removed user successfully from group' + group
+          msg: 'Removed user successfully from group: ' + group
         }];
       } else {
         userService.removeGroup(user, group).then(function(){
           user.memberOf.splice(user.memberOf.indexOf(group), 1);
           $scope.alerts = [{
             type: 'info',
-            msg: 'Removed user successfully from group' + group
+            msg: 'Removed user successfully from group: ' + group
           }];
         });
       }
