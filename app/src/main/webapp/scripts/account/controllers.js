@@ -139,7 +139,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       accountService.modify(account);
       $scope.alerts = [{
         type: 'info',
-        msg: 'removed group "' + group + '"'
+        msg: 'Removed group "' + group + '"'
       }];
     };
   });
