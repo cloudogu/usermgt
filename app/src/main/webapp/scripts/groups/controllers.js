@@ -62,6 +62,10 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
       
       removeScope.remove = function(group){
         groupService.remove(group).then(function(){
+          $scope.alerts = [{
+            type: 'info',
+            msg: 'Removed group successfully'
+          }];
           return groupService.search(query, groups.meta.start, groups.meta.limit);
         }).then(function(groups){
           setGroups(groups);
@@ -104,6 +108,10 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         promise.then(function(){
           group.members.push(member.newMember);
           member.newMember = null;
+          $scope.alerts = [{
+            type: 'info',
+            msg: 'User successfully added to group'
+          }];
         }, function(e){
           // ?? do not clear, mark as dirty ?
           if (e.status === 400 || e.status === 404){
@@ -114,7 +122,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
           } else if (e.status === 409) {
             $scope.alerts = [{
               type: 'info',
-              msg: 'The user ' + member.newMember + ' is allready a member'
+              msg: 'The user ' + member.newMember + ' is already a member'
             }];              
           } else {
             $scope.alerts = [{
@@ -152,9 +160,17 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
     $scope.removeMember = function(member){
       if ($scope.create){
         group.members.splice(group.members.indexOf(member), 1);
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'User successfully removed from group'
+        }];
       } else {
         groupService.removeMember(group, member).then(function(){
           group.members.splice(group.members.indexOf(member), 1);
+          $scope.alerts = [{
+            type: 'info',
+            msg: 'User successfully removed from group'
+          }];
         });
       }
     };
@@ -185,7 +201,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         promise = groupService.modify(group);
       }
       promise.then(function(){
-        groupService.addGroupAlert('info', 'Saved group information successfully');
+        groupService.addGroupAlert('info', 'Group information successfully saved');
         $location.path('/groups');
       }, function(error){
         if ( error.status === 409 ){

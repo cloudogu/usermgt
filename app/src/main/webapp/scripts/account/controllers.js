@@ -52,7 +52,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
         $scope.form.$setPristine();
         $scope.alerts = [{
           type: 'info',
-          msg: 'Saved account information successfully.'
+          msg: 'Account information saved successfully.'
         }];
       }, function(error){
         if ( error.status === 409 ){
@@ -92,12 +92,12 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       if (e.status === 400 || e.status === 404){
         $scope.alerts = [{
           type: 'danger',
-          msg: 'group ' + group.newGroup + ' does not exists'
+          msg: 'Group ' + group.newGroup + ' does not exists'
         }];
       } else if (e.status === 409) {
         $scope.alerts = [{
           type: 'info',
-          msg: 'Account is allready a member of ' + group.newGroup
+          msg: 'Account is already a member of ' + group.newGroup
         }];  
       } else {
         $scope.alerts = [{
@@ -114,7 +114,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
           accountService.modify(account).then(function(){
             $scope.alerts = [{
               type: 'info',
-              msg: 'added group "' + group.newGroup + '"'
+              msg: 'Added group "' + group.newGroup + '"'
             }];
             group.newGroup = null;
           }, function(e){
@@ -128,7 +128,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       } else if (group) {
         $scope.alerts = [{
           type: 'info',
-          msg: 'Account is allready a member of ' + group.newGroup
+          msg: 'Account is already a member of ' + group.newGroup
         }];
         group.newGroup = null;
       }
