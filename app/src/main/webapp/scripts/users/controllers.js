@@ -152,7 +152,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
           if (e.status === 400 || e.status === 404){
             $scope.alerts = [{
               type: 'danger',
-              msg: 'group ' + group.newGroup + ' does not exists'
+              msg: 'Group ' + group.newGroup + ' does not exists'
             }];
           } else if (e.status === 409) {
             $scope.alerts = [{
