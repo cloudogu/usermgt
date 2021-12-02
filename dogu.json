@@ -13,9 +13,18 @@
   "Url": "https://github.com/cloudogu/usermgt",
   "Image": "registry.cloudogu.com/official/usermgt",
   "Dependencies": [
-    "cas",
-    "ldap",
-    "nginx"
+    {
+      "Type": "dogu",
+      "Name": "cas"
+    },
+    {
+      "Type": "dogu",
+      "Name": "ldap"
+    },
+    {
+      "Type": "dogu",
+      "Name": "nginx"
+    }
   ],
   "Volumes": [
     {

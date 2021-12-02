@@ -1,7 +1,14 @@
 <div class="row">
+  <div class="danger">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-sm-6">
     <h1>Groups</h1>
   </div>
+
   <div class="col-sm-2 col-xs-5">
     <a class="btn btn-default pull-right" style="margin-top: 20px;" ng-href="#/group/">Create Group</a>
   </div>
