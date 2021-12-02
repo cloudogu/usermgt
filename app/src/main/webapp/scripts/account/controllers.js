@@ -50,6 +50,10 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       accountService.modify(account).then(function() {
         setAccount(account);
         $scope.form.$setPristine();
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'Account information saved successfully'
+        }];
       }, function(error){
         if ( error.status === 409 ){
           constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
@@ -88,12 +92,12 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       if (e.status === 400 || e.status === 404){
         $scope.alerts = [{
           type: 'danger',
-          msg: 'group ' + group.newGroup + ' does not exists'
+          msg: 'Group ' + group.newGroup + ' does not exists'
         }];
       } else if (e.status === 409) {
         $scope.alerts = [{
           type: 'info',
-          msg: 'Account is allready a member of ' + group.newGroup
+          msg: 'Account is already a member of ' + group.newGroup
         }];  
       } else {
         $scope.alerts = [{
@@ -108,8 +112,11 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
         groupService.exists(group.newGroup).then(function(){
           account.memberOf.push(group.newGroup);
           accountService.modify(account).then(function(){
+            $scope.alerts = [{
+              type: 'info',
+              msg: 'Added group "' + group.newGroup + '"'
+            }];
             group.newGroup = null;
-            $scope.alerts.splice(0, $scope.alerts.length);
           }, function(e){
             addError(e, group);
             group.newGroup = null;
@@ -121,7 +128,7 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
       } else if (group) {
         $scope.alerts = [{
           type: 'info',
-          msg: 'Account is allready a member of ' + group.newGroup
+          msg: 'Account is already a member of ' + group.newGroup
         }];
         group.newGroup = null;
       }
@@ -130,5 +137,9 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
     $scope.removeGroup = function(group) {
       account.memberOf.splice(account.memberOf.indexOf(group), 1);
       accountService.modify(account);
+      $scope.alerts = [{
+        type: 'info',
+        msg: 'Removed group "' + group + '"'
+      }];
     };
   });

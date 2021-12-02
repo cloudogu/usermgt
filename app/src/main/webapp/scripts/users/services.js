@@ -29,6 +29,8 @@
 angular.module('universeadm.users.services', ['restangular'])
   .factory('userService', function(Restangular){
     var users = Restangular.all('users');
+    var alerts = [];
+
     return {
       getAll: function(start, limit){
         return users.getList({start: start, limit: limit});
@@ -56,6 +58,12 @@ angular.module('universeadm.users.services', ['restangular'])
       },
       removeGroup: function(user, group){
         return user.one('groups/' + group).remove();
+      },
+      addUserAlert: function(type, message){
+        alerts.push({type: type, msg: message});
+      },
+      getUserAlert: function(){
+        return alerts.pop();
       }
     };
   });

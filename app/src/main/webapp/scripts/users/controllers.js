@@ -40,6 +40,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.pageRange = pagingService.pageRange(page, 10, $scope.pages);
     }
 
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
+    };
+
     $scope.editUser = function(username){
       var redirectURL='#/user/'+username;
       window.location.replace(redirectURL);
@@ -65,6 +69,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       
       removeScope.remove = function(user){
         userService.remove(user).then(function(){
+          $scope.alerts = [{
+            type: 'info',
+            msg: 'Removed user successfully'
+          }];
           return userService.search(query, users.meta.start, users.meta.limit);
         }).then(function(users){
           setUsers(users);
@@ -77,7 +85,12 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       };
 
     };
-    
+
+    var userAlert = userService.getUserAlert();
+    if (userAlert) {
+      $scope.alerts = [userAlert];
+    }
+
     $scope.page = page;
     $scope.query = query;
     $scope.nonSubmittedQuery = query;
@@ -126,6 +139,10 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
           promise = groupService.exists(group.newGroup);
         } else {
           promise = userService.addGroup(user, group.newGroup);
+          $scope.alerts = [{
+            type: 'info',
+            msg: 'User successfully added to ' + group.newGroup
+          }];
         }
         promise.then(function(){
           user.memberOf.push(group.newGroup);
@@ -135,12 +152,12 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
           if (e.status === 400 || e.status === 404){
             $scope.alerts = [{
               type: 'danger',
-              msg: 'group ' + group.newGroup + ' does not exists'
+              msg: 'Group ' + group.newGroup + ' does not exists'
             }];
           } else if (e.status === 409) {
             $scope.alerts = [{
               type: 'info',
-              msg: 'The user is allready a member of ' + group.newGroup
+              msg: 'The user is already a member of ' + group.newGroup
             }];  
           } else {
             $scope.alerts = [{
@@ -156,9 +173,17 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     $scope.removeGroup = function(group){
       if ($scope.create){
         user.memberOf.splice(user.memberOf.indexOf(group), 1);
+        $scope.alerts = [{
+          type: 'info',
+          msg: 'Removed user successfully from group: ' + group
+        }];
       } else {
         userService.removeGroup(user, group).then(function(){
           user.memberOf.splice(user.memberOf.indexOf(group), 1);
+          $scope.alerts = [{
+            type: 'info',
+            msg: 'Removed user successfully from group: ' + group
+          }];
         });
       }
     };
@@ -182,6 +207,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       removeScope.remove = function(user){              
         userService.remove(user).then(function(){
           instance.close();
+          userService.addUserAlert('info', 'Removed user successfully');
           $location.path('/users');
         });
       };
@@ -202,6 +228,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
         promise = userService.modify(user);
       }
       promise.then(function(){
+        userService.addUserAlert('info', 'User data saved successfully');
         $location.path('/users');
       }, function(error){
         if ( error.status === 409 ){
