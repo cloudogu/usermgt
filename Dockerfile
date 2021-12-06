@@ -17,7 +17,6 @@ ENV SERVICE_TAGS=webapp \
     TOMCAT_MAJOR_VERSION=8 \
     TOMCAT_VERSION=8.0.45 \
     TOMCAT_TARGZ_SHA256=1d951342ca873b903b77491e61a2d0c74878dcb01ea5a499f3052546cf004cfa \
-    TOMCAT_TARGZ_FILENAME="apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
     # home directory
     UNIVERSEADM_HOME=/var/lib/usermgt/conf
 
