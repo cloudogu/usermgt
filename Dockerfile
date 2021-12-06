@@ -9,13 +9,15 @@ FROM registry.cloudogu.com/official/java:8u242-3
 
 LABEL NAME="official/usermgt" \
    VERSION="1.4.4-1" \
-   maintainer="sebastian.sdorra@cloudogu.com"
+   maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
 ENV SERVICE_TAGS=webapp \
     # tomcat version
     TOMCAT_MAJOR_VERSION=8 \
     TOMCAT_VERSION=8.0.45 \
+    TOMCAT_TARGZ_SHA256=1d951342ca873b903b77491e61a2d0c74878dcb01ea5a499f3052546cf004cfa \
+    TOMCAT_TARGZ_FILENAME="apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
     # home directory
     UNIVERSEADM_HOME=/var/lib/usermgt/conf
 
@@ -26,11 +28,14 @@ RUN set -x \
     && addgroup -S -g 1000 tomcat \
     && adduser -S -h /opt/apache-tomcat -s /bin/bash -G tomcat -u 1000 tomcat \
     # install tomcat
-    && curl --fail --location --retry 3 \
-    http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz \
-    | gunzip \
-    | tar x -C /opt \
-    && mv /opt/apache-tomcat-${TOMCAT_VERSION}/* /opt/apache-tomcat \
+    && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+    "http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+    && echo "${TOMCAT_TARGZ_SHA256} *apache-tomcat-${TOMCAT_VERSION}.tar.gz" | sha256sum -c - \
+    && gunzip "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+    && tar xf "apache-tomcat-${TOMCAT_VERSION}.tar" -C /opt \
+    && rm "apache-tomcat-${TOMCAT_VERSION}.tar" \
+    && mv "/opt/apache-tomcat-${TOMCAT_VERSION}/"* /opt/apache-tomcat \
+    && rmdir  "/opt/apache-tomcat-${TOMCAT_VERSION}" \
     && chown -R tomcat:tomcat /opt/apache-tomcat \
     && rm -rf /opt/apache-tomcat/logs \
     && mkdir /var/lib/usermgt \
