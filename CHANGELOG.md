@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - add tomcat checksum check in dockerfile
 
+### Changed
+- upgrade dogu-build-ib to v1.5.1
+
 ### Removed
 - remove the ability to edit groups from the user edit view and vice versa (#44)
   - this context switch result in a loss of typed user/group information in the edit view
