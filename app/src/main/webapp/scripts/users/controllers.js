@@ -188,11 +188,6 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       }
     };
 
-    $scope.editGroup = function(group){
-      var redirectURL='#/group/'+group;
-      window.location.replace(redirectURL);
-    };
-
     $scope.searchGroups = function(value){
       return groupService.search(value, 0, 5);
     };
