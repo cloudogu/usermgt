@@ -132,11 +132,12 @@ node('docker') {
       }
 
       stage('Integration Tests') {
-          ecoSystem.runCypressIntegrationTests([
-                  cypressImage: "cypress/included:8.6.0",
-                  enableVideo: params.EnableVideoRecording,
-                  enableScreenshots    : params.EnableScreenshotRecording,
-          ])
+          echo "No integration test exists."
+//          ecoSystem.runCypressIntegrationTests([
+//                  cypressImage: "cypress/included:8.6.0",
+//                  enableVideo: params.EnableVideoRecording,
+//                  enableScreenshots    : params.EnableScreenshotRecording,
+//          ])
       }
 
       if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
@@ -161,6 +162,11 @@ node('docker') {
 
         stage('Integration Tests - After Upgrade') {
           echo "No integration test exists."
+//          ecoSystem.runCypressIntegrationTests([
+//                  cypressImage: "cypress/included:8.6.0",
+//                  enableVideo: params.EnableVideoRecording,
+//                  enableScreenshots    : params.EnableScreenshotRecording,
+//          ])
         }
       }
 
