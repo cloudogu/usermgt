@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/dogu-build-lib@v1.4.1', 'github.com/cloudogu/ces-build-lib@v1.48.0'])
+@Library(['github.com/cloudogu/dogu-build-lib@v1.5.1', 'github.com/cloudogu/ces-build-lib@v1.48.0'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -12,7 +12,8 @@ node('docker') {
             // Parameter to activate dogu upgrade test on demand
             parameters([
               booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
-              string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest')
+              string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
+              booleanParam(defaultValue: false, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording')
             ])
     ])
 
@@ -130,7 +131,11 @@ node('docker') {
       }
 
       stage('Integration Tests') {
-        echo "No integration test exists."
+          ecoSystem.runCypressIntegrationTests([
+                  cypressImage:"cypress/included:8.7.0",
+                  enableVideo: params.EnableVideoRecording,
+                  enableScreenshots: params.EnableScreenshotRecording
+          ])
       }
 
       if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
