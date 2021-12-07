@@ -13,7 +13,8 @@ node('docker') {
             parameters([
               booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
               string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
-              booleanParam(defaultValue: false, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording')
+              booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
+              booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
             ])
     ])
 
@@ -132,9 +133,9 @@ node('docker') {
 
       stage('Integration Tests') {
           ecoSystem.runCypressIntegrationTests([
-                  cypressImage:"cypress/included:8.7.0",
+                  cypressImage: "cypress/included:8.6.0",
                   enableVideo: params.EnableVideoRecording,
-                  enableScreenshots: params.EnableScreenshotRecording
+                  enableScreenshots    : params.EnableScreenshotRecording,
           ])
       }
 
