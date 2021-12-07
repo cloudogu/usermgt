@@ -1,4 +1,5 @@
-/* 
+'use strict';
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -45,7 +46,9 @@ angular.module('universeadm.account.config', ['ui.router',
         account: function(accountService){
           return accountService.get();
         },
-        $title: function() { return 'Account | User Management'; }
+        $title: ['account', function(account) {
+          return account.username + ' | User Management';
+        }]
       }
     });
   });
