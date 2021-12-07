@@ -1,4 +1,4 @@
-<h1>{{create ? 'New user' : user.username}}</h1>
+<h1>{{create ? 'New user' : 'Account'}}</h1>
 
 <div class="danger">
   <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
@@ -10,7 +10,7 @@
     <form name="form" role="form" novalidate>
       <div ng-init="setForm(form)"></div>
       <!-- TODO: Aussagekraeftige Fehlermeldung wenn username mit ._-@ beginnt -->
-      <div class="form-group has-feedback" ng-if="create" data-uadm-validate>
+      <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="username">Username</label>
         <input id="username"
                name="username" 
@@ -22,6 +22,7 @@
                ng-maxlength="128"
                ng-required="true"
                unique-constraint-checker
+               ng-disabled="!create"
                ng-pattern="/^[a-zA-Z0-9]+[-_@\.]*[a-zA-Z0-9]+[-_@\.]*[a-zA-Z0-9-_@\.]*$/"
         >
         <span class="glyphicon glyphicon-ok form-control-feedback"></span>
