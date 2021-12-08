@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- add tomcat checksum check in dockerfile
+
+### Changed
+- upgrade dogu-build-ib to v1.5.1
+- valid character inputs in new group dialogue (#47)
+
+### Removed
+- remove the ability to edit groups from the user edit view and vice versa (#44)
+  - this context switch result in a loss of typed user/group information in the edit view
 
 ## [v1.4.4-1] - 2021-12-02
 ### Added
