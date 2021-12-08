@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - upgrade dogu-build-ib to v1.5.1
+- valid character inputs in new group dialogue (#47)
 
 ### Removed
 - remove the ability to edit groups from the user edit view and vice versa (#44)
