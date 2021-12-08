@@ -15,8 +15,8 @@ LABEL NAME="official/usermgt" \
 ENV SERVICE_TAGS=webapp \
     # tomcat version
     TOMCAT_MAJOR_VERSION=8 \
-    TOMCAT_VERSION=8.0.45 \
-    TOMCAT_TARGZ_SHA256=1d951342ca873b903b77491e61a2d0c74878dcb01ea5a499f3052546cf004cfa \
+    TOMCAT_VERSION=8.5.73 \
+    TOMCAT_TARGZ_SHA256=f8965400c9f21361ff81ff04478dbb4ce365276d14b0b99b85912c9de949f6a0 \
     # home directory
     UNIVERSEADM_HOME=/var/lib/usermgt/conf
 
