@@ -79,12 +79,12 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
         templateUrl: 'views/user/edit.html',
         resolve: {
           user: function(userService, $stateParams){
-            let username = $stateParams.username;
+            var username = $stateParams.username;
             return username !== null && username.length > 0 ? userService.get(username) : null;
           },
           $title: function($stateParams) {
-            let username = $stateParams.username;
-            let title;
+            var username = $stateParams.username;
+            var title;
             if (username !== null && username.length > 0) {
               title = 'Edit ' + username + ' | User Management';
             } else {
