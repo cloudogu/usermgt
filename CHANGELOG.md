@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- show disabled username field for users which were already saved (#46)
+- update UI for a more consistent user experience (#46)
 
 ## [v1.4.4-1] - 2021-12-02
 ### Added
