@@ -27,104 +27,105 @@
 
 
 angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular',
-  'ui.router', 'universeadm.navigation', 'universeadm.account.config', 
+  'ui.router', 'universeadm.navigation', 'universeadm.account.config',
   'universeadm.users.config', 'universeadm.groups.config', 'ui.router.title'])
-  .config(function(RestangularProvider, $stateProvider, $urlRouterProvider, $logProvider){
-    // configure restangular
-    RestangularProvider.setBaseUrl(_contextPath + '/api');
-    RestangularProvider.addResponseInterceptor(function(response, operation) {
-      if (operation === 'getList') {
-        if ( response.entries ){
-          var resp = response.entries;
-          resp.meta = {
-            start: response.start,
-            limit: response.limit,
-            totalEntries: response.totalEntries
-          };
-          return resp;
+    .config(function (RestangularProvider, $stateProvider, $urlRouterProvider, $logProvider) {
+      // configure restangular
+      RestangularProvider.setBaseUrl(_contextPath + '/api');
+      RestangularProvider.addResponseInterceptor(function (response, operation) {
+        if (operation === 'getList') {
+          if (response.entries) {
+            var resp = response.entries;
+            resp.meta = {
+              start: response.start,
+              limit: response.limit,
+              totalEntries: response.totalEntries
+            };
+            return resp;
+          }
         }
-      }
-      return response;
-    });
-
-    $stateProvider
-      .state('error404', {
-        url: '/error/404',
-        templateUrl: 'views/error/404.html'
-      })
-      .state('error500', {
-        url: '/error/500',
-        templateUrl: 'views/error/500.html'
+        return response;
       });
 
-    // redirect start page to account
-    $urlRouterProvider.when('', '/account');
-    $urlRouterProvider.when('/', '/account');
+      $stateProvider
+          .state('error404', {
+            url: '/error/404',
+            templateUrl: 'views/error/404.html'
+          })
+          .state('error500', {
+            url: '/error/500',
+            templateUrl: 'views/error/500.html'
+          });
 
-    // diplay error 404 for unmatched routes
-    $urlRouterProvider.otherwise(function($injector){
-      $injector.get('$state').go('error404');
-    });
-    
-    // configure logging
-    $logProvider.debugEnabled(false);
-  })
-  .run(function($rootScope, $state, $log, $http){
-    $http.get(_contextPath + '/api/subject').then(function(res){
-      $log.info('subject for principal ' + res.data.principal + ' logged in');
-      $rootScope.subject = res.data;
-      $rootScope.$broadcast('universeadmSubjectReceived', res.data);
-    }, function(e){
-      $log.error(e);
-    });
-    
-    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
-      if ( error.status === 404 ){
-        event.preventDefault();
-        $log.warn('could not find page, redirect to error page');
+      // redirect start page to account
+      $urlRouterProvider.when('', '/account');
+      $urlRouterProvider.when('/', '/account');
+
+      // diplay error 404 for unmatched routes
+      $urlRouterProvider.otherwise(function ($injector) {
+        $injector.get('$state').go('error404');
+      });
+
+      // configure logging
+      $logProvider.debugEnabled(false);
+    })
+    .run(function ($rootScope, $state, $log, $http) {
+      $http.get(_contextPath + '/api/subject').then(function (res) {
+        $log.info('subject for principal ' + res.data.principal + ' logged in');
+        $rootScope.subject = res.data;
+        $rootScope.$broadcast('universeadmSubjectReceived', res.data);
+      }, function (e) {
+        $log.error(e);
+      });
+
+      $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
+        if (error.status === 404) {
+          event.preventDefault();
+          $log.warn('could not find page, redirect to error page');
+          $state.go('error404');
+        } else if (error.status === 302 || error.status === 0) {
+          location.href = _contextPath;
+        } else {
+          $log.warn('http error ' + error.status);
+          $state.go('error500');
+        }
+      });
+
+      $rootScope.$on('$stateNotFound', function () {
+        $log.debug('$stateNotFound, go to 404 page');
         $state.go('error404');
-      } else if (error.status === 302 || error.status === 0){
-        location.href = _contextPath;
-      } else {
-        $log.warn('http error ' + error.status);
-        $state.go('error500');
+      });
+    })
+    .controller('navigationController', function ($scope, $location, $log, navigation) {
+      function setNavigation(subject) {
+        $scope.navItems = _.filter(navigation.items, function (item) {
+          $scope.username = subject.principal;
+          return !item.requireAdminPrivileges || subject.admin;
+        });
       }
-    });
 
-    $rootScope.$on('$stateNotFound', function(){
-      $log.debug('$stateNotFound, go to 404 page');
-      $state.go('error404');
-    });
-  })
-  .controller('navigationController', function($scope, $location, $log, navigation){    
-    function setNavigation(subject){
-      $scope.navItems = _.filter(navigation.items, function(item){
-        return ! item.requireAdminPrivileges || subject.admin;
-      });
-    }
-    
-    var subject = $scope.subject;
-    if (!subject){
-      $scope.$on('universeadmSubjectReceived', function(event, subject){
+      var subject = $scope.subject;
+      if (!subject) {
+        $scope.$on('universeadmSubjectReceived', function (event, subject) {
+          setNavigation(subject);
+        });
+      } else {
         setNavigation(subject);
-      });
-    } else {
-      setNavigation(subject);
-    }
+      }
 
-    $scope.navCollapsed = true;
-
-    $scope.toggleNav = function(){
-      $scope.navCollapsed = !$scope.navCollapsed;
-    };
-
-    $scope.$on('$routeChangeStart', function() {
       $scope.navCollapsed = true;
-    });
-    
-    $scope.navClass = function(page) {
-      var currentRoute = $location.path();
-      return page === currentRoute || new RegExp(page).test(currentRoute) ? 'active' : '';
-    };
 
-  });
+      $scope.toggleNav = function () {
+        $scope.navCollapsed = !$scope.navCollapsed;
+      };
+
+      $scope.$on('$routeChangeStart', function () {
+        $scope.navCollapsed = true;
+      });
+
+      $scope.navClass = function (page) {
+        var currentRoute = $location.path();
+        return page === currentRoute || new RegExp(page).test(currentRoute) ? 'active' : '';
+      };
+
+    });

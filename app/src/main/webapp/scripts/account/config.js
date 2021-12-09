@@ -46,9 +46,9 @@ angular.module('universeadm.account.config', ['ui.router',
         account: function(accountService){
           return accountService.get();
         },
-        $title: ['account', function(account) {
-          return account.username + ' | User Management';
-        }]
+        $title: function() {
+          return 'Account | User Management';
+        }
       }
     });
   });
