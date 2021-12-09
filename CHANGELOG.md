@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - upgrade dogu-build-ib to v1.5.1
+- update tomcat to 8.5.73 fixing the following list of vulnerabilities: 
+https://tomcat.apache.org/security-8.html#Apache_Tomcat_8.x_vulnerabilities
 - valid character inputs in new group dialogue (#47)
 - update UI for a more consistent user experience (#46)
 
