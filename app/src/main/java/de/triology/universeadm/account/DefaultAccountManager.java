@@ -53,7 +53,6 @@ public class DefaultAccountManager implements AccountManager
     this.userManager = userManager;
   }
 
-  @Override
   public User getCurrentUser()
   {
     String username = getSessionUser();
@@ -66,12 +65,11 @@ public class DefaultAccountManager implements AccountManager
     return subject.getPrincipal().toString();
   }
 
-  @Override
-  public void modifyCurrentUser(User account)
-  {
+
+  public void modifyCurrentUser(User account) {
     String username = getSessionUser();
     logger.trace("try to modify account {} as user {}", account.getUsername(), username);
-    Preconditions.checkArgument(username.equals(account.getUsername()));
+    Preconditions.checkArgument(username.equals(account.getUsername()), "the username must not be changed");
     userManager.modify(account);
   }
   

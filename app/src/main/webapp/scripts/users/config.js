@@ -1,4 +1,5 @@
-/* 
+'use strict';
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
  * 
@@ -85,7 +86,7 @@ angular.module('universeadm.users.config', ['ui.router', 'universeadm.navigation
             var username = $stateParams.username;
             var title;
             if (username !== null && username.length > 0) {
-              title = 'Edit User | User Management';
+              title = 'Edit ' + username + ' | User Management';
             } else {
               title = 'Create User | User Management';
             }

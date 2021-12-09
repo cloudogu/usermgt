@@ -28,9 +28,7 @@
 package de.triology.universeadm.account;
 
 import com.google.inject.Inject;
-import de.triology.universeadm.ConstraintViolationException;
-import de.triology.universeadm.ConstraintViolationResponse;
-import de.triology.universeadm.Manager;
+import de.triology.universeadm.*;
 import de.triology.universeadm.user.User;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -103,6 +101,9 @@ public class AccountResource
     }
     catch (ConstraintViolationException e){
       return Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e)).build();
+    }
+    catch (IllegalArgumentException e) {
+      return Response.status(Response.Status.BAD_REQUEST).entity(new DenyChangeUserResponse(e)).build();
     }
     return Response.noContent().build();
   }

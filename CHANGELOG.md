@@ -11,11 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - upgrade dogu-build-ib to v1.5.1
 - valid character inputs in new group dialogue (#47)
+- update UI for a more consistent user experience (#46)
 
 ### Removed
 - remove the ability to edit groups from the user edit view and vice versa (#44)
   - this context switch result in a loss of typed user/group information in the edit view
-
+  
 ## [v1.4.4-1] - 2021-12-02
 ### Added
 - more detailed messages to enable users to understand if their actions were successful (#41)

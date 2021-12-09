@@ -36,8 +36,8 @@ import de.triology.universeadm.user.User;
 public interface AccountManager
 {
 
-  public User getCurrentUser();
+  User getCurrentUser();
 
-  public void modifyCurrentUser(User account);
+  void modifyCurrentUser(User account);
 
 }

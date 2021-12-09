@@ -55,11 +55,16 @@ angular.module('universeadm.account.controllers', ['universeadm.validation.direc
           msg: 'Account information saved successfully'
         }];
       }, function(error){
-        if ( error.status === 409 ){
+        if ( error.status === 409 ) {
           constraintHandlingService.setConstraintErrors(error.data.constraints, $scope);
           $scope.alerts = [{
             type: 'danger',
             msg: constraintHandlingService.createErrorMessage(error.data.constraints, $scope)
+          }];
+        } else if ( error.status === 400 ){
+          $scope.alerts = [{
+            type: 'danger',
+            msg: 'The user could not be saved: ' + error.data.errorMessage
           }];
         } else {
           $scope.alerts = [{
