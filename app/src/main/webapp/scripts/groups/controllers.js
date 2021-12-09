@@ -174,12 +174,6 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         });
       }
     };
-
-    $scope.editMember = function(member){
-      var redirectURL='#/user/'+member;
-      console.log(redirectURL);
-      window.location.replace(redirectURL);
-    };
     
     $scope.searchUsers = function(value){
       return userService.search(value, 0, 5);
