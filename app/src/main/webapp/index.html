@@ -61,10 +61,17 @@
                 {{nav.label}}
               </a>
             </li>
+          </ul>
+          <ul id="user-menu" class="nav navbar-nav navbar-inverse navbar-right">
+
             <li>
-              <a href="api/logout">
-                Logout
-              </a>
+              <span class="user-icon">
+              <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+              {{username}}
+              </span>
+            </li>
+            <li>
+              <a id="logout" href="/usermgt/api/logout">Logout</a>
             </li>
           </ul>
         </div><!--/.nav-collapse -->

@@ -17,7 +17,7 @@
                class="form-control" 
                placeholder="Enter name" 
                ng-model="group.name" 
-               ng-pattern="/^[a-zA-Z0-9-_@\. ]+$/"
+               ng-pattern="/^[a-zA-Z0-9-_@\.]+$/"
                ng-minlength="2"
                ng-maxlength="32"
                ng-required="true">
@@ -77,7 +77,6 @@
           <b>{{member}}</b>
         </td>
         <td class="text-right element-interactions">
-          <button aria-label="edit" title="edit member" class="glyphicon glyphicon-pencil edit" ng-click="editMember(member)"></button>
           <button aria-label="remove" title="remove member" class="glyphicon glyphicon-trash remove" ng-click="removeMember(member)"></button>
         </td>
       </tr>
