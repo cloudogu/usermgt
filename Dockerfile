@@ -1,11 +1,11 @@
-FROM openjdk:8u171-jdk as builder
+FROM openjdk:8u302-jdk as builder
 COPY app/ /usermgt
 RUN set -x \
  && cd /usermgt \
  && ./mvnw package
 
 
-FROM registry.cloudogu.com/official/java:8u242-3
+FROM registry.cloudogu.com/official/java:8u302-1
 
 LABEL NAME="official/usermgt" \
    VERSION="1.5.0-1" \
@@ -23,7 +23,9 @@ ENV SERVICE_TAGS=webapp \
 COPY --from=builder /usermgt/target/usermgt-*.war /usermgt.war
 
 # create user
-RUN set -x \
+RUN set -o errexit \
+    && apk update \
+    && apk upgrade \
     && addgroup -S -g 1000 tomcat \
     && adduser -S -h /opt/apache-tomcat -s /bin/bash -G tomcat -u 1000 tomcat \
     # install tomcat
