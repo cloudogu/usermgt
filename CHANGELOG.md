@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.5.0-2] - 2022-04-05
+### Changed
+- Upgrade java base image to 8u302-1
+- Upgrade all packages to get zlib 1.2.12; #49
+
 ## [v1.5.0-1] - 2021-12-09
 ### Added
 - add tomcat checksum check in dockerfile
