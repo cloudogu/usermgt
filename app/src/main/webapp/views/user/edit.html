@@ -100,6 +100,10 @@
           Passwords do not match.
         </strong>
       </div>
+      <div>
+        <label for="pwdResetAtFirstLogin">Should the user change his password at the first login?</label>
+        <input id="pwdResetAtFirstLogin" name="pwdReset" type="checkbox" class="form-control" placeholder="Reset Password at initial login" ng-model="user.pwdReset" ng-disabled="!create">
+      </div>
       <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user)">
         Save
       </button>

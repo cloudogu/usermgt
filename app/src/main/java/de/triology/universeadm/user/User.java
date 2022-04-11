@@ -43,6 +43,7 @@ import org.hibernate.validator.constraints.Email;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -140,7 +141,8 @@ public class User implements Comparable<User>
       && Objects.equal(givenname, other.givenname)
       && Objects.equal(surname, other.surname)
       && Objects.equal(mail, other.mail)
-      && Objects.equal(memberOf, other.memberOf);
+      && Objects.equal(memberOf, other.memberOf)
+      && Objects.equal(pwdReset, other.pwdReset);
   }
 
   /**
@@ -153,7 +155,7 @@ public class User implements Comparable<User>
   public int hashCode()
   {
     return Objects.hashCode(username, displayName, givenname, surname, mail,
-      memberOf);
+      memberOf, pwdReset);
   }
 
   /**
@@ -168,7 +170,7 @@ public class User implements Comparable<User>
     return MoreObjects.toStringHelper(this).add("username",
       username).add("displayName", displayName).add("givenname",
         givenname).add("surname", surname).add("mail", mail).add("memberOf",
-          memberOf).toString();
+          memberOf).add("pwdReset", pwdReset).toString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -231,6 +233,17 @@ public class User implements Comparable<User>
   public String getPassword()
   {
     return password;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getPwdResetLDAPValue() {
+    return pwdReset ? Boolean.TRUE.toString().toUpperCase(Locale.ROOT):
+            Boolean.FALSE.toString().toUpperCase(Locale.ROOT);
   }
 
   /**
@@ -316,6 +329,27 @@ public class User implements Comparable<User>
    * Method description
    *
    *
+   * @param pwdReset
+   */
+  public void setPwdReset(boolean pwdReset) {
+    this.pwdReset = pwdReset;
+  }
+
+
+  /**
+   * Method description
+   *
+   *
+   * @param pwdResetLDAPValue
+   */
+  public void setPwdResetLDAPValue(String pwdResetLDAPValue) {
+    this.pwdResetLDAPValue = pwdResetLDAPValue;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param surname
    */
   public void setSurname(String surname)
@@ -363,6 +397,17 @@ public class User implements Comparable<User>
    */
   private String password;
 
+
+  /**
+   * Field description
+   */
+  private boolean pwdReset;
+
+  /**
+   * Field description
+   */
+  private String pwdResetLDAPValue;
+
   /**
    * Field description
    */
@@ -375,4 +420,8 @@ public class User implements Comparable<User>
    */
   @RDN
   private String username;
+
+
+
+
 }

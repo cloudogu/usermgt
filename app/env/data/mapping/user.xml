@@ -29,6 +29,7 @@ and open the template in the editor.
       in-search="false">
       password
     </attribute>
+    <attribute ldap-name="pwdReset">pwdResetLDAPValue</attribute>
     <attribute ldap-name="memberOf" is-multi-value="true" in-modify="false" 
       in-create="false"
                decoder="de.triology.universeadm.mapping.MemberOfMappingConverter"
