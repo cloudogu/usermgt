@@ -21,3 +21,4 @@ sn: Dent
 cn: Arthur Dent
 mail: arthur.dent@hitchhiker.com
 userPassword: hitchhiker123
+pwdReset: TRUE

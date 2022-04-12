@@ -40,7 +40,7 @@ public final class Users
   public static User createDent(){
     return new User(
       "dent", "Arthur Dent", "Arthur", "Dent", 
-      "arthur.dent@hitchhiker.com", "hitchhiker123", false,
+      "arthur.dent@hitchhiker.com", "hitchhiker123", true,
       Lists.newArrayList("Hitchhiker")
     );
   }

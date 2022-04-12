@@ -20,6 +20,7 @@ givenName: Arthur
 sn: Dent
 cn: Arthur Dent
 mail: arthur.dent@hitchhiker.com
+pwdReset: TRUE
 
 dn: uid=tricia,ou=People,dc=hitchhiker,dc=com
 objectClass: organizationalPerson
@@ -31,3 +32,4 @@ givenName: Tricia
 sn: McMillan
 cn: Tricia McMillan
 mail: tricia.mcmillan@hitchhiker.com
+pwdReset: TRUE
