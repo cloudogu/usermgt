@@ -97,7 +97,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     setUsers(users);
   })
 
-  .controller('userEditController', function($scope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService){
+  .controller('userEditController', function($scope, $rootScope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
@@ -115,7 +115,8 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
       $scope.confirmPassword = user.password;
     }
     $scope.user = user;
-    
+    $scope.userIsCurrentUser = $rootScope.username === user.username;
+
     $scope.containsIllegalChar = function(username){
       return /^[a-zA-Z0-9-_@\.]+$/.test(username);
     };

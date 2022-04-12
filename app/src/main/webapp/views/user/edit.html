@@ -100,8 +100,8 @@
           Passwords do not match.
         </strong>
       </div>
-      <div class="form-group">
-          <input id="pwdResetAtFirstLogin" name="pwdReset" type="checkbox" class="form-control" placeholder="Reset Password at initial login" ng-model="user.pwdReset" ng-disabled="!create">
+      <div class="form-group" ng-hide="userIsCurrentUser">
+          <input id="pwdResetAtFirstLogin" name="pwdReset" type="checkbox" class="form-control" placeholder="Reset Password at initial login" ng-model="user.pwdReset">
           <label>The user must change the password at the next login</label>
       </div>
       <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user)">
