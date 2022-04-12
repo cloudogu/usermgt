@@ -17,13 +17,12 @@
     <attribute
       ldap-name="userPassword"
       in-read="false"
-      in-modify="fals"
+      in-modify="false"
       in-create="false"
       in-search="false">
       password
     </attribute>
-    <attribute ldap-name="pwdReset"
-               decoder="de.triology.universeadm.mapping.LDAPBooleanConverter"
+    <attribute decoder="de.triology.universeadm.mapping.LDAPBooleanConverter"
                encoder="de.triology.universeadm.mapping.LDAPBooleanConverter">pwdReset</attribute>
     <attribute ldap-name="memberOf" is-multi-value="true" in-modify="false"
       in-create="false"
