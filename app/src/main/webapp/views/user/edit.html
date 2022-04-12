@@ -13,9 +13,9 @@
       <div class="form-group has-feedback" data-uadm-validate>
         <label class="control-label" for="username">Username</label>
         <input id="username"
-               name="username" 
-               type="text" 
-               class="form-control" 
+               name="username"
+               type="text"
+               class="form-control"
                placeholder="Enter username"
                ng-model="user.username"
                ng-minlength="2"
@@ -100,9 +100,9 @@
           Passwords do not match.
         </strong>
       </div>
-      <div>
-        <label for="pwdResetAtFirstLogin">Should the user change his password at the first login?</label>
-        <input id="pwdResetAtFirstLogin" name="pwdReset" type="checkbox" class="form-control" placeholder="Reset Password at initial login" ng-model="user.pwdReset" ng-disabled="!create">
+      <div class="form-group">
+          <input id="pwdResetAtFirstLogin" name="pwdReset" type="checkbox" class="form-control" placeholder="Reset Password at initial login" ng-model="user.pwdReset" ng-disabled="!create">
+          <label>The user must change the password at the next login</label>
       </div>
       <button type="submit" class="btn btn-primary" ng-click="save(user)" ng-disabled="form.$invalid || isUnchanged(user)">
         Save
@@ -114,15 +114,15 @@
         Back
       </a>
     </form>
-    
+
   </tab>
   <tab heading="Groups" ng-if="subject.admin">
      <form name="groupform" role="form" ng-submit="addGroup(group)" novalidate>
       <div class="form-group">
         <label class="control-label" for="addGroup">Add group</label>
-        <input id="addGroup" name="addGroup" type="text" class="form-control" 
+        <input id="addGroup" name="addGroup" type="text" class="form-control"
                placeholder="Add group" ng-model="group.newGroup" required="required" autocomplete="off"
-               typeahead="group.name for group in searchGroups($viewValue)" 
+               typeahead="group.name for group in searchGroups($viewValue)"
                typeahead-min-length="2"
                typeahead-on-select="addGroup(group)"
                typeahead-loading="searchGroupIndicator" />
