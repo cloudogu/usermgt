@@ -43,7 +43,6 @@ import org.hibernate.validator.constraints.Email;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -85,7 +84,7 @@ public class User implements Comparable<User>
    * @param memberOf
    */
   public User(String username, String displayName, String givenname,
-    String surname, String mail, String password, List<String> memberOf)
+    String surname, String mail, String password, boolean pwdReset, List<String> memberOf)
   {
     this.username = username;
     this.displayName = displayName;
@@ -93,6 +92,7 @@ public class User implements Comparable<User>
     this.surname = surname;
     this.mail = mail;
     this.password = password;
+    this.pwdReset = pwdReset;
     this.memberOf = memberOf;
   }
 
@@ -241,9 +241,8 @@ public class User implements Comparable<User>
    *
    * @return
    */
-  public String getPwdResetLDAPValue() {
-    return pwdReset ? Boolean.TRUE.toString().toUpperCase(Locale.ROOT):
-            Boolean.FALSE.toString().toUpperCase(Locale.ROOT);
+  public boolean isPwdReset() {
+    return pwdReset;
   }
 
   /**
@@ -335,17 +334,6 @@ public class User implements Comparable<User>
     this.pwdReset = pwdReset;
   }
 
-
-  /**
-   * Method description
-   *
-   *
-   * @param pwdResetLDAPValue
-   */
-  public void setPwdResetLDAPValue(String pwdResetLDAPValue) {
-    this.pwdResetLDAPValue = pwdResetLDAPValue;
-  }
-
   /**
    * Method description
    *
@@ -406,11 +394,6 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
-  private String pwdResetLDAPValue;
-
-  /**
-   * Field description
-   */
   @NotNull
   @Size(min = 1)
   private String surname;
@@ -420,8 +403,4 @@ public class User implements Comparable<User>
    */
   @RDN
   private String username;
-
-
-
-
 }
