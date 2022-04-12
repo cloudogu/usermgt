@@ -132,12 +132,12 @@ node('docker') {
       }
 
       stage('Integration Tests') {
-          echo "No integration test exists."
-//          ecoSystem.runCypressIntegrationTests([
-//                  cypressImage: "cypress/included:8.6.0",
-//                  enableVideo: params.EnableVideoRecording,
-//                  enableScreenshots    : params.EnableScreenshotRecording,
-//          ])
+         echo "run integration tests."
+         ecoSystem.runCypressIntegrationTests([
+                 cypressImage: "cypress/included:8.6.0",
+                 enableVideo: params.EnableVideoRecording,
+                 enableScreenshots    : params.EnableScreenshotRecording,
+          ])
       }
 
       if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
