@@ -9,9 +9,16 @@ When("the user clicks the dogu logout button", function () {
     cy.get('#logout').click()
 });
 
-
-When("the user opens the user creation page", function () {
+When("the user opens the users page", function () {
     cy.visit('/usermgt/#/users')
+})
+
+When("the user clicks the edit function in his own user entry", function () {
+ cy.get("tr").filter(`:contains("${env.GetAdminUsername()}")`).within((tr) => {
+    console.log(tr)
+     cy.get('.element-interactions button').first().click()
+ })
+// ('button[title="edit"]').click()
 })
 
 When("the user opens and fills the form to create a new user", function () {
@@ -25,8 +32,8 @@ When("the user opens and fills the form to create a new user", function () {
         cy.get('#password').type(newUser.password)
         cy.get('#confirmPassword').type(newUser.password)
     })
-
 })
+
 When("the user enables the password reset flag", function () {
     cy.get('#pwdResetAtFirstLogin').click()
 })
