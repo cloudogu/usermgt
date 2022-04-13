@@ -11,18 +11,24 @@ When("the user clicks the dogu logout button", function () {
 
 When("the user opens the users page", function () {
     cy.visit('/usermgt/#/users')
+    cy.clickWarpMenuCheckboxIfPossible()
+})
+
+When("the user clicks on the create button", function () {
+    cy.get('a[href*="#/user/"]').click()
 })
 
 When("the user clicks the edit function in his own user entry", function () {
- cy.get("tr").filter(`:contains("${env.GetAdminUsername()}")`).within((tr) => {
-    console.log(tr)
-     cy.get('.element-interactions button').first().click()
- })
-// ('button[title="edit"]').click()
+
+    cy.fixture("testuser_data").then(function (testUser) {
+        cy.get("tr").filter(`:contains("${testUser.username}")`).within((tr) => {
+            cy.get('.element-interactions button').first().click()
+        })
+    })
+
 })
 
-When("the user opens and fills the form to create a new user", function () {
-    cy.get('a[href*="#/user/"]').click()
+When("the user fills the form to create a new user", function () {
     cy.fixture("newuser_data").then(function (newUser) {
         cy.get('#username').type(newUser.username)
         cy.get('#givenname').type(newUser.givenname)
