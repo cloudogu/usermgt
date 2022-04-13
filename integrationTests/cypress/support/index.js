@@ -18,7 +18,7 @@ const logout = () => {
 
 const login = (username, password, retryCount = 0) => {
     cy.clearCookies()
-    
+
     cy.visit("/" + env.GetDoguName(), {failOnStatusCode: false})
     cy.clickWarpMenuCheckboxIfPossible()
 
