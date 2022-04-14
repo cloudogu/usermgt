@@ -52,9 +52,10 @@ Danach können Sie Änderungen vornehmen und diese durch einen Klick auf "Save" 
 * Surname: Nachname des Benutzers
 * Display name: Anzeigename, welcher in den einzelnen Dogus zum Nutzer ausgegeben wird.
 * Email address: Email-Adresse des Nutzers wird für Benachrichtungsfunktionen verwendet, Eindeutiges Attribut
-* Password:  Das Passwort des Benutzers für die Anmeldung am Cloudogu EcoSystem.
+* Password: Das Passwort des Benutzers für die Anmeldung am Cloudogu EcoSystem.
+* Passwort Reset Flag: Wird diese Option aktiviert, muss der Nutzer nach der initialen Anmeldung sein Passwort ändern.
 
-![Nutzerin oder Nutzer neu angelegt](figures/usermanagement/CESUsermanagement_OverviewUsers.png)
+* ![Nutzerin oder Nutzer neu angelegt](figures/usermanagement/CESUsermanagement_OverviewUsers.png)
 
 Nachdem Sie gespeichert haben, wird Ihnen die neu angelegte Nutzerin oder der Nutzer auf der Seite "Users" angezeigt. Sofern Sie noch weitere Änderungen vornehmen möchten, klicken Sie in der Spalte "Functions" auf das Symbol "Stift".
 

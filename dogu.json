@@ -15,11 +15,13 @@
   "Dependencies": [
     {
       "Type": "dogu",
-      "Name": "cas"
+      "Name": "cas",
+      "Version": ">=6.5.2-1"
     },
     {
       "Type": "dogu",
-      "Name": "ldap"
+      "Name": "ldap",
+      "Version": ">=2.4.58-2"
     },
     {
       "Type": "dogu",
