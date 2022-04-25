@@ -93,7 +93,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.va
         setUsers(users);
     })
 
-    .controller('userEditController', function ($scope, $rootScope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService, passwordResetHandlingService, passwordResetHandlingService) {
+    .controller('userEditController', function ($scope, $rootScope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService, passwordResetHandlingService) {
         $scope.alerts = [];
         $scope.backEnabled = true;
         $scope.removeEnabled = true;
