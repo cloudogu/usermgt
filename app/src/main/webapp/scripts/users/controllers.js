@@ -28,7 +28,8 @@
 
 angular.module('universeadm.users.controllers', ['ui.bootstrap', 
   'universeadm.validation.directives', 'universeadm.users.services', 
-  'universeadm.util.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services', 'universeadm.constrainthandling.services'])
+  'universeadm.util.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services', 'universeadm.constrainthandling.services',
+  'universeadm.passwordresethandling.services'])
   .controller('usersController', function($scope, $location, $modal, userService, pagingService, users, page, query){
 
     function setUsers(users){
@@ -97,7 +98,7 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     setUsers(users);
   })
 
-  .controller('userEditController', function($scope, $rootScope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService){
+  .controller('userEditController', function($scope, $rootScope, $location, $modal, groupService, userService, user, passwordPolicyService, constraintHandlingService, passwordResetHandlingService, passwordResetHandlingService){
     $scope.alerts = [];
     $scope.backEnabled = true;
     $scope.removeEnabled = true;
@@ -116,6 +117,19 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap',
     }
     $scope.user = user;
     $scope.userIsCurrentUser = $rootScope.username === user.username;
+
+    function isCreateUserAndDefaultIsPwdReset() {
+      return $scope.create && passwordResetHandlingService.getPasswordResetDefaultValue();
+    }
+
+    function isEditUserAndUserMustPwdReset() {
+      return !$scope.create && $scope.user.pwdReset;
+    }
+
+    console.log(passwordResetHandlingService.getPasswordResetDefaultValue());
+    console.log(isCreateUserAndDefaultIsPwdReset());
+    console.log(isEditUserAndUserMustPwdReset());
+    $scope.checkPwdResetCheckobox = isCreateUserAndDefaultIsPwdReset() || isEditUserAndUserMustPwdReset();
 
     $scope.containsIllegalChar = function(username){
       return /^[a-zA-Z0-9-_@\.]+$/.test(username);
