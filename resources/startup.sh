@@ -39,7 +39,7 @@ echo "${POLICY}" > "${OPTIONAL_CONFIG_PATH}"
 echo "Read configuration fof preselection of password reset attribute checkbox"
 PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_POLICY}" --default 'false')"
 echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
-echo "{ \"pwdResetPreselected\": \"${PWD_RESET_PRESELECTION}\"}" > "${GUI_CONFIG_PATH}"
+echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" > "${GUI_CONFIG_PATH}"
 
 # create truststore, which is used in the setenv.sh
 create_truststore.sh > /dev/null
