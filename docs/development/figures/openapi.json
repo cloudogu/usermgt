@@ -31,6 +31,28 @@
             }
           }
         }
+      },
+      "post": {
+        "description": "Create a new group",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api_groups_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"description\": \"mynewgroup description\",\n    \"members\": [\n        \"admin2\"\n    ],\n    \"name\": \"mynewgroupname\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/api/users": {
@@ -51,6 +73,28 @@
                 }
               }
             }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api_users_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"memberOf\": [],\n    \"username\": \"mynewusertocreate2\",\n    \"givenname\": \"mynewusertocreate\",\n    \"surname\": \"mynewusertocreate\",\n    \"displayName\": \"mynewusertocreate\",\n    \"mail\": \"mynewusertocreate2@test.de\",\n    \"password\": \"mynewusertocreate\",\n    \"pwdReset\": true\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Auto generated using Swagger Inspector"
           }
         }
       }
@@ -376,6 +420,38 @@
         },
         "example": null
       },
+      "api_users_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "pwdReset": {
+            "type": "boolean"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "givenname": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "memberOf": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
       "inline_response_200_entries": {
         "type": "object",
         "properties": {
@@ -482,6 +558,23 @@
         "properties": {
           "pwdResetPreselected": {
             "type": "boolean"
+          }
+        }
+      },
+      "api_groups_body": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           }
         }
       }
