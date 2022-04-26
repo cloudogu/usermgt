@@ -3,8 +3,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-# shellcheck disable=SC1091
-source /etc/ces/functions.sh
 LDAP_BIND_PASSWORD="$(/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
 export LDAP_BIND_PASSWORD
 
