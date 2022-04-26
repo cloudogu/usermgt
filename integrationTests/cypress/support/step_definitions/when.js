@@ -18,6 +18,10 @@ When("the user clicks on the create button", function () {
     cy.get('a[href*="#/user/"]').click()
 })
 
+When("the user waits a few seconds", function () {
+    cy.wait(1000)
+})
+
 When("the user clicks the edit function in his own user entry", function () {
 
     cy.fixture("testuser_data").then(function (testUser) {

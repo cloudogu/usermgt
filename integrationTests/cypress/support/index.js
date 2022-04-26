@@ -1,6 +1,7 @@
 // Loads all commands from the dogu integration library into this project
 const doguTestLibrary = require('@cloudogu/dogu-integration-test-library')
 const env = require('@cloudogu/dogu-integration-test-library/lib/environment_variables')
+const managerGroup = "cesManager"
 
 doguTestLibrary.registerCommands()
 
@@ -34,5 +35,34 @@ const login = (username, password, retryCount = 0) => {
     })
 }
 
+/**
+ * Returns whether the given user has manager privileges in the CES.
+ * @param {String} username - The username of the user to check.
+ */
+const isCesManager = (username) => {
+    cy.usermgtGetUser(username).then(function (response) {
+        for (var element of response.memberOf) {
+            if (element === managerGroup) {
+                return true
+            }
+        }
+        return false
+    })
+}
+
+/**
+ * Promotes an account to a ces manager account. If the given account is already manager it does nothing.
+ * @param {String} username - The username of the user to promote.
+ */
+const promoteAccountToManager = (username) => {
+    cy.isCesManager(username).then(function (isAdmin) {
+        if (!isAdmin) {
+            cy.usermgtAddMemberToGroup(managerGroup, username)
+        }
+    })
+}
+
 Cypress.Commands.add("logout", logout)
 Cypress.Commands.add("login", login)
+Cypress.Commands.add("isCesManager", isCesManager)
+Cypress.Commands.add("promoteAccountToManager", promoteAccountToManager)

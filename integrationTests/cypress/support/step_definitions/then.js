@@ -8,9 +8,8 @@ Then("the newly created user is asked to change his password", function () {
     cy.get('input[data-testid="confirmedPassword-input"]').should('be.visible')
 });
 
-Then("the password reset flag is disabled", function () {
-    cy.get('#pwdResetAtFirstLogin').should('be.visible')
-    cy.get('#pwdResetAtFirstLogin').should('be.disabled')
+Then("the password reset flag is not visible", function () {
+    cy.get('#pwdResetAtFirstLogin').should('not.be.visible')
 })
 
 Then("the password reset flag is unchecked", function () {
