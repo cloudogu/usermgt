@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.5.0-3] - 2022-04-26
+### Removed
+- remove unused source of `/etc/ces/functions.sh` in `startup.sh` (#52)
+
 ## [v1.5.0-2] - 2022-04-05
 ### Changed
 - Upgrade java base image to 8u302-1
