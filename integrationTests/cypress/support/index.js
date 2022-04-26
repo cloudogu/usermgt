@@ -24,7 +24,7 @@ const login = (username, password, retryCount = 0) => {
 
     cy.get('input[data-testid="login-username-input-field"]').type(username)
     cy.get('input[data-testid="login-password-input-field"]').type(password)
-    cy.get('div[data-testid=login-form-login-button-container]').children('div').children('button').click()
+    cy.get('div[data-testid=login-form-login-button-container]').children('button').click()
 
     cy.url().then(function (url) {
         if (url.includes("cas/login") && retryCount < env.GetMaxRetryCount()) {
