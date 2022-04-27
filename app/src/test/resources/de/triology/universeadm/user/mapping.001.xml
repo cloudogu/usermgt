@@ -52,6 +52,8 @@
       in-search="false">
       password
     </attribute>
+    <attribute decoder="de.triology.universeadm.mapping.LDAPBooleanConverter"
+               encoder="de.triology.universeadm.mapping.LDAPBooleanConverter">pwdReset</attribute>
   </attributes>
   
 </mapping>

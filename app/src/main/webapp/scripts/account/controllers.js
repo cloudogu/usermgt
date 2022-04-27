@@ -28,12 +28,13 @@
 
 angular.module('universeadm.account.controllers', ['universeadm.validation.directives', 
   'universeadm.account.services', 'universeadm.groups.services', 'universeadm.passwordpolicy.services', 'universeadm.constrainthandling.services'])
-  .controller('accountController', function($scope, accountService, groupService, account, passwordPolicyService, constraintHandlingService) {
+  .controller('accountController', function($scope, $rootScope, accountService, groupService, account, passwordPolicyService, constraintHandlingService) {
 
     function setAccount(account) {
       $scope.user = account;
       $scope.master = angular.copy(account);
       $scope.confirmPassword = account.password;
+      $scope.userIsCurrentUser = $rootScope.username === account.username;
     }
 
     setAccount(account);

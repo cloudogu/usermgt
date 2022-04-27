@@ -79,7 +79,8 @@ public class DefaultMapperTest
       attrb("username").ldapName("uid").inModify(false).rdn(true).build(),
       attr("givenname"),
       attr("surname", "sn"),
-      attrb("displayName").ldapName("cn").sibling("displayName").build()
+      attrb("displayName").ldapName("cn").sibling("displayName").build(),
+      attrb("pwdReset").decoder(LDAPBooleanConverter.class).encoder(LDAPBooleanConverter.class).build()
     );
     return new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, "dc=hitchhiker,dc=com");
   }
@@ -95,7 +96,8 @@ public class DefaultMapperTest
             "uid=dent,dc=hitchhiker,dc=com",
             new Attribute("uid", "dent"),
             new Attribute("givenname", "Arthur"),
-            new Attribute("sn", "Dent")
+            new Attribute("sn", "Dent"),
+            new Attribute("pwdReset", "TRUE")
     );
   }
 
@@ -104,7 +106,7 @@ public class DefaultMapperTest
   {
     DefaultMapper<User> mapper = createDefaultMapper();
     List<String> attributes = mapper.getReturningAttributes();
-    assertThat(attributes, containsInAnyOrder("uid", "givenname", "sn", "cn"));
+    assertThat(attributes, containsInAnyOrder("uid", "givenname", "sn", "cn", "pwdReset"));
   }
 
   @Test
@@ -118,6 +120,7 @@ public class DefaultMapperTest
     assertEquals(user.getGivenname(), entry.getAttributeValue("givenname"));
     assertEquals(user.getSurname(), entry.getAttributeValue("sn"));
     assertEquals(user.getDisplayName(), entry.getAttributeValue("cn"));
+    assertEquals("TRUE", entry.getAttributeValue("pwdReset"));
     // test sibling
     assertEquals(user.getDisplayName(), entry.getAttributeValue("displayName"));
   }
@@ -140,6 +143,7 @@ public class DefaultMapperTest
     assertEquals("dent", user.getUsername());
     assertEquals("Arthur", user.getGivenname());
     assertEquals("Dent", user.getSurname());
+    assertTrue(user.isPwdReset());
   }
   
   @Test(expected = MappingException.class)
@@ -169,7 +173,7 @@ public class DefaultMapperTest
     User user = createUser();
     List<Modification> modifications = mapper.getModifications(user);
     assertNotNull(modifications);
-    assertEquals(4, modifications.size());
+    assertEquals(5, modifications.size());
     Modification username = find(modifications, "uid");
     assertNull(username);
     Modification givenname = find(modifications, "givenname");
