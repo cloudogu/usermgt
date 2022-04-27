@@ -1,0 +1,589 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Cloudogu User Management",
+    "description": "Api description for cloudogu User Management",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "https://192.168.56.2/usermgt"
+    }
+  ],
+  "paths": {
+    "/api/groups": {
+      "get": {
+        "description": "Get a list with all groups.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"entries\":[{\"description\":\"This group grants administrative rights to all development applications of cloudogu\",\"members\":[\"admin\",\"admin2\"],\"name\":\"admin2\"},{\"description\":\"Members of the cesManager group have full access to the cloudogu administration applications\",\"members\":[\"admin\"],\"name\":\"cesManager\"}],\"start\":0,\"limit\":20,\"totalEntries\":2}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new group",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api_groups_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"description\": \"mynewgroup description\",\n    \"members\": [\n        \"admin2\"\n    ],\n    \"name\": \"mynewgroupname\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "description": "Get a list with all users.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"entries\":[{\"displayName\":\"admin\",\"givenname\":\"admin\",\"mail\":\"admin@ces.local\",\"memberOf\":[\"admin2\",\"cesManager\"],\"password\":\"__dummypassword\",\"pwdReset\":false,\"surname\":\"admin\",\"username\":\"admin\"},{\"displayName\":\"admin2\",\"givenname\":\"admin2\",\"mail\":\"admin2@test.de\",\"memberOf\":[],\"password\":\"__dummypassword\",\"pwdReset\":true,\"surname\":\"admin2\",\"username\":\"admin2\"},{\"displayName\":\"test\",\"givenname\":\"test\",\"mail\":\"test@cloudogu.com\",\"memberOf\":[],\"password\":\"__dummypassword\",\"pwdReset\":false,\"surname\":\"test\",\"username\":\"testuser\"}],\"start\":0,\"limit\":20,\"totalEntries\":3}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api_users_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"memberOf\": [],\n    \"username\": \"mynewusertocreate2\",\n    \"givenname\": \"mynewusertocreate\",\n    \"surname\": \"mynewusertocreate\",\n    \"displayName\": \"mynewusertocreate\",\n    \"mail\": \"mynewusertocreate2@test.de\",\n    \"password\": \"mynewusertocreate\",\n    \"pwdReset\": true\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Auto generated using Swagger Inspector"
+          }
+        }
+      }
+    },
+    "/api/groups/{groupname}/members/{username}": {
+      "post": {
+        "description": "Adds a user to a group. Fails if user is already member of the group.",
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/members_username_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"displayName\": \"admin\",\n    \"givenname\": \"admin\",\n    \"mail\": \"admin@ces.local\",\n    \"memberOf\": [\n        \"admin2\",\n        \"cesManager\"\n    ],\n    \"password\": \"admin\",\n    \"pwdReset\": false,\n    \"surname\": \"admin\",\n    \"username\": \"admin\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "409": {
+            "description": "Error -> User is already part of the group."
+          }
+        }
+      },
+      "delete": {
+        "description": "Removes a user from a group.",
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "success."
+          }
+        }
+      }
+    },
+    "/api/account/passwordpolicy": {
+      "get": {
+        "description": "Returns the configured password policy",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_2"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{ \"Rules\": [] }"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/gui_config": {
+      "get": {
+        "description": "Returns the configured gui config.",
+        "responses": {
+          "200": {
+            "description": "Returns the configured gui config.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_3"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{ \"pwdResetPreselected\": false}"
+                  },
+                  "1": {
+                    "value": "{ \"pwdResetPreselected\": true}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account": {
+      "get": {
+        "description": "Returns the currently logged in account. Password will be replaced with _dummypassword.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/members_username_body"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"displayName\":\"admin\",\"givenname\":\"admin\",\"mail\":\"admin@ces.local\",\"memberOf\":[\"admin2\",\"cesManager\"],\"password\":\"__dummypassword\",\"pwdReset\":false,\"surname\":\"admin\",\"username\":\"admin\"}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Creates a new account.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api_account_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"displayName\": \"admin\",\n    \"givenname\": \"admin\",\n    \"mail\": \"admin@ces.local\",\n    \"memberOf\": [\n        \"admin2\",\n        \"cesManager\"\n    ],\n    \"password\": \"admin\",\n    \"pwdReset\": false,\n    \"surname\": \"admin\",\n    \"username\": \"admin\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/users/{username}/groups/{groupname}": {
+      "post": {
+        "description": "Adds a group member.",
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "409": {
+            "description": "Error -> User is already member of the group"
+          }
+        }
+      },
+      "delete": {
+        "description": "Removes a member from a group.",
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/groups/mynewgroupname": {
+      "delete": {
+        "description": "Deletes a group",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "members_username_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "pwdReset": {
+            "type": "boolean"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "givenname": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "memberOf": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_1_entries": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "pwdReset": {
+            "type": "boolean"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "givenname": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "memberOf": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "example": null
+      },
+      "api_users_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "pwdReset": {
+            "type": "boolean"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "givenname": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "memberOf": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_entries": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "example": null
+      },
+      "inline_response_200_1": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_1_entries"
+            }
+          },
+          "start": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "totalEntries": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_entries"
+            }
+          },
+          "start": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "totalEntries": {
+            "type": "integer"
+          }
+        }
+      },
+      "inline_response_200_2": {
+        "type": "object",
+        "properties": {
+          "Rules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "api_account_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "pwdReset": {
+            "type": "boolean"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "givenname": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "memberOf": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_3": {
+        "type": "object",
+        "properties": {
+          "pwdResetPreselected": {
+            "type": "boolean"
+          }
+        }
+      },
+      "api_groups_body": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    }
+  }
+}

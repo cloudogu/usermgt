@@ -7,8 +7,9 @@ LDAP_BIND_PASSWORD="$(/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encry
 export LDAP_BIND_PASSWORD
 
 PASSWORD_POLICY="password_policy"
+PASSWORD_RESET_DEFAULT_VALUE_KEY="pwd_reset_selected_by_default"
 OPTIONAL_CONFIG_PATH="/var/lib/usermgt/conf/optional.conf"
-
+GUI_CONFIG_PATH="/var/lib/usermgt/conf/gui.conf"
 
 # copy resources
 if [ ! -d "/var/lib/usermgt/conf" ]; then
@@ -32,6 +33,12 @@ echo "Read password policy"
 POLICY="$(doguctl config "${PASSWORD_POLICY}" --default '{ "Rules": [] }')"
 echo "Password policy is: ${POLICY}"
 echo "${POLICY}" > "${OPTIONAL_CONFIG_PATH}"
+
+# create gui configuration
+echo "Read configuration fof preselection of password reset attribute checkbox"
+PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_RESET_DEFAULT_VALUE_KEY}" --default 'false')"
+echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
+echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" > "${GUI_CONFIG_PATH}"
 
 # create truststore, which is used in the setenv.sh
 create_truststore.sh > /dev/null

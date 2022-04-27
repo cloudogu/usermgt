@@ -86,7 +86,25 @@ public class AccountResource
       final Configuration conf = Configuration.getInstance();
       builder = Response.ok(conf.getContent(), MediaType.APPLICATION_JSON);
     } else {
-      logger.error("call /api/conf/passwordpolicy without prior authentication");
+      logger.error("call /api/account/passwordpolicy without prior authentication");
+      builder = Response.status(Response.Status.FORBIDDEN);
+    }
+
+    return builder.build();
+  }
+
+  @GET
+  @Path("gui_config")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getGuiConfig()
+  {
+    Response.ResponseBuilder builder;
+    User account = accountManager.getCurrentUser();
+    if ( account != null ){
+      final Configuration conf = Configuration.getInstance();
+      builder = Response.ok(conf.getGuiContent(), MediaType.APPLICATION_JSON);
+    } else {
+      logger.error("call /api/account/gui_config without prior authentication");
       builder = Response.status(Response.Status.FORBIDDEN);
     }
 

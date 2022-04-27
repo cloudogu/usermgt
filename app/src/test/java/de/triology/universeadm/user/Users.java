@@ -40,7 +40,7 @@ public final class Users
   public static User createDent(){
     return new User(
       "dent", "Arthur Dent", "Arthur", "Dent", 
-      "arthur.dent@hitchhiker.com", "hitchhiker123",
+      "arthur.dent@hitchhiker.com", "hitchhiker123", true,
       Lists.newArrayList("Hitchhiker")
     );
   }
@@ -48,7 +48,7 @@ public final class Users
   public static User createDent2(){
     return new User(
       "dent2", "Arthur Dent", "Arthur", "Dent",
-      "arthur.dent@hitchhiker.com", "hitchhiker123",
+      "arthur.dent@hitchhiker.com", "hitchhiker123", false,
       Lists.newArrayList("Hitchhiker")
     );
   }
@@ -56,7 +56,7 @@ public final class Users
   public static User createTrillian(){
     return new User(
       "trillian", "Tricia McMillan", "Tricia", "McMillan", 
-      "tricia.mcmillan@hitchhiker.com", "hitchhiker123",
+      "tricia.mcmillan@hitchhiker.com", "hitchhiker123", false,
       Lists.newArrayList("Hitchhiker")
     );
   }

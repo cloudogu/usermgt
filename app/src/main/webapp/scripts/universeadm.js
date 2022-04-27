@@ -96,10 +96,11 @@ angular.module('universeadm', ['angular-loading-bar', 'ngAnimate', 'restangular'
         $state.go('error404');
       });
     })
-    .controller('navigationController', function ($scope, $location, $log, navigation) {
+    .controller('navigationController', function ($scope, $rootScope, $location, $log, navigation) {
       function setNavigation(subject) {
         $scope.navItems = _.filter(navigation.items, function (item) {
           $scope.username = subject.principal;
+          $rootScope.username = subject.principal;
           return !item.requireAdminPrivileges || subject.admin;
         });
       }

@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.5.0-3",
+  "Version": "1.6.0-1",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -15,11 +15,13 @@
   "Dependencies": [
     {
       "Type": "dogu",
-      "Name": "cas"
+      "Name": "cas",
+      "Version": ">=6.5.3-2"
     },
     {
       "Type": "dogu",
-      "Name": "ldap"
+      "Name": "ldap",
+      "Version": ">=2.4.58-2"
     },
     {
       "Type": "dogu",
@@ -40,6 +42,19 @@
       "Name": "password_policy",
       "Description": "Configure a password policy for users passwords, based on a set of rules",
       "Optional": true
+    },
+    {
+      "Name": "pwd_reset_selected_by_default",
+      "Description": "Specifies whether the checkbox for the password change at the next login attribute should be preselected by default ",
+      "Default": "false",
+      "Optional": true,
+      "Validation": {
+        "Type": "ONE_OF",
+        "Values": [
+          "true",
+          "false"
+        ]
+      }
     },
     {
       "Name": "container_config/memory_limit",

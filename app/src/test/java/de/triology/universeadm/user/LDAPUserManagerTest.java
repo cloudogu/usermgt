@@ -297,6 +297,7 @@ public class LDAPUserManagerTest
     assertEquals("Arthur", user.getGivenname());
     assertEquals("Dent", user.getSurname());
     assertEquals("arthur.dent@hitchhiker.com", user.getMail());
+    assertTrue(user.isPwdReset());
   }
   
   private void assertEntry(Entry entry){

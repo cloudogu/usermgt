@@ -55,7 +55,7 @@ To create a new user for the Cloudogu EcoSystem, first call up the "Users" tab.
 * Display name
 * Email address
 * Password
-
+* Passwort Reset Flag (the user must set a new password after the next login)
 ![User newly created](figures/usermanagement/CESUsermanagement_OverviewUsers.png)
 
 After you have saved, the newly created user will be displayed on the "Users" page. If you want to make any further changes, click on the "Pencil" icon in the "Functions" column.

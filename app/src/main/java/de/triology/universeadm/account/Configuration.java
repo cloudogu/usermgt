@@ -12,11 +12,14 @@ public class Configuration {
   private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
   private static final String defaultPath = "/var/lib/usermgt/conf";
   private static final String configFilePath = defaultPath + "/optional.conf";
+  private static final String guiConfigFilePath = defaultPath + "/gui.conf";
   private static Configuration instance;
   private final String content;
+  private final String guiContent;
 
   private Configuration() {
     this.content = this.readConfigurationFromFile(configFilePath);
+    this.guiContent = this.readConfigurationFromFile(guiConfigFilePath);
   }
 
   public static Configuration getInstance() {
@@ -28,6 +31,10 @@ public class Configuration {
 
   public String getContent() {
     return this.content;
+  }
+
+  public String getGuiContent() {
+    return this.guiContent;
   }
 
   private String readConfigurationFromFile(final String path) {
