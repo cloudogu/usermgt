@@ -17,11 +17,13 @@ Then("the password reset flag is unchecked", function () {
     cy.get('#pwdResetAtFirstLogin').should('not.be.checked')
 })
 
-// TODO?
-Then(/^the user has no administrator privileges in the dogu$/, function () {
-    //not possible for cockpit as there is no distinction between normal user and admin
+
+Then("the user has no administrator privileges in the dogu", function () {
+    //not possible for usermgt as there is no distinction between normal user and admin
+    //only the CES manager has extended permissions, not the admin
 });
 
-Then(/^the user has administrator privileges in the dogu$/, function () {
-    //not possible for cockpit as there is no distinction between normal user and admin
+Then("the user has administrator privileges in the dogu", function () {
+    //not possible for usermgt as there is no distinction between normal user and admin
+    //only the CES manager has extended permissions, not the admin
 });
