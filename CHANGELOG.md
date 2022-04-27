@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.6.0-1] - 2022-04-27
+Note: CAS version >= 6.5.3-2 is required for this version.
+
 ### Added
 - Possibility to set the attribute that the user has to change his password at the next login (#51)
 
