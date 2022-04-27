@@ -9,7 +9,7 @@
 #### Lokales LDAP mit Docker einrichten
 * Checken Sie das folgende Repository aus https://github.com/cloudogu/docker-sample-ldap
 * Bauen Sie den Container `docker build -t usermgt/ldap .`
-* Starten Sie den Container `docker run --rm -p389:389 usermgt/ldap`.
+* Starten Sie den Container `docker run --rm -p 389:389 usermgt/ldap`.
 
 #### Usermgt Entwicklungsmodus einrichten
 * `export UNIVERSEADM_STAGE=DEVELOPMENT`
