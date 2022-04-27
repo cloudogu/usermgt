@@ -53,7 +53,7 @@ Danach können Sie Änderungen vornehmen und diese durch einen Klick auf "Save" 
 * Display name: Anzeigename, welcher in den einzelnen Dogus zum Nutzer ausgegeben wird.
 * Email address: Email-Adresse des Nutzers wird für Benachrichtungsfunktionen verwendet, Eindeutiges Attribut
 * Password: Das Passwort des Benutzers für die Anmeldung am Cloudogu EcoSystem.
-* Passwort Reset Flag: Wird diese Option aktiviert, muss der Nutzer nach der initialen Anmeldung sein Passwort ändern.
+* Passwort Reset Flag: Wird diese Option aktiviert, muss der Nutzer nach der nächsten Anmeldung sein Passwort ändern.
 
 * ![Nutzerin oder Nutzer neu angelegt](figures/usermanagement/CESUsermanagement_OverviewUsers.png)
 
