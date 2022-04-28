@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed a bug where the pwd-reset checkbox was checked without any effect (#55)
+
 ## [v1.6.0-1] - 2022-04-27
 Note: CAS version >= 6.5.3-2 is required for this version.
 
