@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.6.0-2] - 2022-04-29
+
 ### Fixed
 - Fixed a bug where the pwd-reset checkbox was checked without any effect (#55)
 
