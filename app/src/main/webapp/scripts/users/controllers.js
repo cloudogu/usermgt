@@ -117,10 +117,8 @@ angular.module('universeadm.users.controllers', ['ui.bootstrap', 'universeadm.va
             return !$scope.create && $scope.user.pwdReset;
         }
 
-
-        $scope.checkPwdResetCheckbox = false;
         passwordResetHandlingService.getPasswordResetDefaultValue().then(function (pwdReset) {
-            $scope.checkPwdResetCheckbox = isEditUserAndUserMustPwdReset() || ($scope.create && pwdReset);
+            $scope.user.pwdReset = isEditUserAndUserMustPwdReset() || ($scope.create && pwdReset);
         });
 
         $scope.containsIllegalChar = function (username) {
