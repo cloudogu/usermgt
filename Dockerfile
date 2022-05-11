@@ -5,10 +5,10 @@ RUN set -x \
  && ./mvnw package
 
 
-FROM registry.cloudogu.com/official/java:8u302-1
+FROM registry.cloudogu.com/official/java:8u302-3
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.6.0-2" \
+   VERSION="1.6.1-1" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
