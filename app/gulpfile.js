@@ -62,14 +62,12 @@ gulp.task('default', gulp.series('lessc', 'build-template-cache', function(){
   // concat, compress and rename resources from index.html
   return gulp.src('src/main/webapp/index.html')
       .pipe($.useref({searchPath: '{target/gulp,target/gulptmp,src/main/webapp}'}))
-      .pipe($.filesize())
       .pipe($.if('*.js', $.ngAnnotate()))
       .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.minifyCss()))
       .pipe($.if('!*.html', $.rev()))
       .pipe($.if('!*.html', $.rename({suffix: '.min'})))
       .pipe($.revReplace())
-      .pipe($.filesize())
       .pipe(gulp.dest('target/gulp'));
 }));
 
