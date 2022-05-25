@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.6.1-1] - 2022-05-11
+
+### Security
+- java base image
+- updated some maven dependencies
+
+## [v1.6.0-2] - 2022-04-29
+
+### Fixed
+- Fixed a bug where the pwd-reset checkbox was checked without any effect (#55)
+
+## [v1.6.0-1] - 2022-04-27
+Note: CAS version >= 6.5.3-2 is required for this version.
+
+### Added
+- Possibility to set the attribute that the user has to change his password at the next login (#51)
+
+## [v1.5.0-3] - 2022-04-26
+### Removed
+- remove unused source of `/etc/ces/functions.sh` in `startup.sh` (#52)
+
 ## [v1.5.0-2] - 2022-04-05
 ### Changed
 - Upgrade java base image to 8u302-1

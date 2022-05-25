@@ -84,7 +84,7 @@ public class User implements Comparable<User>
    * @param memberOf
    */
   public User(String username, String displayName, String givenname,
-    String surname, String mail, String password, List<String> memberOf)
+    String surname, String mail, String password, boolean pwdReset, List<String> memberOf)
   {
     this.username = username;
     this.displayName = displayName;
@@ -92,6 +92,7 @@ public class User implements Comparable<User>
     this.surname = surname;
     this.mail = mail;
     this.password = password;
+    this.pwdReset = pwdReset;
     this.memberOf = memberOf;
   }
 
@@ -140,7 +141,8 @@ public class User implements Comparable<User>
       && Objects.equal(givenname, other.givenname)
       && Objects.equal(surname, other.surname)
       && Objects.equal(mail, other.mail)
-      && Objects.equal(memberOf, other.memberOf);
+      && Objects.equal(memberOf, other.memberOf)
+      && Objects.equal(pwdReset, other.pwdReset);
   }
 
   /**
@@ -153,7 +155,7 @@ public class User implements Comparable<User>
   public int hashCode()
   {
     return Objects.hashCode(username, displayName, givenname, surname, mail,
-      memberOf);
+      memberOf, pwdReset);
   }
 
   /**
@@ -168,7 +170,7 @@ public class User implements Comparable<User>
     return MoreObjects.toStringHelper(this).add("username",
       username).add("displayName", displayName).add("givenname",
         givenname).add("surname", surname).add("mail", mail).add("memberOf",
-          memberOf).toString();
+          memberOf).add("pwdReset", pwdReset).toString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -231,6 +233,16 @@ public class User implements Comparable<User>
   public String getPassword()
   {
     return password;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPwdReset() {
+    return pwdReset;
   }
 
   /**
@@ -316,6 +328,16 @@ public class User implements Comparable<User>
    * Method description
    *
    *
+   * @param pwdReset
+   */
+  public void setPwdReset(boolean pwdReset) {
+    this.pwdReset = pwdReset;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param surname
    */
   public void setSurname(String surname)
@@ -362,6 +384,12 @@ public class User implements Comparable<User>
    * Field description
    */
   private String password;
+
+
+  /**
+   * Field description
+   */
+  private boolean pwdReset;
 
   /**
    * Field description

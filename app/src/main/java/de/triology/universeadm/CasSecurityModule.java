@@ -114,6 +114,8 @@ public class CasSecurityModule extends BaseSecurityModule {
     addFilterChain("/api/users/*", API, config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/groups", API, config(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/groups/*", API, config(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/account", API);
+    addFilterChain("/api/account/*", API);
     addFilterChain("/**", AUTHC);
   }
   
