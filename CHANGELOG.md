@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.6.1-2] - 2022-07-05
 ### Changed
-- Increase max username lenght to 64 characters (was 32 before) (#61)
+- Increase max username length to 64 characters (was 32 before) (#61)
 
 ## [v1.6.1-1] - 2022-05-11
 ### Security
