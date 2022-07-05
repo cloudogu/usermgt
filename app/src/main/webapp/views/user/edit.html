@@ -19,7 +19,7 @@
                placeholder="Enter username"
                ng-model="user.username"
                ng-minlength="2"
-               ng-maxlength="32"
+               ng-maxlength="128"
                ng-required="true"
                unique-constraint-checker
                ng-disabled="!create"
@@ -40,7 +40,7 @@
           Username must have at least 2 characters
         </strong>
         <strong ng-show="form.username.$error.maxlength" class="text-danger help-block">
-          Username exceeds the maximum length of 32 characters.
+          Username exceeds the maximum length of 128 characters.
         </strong>
         <strong ng-show="form.username.$error.uniqueConstraint" class="text-danger help-block">
           A user with that username already exists.

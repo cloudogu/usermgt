@@ -5,15 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Increase max username lenght to 128 characters (#61)
 
 ## [v1.6.1-1] - 2022-05-11
-
 ### Security
 - java base image
 - updated some maven dependencies
 
 ## [v1.6.0-2] - 2022-04-29
-
 ### Fixed
 - Fixed a bug where the pwd-reset checkbox was checked without any effect (#55)
 
