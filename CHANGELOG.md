@@ -6,14 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v1.6.1-1] - 2022-05-11
+## [v1.6.1-2] - 2022-07-05
+### Changed
+- Increase max username length to 64 characters (was 32 before) (#61)
 
+## [v1.6.1-1] - 2022-05-11
 ### Security
 - java base image
 - updated some maven dependencies
 
 ## [v1.6.0-2] - 2022-04-29
-
 ### Fixed
 - Fixed a bug where the pwd-reset checkbox was checked without any effect (#55)
 
