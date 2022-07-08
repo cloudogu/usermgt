@@ -8,7 +8,7 @@ RUN set -x \
 FROM registry.cloudogu.com/official/java:8u302-1
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.5.0-3" \
+   VERSION="1.5.0-4" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
