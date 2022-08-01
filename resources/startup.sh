@@ -3,6 +3,9 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+# shellcheck disable=SC1091
+source util.sh
+
 LDAP_BIND_PASSWORD="$(/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
 export LDAP_BIND_PASSWORD
 
@@ -27,12 +30,8 @@ fi
 # render templates
 doguctl template "/var/lib/usermgt/conf/cas.xml.tpl" "/var/lib/usermgt/conf/cas.xml"
 doguctl template "/var/lib/usermgt/conf/ldap.xml.tpl" "/var/lib/usermgt/conf/ldap.xml"
-
-# create password policy config file
-echo "Read password policy"
-POLICY="$(doguctl config "${PASSWORD_POLICY}" --default '{ "Rules": [] }')"
-echo "Password policy is: ${POLICY}"
-echo "${POLICY}" > "${OPTIONAL_CONFIG_PATH}"
+determinePwdMinLength
+doguctl template "/var/lib/usermgt/conf/password_policy.tpl" "${OPTIONAL_CONFIG_PATH}"
 
 # create gui configuration
 echo "Read configuration fof preselection of password reset attribute checkbox"
