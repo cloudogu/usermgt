@@ -6,6 +6,12 @@ set -o pipefail
 # shellcheck disable=SC1091
 source util.sh
 
+# check whether post-upgrade script is still running
+while [[ "$(doguctl state)" == "upgrading" ]]; do
+  echo "Upgrade script is running. Waiting..."
+  sleep 3
+done
+
 LDAP_BIND_PASSWORD="$(/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
 export LDAP_BIND_PASSWORD
 
