@@ -4,6 +4,9 @@ set -o nounset
 set -o pipefail
 
 function checkSameVersion() {
+  FROM_VERSION="${1}"
+  TO_VERSION="${2}"
+
   echo "Checking the Usermgt versions..."
   if [ "${FROM_VERSION}" = "${TO_VERSION}" ]; then
     echo "FROM and TO versions are the same"
@@ -25,21 +28,25 @@ function removeDeprecatedKeys() {
     doguctl config --remove "password_policy"
   fi
 
- echo "Remove deprecated etcd Keys... Done!"
+  echo "Remove deprecated etcd Keys... Done!"
 }
 
-##### Functions definition done; Executing post-upgrade now
+function run_postupgrade() {
+  FROM_VERSION="${1}"
+  TO_VERSION="${2}"
 
-FROM_VERSION="${1}"
-TO_VERSION="${2}"
+  echo "Executing Usermgt post-upgrade from ${FROM_VERSION} to ${TO_VERSION} ..."
 
-echo "Executing Usermgt post-upgrade from ${FROM_VERSION} to ${TO_VERSION} ..."
+  checkSameVersion ${FROM_VERSION} ${TO_VERSION}
+  removeDeprecatedKeys
 
-checkSameVersion
-removeDeprecatedKeys
+  echo "Set registry flag so startup script can start afterwards..."
+  doguctl state "upgrade done"
 
-echo "Set registry flag so startup script can start afterwards..."
-doguctl state "upgrade done"
+  echo "Executing Usermgt post-upgrade from ${FROM_VERSION} to ${TO_VERSION} ... Done!"
+}
 
-echo "Executing Usermgt post-upgrade from ${FROM_VERSION} to ${TO_VERSION} ... Done!"
-
+# make the script only run when executed, not when sourced from bats tests)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  run_postupgrade "$@"
+fi
