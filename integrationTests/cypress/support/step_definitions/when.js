@@ -57,3 +57,18 @@ When("the newly created user logs in", function () {
         cy.login(newUser.username, newUser.password, env.GetMaxRetryCount()) // We dont want to retry the login
     })
 })
+
+When("the user opens his own page in usermgt", function () {
+    cy.visit('/usermgt/#/account')
+    cy.clickWarpMenuCheckboxIfPossible()
+})
+
+When("the user deletes his password input", function () {
+    cy.get('input[id="password"]').clear()
+})
+
+When("the user enters a valid password", function () {
+    cy.fixture("newuser_data").then(function (newUser) {
+        cy.get('input[id="password"]').type(newUser.password)
+    })
+})
