@@ -15,7 +15,6 @@ done
 LDAP_BIND_PASSWORD="$(/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
 export LDAP_BIND_PASSWORD
 
-PASSWORD_POLICY="password_policy"
 PASSWORD_RESET_DEFAULT_VALUE_KEY="pwd_reset_selected_by_default"
 OPTIONAL_CONFIG_PATH="/var/lib/usermgt/conf/optional.conf"
 GUI_CONFIG_PATH="/var/lib/usermgt/conf/gui.conf"
