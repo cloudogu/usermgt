@@ -84,10 +84,10 @@
       <div class="form-group password-field has-feedback" data-uadm-validate>
         <label class="control-label" for="password">Password</label>
         <input id="password" name="password" type="password" class="form-control" placeholder="Password" ng-required="true" ng-model="user.password" ng-change="applyPasswordPolicy()">
-        <span  class="glyphicon glyphicon-remove form-control-feedback "></span>
-        <span  class="glyphicon glyphicon-ok form-control-feedback"></span>
+        <span  class="glyphicon glyphicon-remove form-control-feedback " data-testid="password-invalid-marker"></span>
+        <span  class="glyphicon glyphicon-ok form-control-feedback" data-testid="password-valid-marker"></span>
       </div>
-      <p>
+      <p data-testid="password-policy-rules">
         <span ng-repeat="violation in passwordPolicy.violations" class="text-danger display-block"><strong>{{violation.Description}}.&nbsp;</strong></span>
         <span ng-repeat="satisfaction in passwordPolicy.satisfactions" class="text-success display-block"><strong>{{satisfaction.Description}}.&nbsp;</strong></span>
       </p>

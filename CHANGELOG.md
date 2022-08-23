@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.7.0-1] - 2022-08-23
+### Changed
+- The password rules are now set via global etcd keys. For more information see [docs](docs/operations/password-policy_en.md#Configuration-of-password-rules-in-etcd) (#63)
+  - Note: the existing password rules will NOT be migrated automatically.
+
 ## [v1.6.1-2] - 2022-07-05
 ### Changed
 - Increase max username length to 64 characters (was 32 before) (#61)

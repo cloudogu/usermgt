@@ -45,6 +45,10 @@ node('docker') {
       shellCheck("./resources/startup.sh")
     }
 
+    stage('Shell tests') {
+      executeShellTests()
+    }
+
     // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
     // builds run concurrently (e.g. feature branch, PR and develop)
     new Docker(this).image('openjdk:8-jdk')
@@ -114,7 +118,17 @@ node('docker') {
 
       stage('Setup') {
         ecoSystem.loginBackend('cesmarvin-setup')
-        ecoSystem.setup()
+        ecoSystem.setup([registryConfig:"""
+                                        "_global": {
+                                            "password-policy": {
+                                                "must_contain_capital_letter": "true",
+                                                "must_contain_lower_case_letter": "true",
+                                                "must_contain_digit": "true",
+                                                "must_contain_special_character": "true",
+                                                "min_length": "14"
+                                            }
+                                        }
+                                    """])
       }
 
       stage('Wait for dependencies') {
@@ -205,4 +219,21 @@ void gitWithCredentials(String command){
       returnStdout: true
     )
   }
+}
+
+def executeShellTests() {
+    def bats_base_image = "bats/bats"
+    def bats_custom_image = "cloudogu/bats"
+    def bats_tag = "1.2.1"
+
+    def batsImage = docker.build("${bats_custom_image}:${bats_tag}", "--build-arg=BATS_BASE_IMAGE=${bats_base_image} --build-arg=BATS_TAG=${bats_tag} ./unitTests")
+    try {
+        sh "mkdir -p target"
+
+        batsContainer = batsImage.inside("--entrypoint='' -v ${WORKSPACE}:/workspace") {
+            sh "make unit-test-shell-ci"
+        }
+    } finally {
+        junit allowEmptyResults: true, testResults: 'target/shell_test_reports/*.xml'
+    }
 }

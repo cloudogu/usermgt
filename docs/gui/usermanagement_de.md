@@ -72,7 +72,7 @@ Wird versucht, eine Nutzerin oder einen Nutzer mit einer E-Mail-Addresse anzuleg
 ![Nutzerin oder Nutzer neu angelegt_Unique_Email: Fehlermeldung E-mail](figures/usermanagement/CESUsermanagement_EmailUnique.png)
 
 ### Passwort-Richtlinien
-Im User Management können Passwort-Richtlinien konfiguriert werden, die während der Eingabe der Passwörter validiert werden. Durch das Anlegen von sinnvollen Passwort-Richtlinien kann die Sicherheit der Passwörter global kontrolliert werden.
+Im etcd vom CES können Passwort-Richtlinien konfiguriert werden, die während der Eingabe der Passwörter validiert werden. Durch das Anlegen von sinnvollen Passwort-Richtlinien kann die Sicherheit der Passwörter global kontrolliert werden.
 
 ##### Ablauf
 1. Alle nicht erfüllten Passwort-Richtlinien werden angezeigt.
@@ -86,15 +86,6 @@ Im User Management können Passwort-Richtlinien konfiguriert werden, die währen
 3. Sobald alle Passwort-Richtlinien erfüllt wurden, kann das neue Passwort gespeichert werden.
 
 ![Alle Regeln erfüllt](figures/usermanagement/CESUsermanagement_Password_Policy_All_Rules_Satisfied.png)
-
-
-##### Ausnahmen
-Sollten Passwort-Richtlinien falsch konfiguriert worden sein, so werden diese angezeigt. Die Eingabe von Passwörtern im System ist dann nicht möglich. Der Administrator muss in diesem Fall die Einstellungen korrigieren.
-
-Sollte ein ungültiger Regex zur Konfiguration verwendet worden sein, so wird eine Fehlermeldung nach dem folgenden Muster angezeigt:
-
-![Invalid Regel](figures/usermanagement/CESUsermanagement_Password_Policy_InvalidRegex.png)
-
 
 ### Nutzerin oder Nutzer löschen
 Klicken Sie hierzu auf der Seite "Users" auf das Symbol "Mülltonne", welches in der Spalte "Functions" und in der Zeile der zu löschenden Nutzerin oder des Nutzers abgebildet ist. Bestätigen Sie daraufhin die Sicherheitsabfrage.
