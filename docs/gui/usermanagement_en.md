@@ -73,7 +73,7 @@ If you try to create a user with an email address that already exists the follow
 ![User newly created_Unique_Email: Error message E-mail](figures/usermanagement/CESUsermanagement_EmailUnique.png)
 
 ### Password policies
-In User Management, password policies can be configured to be validated as passwords are entered. By creating meaningful password policies, the security of passwords can be controlled globally.
+In etcd of the CES, password policies can be configured to be validated as passwords are entered. By creating meaningful password policies, the security of passwords can be controlled globally.
 
 ##### Procedure
 1. all password policies that are not fulfilled are displayed.
@@ -87,15 +87,6 @@ In User Management, password policies can be configured to be validated as passw
 3. once all password policies are satisfied, the new password can be saved.
 
 ![All rules satisfied](figures/usermanagement/CESUsermanagement_Password_Policy_All_Rules_Satisfied.png)
-
-
-##### Exceptions
-If password policies have been configured incorrectly, they will be displayed. It is then not possible to enter passwords in the system. In this case, the administrator must correct the settings.
-
-If an invalid regex has been used for configuration, an error message will be displayed according to the following pattern:
-
-![Invalid Rule](figures/usermanagement/CESUsermanagement_Password_Policy_InvalidRegex.png)
-
 
 ### Delete user
 To do this, click on the "Trash can" icon on the "Users" page, which is shown in the "Functions" column and in the row of the user you want to delete. Confirm the security prompt at the end.
