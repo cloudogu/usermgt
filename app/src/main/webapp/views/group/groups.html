@@ -61,7 +61,7 @@
       <td class="element-interactions">
         <button aria-label="edit" title="edit group" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
         </button>
-        <button aria-label="remove" title="remove group" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
+        <button ng-if="nonDeletableGroups.indexOf(group.name) == -1" aria-label="remove" title="remove group" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
         </button>
       </td>
     </tr>

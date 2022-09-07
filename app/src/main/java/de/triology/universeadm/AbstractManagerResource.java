@@ -151,12 +151,19 @@ public abstract class AbstractManagerResource<T> {
 
     if (object == null) {
       builder = Response.status(Response.Status.NOT_FOUND);
-    } else {
+      return builder.build();
+    }
+    try{
       manager.remove(object);
       builder = Response.noContent();
+    } catch (CannotRemoveException e) {
+      builder = Response.status(Response.Status.CONFLICT);
     }
 
-    return builder.build();
+   return builder.build();
+
+
+
   }
 
   //~--- get methods ----------------------------------------------------------

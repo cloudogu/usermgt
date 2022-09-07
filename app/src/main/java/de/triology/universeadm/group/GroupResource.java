@@ -31,11 +31,15 @@ import com.google.inject.Inject;
 import de.triology.universeadm.AbstractManagerResource;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import org.json.simple.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -44,6 +48,8 @@ import javax.ws.rs.core.Response;
 @Path("groups")
 public class GroupResource extends AbstractManagerResource<Group>
 {
+
+  private static final Logger logger = LoggerFactory.getLogger(GroupResource.class);
 
   private final GroupManager groupManager;
   private final UserManager userManager;
@@ -121,5 +127,22 @@ public class GroupResource extends AbstractManagerResource<Group>
     
     return builder.build();
   }
-  
+
+  @GET
+  @Path("GetNonDeleteGroups")
+  public Response getNonDeleteGroups(){
+    Response.ResponseBuilder builder;
+    try {
+      List<String> groups = UndeletableGroupManager.getNonDeleteClassList();
+      JSONArray array = new JSONArray();
+      array.addAll(groups);
+      builder = Response.ok(array, MediaType.APPLICATION_JSON);
+    } catch (Exception e) {
+
+      logger.error("call /api/account without prior authentication");
+      builder = Response.status(Response.Status.BAD_REQUEST);
+    }
+    return builder.build();
+  }
+
 }
