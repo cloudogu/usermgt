@@ -1,4 +1,12 @@
-<h1>{{create ? 'New group' : group.name}}</h1>
+<h1>
+  {{create ? 'New group' : group.name}}
+  <i class="popup popup-bottom glyphicon glyphicon-info-sign" ng-click="togglePopup($event)"
+     ng-if="undeletableGroups.includes(group.name)">
+    <span class="popuptext" id="sysgroups-info-popup">
+      This is a system group. It cannot be deleted.
+    </span>
+  </i>
+</h1>
 
 <div class="danger">
   <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
@@ -45,7 +53,7 @@
       <button type="submit" class="btn btn-primary" ng-click="save(group)" ng-disabled="form.$invalid || isUnchanged(group)">
         Save
       </button>
-      <button  class="btn btn-warning" ng-click="remove(group)" ng-if="! create">
+      <button class="btn btn-warning" ng-click="remove(group)" ng-disabled="undeletableGroups.includes(group.name)" ng-if="! create">
         Remove
       </button>
       <a ng-if="backEnabled" class="btn btn-default" ng-href="#/groups">

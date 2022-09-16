@@ -54,6 +54,12 @@
       <td>
         <b>
           {{group.name}}
+          <i class="popup glyphicon glyphicon-info-sign" ng-click="togglePopup($event)"
+             ng-if="undeletableGroups.includes(group.name)">
+            <span class="popuptext" id="sysgroups-info-popup">
+              This is a system group. It cannot be deleted.
+            </span>
+          </i>
         </b>
       </td>
       <td>{{group.description}}</td>
@@ -61,8 +67,8 @@
       <td class="element-interactions">
         <button aria-label="edit" title="edit group" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
         </button>
-        <button ng-if="nonDeletableGroups.indexOf(group.name) == -1" aria-label="remove" title="remove group" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
-        </button>
+        <button aria-label="remove" class="glyphicon glyphicon-trash remove" ng-click="remove(group)"
+                ng-disabled="undeletableGroups.includes(group.name)" title="remove group"></button>
       </td>
     </tr>
   </tbody>

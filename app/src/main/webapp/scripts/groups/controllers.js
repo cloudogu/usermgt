@@ -25,6 +25,37 @@
  * http://www.scm-manager.com
  */
 
+function setUndeletableGroups($scope, groupService) {
+    groupService.getUndeletableGroups().then(function (response) {
+        /**
+         * We assume that only two groups are not deletable, the admin and the tool admin group.
+         * The "get().$object" will return the two groups as the first two entries in $object
+         */
+        $scope.undeletableGroups = [response[0], response[1]];
+    }, function (err, status) {
+        console.error('Error when trying to fetch undeletable groups.', err, status);
+    });
+}
+
+function togglePopup(event) {
+    var popupTarget = event.target;
+    var popups = popupTarget.querySelectorAll('.popuptext');
+    popups.forEach(function (popup) {
+        popup.classList.toggle('show');
+    });
+    event.stopPropagation();
+}
+
+function addClosePopupListener() {
+    document.body.addEventListener('click', function (event) {
+        if (!event.target.classList.contains('popup')) {
+            var popups = event.target.querySelectorAll('.popuptext');
+            popups.forEach(function (popup) {
+                popup.classList.remove('show');
+            });
+        }
+    });
+}
 
 angular.module('universeadm.groups.controllers', ['ui.bootstrap',
     'universeadm.validation.directives', 'universeadm.groups.services',
@@ -42,7 +73,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         }
 
 
-        $scope.nonDeletableGroups = groupService.getNonDeletableGroups();
+        setUndeletableGroups($scope, groupService);
 
         $scope.editGroup = function (group) {
             var redirectURL = '#/group/' + group;
@@ -81,6 +112,9 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
             };
         };
 
+        $scope.togglePopup = togglePopup;
+        addClosePopupListener();
+
         $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
         };
@@ -99,6 +133,8 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         $scope.alerts = [];
         $scope.backEnabled = true;
         $scope.removeEnabled = true;
+
+        setUndeletableGroups($scope, groupService);
 
         $scope.addMember = function (member) {
             if (member) {
@@ -159,6 +195,9 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
                 instance.close();
             };
         };
+
+        $scope.togglePopup = togglePopup;
+        addClosePopupListener();
 
         $scope.removeMember = function (member) {
             if ($scope.create) {

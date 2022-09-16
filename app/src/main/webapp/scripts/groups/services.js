@@ -29,14 +29,13 @@
 angular.module('universeadm.groups.services', ['restangular'])
     .factory('groupService', function (Restangular) {
         var groups = Restangular.all('groups');
-        console.log(groups.route);
         var alerts = [];
         return {
             getAll: function (start, limit) {
                 return groups.getList({start: start, limit: limit});
             },
-            getNonDeletableGroups: function () {
-                return groups.get('GetNonDeleteGroups');
+            getUndeletableGroups: function () {
+                return groups.one('undeletable').get();
             },
             search: function (query, start, limit) {
                 return groups.getList({query: query, start: start, limit: limit});
