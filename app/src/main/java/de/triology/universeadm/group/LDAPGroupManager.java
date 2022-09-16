@@ -102,7 +102,7 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
   {
     logger.debug("remove group {}", group.getName());
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
-    if(UndeletableGroupManager.isGroupDeletable(group.getName())){
+    if(UndeletableGroupManager.isGroupUndeletable(group.getName())){
       throw new CannotRemoveException();
     }
     mapping.remove(group);

@@ -129,17 +129,15 @@ public class GroupResource extends AbstractManagerResource<Group>
   }
 
   @GET
-  @Path("GetNonDeleteGroups")
-  public Response getNonDeleteGroups(){
+  @Path("undeletable")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getUndeletable(){
     Response.ResponseBuilder builder;
     try {
       List<String> groups = UndeletableGroupManager.getNonDeleteClassList();
-      JSONArray array = new JSONArray();
-      array.addAll(groups);
-      builder = Response.ok(array, MediaType.APPLICATION_JSON);
+      builder = Response.ok(groups, MediaType.APPLICATION_JSON);
     } catch (Exception e) {
-
-      logger.error("call /api/account without prior authentication");
+      logger.error("call /api/groups/undeletable without prior authentication");
       builder = Response.status(Response.Status.BAD_REQUEST);
     }
     return builder.build();

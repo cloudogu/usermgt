@@ -16,7 +16,7 @@ public class UndeletableGroupManager {
         return groups;
     }
 
-    public static boolean isGroupDeletable(String group){
+    public static boolean isGroupUndeletable(String group){
         return getNonDeleteClassList().contains(group);
     }
 
