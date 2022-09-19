@@ -151,7 +151,7 @@ public class LDAPGroupManagerTest
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
   public void removeTest() throws LDAPException
   {
-    Group group = Groups.createHeartOfGold();
+    final Group group = Groups.createHeartOfGold();
     createGroupManager().remove(group);
     assertNull(ldap.getConnection().getEntry("cn=Heart Of Gold,ou=Groups,dc=hitchhiker,dc=com"));
     verify(eventBus).post(new GroupEvent(group, EventType.REMOVE));
