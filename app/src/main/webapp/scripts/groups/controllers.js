@@ -37,22 +37,32 @@ function setUndeletableGroups($scope, groupService) {
     });
 }
 
-function togglePopup(event) {
+function popup(event, action) {
     var popupTarget = event.target;
     var popups = popupTarget.querySelectorAll('.popuptext');
     popups.forEach(function (popup) {
-        popup.classList.toggle('show');
+        switch (action) {
+            case 'toggle':
+                popup.classList.toggle('show');
+                break;
+            case 'open':
+                popup.classList.add('show');
+                break;
+            case 'close':
+                popup.classList.remove('show');
+                break;
+        }
     });
     event.stopPropagation();
 }
 
 function addClosePopupListener() {
-    document.body.addEventListener('click', function (event) {
-        if (!event.target.classList.contains('popup')) {
-            var popups = event.target.querySelectorAll('.popuptext');
-            popups.forEach(function (popup) {
-                popup.classList.remove('show');
-            });
+    document.addEventListener('click', function (event) {
+        popup(event, 'close');
+    });
+    document.addEventListener('keyup', function (event) {
+        if (event.key === 'Escape'|| event.key === 'Esc') {
+            popup(event, 'close');
         }
     });
 }
@@ -112,7 +122,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
             };
         };
 
-        $scope.togglePopup = togglePopup;
+        $scope.popup = popup;
         addClosePopupListener();
 
         $scope.closeAlert = function (index) {
@@ -196,7 +206,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
             };
         };
 
-        $scope.togglePopup = togglePopup;
+        $scope.popup = popup;
         addClosePopupListener();
 
         $scope.removeMember = function (member) {

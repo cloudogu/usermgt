@@ -1,11 +1,13 @@
-<h1>
+<h1 aria-describedby="{{ undeletableGroups.includes(group.name) ? 'sysgroups-info-popup' : undefined }}"
+    ng-class="{popup: undeletableGroups.includes(group.name), 'popup-bottom': true}" ng-mouseenter="popup($event, 'open')">
   {{create ? 'New group' : group.name}}
-  <i class="popup popup-bottom glyphicon glyphicon-info-sign" ng-click="togglePopup($event)"
+  <i class="glyphicon glyphicon-info-sign"
      ng-if="undeletableGroups.includes(group.name)">
-    <span class="popuptext" id="sysgroups-info-popup">
-      This is a system group. It cannot be deleted.
-    </span>
   </i>
+  <span class="popuptext" id="sysgroups-info-popup" ng-if="undeletableGroups.includes(group.name)"
+        role="tooltip">
+    This is a system group. It cannot be deleted.
+  </span>
 </h1>
 
 <div class="danger">
