@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Prevent system groups (admin/cesManager) from being deleted
+- Prevent system groups (admin/cesManager) from being deleted (#65)
   - This is implemented in both backend and frontend.
 
 ## [v1.7.0-1] - 2022-08-23
