@@ -51,18 +51,21 @@
   </thead>
   <tbody>
     <tr ng-repeat="group in groups">
-      <td aria-describedby="{{ undeletableGroups.includes(group.name) ? 'sysgroups-info-popup' : undefined }}"
-          ng-class="{popup: undeletableGroups.includes(group.name)}" ng-mouseenter="popup($event, 'open')">
-        <b>
-          {{group.name}}
-          <i class="glyphicon glyphicon-info-sign"
-             ng-if="undeletableGroups.includes(group.name)">
-          </i>
-        </b>
-        <span class="popuptext" id="sysgroups-info-popup" ng-if="undeletableGroups.includes(group.name)"
-              role="tooltip">
-          This is a system group. It cannot be deleted.
-        </span>
+      <td>
+        <div aria-describedby="{{ undeletableGroups.includes(group.name) ? 'sysgroups-info-popup' : undefined }}"
+             ng-class="{popup: undeletableGroups.includes(group.name)}" ng-init="timeout = 0"
+             ng-click="popup($event, 'open')" ng-mouseover="openPopupWithDelay($event)">
+          <b>
+            {{group.name}}
+            <i class="glyphicon glyphicon-info-sign"
+               ng-if="undeletableGroups.includes(group.name)">
+            </i>
+          </b>
+          <span class="popuptext" id="sysgroups-info-popup" ng-if="undeletableGroups.includes(group.name)"
+                role="tooltip">
+            This is a system group. It cannot be deleted.
+          </span>
+        </div>
       </td>
       <td>{{group.description}}</td>
       <td>{{group.members.length}}</td>

@@ -56,11 +56,20 @@ function popup(event, action) {
     event.stopPropagation();
 }
 
+function openPopupWithDelay(event) {
+    var timeout = setTimeout(popup, 1000, event, 'open');
+    function clear() {
+        clearTimeout(timeout);
+        event.target.removeEventListener('mouseleave', clear);
+    }
+    event.target.addEventListener('mouseleave', clear);
+}
+
 function addClosePopupListener() {
-    document.addEventListener('click', function (event) {
+    document.body.addEventListener('click', function (event) {
         popup(event, 'close');
     });
-    document.addEventListener('keyup', function (event) {
+    document.body.addEventListener('keyup', function (event) {
         if (event.key === 'Escape'|| event.key === 'Esc') {
             popup(event, 'close');
         }
@@ -123,6 +132,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         };
 
         $scope.popup = popup;
+        $scope.openPopupWithDelay = openPopupWithDelay;
         addClosePopupListener();
 
         $scope.closeAlert = function (index) {
@@ -207,6 +217,7 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
         };
 
         $scope.popup = popup;
+        $scope.openPopupWithDelay = openPopupWithDelay;
         addClosePopupListener();
 
         $scope.removeMember = function (member) {

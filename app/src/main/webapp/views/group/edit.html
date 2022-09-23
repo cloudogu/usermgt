@@ -1,13 +1,16 @@
-<h1 aria-describedby="{{ undeletableGroups.includes(group.name) ? 'sysgroups-info-popup' : undefined }}"
-    ng-class="{popup: undeletableGroups.includes(group.name), 'popup-bottom': true}" ng-mouseenter="popup($event, 'open')">
-  {{create ? 'New group' : group.name}}
-  <i class="glyphicon glyphicon-info-sign"
-     ng-if="undeletableGroups.includes(group.name)">
-  </i>
-  <span class="popuptext" id="sysgroups-info-popup" ng-if="undeletableGroups.includes(group.name)"
-        role="tooltip">
-    This is a system group. It cannot be deleted.
-  </span>
+<h1>
+  <div aria-describedby="{{ undeletableGroups.includes(group.name) ? 'sysgroups-info-popup' : undefined }}"
+       ng-class="{popup: undeletableGroups.includes(group.name), 'popup-bottom': true}" ng-init="timeout = 0"
+       ng-click="popup($event, 'open')" ng-mouseover="openPopupWithDelay($event)">
+    {{create ? 'New group' : group.name}}
+    <i class="glyphicon glyphicon-info-sign"
+       ng-if="undeletableGroups.includes(group.name)">
+    </i>
+    <span class="popuptext" id="sysgroups-info-popup" ng-if="undeletableGroups.includes(group.name)"
+          role="tooltip">
+      This is a system group. It cannot be deleted.
+    </span>
+  </div>
 </h1>
 
 <div class="danger">
