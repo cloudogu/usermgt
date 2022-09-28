@@ -166,65 +166,6 @@ td, th {
     cursor:pointer;
 }
 
-/* Popup container */
-.popup {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-}
-
-/* The actual popup */
-/* top popup */
-.popup .popuptext, .popup.popup-top .popuptext {
-  visibility: hidden;
-  width: 11em;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 0.3em;
-  padding: 0.5em 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5.5em;
-  font-family: Droid Sans,Calibri,sans-serif;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857;
-  text-transform: none;
-}
-/* bottom popup */
-.popup.popup-bottom .popuptext {
-  bottom: unset;
-  top: 135%;
-}
-
-/* top popup arrow */
-.popup .popuptext::after, .popup.popup-top .popuptext:after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -0.3em;
-  border-width: 0.3em;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
-/* bottom popup arrow */
-.popup.popup-bottom .popuptext:after {
-  top: unset;
-  bottom: 100%;
-  border-color: transparent transparent #555 transparent;
-}
-
-/* Toggle this class when clicking on the popup container (hide and show the popup) */
-.popup .show {
-  visibility: visible;
-  -webkit-animation: fadeIn 1s;
-  animation: fadeIn 1s
-}
-
 /* Add animation (fade in the popup) */
 @-webkit-keyframes fadeIn {
   from {opacity: 0;}

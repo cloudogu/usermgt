@@ -37,45 +37,6 @@ function setUndeletableGroups($scope, groupService) {
     });
 }
 
-function popup(event, action) {
-    var popupTarget = event.target;
-    var popups = popupTarget.querySelectorAll('.popuptext');
-    popups.forEach(function (popup) {
-        switch (action) {
-            case 'toggle':
-                popup.classList.toggle('show');
-                break;
-            case 'open':
-                popup.classList.add('show');
-                break;
-            case 'close':
-                popup.classList.remove('show');
-                break;
-        }
-    });
-    event.stopPropagation();
-}
-
-function openPopupWithDelay(event) {
-    var timeout = setTimeout(popup, 1000, event, 'open');
-    function clear() {
-        clearTimeout(timeout);
-        event.target.removeEventListener('mouseleave', clear);
-    }
-    event.target.addEventListener('mouseleave', clear);
-}
-
-function addClosePopupListener() {
-    document.body.addEventListener('click', function (event) {
-        popup(event, 'close');
-    });
-    document.body.addEventListener('keyup', function (event) {
-        if (event.key === 'Escape'|| event.key === 'Esc') {
-            popup(event, 'close');
-        }
-    });
-}
-
 angular.module('universeadm.groups.controllers', ['ui.bootstrap',
     'universeadm.validation.directives', 'universeadm.groups.services',
     'universeadm.users.services', 'universeadm.util.filters', 'universeadm.util.services'
@@ -130,10 +91,6 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
                 instance.close();
             };
         };
-
-        $scope.popup = popup;
-        $scope.openPopupWithDelay = openPopupWithDelay;
-        addClosePopupListener();
 
         $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
@@ -215,10 +172,6 @@ angular.module('universeadm.groups.controllers', ['ui.bootstrap',
                 instance.close();
             };
         };
-
-        $scope.popup = popup;
-        $scope.openPopupWithDelay = openPopupWithDelay;
-        addClosePopupListener();
 
         $scope.removeMember = function (member) {
             if ($scope.create) {
