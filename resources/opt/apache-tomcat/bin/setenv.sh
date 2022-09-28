@@ -14,3 +14,8 @@ if [ "$(doguctl config "container_config/memory_limit" -d "empty")" != "empty" ]
   JAVA_OPTS="$JAVA_OPTS -XX:MaxRAMPercentage=${MEMORY_LIMIT_MAX_PERCENTAGE}"
   JAVA_OPTS="$JAVA_OPTS -XX:MinRAMPercentage=${MEMORY_LIMIT_MIN_PERCENTAGE}"
 fi
+
+ADMIN_GROUP="$(doguctl config --global --default "admin" "admin_group")"
+export ADMIN_GROUP
+CES_MANAGER_GROUP="$(doguctl config --global --default "cesManager" "manager_group")"
+export CES_MANAGER_GROUP

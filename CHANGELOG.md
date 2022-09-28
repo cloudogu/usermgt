@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.8.0-1] - 2022-09-28
+### Changed
+- Prevent system groups (admin/cesManager) from being deleted (#65)
+  - This is implemented in both backend and frontend.
+
 ## [v1.7.0-1] - 2022-08-23
 ### Changed
 - The password rules are now set via global etcd keys. For more information see [docs](docs/operations/password-policy_en.md#Configuration-of-password-rules-in-etcd) (#63)

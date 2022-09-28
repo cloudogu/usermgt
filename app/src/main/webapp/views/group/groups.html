@@ -56,13 +56,21 @@
           {{group.name}}
         </b>
       </td>
-      <td>{{group.description}}</td>
+      <td>
+        {{group.description}}
+        <span ng-if="undeletableGroups.includes(group.name)">
+          <br ng-if="group.description && group.description != ''"/>
+          <b>
+            This is a system group. It cannot be deleted.
+          </b>
+        </span>
+      </td>
       <td>{{group.members.length}}</td>
       <td class="element-interactions">
         <button aria-label="edit" title="edit group" class="glyphicon glyphicon-pencil edit" ng-click="editGroup(group.name)">
         </button>
-        <button aria-label="remove" title="remove group" class="glyphicon glyphicon-trash remove" ng-click="remove(group)">
-        </button>
+        <button aria-label="remove" class="glyphicon glyphicon-trash remove" ng-click="remove(group)"
+                ng-disabled="undeletableGroups.includes(group.name)" title="remove group"></button>
       </td>
     </tr>
   </tbody>

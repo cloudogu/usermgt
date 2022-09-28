@@ -154,9 +154,26 @@ td, th {
 
 }
 
+.remove:disabled {
+  color: gray;
+}
+.remove[disabled]:hover {
+  cursor: not-allowed;
+}
+
 .remove:hover {
     color:black;
     cursor:pointer;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
 }
 
 .edit {

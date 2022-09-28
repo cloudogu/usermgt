@@ -117,13 +117,15 @@ Es gibt zwei Wege, die Zuordnung vorzunehmen:
 ### Gruppen löschen
 Klicken Sie hierzu im Bereich "Groups" unter "Functions" auf das Symbol "Mülleimer" der jeweiligen Gruppe und bestätigen Sie die Sicherheitsabfrage.
 
+Die beiden Systemgruppen (admin/cesManager - siehe unten) sind nicht löschbar.
+
 ### Gruppenberechtigungen
 Im User Management finden Sie unter "Groups" bereits vordefinierte Gruppen. Diese Gruppen haben bestimmte Berechtigungen in den Dogus des Cloudogu EcoSystem.
 
 **cesManager Gruppe**
 Mitglieder dieser Gruppe haben vollen Zugriff auf das **User Management** des Cloudogu EcoSystem.
 Damit erhalten User die Berechtigung zum einen Nutzerinnen sowie Nutzer und zum anderen Gruppen anzulegen und zu verwalten.
-Darüberhinaus sind keine weiteren Berechtigungen mit der **cesManager Gruppe** verbunden.
+Darüber hinaus sind keine weiteren Berechtigungen mit der **cesManager Gruppe** verbunden.
 
 **admin Gruppe**
 Mitglieder dieser Gruppe haben in **allen** Dogus des Cloudogu EcoSystem wie bspw. Jenkins, Redmine oder SCM-Manager administrative Rechte. Das bedeutet, die Mitglieder können in den einzelnen Dogus die administrativen Funktionen nutzen und so zum Beispiel Plugins installieren oder Applikationseinstellungen vornehmen.

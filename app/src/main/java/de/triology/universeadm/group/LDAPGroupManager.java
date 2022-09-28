@@ -31,6 +31,7 @@ import com.github.legman.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import de.triology.universeadm.AbstractLDAPManager;
+import de.triology.universeadm.CannotRemoveException;
 import de.triology.universeadm.EventType;
 import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
@@ -39,6 +40,8 @@ import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingHandler;
 import de.triology.universeadm.validation.Validator;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -99,6 +102,9 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
   {
     logger.debug("remove group {}", group.getName());
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
+    if(UndeletableGroupManager.isGroupUndeletable(group.getName())){
+      throw new CannotRemoveException();
+    }
     mapping.remove(group);
     eventBus.post(new GroupEvent(group, EventType.REMOVE));
   }
@@ -116,7 +122,6 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
   {
     logger.debug("get all groups");
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
-
     return mapping.getAll();
   }
 
@@ -128,5 +133,5 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
 
     return mapping.search(query);
   }
-  
+
 }

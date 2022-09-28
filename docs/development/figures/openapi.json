@@ -351,6 +351,28 @@
           }
         }
       }
+    },
+    "/api/groups/undeletable": {
+      "get": {
+        "description": "Returns all undeletable system groups.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/api_groups_undeletable_body"
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\"admin\",\"cesManager\"]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -576,6 +598,12 @@
           "description": {
             "type": "string"
           }
+        }
+      },
+      "api_groups_undeletable_body":{
+        "type": "array",
+        "items": {
+          "type": "string"
         }
       }
     },
