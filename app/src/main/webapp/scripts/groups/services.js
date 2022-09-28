@@ -27,42 +27,45 @@
 
 
 angular.module('universeadm.groups.services', ['restangular'])
-  .factory('groupService', function(Restangular){
-    var groups = Restangular.all('groups');
-    var alerts = [];
-    return {
-      getAll: function(start, limit){
-        return groups.getList({start: start, limit: limit});
-      },
-      search: function(query, start, limit){
-        return groups.getList({query: query, start: start, limit: limit});
-      },
-      exists: function(name){
-        return groups.one(name).head();
-      },
-      get: function(name){
-        return groups.one(name).get();
-      },
-      modify: function(group){
-        return group.put();
-      },
-      remove: function(group){
-        return groups.one(group.name).remove();
-      },
-      create: function(group){
-        return groups.post(group);
-      },
-      addMember: function(group, member){
-        return group.one('members/' + member).post();
-      },
-      removeMember: function(group, member){
-        return group.one('members/' + member).remove();
-      },
-      addGroupAlert: function(type, message){
-        alerts.push({type: type, msg: message});
-      },
-      getGroupAlert: function(){
-        return alerts.pop();
-      }
-    };
-  });
+    .factory('groupService', function (Restangular) {
+        var groups = Restangular.all('groups');
+        var alerts = [];
+        return {
+            getAll: function (start, limit) {
+                return groups.getList({start: start, limit: limit});
+            },
+            getUndeletableGroups: function () {
+                return groups.one('undeletable').get();
+            },
+            search: function (query, start, limit) {
+                return groups.getList({query: query, start: start, limit: limit});
+            },
+            exists: function (name) {
+                return groups.one(name).head();
+            },
+            get: function (name) {
+                return groups.one(name).get();
+            },
+            modify: function (group) {
+                return group.put();
+            },
+            remove: function (group) {
+                return groups.one(group.name).remove();
+            },
+            create: function (group) {
+                return groups.post(group);
+            },
+            addMember: function (group, member) {
+                return group.one('members/' + member).post();
+            },
+            removeMember: function (group, member) {
+                return group.one('members/' + member).remove();
+            },
+            addGroupAlert: function (type, message) {
+                alerts.push({type: type, msg: message});
+            },
+            getGroupAlert: function () {
+                return alerts.pop();
+            }
+        };
+    });
