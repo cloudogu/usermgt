@@ -35,11 +35,15 @@ angular.module('universeadm.passwordpolicy.services', ['restangular'])
           var rules = policy.Rules;
           var violations = [];
           var invalidRules = [];
+          var password = $scope.user.password;
+          if (password === undefined){
+            password = '';
+          }
           try {
             rules.forEach(function (rule) {
               try {
                 var regEx = new RegExp(rule.Rule);
-                if (!regEx.test($scope.user.password)) {
+                if (!regEx.test(password)) {
                   violations.push(rule);
                 }
               } catch (e) {
