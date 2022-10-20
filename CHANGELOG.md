@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.8.1-1] - 2022-10-20
+### Fixed
+- in User Managment  an empty Password will not suffice for lowercase and minimum lenght of 9 or less (#67)
+
 ## [v1.8.0-1] - 2022-09-28
 ### Changed
 - Prevent system groups (admin/cesManager) from being deleted (#65)

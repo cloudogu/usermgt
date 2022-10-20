@@ -47,8 +47,7 @@ Then("the password entry is marked as valid", function () {
 });
 
 Then("all password rules are marked as not fullfilled", function () {
-    // Actually, there should be 5 unfulfilled rules. But unfortunately there is a bug: with an empty password, a rule is still marked as valid.
-    cy.get('p[data-testid="password-policy-rules"]').children('span[ng-repeat="violation in passwordPolicy.violations"]').should('have.length', 4)
+    cy.get('p[data-testid="password-policy-rules"]').children('span[ng-repeat="violation in passwordPolicy.violations"]').should('have.length', 5)
 });
 
 Then("all password rules are marked as fullfilled", function () {
