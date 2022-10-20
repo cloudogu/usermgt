@@ -2,6 +2,7 @@ package de.triology.universeadm.user;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,7 +26,10 @@ public class ProtcolWriterTest {
     public void writesLineSuccessfully() throws IOException {
         this.protocolWriter.writeLine("test line");
         verify(this.mockWriterBuilder).build("myfilename.protocol");
-        verify(this.fileWriter).append("test line");
+        InOrder inOrder = inOrder(this.fileWriter);
+        inOrder.verify(this.fileWriter, times(1)).append(matches("([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}: )"));
+        inOrder.verify(this.fileWriter).append("test line");
+        inOrder.verify(this.fileWriter).append("\n");
     }
 
     @Test(expected = IOException.class)

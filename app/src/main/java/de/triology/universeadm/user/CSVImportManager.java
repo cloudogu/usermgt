@@ -2,7 +2,6 @@ package de.triology.universeadm.user;
 
 import com.google.inject.Inject;
 import de.triology.universeadm.group.GroupManager;
-import org.joda.time.LocalDateTime;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,16 +37,14 @@ public class CSVImportManager {
      * @param groupManager
      */
     @Inject
-    public CSVImportManager(UserManager userManager, GroupManager groupManager) {
+    public CSVImportManager(UserManager userManager, GroupManager groupManager, ProtocolWriter protocolWriter) {
         this.userManager = userManager;
         this.groupManager = groupManager;
-        this.protocolWriter = new ProtocolWriter("/var/lib/usermgt/protocol/user-import-protocol");
+        this.protocolWriter = protocolWriter;
     }
 
     public void importUsers(InputStream inputStream) throws IOException {
 
-
-        //protokoll fehlt, aktuell mit sysout
         final BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         final List<String> lines = new ArrayList<>();
 
@@ -61,15 +58,14 @@ public class CSVImportManager {
         while ((line = br.readLine()) != null) {
             lines.add(line);
         }
-        System.out.println(createProtocolEntry("CSV-Datei mit " + lines.size() + " Zeilen erfolgreich eingelesen."));
+        createProtocolEntry("CSV-Datei mit " + lines.size() + " Zeilen erfolgreich eingelesen.");
 
         //create user for each Line
         for (int index = 0; index < lines.size(); index++) {
             final String userDataString = lines.get(index);
-            final String[] userValues = userDataString.split(";");
-
+            final String[] userValues = userDataString.split(";", -1);
             if (userValues.length != 6 && userValues.length != 5) {
-                System.out.println(createProtocolEntry("Zeile " + index + 1 + " ist unvollständig"));
+                createProtocolEntry("Zeile " + (index + 2) + " ist unvollständig");
                 continue;
             }
 
@@ -83,26 +79,27 @@ public class CSVImportManager {
             final List<String> validationErrors = getUserValidationErrors(potentialNewUser);
 
             if (validationErrors.size() != 0) {
-                String errorMessage = "Fehler in Zeile " + index + " Benutzer nicht angelegt. Errors: ";
+                String errorMessage = "Fehler in Zeile " + (index + 2) + " Benutzer nicht angelegt. Errors: ";
                 for (String error : validationErrors) {
                     errorMessage += error + ", ";
                 }
                 if (errorMessage.endsWith(", ")) {
                     errorMessage = errorMessage.substring(0, errorMessage.length() - 2);
                 }
-                System.out.println(createProtocolEntry(errorMessage));
+                createProtocolEntry(errorMessage);
                 continue;
             }
 
             //adding User
-            String userResult = addUser(potentialNewUser);
-            System.out.println(userResult);
+            addUser(potentialNewUser);
+
 
             //Adding Groups
-            String groupsResult = addGroupsToUser(potentialNewUser, memberOf);
-            System.out.println(groupsResult);
+            addGroupsToUser(potentialNewUser, memberOf);
 
             //send email with credentials
+            //postfix dogu dependency
+            //mail in java versenden
         }
     }
 
@@ -137,40 +134,47 @@ public class CSVImportManager {
         );
     }
 
-    private String addUser(User user) {
+    private void addUser(User user) {
         String username = user.getUsername();
         if (!(userManager.get(username) == null)) {
-            return (createProtocolEntry(username, "konnte nicht angelegt werden(Nutzer existiert bereits)"));
+            createProtocolEntry(username, "konnte nicht angelegt werden(Nutzer existiert bereits)");
         } else {
             userManager.create(user);
-            return (createProtocolEntry(username, "erfolgreich angelegt(" + user.getUsername() + "," + user.getGivenname() + "," + user.getSurname() + "," + user.getDisplayName() + "," + user.getMail() + ")"));
+            createProtocolEntry(username, "erfolgreich angelegt(" + user.getUsername() + "," + user.getGivenname() + "," + user.getSurname() + "," + user.getDisplayName() + "," + user.getMail() + ")");
         }
     }
 
-    private String addGroupsToUser(User user, List<String> memberOf) {
-        String result = "";
+    private void addGroupsToUser(User user, List<String> memberOf) {
         String username = user.getUsername();
         for (String group : memberOf) {
             if (groupManager.get(group) == null) {
-                result += createProtocolEntry(username, group + " existiert nicht\n");
+                createProtocolEntry(username, group + " existiert nicht");
                 continue;
             }
-            if (user.getMemberOf().contains(group)) {
-                result += createProtocolEntry(username, "Nutzer ist bereits Teil von " + group + "\n");
+            if (userManager.get(username).getMemberOf().contains(group)) {
+                createProtocolEntry(username, "Nutzer ist bereits Teil von " + group);
             }
             user.getMemberOf().add(group);
             userManager.modify(user);
-            result += createProtocolEntry(username, group + " zugeordnet\n");
+            createProtocolEntry(username, group + " zugeordnet");
         }
-        return result;
     }
 
-    public String createProtocolEntry(String username, String content) {
-        return LocalDateTime.now() + ":" + username + ": " + content;
+    public void createProtocolEntry(String username, String content) {
+        try {
+            protocolWriter.writeLine(username + ": " + content);
+            System.out.println(content);
+        } catch (IOException e) {
+            System.out.println("Line broken");
+        }
     }
 
-    public String createProtocolEntry(String content) {
-        return LocalDateTime.now() + ": " + content;
+    public void createProtocolEntry(String content) {
+        try {
+            protocolWriter.writeLine(content);
+            System.out.println(content);
+        } catch (IOException e) {
+            System.out.println("Line broken");
+        }
     }
-
 }

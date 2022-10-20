@@ -1,5 +1,6 @@
 package de.triology.universeadm.user;
 
+import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,41 +10,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class CSVImportManagerTest {
-    final static User user1 = new User(
-            "Tester1",
-            "Tester1",
-            "Tes",
-            "Ter",
-            "test1@test.com",
-            "temp",
-            true,
-            new ArrayList<String>()
-    );
+    static User user1;
 
-    final static User user2 = new User(
-            "Tester2",
-            "Tester2",
-            "Tes",
-            "Ter",
-            "test2@test.com",
-            "temp",
-            true,
-            new ArrayList<String>()
-    );
+    static User user2;
 
     private GroupManager groupManager;
     private UserManager userManager;
+
+    private ProtocolWriter protocolWriter;
     private CSVImportManager csvImportManager;
 
     @Before
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager);
+        this.protocolWriter = mockProtocolWriter();
+        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter);
+        user1 = new User(
+                "Tester1",
+                "Tester1",
+                "Tes",
+                "Ter",
+                "test1@test.com",
+                "temp",
+                true,
+                new ArrayList<String>());
+        user2 = new User(
+                "Tester2",
+                "Tester2",
+                "Tes",
+                "Ter",
+                "test2@test.com",
+                "temp",
+                true,
+                new ArrayList<String>()
+        );
     }
 
     private InputStream stringToStream(final String input) {
@@ -76,7 +80,7 @@ public class CSVImportManagerTest {
     public void generateMultipleUsersSuccessful() throws IOException {
         this.csvImportManager.importUsers(this.stringToStream("Username;FirstName;Surname;DisplayName;EMail;Group\n" +
                 "Tester1;Tes;Ter;Tester1;test1@test.com;\n" +
-                "Tester2;Tes;Ter;Tester2;test2@test.com"));
+                "Tester2;Tes;Ter;Tester2;test2@test.com;exist"));
         verify(userManager).create(user1);
         verify(userManager).create(user2);
     }
@@ -102,31 +106,42 @@ public class CSVImportManagerTest {
         verify(userManager).create(user2);
     }
 
-/*    @Test
+    @Test
     public void missingAnyContent() throws IOException {
         this.csvImportManager.importUsers(this.stringToStream("Username;FirstName;Surname;DisplayName;EMail;Group\n" +
-                ";;;;;\n"));
+                ";;;;\n"));
 
-        verify(csvImportManager).createProtocolEntry("Fehler in Zeile 2 Benutzer nicht angelegt. Errors: Nutzername ist leer, DisplayName ist leer, Surname ist leer, Mail ist leer");
-    }*/
-
-    @Test
-    public void userExistAlready() throws IOException {
-
+        verify(protocolWriter).writeLine("Fehler in Zeile 2 Benutzer nicht angelegt. Errors: Nutzername ist leer, DisplayName ist leer, Surname ist leer, Mail ist leer");
     }
 
     @Test
-    public void groupAddedSuccesful() throws IOException {
-
+    public void userExistAlreadyAndGroupAddedsuccessful() throws IOException {
+        user1.getMemberOf().add("exist");
+        when(userManager.get(user1.getUsername())).thenReturn(user1);
+        when(groupManager.get("exist")).thenReturn(new Group("exist"));
+        this.csvImportManager.importUsers(this.stringToStream("Username;FirstName;Surname;DisplayName;EMail;Group\n" +
+                "Tester1;Tes;Ter;Tester1;test1@test.com;exist"));
+        verify(protocolWriter).writeLine("Tester1: konnte nicht angelegt werden(Nutzer existiert bereits)");
+        verify(userManager).modify(user1);
     }
 
     @Test
     public void groupDoesNotExist() throws IOException {
+        when(userManager.get(user1.getUsername())).thenReturn(user1);
+        this.csvImportManager.importUsers(this.stringToStream("Username;FirstName;Surname;DisplayName;EMail;Group\n" +
+                "Tester1;Tes;Ter;Tester1;test1@test.com;doesnotexist"));
+        verify(protocolWriter).writeLine("Tester1: doesnotexist existiert nicht");
 
     }
 
     @Test
     public void userAlreadyMemberOfGroup() throws IOException {
+        user2.getMemberOf().add("exist");
+        when(groupManager.get("exist")).thenReturn(new Group("exist"));
+        when(userManager.get(user2.getUsername())).thenReturn(user2);
+        this.csvImportManager.importUsers(this.stringToStream("Username;FirstName;Surname;DisplayName;EMail;Group\n" +
+                "Tester2;Tes;Ter;Tester2;test2@test.com;exist"));
+        verify(protocolWriter).writeLine("Tester2: Nutzer ist bereits Teil von exist");
 
     }
 
@@ -151,15 +166,4 @@ public class CSVImportManagerTest {
     private ProtocolWriter mockProtocolWriter() {
         return mock(ProtocolWriter.class);
     }
-//        writer.writeToProtocol("test");
-//        writer.writeToProtocol("added 1 user");
-//        writer.writeToProtocol("added group a to user");
-//
-//
-//        InOrder inOrder = inOrder(writer);
-//
-//        inOrder.verify(writer).writeToProtocol("test");
-//        inOrder.verify(writer).writeToProtocol("added 1 user");
-//        inOrder.verify(writer).writeToProtocol("added group a to user");
-
 }

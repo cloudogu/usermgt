@@ -49,7 +49,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -343,7 +342,8 @@ public class UserResourceTest
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager);
+        this.protocolWriter = mockProtocolWriter();
+        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter);
         this.resource = new UserResource(userManager, groupManager, csvImportManager);
     }
 
@@ -384,6 +384,10 @@ public class UserResourceTest
       1));
 
         return manager;
+    }
+
+    private ProtocolWriter mockProtocolWriter() {
+        return mock(ProtocolWriter.class);
     }
 
   //~--- fields ---------------------------------------------------------------

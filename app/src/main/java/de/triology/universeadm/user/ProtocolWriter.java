@@ -1,5 +1,7 @@
 package de.triology.universeadm.user;
 
+import org.joda.time.LocalDateTime;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -13,6 +15,10 @@ public class ProtocolWriter {
         }
     }
 
+    public ProtocolWriter() {
+        this("/var/lib/usermgt/protocol/user-import-protocol", new FileWriterBuilder());
+    }
+
     public ProtocolWriter(String fileName) {
         this(fileName, new FileWriterBuilder());
     }
@@ -23,8 +29,10 @@ public class ProtocolWriter {
     }
 
     public void writeLine(String line) throws IOException {
-        try (FileWriter writer = this.writerBuilder.build(this.fileName)){
+        try (FileWriter writer = this.writerBuilder.build(this.fileName)) {
+            writer.append(LocalDateTime.now() + ": ");
             writer.append(line);
+            writer.append("\n");
         }
     }
 
