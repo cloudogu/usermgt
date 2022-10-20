@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.8.1-1] - 2022-10-20
 ### Fixed
 - in User Managment  an empty Password will not suffice for lowercase and minimum lenght of 9 or less (#67)
 
