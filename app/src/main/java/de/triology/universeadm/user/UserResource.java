@@ -26,24 +26,20 @@
  */
 
 
-
 package de.triology.universeadm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
 import de.triology.universeadm.AbstractManagerResource;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * TODO remove package cycle with group.
@@ -69,119 +65,120 @@ public class UserResource extends AbstractManagerResource<User>
     this.groupManager = groupManager;
   }
 
-  //~--- methods --------------------------------------------------------------
+    //~--- methods --------------------------------------------------------------
+    @POST
+    @Path("/import")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response importUsers(InputStream inputStream) {
+        //TODO control if user is manager gruppe fehlt
+        //SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   * @param groupname
-   *
-   * @return
-   */
-  @POST
-  @Path("{user}/groups/{group}")
-  public Response addMembership(@PathParam("user") String username,
-    @PathParam("group") String groupname)
-  {
-    Response.ResponseBuilder builder;
-
-    User user = userManager.get(username);
-    Group group = groupManager.get(groupname);
-
-    if (user == null)
-    {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if (group == null)
-    {
-      builder = Response.status(Response.Status.BAD_REQUEST);
-    }
-    else if (user.getMemberOf().contains(groupname))
-    {
-      builder = Response.status(Response.Status.CONFLICT);
-    }
-    else
-    {
-      user.getMemberOf().add(groupname);
-      userManager.modify(user);
-      builder = Response.noContent();
+        Response.ResponseBuilder builder;
+        try {
+            this.csvImportManager.importUsers(inputStream);
+        } catch (IOException | IllegalArgumentException e) {
+            builder = Response.status(Response.Status.BAD_REQUEST);
+            return builder.build();
+        }
+        builder = Response.status(Response.Status.OK);
+        return builder.build();
     }
 
-    return builder.build();
-  }
+    /**
+     * Method description
+     *
+     * @param username
+     * @param groupname
+     * @return
+     */
+    @POST
+    @Path("{user}/groups/{group}")
+    public Response addMembership(@PathParam("user") String username,
+                                  @PathParam("group") String groupname) {
+        Response.ResponseBuilder builder;
+        User user = userManager.get(username);
+        Group group = groupManager.get(groupname);
 
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   * @param group
-   *
-   * @return
-   */
-  @DELETE
-  @Path("{user}/groups/{group}")
-  public Response removeMember(@PathParam("user") String username,
-    @PathParam("group") String group)
-  {
-    Response.ResponseBuilder builder;
+        if (user == null) {
+            builder = Response.status(Response.Status.NOT_FOUND);
+        } else if (group == null) {
+            builder = Response.status(Response.Status.BAD_REQUEST);
+        } else if (user.getMemberOf().contains(groupname)) {
+            builder = Response.status(Response.Status.CONFLICT);
+        } else {
+            user.getMemberOf().add(groupname);
+            userManager.modify(user);
+            builder = Response.noContent();
+        }
 
-    User user = userManager.get(username);
-
-    if (user == null)
-    {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if (!user.getMemberOf().contains(group))
-    {
-      builder = Response.status(Response.Status.CONFLICT);
-    }
-    else
-    {
-      user.getMemberOf().remove(group);
-      userManager.modify(user);
-      builder = Response.noContent();
+        return builder.build();
     }
 
-    return builder.build();
-  }
+    /**
+     * Method description
+     *
+     * @param username
+     * @param group
+     * @return
+     */
+    @DELETE
+    @Path("{user}/groups/{group}")
+    public Response removeMember(@PathParam("user") String username,
+                                 @PathParam("group") String group) {
+        Response.ResponseBuilder builder;
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param user
-   */
-  @Override
-  protected void prepareForModify(String id, User user)
-  {
-    user.setUsername(id);
-  }
+        User user = userManager.get(username);
 
-  //~--- get methods ----------------------------------------------------------
+        if (user == null) {
+            builder = Response.status(Response.Status.NOT_FOUND);
+        } else if (!user.getMemberOf().contains(group)) {
+            builder = Response.status(Response.Status.CONFLICT);
+        } else {
+            user.getMemberOf().remove(group);
+            userManager.modify(user);
+            builder = Response.noContent();
+        }
+        return builder.build();
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
-  @Override
-  protected String getId(User user)
-  {
-    return user.getUsername();
-  }
+    /**
+     * Method description
+     *
+     * @param id
+     * @param user
+     */
+    @Override
+    protected void prepareForModify(String id, User user) {
+        user.setUsername(id);
+    }
 
-  //~--- fields ---------------------------------------------------------------
+    //~--- get methods ----------------------------------------------------------
 
-  /** Field description */
-  private final GroupManager groupManager;
+    /**
+     * Method description
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    protected String getId(User user) {
+        return user.getUsername();
+    }
 
-  /** Field description */
-  private final UserManager userManager;
+    //~--- fields ---------------------------------------------------------------
+
+    /**
+     * Field description
+     */
+    private final GroupManager groupManager;
+
+    /**
+     * Field description
+     */
+    private final UserManager userManager;
+
+    /**
+     * Field description
+     */
+    private final CSVImportManager csvImportManager;
 }
