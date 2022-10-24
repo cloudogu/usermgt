@@ -1,16 +1,16 @@
-/* 
+/*
  * Copyright (c) 2013 - 2014, TRIOLOGY GmbH
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -21,7 +21,7 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * http://www.scm-manager.com
  */
 
@@ -31,107 +31,87 @@ import com.google.inject.Inject;
 import de.triology.universeadm.AbstractManagerResource;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
-import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
 @Path("groups")
-public class GroupResource extends AbstractManagerResource<Group>
-{
+public class GroupResource extends AbstractManagerResource<Group> {
 
   private static final Logger logger = LoggerFactory.getLogger(GroupResource.class);
 
   private final GroupManager groupManager;
   private final UserManager userManager;
-  
+
   @Inject
-  public GroupResource(GroupManager groupManager, UserManager userManager)
-  {
+  public GroupResource(GroupManager groupManager, UserManager userManager) {
     super(groupManager);
     this.groupManager = groupManager;
     this.userManager = userManager;
   }
 
   @Override
-  protected String getId(Group group)
-  {
+  protected String getId(Group group) {
     return group.getName();
   }
 
   @Override
-  protected void prepareForModify(String id, Group group)
-  {
+  protected void prepareForModify(String id, Group group) {
     group.setName(id);
   }
-  
+
   @POST
   @Path("{name}/members/{member}")
-  public Response addMember(@PathParam("name") String name, @PathParam("member") String member)
-  {
+  public Response addMember(@PathParam("name") String name, @PathParam("member") String member) {
     Response.ResponseBuilder builder;
-    
+
     Group group = groupManager.get(name);
     User user = userManager.get(member);
-    if ( group == null )
-    {
+    if (group == null) {
       builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if (user == null){
+    } else if (user == null) {
       builder = Response.status(Response.Status.BAD_REQUEST);
-    }
-    else if ( group.getMembers().contains(member) )
-    {
+    } else if (group.getMembers().contains(member)) {
       builder = Response.status(Response.Status.CONFLICT);
-    }
-    else 
-    {
+    } else {
       group.getMembers().add(member);
       groupManager.modify(group);
       builder = Response.noContent();
     }
-    
+
     return builder.build();
   }
-  
+
   @DELETE
   @Path("{name}/members/{member}")
-  public Response removeMember(@PathParam("name") String name, @PathParam("member") String member)
-  {
+  public Response removeMember(@PathParam("name") String name, @PathParam("member") String member) {
     Response.ResponseBuilder builder;
-    
+
     Group group = groupManager.get(name);
-    if ( group == null )
-    {
+    if (group == null) {
       builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if ( ! group.getMembers().contains(member) )
-    {
+    } else if (!group.getMembers().contains(member)) {
       builder = Response.status(Response.Status.CONFLICT);
-    }
-    else 
-    {
+    } else {
       group.getMembers().remove(member);
       groupManager.modify(group);
       builder = Response.noContent();
     }
-    
+
     return builder.build();
   }
 
   @GET
   @Path("undeletable")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getUndeletable(){
+  public Response getUndeletable() {
     Response.ResponseBuilder builder;
     try {
       List<String> groups = UndeletableGroupManager.getNonDeleteClassList();
