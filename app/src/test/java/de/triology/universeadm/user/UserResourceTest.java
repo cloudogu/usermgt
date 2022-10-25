@@ -26,7 +26,6 @@
  */
 
 
-
 package de.triology.universeadm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -35,8 +34,11 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import de.triology.universeadm.*;
+import de.triology.universeadm.csvimport.CSVImportManager;
+import de.triology.universeadm.csvimport.ProtocolWriter;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.Groups;
+import de.triology.universeadm.mail.MailSender;
 import org.codehaus.jackson.JsonNode;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -56,263 +58,240 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
- *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class UserResourceTest
-{
+@SubjectAware(
+        configuration = "classpath:de/triology/universeadm/shiro.001.ini",
+        username = "trillian",
+        password = "secret"
+)
+public class UserResourceTest {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testAddMembership() throws URISyntaxException, IOException
-  {
-    MockHttpRequest request =
-      MockHttpRequest.post("/users/dent/groups/heartOfGold");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testAddMembership() throws URISyntaxException, IOException {
+        MockHttpRequest request =
+                MockHttpRequest.post("/users/dent/groups/heartOfGold");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-  }
+        assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testAddMembershipConflict() throws URISyntaxException, IOException
-  {
-    User trillian = Users.createTrillian();
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testAddMembershipConflict() throws URISyntaxException, IOException {
+        User trillian = Users.createTrillian();
 
-    trillian.getMemberOf().add("heartOfGold");
-    when(userManager.get("trillian")).thenReturn(trillian);
+        trillian.getMemberOf().add("heartOfGold");
+        when(userManager.get("trillian")).thenReturn(trillian);
 
-    MockHttpRequest request =
-      MockHttpRequest.post("/users/trillian/groups/heartOfGold");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+        MockHttpRequest request =
+                MockHttpRequest.post("/users/trillian/groups/heartOfGold");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
-  }
+        assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testAddMembershipGroupNotFound()
-    throws URISyntaxException, IOException
-  {
-    MockHttpRequest request = MockHttpRequest.post("/users/dent/groups/towel");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testAddMembershipGroupNotFound()
+            throws URISyntaxException, IOException {
+        MockHttpRequest request = MockHttpRequest.post("/users/dent/groups/towel");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-  }
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testAddMembershipUserNotFound()
-    throws URISyntaxException, IOException
-  {
-    MockHttpRequest request =
-      MockHttpRequest.post("/users/slarti/groups/heartOfGold");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testAddMembershipUserNotFound()
+            throws URISyntaxException, IOException {
+        MockHttpRequest request =
+                MockHttpRequest.post("/users/slarti/groups/heartOfGold");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
-  }
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testCreateAlreadyExists() throws URISyntaxException, IOException
-  {
-    User dent = Users.createDent();
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testCreateAlreadyExists() throws URISyntaxException, IOException {
+        User dent = Users.createDent();
 
-    doThrow(new ConstraintViolationException(Constraint.ID.UNIQUE_USERNAME)).when(userManager).create(dent);
+        doThrow(new ConstraintViolationException(Constraint.ID.UNIQUE_USERNAME)).when(userManager).create(dent);
 
-    MockHttpRequest request = MockHttpRequest.post("/users");
-    MockHttpResponse response = Resources.dispatch(resource, request, dent);
+        MockHttpRequest request = MockHttpRequest.post("/users");
+        MockHttpResponse response = Resources.dispatch(resource, request, dent);
 
-    assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
-  }
+        assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testGet() throws URISyntaxException, IOException
-  {
-    MockHttpRequest request = MockHttpRequest.get("/users/dent");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testGet() throws URISyntaxException, IOException {
+        MockHttpRequest request = MockHttpRequest.get("/users/dent");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
 
-    JsonNode node = Resources.parseJson(response);
+        JsonNode node = Resources.parseJson(response);
 
-    assertEquals("dent", node.path("username").asText());
-    assertEquals("arthur.dent@hitchhiker.com", node.path("mail").asText());
-  }
+        assertEquals("dent", node.path("username").asText());
+        assertEquals("arthur.dent@hitchhiker.com", node.path("mail").asText());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testGetAll() throws URISyntaxException, IOException
-  {
-    MockHttpRequest request = MockHttpRequest.get("/users?start=0&limit=20");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testGetAll() throws URISyntaxException, IOException {
+        MockHttpRequest request = MockHttpRequest.get("/users?start=0&limit=20");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
 
-    JsonNode node = Resources.parseJson(response);
+        JsonNode node = Resources.parseJson(response);
 
-    assertEquals(0, node.get("start").asInt());
-    assertEquals(20, node.get("limit").asInt());
-    assertEquals(1, node.get("totalEntries").asInt());
+        assertEquals(0, node.get("start").asInt());
+        assertEquals(20, node.get("limit").asInt());
+        assertEquals(1, node.get("totalEntries").asInt());
 
-    JsonNode entries = node.get("entries");
+        JsonNode entries = node.get("entries");
 
-    assertTrue(entries.isArray());
-    assertEquals("dent", Iterables.get(entries, 0).path("username").asText());
-  }
+        assertTrue(entries.isArray());
+        assertEquals("dent", Iterables.get(entries, 0).path("username").asText());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testGetNotFound() throws URISyntaxException, IOException
-  {
-    MockHttpRequest request = MockHttpRequest.get("/users/trillian");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testGetNotFound() throws URISyntaxException, IOException {
+        MockHttpRequest request = MockHttpRequest.get("/users/trillian");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
-  }
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testGreate() throws URISyntaxException, IOException
-  {
-    User trillian = Users.createTrillian();
-    MockHttpRequest request = MockHttpRequest.post("/users");
-    MockHttpResponse response = Resources.dispatch(resource, request, trillian);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testGreate() throws URISyntaxException, IOException {
+        User trillian = Users.createTrillian();
+        MockHttpRequest request = MockHttpRequest.post("/users");
+        MockHttpResponse response = Resources.dispatch(resource, request, trillian);
 
-    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+        assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
 
-    URI location = (URI) response.getOutputHeaders().getFirst("Location");
+        URI location = (URI) response.getOutputHeaders().getFirst("Location");
 
-    assertTrue(location.getPath().endsWith("users/trillian"));
-    verify(userManager).create(trillian);
-  }
+        assertTrue(location.getPath().endsWith("users/trillian"));
+        verify(userManager).create(trillian);
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testModify() throws URISyntaxException, IOException
-  {
-    User dent = Users.createDent();
-    MockHttpRequest request = MockHttpRequest.put("/users/dent");
-    MockHttpResponse response = Resources.dispatch(resource, request, dent);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testModify() throws URISyntaxException, IOException {
+        User dent = Users.createDent();
+        MockHttpRequest request = MockHttpRequest.put("/users/dent");
+        MockHttpResponse response = Resources.dispatch(resource, request, dent);
 
-    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-    verify(userManager).modify(dent);
-  }
+        assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+        verify(userManager).modify(dent);
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testModifyNotFound() throws URISyntaxException, IOException
-  {
-    User trillian = Users.createTrillian();
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testModifyNotFound() throws URISyntaxException, IOException {
+        User trillian = Users.createTrillian();
 
-    doThrow(EntityNotFoundException.class).when(userManager).modify(trillian);
+        doThrow(EntityNotFoundException.class).when(userManager).modify(trillian);
 
-    MockHttpRequest request = MockHttpRequest.put("/users/trillian");
-    MockHttpResponse response = Resources.dispatch(resource, request, trillian);
+        MockHttpRequest request = MockHttpRequest.put("/users/trillian");
+        MockHttpResponse response = Resources.dispatch(resource, request, trillian);
 
-    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
-    verify(userManager).modify(trillian);
-  }
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+        verify(userManager).modify(trillian);
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testRemove() throws URISyntaxException, IOException
-  {
-    MockHttpRequest request = MockHttpRequest.delete("/users/dent");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testRemove() throws URISyntaxException, IOException {
+        MockHttpRequest request = MockHttpRequest.delete("/users/dent");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
-    verify(userManager).remove(Users.createDent());
-  }
+        assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+        verify(userManager).remove(Users.createDent());
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
-  @Test
-  public void testRemoveNotFound() throws URISyntaxException, IOException
-  {
-    MockHttpRequest request = MockHttpRequest.delete("/users/trillian");
-    MockHttpResponse response = Resources.dispatch(resource, request);
+    /**
+     * Method description
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    public void testRemoveNotFound() throws URISyntaxException, IOException {
+        MockHttpRequest request = MockHttpRequest.delete("/users/trillian");
+        MockHttpResponse response = Resources.dispatch(resource, request);
 
-    assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
-  }
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+    }
 
     @Test
     public void testUserImportSuccesfull() throws URISyntaxException, IOException {
@@ -343,45 +322,43 @@ public class UserResourceTest
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
         this.protocolWriter = mockProtocolWriter();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter);
+        this.mailSender = mockMailSender();
+        PasswordGenerator pwdGen = new PasswordGenerator();
+        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen);
         this.resource = new UserResource(userManager, groupManager, csvImportManager);
     }
 
-  //~--- methods --------------------------------------------------------------
+    //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private GroupManager mockGroupManager()
-  {
-    GroupManager manager = mock(GroupManager.class);
+    /**
+     * Method description
+     *
+     * @return
+     */
+    private GroupManager mockGroupManager() {
+        GroupManager manager = mock(GroupManager.class);
 
-    when(manager.get("heartOfGold")).thenReturn(Groups.createHeartOfGold());
+        when(manager.get("heartOfGold")).thenReturn(Groups.createHeartOfGold());
 
-    return manager;
-  }
+        return manager;
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private UserManager mockUserManager()
-  {
-    UserManager manager = mock(UserManager.class);
-    User dent = Users.createDent();
+    /**
+     * Method description
+     *
+     * @return
+     */
+    private UserManager mockUserManager() {
+        UserManager manager = mock(UserManager.class);
+        User dent = Users.createDent();
 
-    when(manager.get("dent")).thenReturn(dent);
+        when(manager.get("dent")).thenReturn(dent);
 
-    List<User> all = ImmutableList.of(dent);
+        List<User> all = ImmutableList.of(dent);
 
-    when(manager.getAll()).thenReturn(all);
-    when(manager.getAll(0, 20)).thenReturn(new PagedResultList<>(all, 0, 20,
-      1));
+        when(manager.getAll()).thenReturn(all);
+        when(manager.getAll(0, 20)).thenReturn(new PagedResultList<>(all, 0, 20,
+                1));
 
         return manager;
     }
@@ -390,14 +367,31 @@ public class UserResourceTest
         return mock(ProtocolWriter.class);
     }
 
-  //~--- fields ---------------------------------------------------------------
+    private MailSender mockMailSender() { return mock(MailSender.class);};
 
-  /** Field description */
-  private GroupManager groupManager;
+    //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private UserResource resource;
+    /**
+     * Field description
+     */
+    private GroupManager groupManager;
 
-  /** Field description */
-  private UserManager userManager;
+    /**
+     * Field description
+     */
+    private CSVImportManager csvImportManager;
+
+    /**
+     * Field description
+     */
+    private UserResource resource;
+
+    /**
+     * Field description
+     */
+    private UserManager userManager;
+
+    private ProtocolWriter protocolWriter;
+
+    private MailSender mailSender;
 }

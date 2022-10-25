@@ -7,15 +7,21 @@ import static org.junit.Assert.*;
 
 public class PasswordGeneratorTest {
 
+    private static final String SPECIAL_CASE_REGEX = "[^a-z0-9A-Z]";
+    private static final String LOWER_CASE_REGEX = "[a-z]";
+    private static final String UPPERCASE_REGEX = "[A-Z]";
+    private static final String NUMBER_REGEX = "[0-9]";
+
     @Test
     public void testPasswordGenerator() {
-        Pattern specialCharacters = Pattern.compile("[^a-z0-9A-Z]");
-        Pattern lowerCaseCharacters = Pattern.compile("[a-z]");
-        Pattern upperCaseCharacters = Pattern.compile("[A-Z]");
-        Pattern numberCharacters = Pattern.compile("[0-9]");
+        Pattern specialCharacters = Pattern.compile(SPECIAL_CASE_REGEX);
+        Pattern lowerCaseCharacters = Pattern.compile(LOWER_CASE_REGEX);
+        Pattern upperCaseCharacters = Pattern.compile(UPPERCASE_REGEX);
+        Pattern numberCharacters = Pattern.compile(NUMBER_REGEX);
+        PasswordGenerator pwdGen = new PasswordGenerator();
 
         for (int i = 0; i < 100; i++) {
-            final String randomPassword = PasswordGenerator.random(30);
+            final String randomPassword = pwdGen.random(30);
             final boolean hasSpecialCharacters = specialCharacters.matcher(randomPassword).find();
             assertTrue(hasSpecialCharacters);
 

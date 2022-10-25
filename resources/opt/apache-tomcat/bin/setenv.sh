@@ -19,3 +19,6 @@ ADMIN_GROUP="$(doguctl config --global --default "admin" "admin_group")"
 export ADMIN_GROUP
 CES_MANAGER_GROUP="$(doguctl config --global --default "cesManager" "manager_group")"
 export CES_MANAGER_GROUP
+
+MAIL_ADDRESS="$(doguctl config --global --default "ecosystem@ces.local" "mail_address")"
+export MAIL_ADDRESS

@@ -32,6 +32,7 @@ package de.triology.universeadm.user;
 
 import com.google.inject.Inject;
 import de.triology.universeadm.AbstractManagerResource;
+import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 
@@ -47,23 +48,20 @@ import java.io.InputStream;
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
 @Path("users")
-public class UserResource extends AbstractManagerResource<User>
-{
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param userManager
-   * @param groupManager
-   */
-  @Inject
-  public UserResource(UserManager userManager, GroupManager groupManager)
-  {
-    super(userManager);
-    this.userManager = userManager;
-    this.groupManager = groupManager;
-  }
+public class UserResource extends AbstractManagerResource<User> {
+    /**
+     * Constructs ...
+     *
+     * @param userManager
+     * @param groupManager
+     */
+    @Inject
+    public UserResource(UserManager userManager, GroupManager groupManager, CSVImportManager csvImportManager) {
+        super(userManager);
+        this.userManager = userManager;
+        this.groupManager = groupManager;
+        this.csvImportManager = csvImportManager;
+    }
 
     //~--- methods --------------------------------------------------------------
     @POST

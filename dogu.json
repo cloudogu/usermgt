@@ -26,6 +26,10 @@
     {
       "Type": "dogu",
       "Name": "nginx"
+    },
+    {
+      "Type": "dogu",
+      "Name": "postfix"
     }
   ],
   "Volumes": [
