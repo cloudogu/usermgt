@@ -1,0 +1,21 @@
+{
+  "subject": "New Account for CES",
+  "mailContent": "Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern",
+  "startingProtocol": "---Beginne Protocol---",
+  "endingProtocol": "---Beende Protocol---",
+  "csvWithLinesReadSuccessful": "CSV-Datei mit %d Zeilen erfolgreich eingelesen.",
+  "addedSuccessful": "erfolgreich angelegt(%s, %s, %s, %s, %s)",
+  "incompleteLine": "Zeile %d ist unvollständig",
+  "userAlreadyExists": "konnte nicht angelegt werden(Nutzer existiert bereits)",
+  "errorOnCreatingUser": "Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ",
+  "emptyUsername": "Nutzername ist leer",
+  "emptyDisplayname": "DisplayName ist leer",
+  "emptySurname": "Surname ist leer",
+  "emptyMail": "Mail ist leer",
+  "userAdded": "%s zugeordnet",
+  "userPartOfGroupAlready": "Nutzer ist bereits Teil von %s",
+  "groupDoesntExist": "%s existiert nicht",
+  "couldNotSendMail": "Mail konnte nicht vesendet werden",
+  "unknownError" : "Ein unbekannter Fehler ist bei dem anlegen des Nutzers aufgetreten.",
+  "uniqueMailError" : "Die Mail für diesen Nutzer wird bereits verwendet."
+}

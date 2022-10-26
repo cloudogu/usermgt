@@ -57,4 +57,5 @@ public class ProtcolWriterTest {
         verify(loggerMock).error(eq(COULD_NOT_WRITE_PROTOCOL_ENTRY), Matchers.<IOException>any());
     }
 
+
 }

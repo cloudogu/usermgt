@@ -1,0 +1,5 @@
+{
+  "postfixPort": "25",
+  "postfixHost": "postfix",
+  "importProtocolPath": "/var/lib/usermgt/protocol"
+}

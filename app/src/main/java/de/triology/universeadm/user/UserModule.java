@@ -34,6 +34,9 @@ package de.triology.universeadm.user;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
+import de.triology.universeadm.configreader.ApplicationConfigReader;
+import de.triology.universeadm.configreader.JsonConfigReader;
+import de.triology.universeadm.configreader.LanguageConfigReader;
 import org.kohsuke.MetaInfServices;
 
 /**
@@ -55,5 +58,7 @@ public class UserModule extends AbstractModule
     bind(MemberListener.class).asEagerSingleton();
     bind(UserResource.class);
     bind(UserSelfRemoveExceptionMapper.class);
+    bind(ApplicationConfigReader.class);
+    bind(LanguageConfigReader.class);
   }
 }

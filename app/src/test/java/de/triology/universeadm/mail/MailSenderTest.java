@@ -1,5 +1,6 @@
 package de.triology.universeadm.mail;
 
+import de.triology.universeadm.configreader.ApplicationConfigReader;
 import de.triology.universeadm.user.User;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,6 +29,7 @@ public class MailSenderTest {
     private MailSender.TransportSender transportSender;
     private Message message;
     private MailSender mailSender;
+    private ApplicationConfigReader applicationConfig;
 
     private final User user = new User(
             "Tester",
@@ -44,12 +46,16 @@ public class MailSenderTest {
         this.message = mock(Message.class);
         this.messageBuilder = mock(MailSender.MessageBuilder.class);
         this.transportSender = mock(MailSender.TransportSender.class);
-        this.mailSender = new MailSender(this.messageBuilder, this.transportSender);
+        this.applicationConfig = mock(ApplicationConfigReader.class);
+        this.mailSender = new MailSender(this.messageBuilder, this.transportSender, this.applicationConfig);
         when(this.messageBuilder.build(Matchers.<Session>any())).thenReturn(this.message);
+        when(applicationConfig.get("postfixHost")).thenReturn("postifx");
+        when(applicationConfig.get("postfixPort")).thenReturn("25");
     }
 
     @Test
     public void sendMailSuccessful() throws MessagingException, IOException {
+
         String content = String.format(MAIL_CONTENT, user.getUsername(), TEST);
         this.mailSender.sendMail(TEST, content, user.getMail());
         ArgumentCaptor<Multipart> argument = ArgumentCaptor.forClass(Multipart.class);

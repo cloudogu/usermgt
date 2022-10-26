@@ -34,6 +34,7 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import de.triology.universeadm.*;
+import de.triology.universeadm.configreader.LanguageConfigReader;
 import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.csvimport.ProtocolWriter;
 import de.triology.universeadm.group.GroupManager;
@@ -66,13 +67,20 @@ import static org.mockito.Mockito.*;
         password = "secret"
 )
 public class UserResourceTest {
+    private GroupManager groupManager;
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
+    private CSVImportManager csvImportManager;
+
+    private UserResource resource;
+
+    private UserManager userManager;
+
+    private ProtocolWriter protocolWriter;
+
+    private MailSender mailSender;
+
+    private LanguageConfigReader languageConfigReader;
+
     @Test
     public void testAddMembership() throws URISyntaxException, IOException {
         MockHttpRequest request =
@@ -82,12 +90,7 @@ public class UserResourceTest {
         assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
+
     @Test
     public void testAddMembershipConflict() throws URISyntaxException, IOException {
         User trillian = Users.createTrillian();
@@ -102,12 +105,6 @@ public class UserResourceTest {
         assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testAddMembershipGroupNotFound()
             throws URISyntaxException, IOException {
@@ -117,12 +114,6 @@ public class UserResourceTest {
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testAddMembershipUserNotFound()
             throws URISyntaxException, IOException {
@@ -133,12 +124,6 @@ public class UserResourceTest {
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testCreateAlreadyExists() throws URISyntaxException, IOException {
         User dent = Users.createDent();
@@ -151,12 +136,6 @@ public class UserResourceTest {
         assertEquals(HttpServletResponse.SC_CONFLICT, response.getStatus());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testGet() throws URISyntaxException, IOException {
         MockHttpRequest request = MockHttpRequest.get("/users/dent");
@@ -170,12 +149,6 @@ public class UserResourceTest {
         assertEquals("arthur.dent@hitchhiker.com", node.path("mail").asText());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testGetAll() throws URISyntaxException, IOException {
         MockHttpRequest request = MockHttpRequest.get("/users?start=0&limit=20");
@@ -195,12 +168,6 @@ public class UserResourceTest {
         assertEquals("dent", Iterables.get(entries, 0).path("username").asText());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testGetNotFound() throws URISyntaxException, IOException {
         MockHttpRequest request = MockHttpRequest.get("/users/trillian");
@@ -209,12 +176,6 @@ public class UserResourceTest {
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testGreate() throws URISyntaxException, IOException {
         User trillian = Users.createTrillian();
@@ -229,12 +190,6 @@ public class UserResourceTest {
         verify(userManager).create(trillian);
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testModify() throws URISyntaxException, IOException {
         User dent = Users.createDent();
@@ -245,12 +200,6 @@ public class UserResourceTest {
         verify(userManager).modify(dent);
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testModifyNotFound() throws URISyntaxException, IOException {
         User trillian = Users.createTrillian();
@@ -264,12 +213,6 @@ public class UserResourceTest {
         verify(userManager).modify(trillian);
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testRemove() throws URISyntaxException, IOException {
         MockHttpRequest request = MockHttpRequest.delete("/users/dent");
@@ -279,12 +222,6 @@ public class UserResourceTest {
         verify(userManager).remove(Users.createDent());
     }
 
-    /**
-     * Method description
-     *
-     * @throws IOException
-     * @throws URISyntaxException
-     */
     @Test
     public void testRemoveNotFound() throws URISyntaxException, IOException {
         MockHttpRequest request = MockHttpRequest.delete("/users/trillian");
@@ -314,27 +251,20 @@ public class UserResourceTest {
     }
     //~--- set methods ----------------------------------------------------------
 
-    /**
-     * Method description
-     */
     @Before
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
         this.protocolWriter = mockProtocolWriter();
         this.mailSender = mockMailSender();
+        this.languageConfigReader = mockLanguageConfig();
         PasswordGenerator pwdGen = new PasswordGenerator();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen);
+        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfigReader);
         this.resource = new UserResource(userManager, groupManager, csvImportManager);
     }
 
     //~--- methods --------------------------------------------------------------
 
-    /**
-     * Method description
-     *
-     * @return
-     */
     private GroupManager mockGroupManager() {
         GroupManager manager = mock(GroupManager.class);
 
@@ -343,11 +273,6 @@ public class UserResourceTest {
         return manager;
     }
 
-    /**
-     * Method description
-     *
-     * @return
-     */
     private UserManager mockUserManager() {
         UserManager manager = mock(UserManager.class);
         User dent = Users.createDent();
@@ -367,31 +292,30 @@ public class UserResourceTest {
         return mock(ProtocolWriter.class);
     }
 
-    private MailSender mockMailSender() { return mock(MailSender.class);};
+    private MailSender mockMailSender() {
+        return mock(MailSender.class);
+    }
 
-    //~--- fields ---------------------------------------------------------------
-
-    /**
-     * Field description
-     */
-    private GroupManager groupManager;
-
-    /**
-     * Field description
-     */
-    private CSVImportManager csvImportManager;
-
-    /**
-     * Field description
-     */
-    private UserResource resource;
-
-    /**
-     * Field description
-     */
-    private UserManager userManager;
-
-    private ProtocolWriter protocolWriter;
-
-    private MailSender mailSender;
+    private LanguageConfigReader mockLanguageConfig(){
+        LanguageConfigReader languageConfig = mock(LanguageConfigReader.class);
+        when(languageConfig.get("subject")).thenReturn("New Account for CES");
+        when(languageConfig.get("mailContent")).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
+        when(languageConfig.get("startingProtocol")).thenReturn("---Beginne Protocol---");
+        when(languageConfig.get("endingProtocol")).thenReturn("---Beende Protocol---");
+        when(languageConfig.get("csvWithLinesReadSuccessful")).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
+        when(languageConfig.get("addedSuccessful")).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
+        when(languageConfig.get("incompleteLine")).thenReturn("Zeile %d ist unvollständig");
+        when(languageConfig.get("incompleteLine")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
+        when(languageConfig.get("errorOnCreatingUser")).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
+        when(languageConfig.get("emptyUsername")).thenReturn("Nutzername ist leer");
+        when(languageConfig.get("emptyDisplayname")).thenReturn("DisplayName ist leer");
+        when(languageConfig.get("couldNotSendMail")).thenReturn("Mail konnte nicht vesendet werden");
+        when(languageConfig.get("groupDoesntExist")).thenReturn("%s existiert nicht");
+        when(languageConfig.get("userPartOfGroupAlready")).thenReturn("Nutzer ist bereits Teil von %s");
+        when(languageConfig.get("userAdded")).thenReturn("%s zugeordnet");
+        when(languageConfig.get("emptyMail")).thenReturn("Mail ist leer");
+        when(languageConfig.get("emptySurname")).thenReturn("Surname ist leer");
+        when(languageConfig.get("userAlreadyExists")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
+        return languageConfig;
+    }
 }

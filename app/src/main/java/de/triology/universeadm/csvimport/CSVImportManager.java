@@ -1,6 +1,8 @@
 package de.triology.universeadm.csvimport;
 
 import com.google.inject.Inject;
+import de.triology.universeadm.ConstraintViolationException;
+import de.triology.universeadm.configreader.LanguageConfigReader;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.mail.MailSender;
 import de.triology.universeadm.user.PasswordGenerator;
@@ -16,51 +18,44 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class CSVImportManager {
     private static final String COMMA_SPLIT = ",";
     private static final String SEMICOLON_SPLIT = ";";
     private static final String EMPTY_STRING = "";
-    private static final String STARTING_PROTOCOL = "---Starting Protocol---";
-    private static final String ENDING_PROTOCOL = "--- Ending Protocol ---";
-    private static final String MAIL_CONTENT = "Willkommen zum Cloudogu Ecosystem!\n" +
-            "Dies ist ihr Benutzeraccount\n" +
-            "Benutzername = %s\n" +
-            "Passwort = %s\n" +
-            "Bei der ersten Anmeldung müssen sie ihr Passwort ändern";
-    private static final String USER_PART_OF_GROUP_ALREADY = "Nutzer ist bereits Teil von %s";
-    private static final String USER_ADDED = "%s zugeordnet";
-    private static final String GROUP_DOESNT_EXIST = "%s existiert nicht";
-    private static final String ADDED_SUCCESSFUL = "erfolgreich angelegt(%s, %s, %s, %s, %s)";
-    private static final String USER_ALREADY_EXISTS = "konnte nicht angelegt werden(Nutzer existiert bereits)";
-    private static final String EMPTY_USERNAME = "Nutzername ist leer";
-    private static final String EMPTY_DISPLAYNAME = "DisplayName ist leer";
-    private static final String EMPTY_SURNAME = "Surname ist leer";
-    private static final String EMPTY_MAIL = "Mail ist leer";
-    private static final String COULD_NOT_SEND_MAIL = "Mail konnte nicht versendet werden";
-    private static final String SUBJECT = "New Account for CES";
-    private static final String ERROR_ON_CREATING_USER = "Fehler in Zeile %d Benutzer nicht angelegt. Errors: ";
     private static final String ERROR_INFORMATION_WITH_COMMA = "%s, ";
-    private static final String CSV_WITH_LINES_READ_SUCCESSFUL = "CSV-Datei mit %d Zeilen erfolgreich eingelesen.";
-    private static final String INCOMPLETE_LINE = "Zeile %d ist unvollständig";
+//    private String STARTING_PROTOCOL;
+//    private String ENDING_PROTOCOL;
+//    private String MAIL_CONTENT;
+//    private String USER_PART_OF_GROUP_ALREADY;
+//    private String reader.get("userAdded");
+//    private String GROUP_DOESNT_EXIST;
+//    private String ADDED_SUCCESSFUL;
+//    private String USER_ALREADY_EXISTS;
+//    private String EMPTY_USERNAME;
+//    private String EMPTY_DISPLAYNAME;
+//    private String EMPTY_SURNAME;
+//    private String EMPTY_MAIL;
+//    private String reader.get("couldNotSendMail");
+//    private String SUBJECT;
+//    private String reader.get("errorOnCreatingUser");
+//    private String CSV_WITH_LINES_READ_SUCCESSFUL;
+//    private String INCOMPLETE_LINE;
 
     private final GroupManager groupManager;
     private final UserManager userManager;
-
     private final ProtocolWriter protocolWriter;
-
     private final MailSender mailSender;
-
     private final PasswordGenerator pwdGen;
+    private final LanguageConfigReader reader;
 
     @Inject
-    public CSVImportManager(UserManager userManager, GroupManager groupManager, ProtocolWriter protocolWriter, MailSender mailSender, PasswordGenerator pwdGen) {
-
+    public CSVImportManager(UserManager userManager, GroupManager groupManager, ProtocolWriter protocolWriter, MailSender mailSender, PasswordGenerator pwdGen, LanguageConfigReader languageConfig) {
         this.pwdGen = pwdGen;
         this.userManager = userManager;
         this.groupManager = groupManager;
         this.protocolWriter = protocolWriter;
         this.mailSender = mailSender;
+        this.reader = languageConfig;
     }
 
     public void importUsers(InputStream inputStream) throws IOException {
@@ -76,14 +71,14 @@ public class CSVImportManager {
         while ((line = br.readLine()) != null) {
             lines.add(line);
         }
-        createProtocolEntry(STARTING_PROTOCOL);
-        createProtocolEntry(String.format(CSV_WITH_LINES_READ_SUCCESSFUL, lines.size()));
+        createProtocolEntry(reader.get("startingProtocol"));
+        createProtocolEntry(String.format(reader.get("csvWithLinesReadSuccessful"), lines.size()));
 
         for (int index = 0; index < lines.size(); index++) {
             final String userDataString = lines.get(index);
             final String[] userValues = userDataString.split(SEMICOLON_SPLIT, -1);
             if (userValues.length != 6 && userValues.length != 5) {
-                createProtocolEntry(String.format(INCOMPLETE_LINE, (index + 2)));
+                createProtocolEntry(String.format(reader.get("incompleteLine"), (index + 2)));
                 continue;
             }
 
@@ -97,7 +92,7 @@ public class CSVImportManager {
             final List<String> validationErrors = getUserValidationErrors(potentialNewUser);
 
             if (validationErrors.size() != 0) {
-                String errorMessage = String.format(ERROR_ON_CREATING_USER, (index + 2));
+                String errorMessage = String.format(reader.get("errorOnCreatingUser"), (index + 2));
                 for (int position = 0; position < validationErrors.size(); position++) {
                     if (position + 1 != validationErrors.size()) {
                         errorMessage += String.format(ERROR_INFORMATION_WITH_COMMA, validationErrors.get(position));
@@ -112,15 +107,15 @@ public class CSVImportManager {
             boolean created = addUser(potentialNewUser);
             if (created) {
                 try {
-                    mailSender.sendMail(SUBJECT, String.format(MAIL_CONTENT, potentialNewUser.getUsername(), password), potentialNewUser.getMail());
+                    mailSender.sendMail(reader.get("subject"), String.format(reader.get("mailContent"), potentialNewUser.getUsername(), password), potentialNewUser.getMail());
                 } catch (MessagingException e) {
-                    createProtocolEntry(potentialNewUser.getUsername(), COULD_NOT_SEND_MAIL);
+                    createProtocolEntry(potentialNewUser.getUsername(), reader.get("couldNotSendMail"));
                 }
             }
 
             addGroupsToUser(potentialNewUser, memberOf);
 
-            createProtocolEntry(ENDING_PROTOCOL);
+            createProtocolEntry(reader.get("endingProtocol"));
         }
     }
 
@@ -128,16 +123,16 @@ public class CSVImportManager {
     private List<String> getUserValidationErrors(final User user) {
         List<String> result = new ArrayList<>();
         if (user.getUsername().equals(EMPTY_STRING)) {
-            result.add(EMPTY_USERNAME);
+            result.add(reader.get("emptyUsername"));
         }
         if (user.getDisplayName().equals(EMPTY_STRING)) {
-            result.add(EMPTY_DISPLAYNAME);
+            result.add(reader.get("emptyDisplayname"));
         }
         if (user.getSurname().equals(EMPTY_STRING)) {
-            result.add(EMPTY_SURNAME);
+            result.add(reader.get("emptySurname"));
         }
         if (user.getMail().equals(EMPTY_STRING)) {
-            result.add(EMPTY_MAIL);
+            result.add(reader.get("emptyMail"));
         }
         return result;
     }
@@ -158,11 +153,20 @@ public class CSVImportManager {
     private boolean addUser(User user) {
         String username = user.getUsername();
         if (!(userManager.get(username) == null)) {
-            createProtocolEntry(username, USER_ALREADY_EXISTS);
+            createProtocolEntry(username, reader.get("userAlreadyExists"));
             return false;
         }
-        userManager.create(user);
-        createProtocolEntry(username, String.format(ADDED_SUCCESSFUL,
+        try {
+            userManager.create(user);
+        } catch (Exception e) {
+            if (e.getMessage().contains("UNIQUE_EMAIL")) {
+                createProtocolEntry(username, reader.get("uniqueMailError"));
+            } else {
+                createProtocolEntry(username, reader.get("unknownError"));
+            }
+        }
+
+        createProtocolEntry(username, String.format(reader.get("addedSuccessful"),
                 user.getUsername(),
                 user.getGivenname(),
                 user.getSurname(),
@@ -175,15 +179,15 @@ public class CSVImportManager {
         String username = user.getUsername();
         for (String group : memberOf) {
             if (groupManager.get(group) == null) {
-                createProtocolEntry(username, String.format(GROUP_DOESNT_EXIST, group));
+                createProtocolEntry(username, String.format(reader.get("groupDoesntExist"), group));
                 continue;
             }
             if (userManager.get(username).getMemberOf().contains(group)) {
-                createProtocolEntry(username, String.format(USER_PART_OF_GROUP_ALREADY, group));
+                createProtocolEntry(username, String.format(reader.get("userPartOfGroupAlready"), group));
             }
             user.getMemberOf().add(group);
             userManager.modify(user);
-            createProtocolEntry(username, String.format(USER_ADDED, group));
+            createProtocolEntry(username, String.format(reader.get("userAdded"), group));
         }
     }
 

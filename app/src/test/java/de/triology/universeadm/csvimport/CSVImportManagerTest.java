@@ -1,5 +1,6 @@
 package de.triology.universeadm.csvimport;
 
+import de.triology.universeadm.configreader.LanguageConfigReader;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.mail.MailSender;
@@ -49,7 +50,7 @@ public class CSVImportManagerTest {
             "Tester1;Tes;Ter;Tester1;test1@test.com;doesnotexist";
     private static final String HEADERS_AND_ONE_USER_WITH_GROUP = "Username;FirstName;Surname;DisplayName;EMail;Group\n" +
             "Tester2;Tes;Ter;Tester2;test2@test.com;exist";
-    private static final String PROTOCOL_ENTRY_EMPTY_USER = "Fehler in Zeile 2 Benutzer nicht angelegt. Errors: " +
+    private static final String PROTOCOL_ENTRY_EMPTY_USER = "Fehler in Zeile 2. Benutzer nicht angelegt. Errors: " +
             "Nutzername ist leer, " +
             "DisplayName ist leer, " +
             "Surname ist leer, " +
@@ -65,6 +66,7 @@ public class CSVImportManagerTest {
     private CSVImportManager csvImportManager;
 
     private PasswordGenerator pwdGen;
+    private LanguageConfigReader languageConfig;
 
     private MailSender mailSender;
 
@@ -75,7 +77,10 @@ public class CSVImportManagerTest {
         protocolWriter = mockProtocolWriter();
         mailSender = mockMailSender();
         pwdGen = mockPasswordGenerator();
-        csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen);
+        languageConfig = mockLanguageConfig();
+        mockStrings();
+
+        csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfig);
 
         user1 = new User(
                 "Tester1",
@@ -97,6 +102,27 @@ public class CSVImportManagerTest {
                 true,
                 new ArrayList<String>()
         );
+    }
+
+    private void mockStrings() {
+        when(languageConfig.get("subject")).thenReturn("New Account for CES");
+        when(languageConfig.get("mailContent")).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
+        when(languageConfig.get("startingProtocol")).thenReturn("---Beginne Protocol---");
+        when(languageConfig.get("endingProtocol")).thenReturn("---Beende Protocol---");
+        when(languageConfig.get("csvWithLinesReadSuccessful")).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
+        when(languageConfig.get("addedSuccessful")).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
+        when(languageConfig.get("incompleteLine")).thenReturn("Zeile %d ist unvollständig");
+        when(languageConfig.get("incompleteLine")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
+        when(languageConfig.get("errorOnCreatingUser")).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
+        when(languageConfig.get("emptyUsername")).thenReturn("Nutzername ist leer");
+        when(languageConfig.get("emptyDisplayname")).thenReturn("DisplayName ist leer");
+        when(languageConfig.get("couldNotSendMail")).thenReturn("Mail konnte nicht vesendet werden");
+        when(languageConfig.get("groupDoesntExist")).thenReturn("%s existiert nicht");
+        when(languageConfig.get("userPartOfGroupAlready")).thenReturn("Nutzer ist bereits Teil von %s");
+        when(languageConfig.get("userAdded")).thenReturn("%s zugeordnet");
+        when(languageConfig.get("emptyMail")).thenReturn("Mail ist leer");
+        when(languageConfig.get("emptySurname")).thenReturn("Surname ist leer");
+        when(languageConfig.get("userAlreadyExists")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
     }
 
     private InputStream stringToStream(final String input) {
@@ -205,5 +231,9 @@ public class CSVImportManagerTest {
 
     private PasswordGenerator mockPasswordGenerator() {
         return mock(PasswordGenerator.class);
+    }
+
+    private LanguageConfigReader mockLanguageConfig() {
+        return mock(LanguageConfigReader.class);
     }
 }

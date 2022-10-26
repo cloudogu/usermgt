@@ -26,7 +26,6 @@
   </scm>
 
   <dependencies>
-
     <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
     <dependency>
       <groupId>javax.mail</groupId>
