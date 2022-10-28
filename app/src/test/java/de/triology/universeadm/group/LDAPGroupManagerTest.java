@@ -233,7 +233,8 @@ public class LDAPGroupManagerTest
     Mapper<Group> mapper = new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, Group.class, groupsdn);
     MapperFactory mapperFactory = mock(MapperFactory.class);
     when(mapperFactory.createMapper(Group.class, groupsdn)).thenReturn(mapper);
-    return new LDAPGroupManager(strategy, config, mapperFactory, validator, eventBus);
+    UndeletableGroupManager undeletableGroupManager = mock(UndeletableGroupManager.class);
+    return new LDAPGroupManager(strategy, config, undeletableGroupManager, mapperFactory, validator, eventBus);
   }
   
   

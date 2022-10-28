@@ -1,22 +1,31 @@
 package de.triology.universeadm.group;
 
+import de.triology.universeadm.configreader.ApplicationConfigReader;
+import de.triology.universeadm.configreader.ApplicationConfiguration;
+import de.triology.universeadm.configreader.JsonConfigReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UndeletableGroupManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final ApplicationConfiguration applicationConfiguration;
 
-    public static List<String> getNonDeleteClassList(){
+    public UndeletableGroupManager(ApplicationConfiguration applicationConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
+    }
+
+    public List<String> getNonDeleteClassList() {
         List<String> groups = new ArrayList<>();
-        String adminGroup = System.getenv("ADMIN_GROUP");
-        String cesManagerGroup = System.getenv("CES_MANAGER_GROUP");
+        String adminGroup = applicationConfiguration.getAdminGroup();
+        String cesManagerGroup = applicationConfiguration.getManagerGroup();
         // fallback to defaults if not set
-        if(adminGroup == null || "".equals(adminGroup)){
+        if (adminGroup == null || "".equals(adminGroup)) {
             logger.warn("Env variable ADMIN_GROUP not set. Falling back to default \"admin\"");
             adminGroup = "admin";
         }
@@ -29,7 +38,7 @@ public class UndeletableGroupManager {
         return groups;
     }
 
-    public static boolean isGroupUndeletable(String group){
+    public boolean isGroupUndeletable(String group) {
         return getNonDeleteClassList().contains(group);
     }
 

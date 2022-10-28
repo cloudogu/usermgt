@@ -1,5 +1,12 @@
 {
   "postfixPort": "25",
   "postfixHost": "postfix",
-  "importProtocolPath": "/var/lib/usermgt/protocol"
+  "mailAddress": "ecosystem@ces.local",
+  "adminGroup" : "admin",
+  "cesManagerGroup" : "cesManager",
+
+  "importProtocolPath": "/var/lib/usermgt/protocol",
+
+  "subject": "New Account for CES",
+  "mailContent": "Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern"
 }

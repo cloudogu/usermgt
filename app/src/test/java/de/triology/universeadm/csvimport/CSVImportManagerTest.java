@@ -1,6 +1,8 @@
 package de.triology.universeadm.csvimport;
 
-import de.triology.universeadm.configreader.LanguageConfigReader;
+import de.triology.universeadm.EntityException;
+import de.triology.universeadm.configreader.ApplicationConfiguration;
+import de.triology.universeadm.configreader.LanguageConfiguration;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.mail.MailSender;
@@ -9,6 +11,7 @@ import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import javax.mail.MessagingException;
 import java.io.ByteArrayInputStream;
@@ -66,7 +69,8 @@ public class CSVImportManagerTest {
     private CSVImportManager csvImportManager;
 
     private PasswordGenerator pwdGen;
-    private LanguageConfigReader languageConfig;
+    private LanguageConfiguration languageConfig;
+    private ApplicationConfiguration applicationConfig;
 
     private MailSender mailSender;
 
@@ -78,9 +82,10 @@ public class CSVImportManagerTest {
         mailSender = mockMailSender();
         pwdGen = mockPasswordGenerator();
         languageConfig = mockLanguageConfig();
+        applicationConfig = mockApplicationConfig();
         mockStrings();
 
-        csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfig);
+        csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfig, applicationConfig);
 
         user1 = new User(
                 "Tester1",
@@ -105,24 +110,24 @@ public class CSVImportManagerTest {
     }
 
     private void mockStrings() {
-        when(languageConfig.get("subject")).thenReturn("New Account for CES");
-        when(languageConfig.get("mailContent")).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
-        when(languageConfig.get("startingProtocol")).thenReturn("---Beginne Protocol---");
-        when(languageConfig.get("endingProtocol")).thenReturn("---Beende Protocol---");
-        when(languageConfig.get("csvWithLinesReadSuccessful")).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
-        when(languageConfig.get("addedSuccessful")).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
-        when(languageConfig.get("incompleteLine")).thenReturn("Zeile %d ist unvollständig");
-        when(languageConfig.get("incompleteLine")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
-        when(languageConfig.get("errorOnCreatingUser")).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
-        when(languageConfig.get("emptyUsername")).thenReturn("Nutzername ist leer");
-        when(languageConfig.get("emptyDisplayname")).thenReturn("DisplayName ist leer");
-        when(languageConfig.get("couldNotSendMail")).thenReturn("Mail konnte nicht vesendet werden");
-        when(languageConfig.get("groupDoesntExist")).thenReturn("%s existiert nicht");
-        when(languageConfig.get("userPartOfGroupAlready")).thenReturn("Nutzer ist bereits Teil von %s");
-        when(languageConfig.get("userAdded")).thenReturn("%s zugeordnet");
-        when(languageConfig.get("emptyMail")).thenReturn("Mail ist leer");
-        when(languageConfig.get("emptySurname")).thenReturn("Surname ist leer");
-        when(languageConfig.get("userAlreadyExists")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
+        when(applicationConfig.getSubject()).thenReturn("New Account for CES");
+        when(applicationConfig.getContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
+        when(languageConfig.getStartingProtocol()).thenReturn("---Beginne Protocol---");
+        when(languageConfig.getEndingProtocol()).thenReturn("---Beende Protocol---");
+        when(languageConfig.getCsvWithLinesReadSuccessful()).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
+        when(languageConfig.getAddedSuccessful()).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
+        when(languageConfig.getIncompleteLine()).thenReturn("Zeile %d ist unvollständig");
+        when(languageConfig.getUserAlreadyExists()).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
+        when(languageConfig.getErrorOnCreatingUser()).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
+        when(languageConfig.getEmptyUsername()).thenReturn("Nutzername ist leer");
+        when(languageConfig.getEmptyDisplayname()).thenReturn("DisplayName ist leer");
+        when(languageConfig.getCouldNotSendMail()).thenReturn("Mail konnte nicht vesendet werden");
+        when(languageConfig.getGroupDoesNotExist()).thenReturn("%s existiert nicht");
+        when(languageConfig.getUserPartOfGroupAlready()).thenReturn("Nutzer ist bereits Teil von %s");
+        when(languageConfig.getUserAdded()).thenReturn("%s zugeordnet");
+        when(languageConfig.getEmptyMail()).thenReturn("Mail ist leer");
+        when(languageConfig.getEmptySurname()).thenReturn("Surname ist leer");
+        when(languageConfig.getUniqueMailError()).thenReturn("Die Mail für diesen Nutzer wird bereits verwendet.");
     }
 
     private InputStream stringToStream(final String input) {
@@ -188,6 +193,14 @@ public class CSVImportManagerTest {
     }
 
     @Test
+    public void emailExistAlready() throws IOException {
+        when(userManager.get(user1.getUsername())).thenReturn(null);
+        Mockito.doThrow(new EntityException("UNIQUE_EMAIL")).when(userManager).create(user1);
+        this.csvImportManager.importUsers(this.stringToStream(HEADERS_AND_ONE_USER));
+        verify(protocolWriter).writeLine("Tester1: Die Mail für diesen Nutzer wird bereits verwendet.");
+    }
+
+    @Test
     public void groupDoesNotExist() throws IOException {
         when(userManager.get(user1.getUsername())).thenReturn(user1);
         this.csvImportManager.importUsers(this.stringToStream(HEADERS_WITH_ONE_USER_AND_NON_EXISTENT_GROUP));
@@ -233,7 +246,11 @@ public class CSVImportManagerTest {
         return mock(PasswordGenerator.class);
     }
 
-    private LanguageConfigReader mockLanguageConfig() {
-        return mock(LanguageConfigReader.class);
+    private LanguageConfiguration mockLanguageConfig() {
+        return mock(LanguageConfiguration.class);
+    }
+
+    private ApplicationConfiguration mockApplicationConfig() {
+        return mock(ApplicationConfiguration.class);
     }
 }

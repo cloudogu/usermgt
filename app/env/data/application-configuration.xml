@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-configuration>
+    <sender-mail>info@cloudogu.com</sender-mail>
+    <admin-group>cesAdmin</admin-group>
+    <manager-group>cesManager</manager-group>
+    <subject>Ihr neues Kennwort</subject>
+    <content>Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern"</content>
+</application-configuration>

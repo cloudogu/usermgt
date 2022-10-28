@@ -53,13 +53,16 @@ public class GroupResource extends AbstractManagerResource<Group>
 
   private final GroupManager groupManager;
   private final UserManager userManager;
+
+  private final UndeletableGroupManager undeletableGroupManager;
   
   @Inject
-  public GroupResource(GroupManager groupManager, UserManager userManager)
+  public GroupResource(GroupManager groupManager, UserManager userManager, UndeletableGroupManager undeletableGroupManager)
   {
     super(groupManager);
     this.groupManager = groupManager;
     this.userManager = userManager;
+    this.undeletableGroupManager = undeletableGroupManager;
   }
 
   @Override
@@ -134,7 +137,7 @@ public class GroupResource extends AbstractManagerResource<Group>
   public Response getUndeletable(){
     Response.ResponseBuilder builder;
     try {
-      List<String> groups = UndeletableGroupManager.getNonDeleteClassList();
+      List<String> groups = undeletableGroupManager.getNonDeleteClassList();
       builder = Response.ok(groups, MediaType.APPLICATION_JSON);
     } catch (Exception e) {
       logger.error("call /api/groups/undeletable without prior authentication");

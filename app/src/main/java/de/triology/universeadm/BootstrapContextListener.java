@@ -34,6 +34,8 @@ package de.triology.universeadm;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Module;
 
+import de.triology.universeadm.configreader.ApplicationConfiguration;
+import de.triology.universeadm.configreader.LanguageConfiguration;
 import org.apache.shiro.guice.web.ShiroWebModule;
 
 import org.jboss.resteasy.plugins.guice
@@ -71,6 +73,9 @@ public class BootstrapContextListener
     LDAPConfiguration ldapConfiguration =
       BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class);
 
+    ApplicationConfiguration applicationConfiguration = BaseDirectory.getConfiguration("appliaction-config.xml", ApplicationConfiguration.class);
+    LanguageConfiguration i18nConfiguration = BaseDirectory.getConfiguration("i18n/de.xml", LanguageConfiguration.class);
+
     List<? extends Module> modules;
 
     if (ldapConfiguration.isDisabled())
@@ -97,7 +102,7 @@ public class BootstrapContextListener
       //J-
       modules = ImmutableList.of(
         ShiroWebModule.guiceFilterModule(),
-        new MainModule(ldapConfiguration),
+        new MainModule(ldapConfiguration, applicationConfiguration, i18nConfiguration),
         securityModule
       );  
       //J+

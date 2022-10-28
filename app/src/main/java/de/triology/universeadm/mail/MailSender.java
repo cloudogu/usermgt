@@ -3,6 +3,7 @@ package de.triology.universeadm.mail;
 
 import com.google.inject.Inject;
 import de.triology.universeadm.configreader.ApplicationConfigReader;
+import de.triology.universeadm.configreader.ApplicationConfiguration;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -15,13 +16,11 @@ public class MailSender {
     private static final String NO_ADDRESS = "noAddress";
     private static final String MAIL_SMTP_HOST = "mail.smtp.host";
     private static final String MAIL_SMTP_PORT = "mail.smtp.port";
-    private static final String MAIL_ADDRESS = "MAIL_ADDRESS";
-    private String PORT;
-    private String HOST;
+
     private final MessageBuilder messageBuilder;
     private final TransportSender sender;
 
-    private final ApplicationConfigReader applicationConfig;
+    private final ApplicationConfiguration applicationConfig;
 
     public static class MessageBuilder {
         public Message build(Session session) {
@@ -36,11 +35,11 @@ public class MailSender {
     }
 
     @Inject
-    public MailSender(ApplicationConfigReader applicationConfig ) {
+    public MailSender(ApplicationConfiguration applicationConfig ) {
         this(new MessageBuilder(), new TransportSender(), applicationConfig);
     }
 
-    public MailSender(MessageBuilder messageBuilder, TransportSender sender, ApplicationConfigReader applicationConfig) {
+    public MailSender(MessageBuilder messageBuilder, TransportSender sender, ApplicationConfiguration applicationConfig) {
         this.messageBuilder = messageBuilder;
         this.sender = sender;
         this.applicationConfig = applicationConfig;
@@ -76,7 +75,7 @@ public class MailSender {
     }
 
     private InternetAddress getInternetAddress() throws AddressException {
-        final String input = System.getenv(MAIL_ADDRESS);
+        final String input = applicationConfig.getSenderMail();
         if (input == null || input.equals("")) {
             return new InternetAddress(NO_ADDRESS);
         }
@@ -85,9 +84,9 @@ public class MailSender {
 
     private Properties createProperties() {
         Properties prop = new Properties();
-        prop.put(MAIL_SMTP_HOST, applicationConfig.get("postfixHost"));
+        prop.put(MAIL_SMTP_HOST, applicationConfig.getHost());
         prop.put(MAIL_SMTP_PORT,
-                applicationConfig.get("postfixPort"));
+                applicationConfig.getPort());
         return prop;
     }
 }

@@ -1,6 +1,7 @@
 package de.triology.universeadm.mail;
 
 import de.triology.universeadm.configreader.ApplicationConfigReader;
+import de.triology.universeadm.configreader.ApplicationConfiguration;
 import de.triology.universeadm.user.User;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class MailSenderTest {
     private MailSender.TransportSender transportSender;
     private Message message;
     private MailSender mailSender;
-    private ApplicationConfigReader applicationConfig;
+    private ApplicationConfiguration applicationConfig;
 
     private final User user = new User(
             "Tester",
@@ -46,11 +47,11 @@ public class MailSenderTest {
         this.message = mock(Message.class);
         this.messageBuilder = mock(MailSender.MessageBuilder.class);
         this.transportSender = mock(MailSender.TransportSender.class);
-        this.applicationConfig = mock(ApplicationConfigReader.class);
+        this.applicationConfig = mock(ApplicationConfiguration.class);
         this.mailSender = new MailSender(this.messageBuilder, this.transportSender, this.applicationConfig);
         when(this.messageBuilder.build(Matchers.<Session>any())).thenReturn(this.message);
-        when(applicationConfig.get("postfixHost")).thenReturn("postifx");
-        when(applicationConfig.get("postfixPort")).thenReturn("25");
+        when(applicationConfig.getHost()).thenReturn("postifx");
+        when(applicationConfig.getPort()).thenReturn("25");
     }
 
     @Test

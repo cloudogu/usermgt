@@ -34,7 +34,10 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import de.triology.universeadm.*;
+import de.triology.universeadm.configreader.ApplicationConfigReader;
+import de.triology.universeadm.configreader.ApplicationConfiguration;
 import de.triology.universeadm.configreader.LanguageConfigReader;
+import de.triology.universeadm.configreader.LanguageConfiguration;
 import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.csvimport.ProtocolWriter;
 import de.triology.universeadm.group.GroupManager;
@@ -79,7 +82,9 @@ public class UserResourceTest {
 
     private MailSender mailSender;
 
-    private LanguageConfigReader languageConfigReader;
+    private LanguageConfiguration languageConfiguration;
+
+    private ApplicationConfiguration applicationConfiguration;
 
     @Test
     public void testAddMembership() throws URISyntaxException, IOException {
@@ -257,9 +262,10 @@ public class UserResourceTest {
         this.groupManager = mockGroupManager();
         this.protocolWriter = mockProtocolWriter();
         this.mailSender = mockMailSender();
-        this.languageConfigReader = mockLanguageConfig();
+        this.languageConfiguration = mockLanguageConfig();
+        this.applicationConfiguration = mockApplicationConfig();
         PasswordGenerator pwdGen = new PasswordGenerator();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfigReader);
+        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfiguration, applicationConfiguration);
         this.resource = new UserResource(userManager, groupManager, csvImportManager);
     }
 
@@ -296,26 +302,31 @@ public class UserResourceTest {
         return mock(MailSender.class);
     }
 
-    private LanguageConfigReader mockLanguageConfig(){
-        LanguageConfigReader languageConfig = mock(LanguageConfigReader.class);
-        when(languageConfig.get("subject")).thenReturn("New Account for CES");
-        when(languageConfig.get("mailContent")).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
-        when(languageConfig.get("startingProtocol")).thenReturn("---Beginne Protocol---");
-        when(languageConfig.get("endingProtocol")).thenReturn("---Beende Protocol---");
-        when(languageConfig.get("csvWithLinesReadSuccessful")).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
-        when(languageConfig.get("addedSuccessful")).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
-        when(languageConfig.get("incompleteLine")).thenReturn("Zeile %d ist unvollständig");
-        when(languageConfig.get("incompleteLine")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
-        when(languageConfig.get("errorOnCreatingUser")).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
-        when(languageConfig.get("emptyUsername")).thenReturn("Nutzername ist leer");
-        when(languageConfig.get("emptyDisplayname")).thenReturn("DisplayName ist leer");
-        when(languageConfig.get("couldNotSendMail")).thenReturn("Mail konnte nicht vesendet werden");
-        when(languageConfig.get("groupDoesntExist")).thenReturn("%s existiert nicht");
-        when(languageConfig.get("userPartOfGroupAlready")).thenReturn("Nutzer ist bereits Teil von %s");
-        when(languageConfig.get("userAdded")).thenReturn("%s zugeordnet");
-        when(languageConfig.get("emptyMail")).thenReturn("Mail ist leer");
-        when(languageConfig.get("emptySurname")).thenReturn("Surname ist leer");
-        when(languageConfig.get("userAlreadyExists")).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
+    private LanguageConfiguration mockLanguageConfig() {
+        LanguageConfiguration languageConfig = mock(LanguageConfiguration.class);
+        when(languageConfig.getStartingProtocol()).thenReturn("---Beginne Protocol---");
+        when(languageConfig.getEndingProtocol()).thenReturn("---Beende Protocol---");
+        when(languageConfig.getCsvWithLinesReadSuccessful()).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
+        when(languageConfig.getAddedSuccessful()).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
+        when(languageConfig.getIncompleteLine()).thenReturn("Zeile %d ist unvollständig");
+        when(languageConfig.getUserAlreadyExists()).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
+        when(languageConfig.getErrorOnCreatingUser()).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
+        when(languageConfig.getEmptyUsername()).thenReturn("Nutzername ist leer");
+        when(languageConfig.getEmptyDisplayname()).thenReturn("DisplayName ist leer");
+        when(languageConfig.getCouldNotSendMail()).thenReturn("Mail konnte nicht vesendet werden");
+        when(languageConfig.getGroupDoesNotExist()).thenReturn("%s existiert nicht");
+        when(languageConfig.getUserPartOfGroupAlready()).thenReturn("Nutzer ist bereits Teil von %s");
+        when(languageConfig.getUserAdded()).thenReturn("%s zugeordnet");
+        when(languageConfig.getEmptyMail()).thenReturn("Mail ist leer");
+        when(languageConfig.getEmptySurname()).thenReturn("Surname ist leer");
+        when(languageConfig.getUniqueMailError()).thenReturn("Die Mail für diesen Nutzer wird bereits verwendet.");
         return languageConfig;
+    }
+
+    private ApplicationConfiguration mockApplicationConfig() {
+        ApplicationConfiguration applicationConfig = mock(ApplicationConfiguration.class);
+        when(applicationConfig.getSubject()).thenReturn("New Account for CES");
+        when(applicationConfig.getContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
+        return applicationConfig;
     }
 }
