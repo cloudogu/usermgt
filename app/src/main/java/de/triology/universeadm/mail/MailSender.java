@@ -84,8 +84,7 @@ public class MailSender {
     private Properties createProperties() {
         Properties prop = new Properties();
         prop.put(MAIL_SMTP_HOST, applicationConfig.getHost());
-        prop.put(MAIL_SMTP_PORT,
-                applicationConfig.getPort());
+        prop.put(MAIL_SMTP_PORT, applicationConfig.getPort());
         return prop;
     }
 }

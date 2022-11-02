@@ -1,5 +1,6 @@
 package de.triology.universeadm.group;
 
+import com.google.inject.Inject;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ public class UndeletableGroupManager {
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ApplicationConfiguration applicationConfiguration;
 
+    @Inject
     public UndeletableGroupManager(ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }

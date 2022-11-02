@@ -5,19 +5,17 @@ import javax.xml.bind.annotation.XmlElement;
 public class ApplicationConfiguration {
     @XmlElement(name = "sender-mail")
     String senderMail;
-    @XmlElement
+    @XmlElement(name = "subject")
     String subject;
-    @XmlElement
+    @XmlElement(name = "content")
     String content;
     @XmlElement(name = "admin-group")
     String adminGroup;
     @XmlElement(name = "manager-group")
     String managerGroup;
-
-    @XmlElement
+    @XmlElement(name = "host")
     String host;
-
-    @XmlElement
+    @XmlElement(name = "port")
     String port;
 
     public String getSenderMail() {
