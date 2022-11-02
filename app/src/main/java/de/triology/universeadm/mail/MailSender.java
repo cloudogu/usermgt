@@ -2,8 +2,7 @@ package de.triology.universeadm.mail;
 
 
 import com.google.inject.Inject;
-import de.triology.universeadm.configreader.ApplicationConfigReader;
-import de.triology.universeadm.configreader.ApplicationConfiguration;
+import de.triology.universeadm.configuration.ApplicationConfiguration;
 
 import javax.mail.*;
 import javax.mail.internet.*;

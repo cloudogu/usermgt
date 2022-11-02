@@ -1,12 +1,9 @@
 package de.triology.universeadm.group;
 
-import de.triology.universeadm.configreader.ApplicationConfigReader;
-import de.triology.universeadm.configreader.ApplicationConfiguration;
-import de.triology.universeadm.configreader.JsonConfigReader;
+import de.triology.universeadm.configuration.ApplicationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;

@@ -37,8 +37,8 @@ import com.github.legman.guice.LegmanModule;
 import com.google.inject.Module;
 import com.google.inject.servlet.ServletModule;
 
-import de.triology.universeadm.configreader.ApplicationConfiguration;
-import de.triology.universeadm.configreader.LanguageConfiguration;
+import de.triology.universeadm.configuration.ApplicationConfiguration;
+import de.triology.universeadm.configuration.LanguageConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +87,7 @@ public class MainModule extends ServletModule
 
     bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
     bind(ApplicationConfiguration.class).toInstance(applicationConfiguration);
+    bind(LanguageConfiguration.class).toInstance(i18nConfiguration);
 
     // events
     EventBus eventBus = new EventBus();
@@ -129,6 +130,5 @@ public class MainModule extends ServletModule
   /** Field description */
   private final LDAPConfiguration ldapConfiguration;
   private final ApplicationConfiguration applicationConfiguration;
-
   private final LanguageConfiguration i18nConfiguration;
 }

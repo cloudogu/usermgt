@@ -35,6 +35,7 @@ fi
 # render templates
 doguctl template "/var/lib/usermgt/conf/cas.xml.tpl" "/var/lib/usermgt/conf/cas.xml"
 doguctl template "/var/lib/usermgt/conf/ldap.xml.tpl" "/var/lib/usermgt/conf/ldap.xml"
+doguctl template "/var/lib/usermgt/conf/application-configuration.xml.tpl" "/var/lib/usermgt/conf/application-configuration.xml"
 determinePwdMinLength
 doguctl template "/var/lib/usermgt/conf/password_policy.tpl" "${OPTIONAL_CONFIG_PATH}"
 

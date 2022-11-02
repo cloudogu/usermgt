@@ -65,3 +65,20 @@ Then("all password rules are displayed", function () {
     cy.get('p[data-testid="password-policy-rules"]').contains('at least 14 character')
 });
 
+Then("the import is done successful", function () {
+    then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
+Then("the access to the endpoint is denied", function () {
+    then((response) => {
+        expect(response.status).to.eq(400)
+    })
+})
+
+Then("one user is imported",function () {
+    cy.get('https://192.168.56.2/usermgt/api/users/Tester1').should(be.visible)
+})
+
+

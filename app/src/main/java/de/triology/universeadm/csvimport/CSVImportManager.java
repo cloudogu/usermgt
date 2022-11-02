@@ -1,8 +1,8 @@
 package de.triology.universeadm.csvimport;
 
 import com.google.inject.Inject;
-import de.triology.universeadm.configreader.ApplicationConfiguration;
-import de.triology.universeadm.configreader.LanguageConfiguration;
+import de.triology.universeadm.configuration.ApplicationConfiguration;
+import de.triology.universeadm.configuration.LanguageConfiguration;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.mail.MailSender;
 import de.triology.universeadm.user.PasswordGenerator;

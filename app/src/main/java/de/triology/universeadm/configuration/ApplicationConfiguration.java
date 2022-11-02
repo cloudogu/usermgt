@@ -1,4 +1,4 @@
-package de.triology.universeadm.configreader;
+package de.triology.universeadm.configuration;
 
 import javax.xml.bind.annotation.XmlElement;
 

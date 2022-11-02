@@ -72,3 +72,11 @@ When("the user enters a valid password", function () {
         cy.get('input[id="password"]').type(newUser.password)
     })
 })
+
+When("the user sends the upload request", function () {
+    cy.request('POST', 'https://192.168.56.2/usermgt/api/users/import',{"Username;FirstName;Surname;DisplayName;EMail;Group\n" +
+            "Tester1;Tes;Ter;Tester1;test1@test.com;exist"})
+        .its('body').then((body) => {
+        newId = body.id;
+    })
+})

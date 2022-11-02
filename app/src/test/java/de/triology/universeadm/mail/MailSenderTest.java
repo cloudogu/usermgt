@@ -1,7 +1,6 @@
 package de.triology.universeadm.mail;
 
-import de.triology.universeadm.configreader.ApplicationConfigReader;
-import de.triology.universeadm.configreader.ApplicationConfiguration;
+import de.triology.universeadm.configuration.ApplicationConfiguration;
 import de.triology.universeadm.user.User;
 import org.junit.Assert;
 import org.junit.Before;
