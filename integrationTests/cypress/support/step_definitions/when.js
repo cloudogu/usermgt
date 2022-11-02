@@ -73,10 +73,48 @@ When("the user enters a valid password", function () {
     })
 })
 
-When("the user sends the upload request", function () {
-    cy.request('POST', 'https://192.168.56.2/usermgt/api/users/import',{"Username;FirstName;Surname;DisplayName;EMail;Group\n" +
-            "Tester1;Tes;Ter;Tester1;test1@test.com;exist"})
-        .its('body').then((body) => {
-        newId = body.id;
+When(`the user {string} sends the upload request`, function (username) {
+    cy.fixture(`userdata-${username}`).then(function (newUser) {
+        cy.logout()
+        cy.request({
+            method: "POST",
+            url: Cypress.config().baseUrl + "/usermgt/api/users/import",
+            auth: {
+                'user': newUser.username,
+                'pass': newUser.password
+            },
+            header: {
+                "User-Agent" : "PostmanRuntime/7.29.2"
+            },
+            body : "Username;FirstName;Surname;DisplayName;EMail;Group\n" +
+                "Tester1;Tes;Ter;Tester1;test1@test.com;exist"
+        }).then((response) => {
+            expect(response.status).to.eq(200)
+        })
+    })
+})
+
+When(`the user {string} sends the upload request, but is not allowed to`, function (username) {
+    cy.fixture(`userdata-${username}`).then(function (newUser) {
+        Cypress.Cookies.debug(true)
+        console.log(cy.getCookies())
+        cy.clearCookie("JSESSIONID")
+        cy.request({
+            method: "POST",
+            url: Cypress.config().baseUrl + "/usermgt/api/users/import",
+            auth: {
+                'user': newUser.username,
+                'pass': newUser.password
+            },
+            header: {
+                "User-Agent" : "PostmanRuntime/7.29.2",
+                "Content-Type" : "application/json"
+            },
+            body : "Username;FirstName;Surname;DisplayName;EMail;Group\n" +
+                "Tester1;Tes;Ter;Tester1;test1@test.com;exist"
+        }).then((response) => {
+            cy.log(JSON.stringify(response))
+            expect(response.status).to.eq(401)
+        })
     })
 })
