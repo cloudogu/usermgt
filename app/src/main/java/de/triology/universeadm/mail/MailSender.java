@@ -18,7 +18,6 @@ public class MailSender {
 
     private final MessageBuilder messageBuilder;
     private final TransportSender sender;
-
     private final ApplicationConfiguration applicationConfig;
 
     public static class MessageBuilder {
@@ -34,7 +33,7 @@ public class MailSender {
     }
 
     @Inject
-    public MailSender(ApplicationConfiguration applicationConfig ) {
+    public MailSender(ApplicationConfiguration applicationConfig) {
         this(new MessageBuilder(), new TransportSender(), applicationConfig);
     }
 
@@ -48,26 +47,23 @@ public class MailSender {
         if (subject == null || content == null || subject.equals("") || content.equals("")) {
             throw new NullPointerException();
         }
-        if(!receiver.matches(MAIL_ADDRESS_REGEX)){
+        if (!receiver.matches(MAIL_ADDRESS_REGEX)) {
             throw new IllegalArgumentException(ILLEGAL_MAIL_ADDRESS_EXCEPTION_MESSAGE);
         }
 
         final Properties prop = createProperties();
         Session session = Session.getInstance(prop);
 
-        final Message message = this.messageBuilder.build(session);
+        final MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(content, TEXT_HTML_CHARSET_UTF_8);
+        final Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
 
+        final Message message = this.messageBuilder.build(session);
         message.setFrom(getInternetAddress());
         message.setRecipients(
                 Message.RecipientType.TO, InternetAddress.parse(receiver));
         message.setSubject(subject);
-
-        final MimeBodyPart mimeBodyPart = new MimeBodyPart();
-        mimeBodyPart.setContent(content, TEXT_HTML_CHARSET_UTF_8);
-
-        final Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(mimeBodyPart);
-
         message.setContent(multipart);
 
         this.sender.send(message);

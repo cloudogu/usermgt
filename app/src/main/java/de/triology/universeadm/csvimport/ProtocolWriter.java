@@ -24,14 +24,6 @@ public class ProtocolWriter {
         }
     }
 
-    public ProtocolWriter() {
-        this(USER_IMPORT_FILE_NAME, new FileWriterBuilder());
-    }
-
-    public ProtocolWriter(String fileName) {
-        this(fileName, new FileWriterBuilder());
-    }
-
     public ProtocolWriter(String fileName, FileWriterBuilder writerBuilder) {
         this.fileName = fileName;
         this.writerBuilder = writerBuilder;

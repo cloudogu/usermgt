@@ -68,17 +68,13 @@ public class UserResource extends AbstractManagerResource<User> {
     @Path("/import")
     @Produces(MediaType.APPLICATION_JSON)
     public Response importUsers(InputStream inputStream) {
-        //TODO control if user is manager gruppe fehlt
-        //SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
-
         Response.ResponseBuilder builder;
         try {
             this.csvImportManager.importUsers(inputStream);
+            builder = Response.status(Response.Status.OK);
         } catch (IOException | IllegalArgumentException e) {
             builder = Response.status(Response.Status.BAD_REQUEST);
-            return builder.build();
         }
-        builder = Response.status(Response.Status.OK);
         return builder.build();
     }
 

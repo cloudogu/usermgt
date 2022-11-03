@@ -24,7 +24,6 @@ import static org.mockito.Mockito.*;
 public class CSVImportManagerTest {
     public static final String SUBJECT = "New Account for CES";
     private static final String EXIST = "exist";
-
     private static final String MAIL_CONTENT = "Willkommen zum Cloudogu Ecosystem!\n" +
             "Dies ist ihr Benutzeraccount\n" +
             "Benutzername = %s\n" +
@@ -67,11 +66,9 @@ public class CSVImportManagerTest {
     private UserManager userManager;
     private ProtocolWriter protocolWriter;
     private CSVImportManager csvImportManager;
-
     private PasswordGenerator pwdGen;
     private LanguageConfiguration languageConfig;
     private ApplicationConfiguration applicationConfig;
-
     private MailSender mailSender;
 
     @Before

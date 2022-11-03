@@ -69,19 +69,12 @@ import static org.mockito.Mockito.*;
 )
 public class UserResourceTest {
     private GroupManager groupManager;
-
     private CSVImportManager csvImportManager;
-
     private UserResource resource;
-
     private UserManager userManager;
-
     private ProtocolWriter protocolWriter;
-
     private MailSender mailSender;
-
     private LanguageConfiguration languageConfiguration;
-
     private ApplicationConfiguration applicationConfiguration;
 
     @Test

@@ -30,7 +30,6 @@ public class MailSenderTest {
     private Message message;
     private MailSender mailSender;
     private ApplicationConfiguration applicationConfig;
-
     private final User user = new User(
             "Tester",
             "Tester",
@@ -67,12 +66,12 @@ public class MailSenderTest {
 
     @Test(expected = NullPointerException.class)
     public void nullValueInMethodCall() throws MessagingException {
-        this.mailSender.sendMail(null,null,null);
+        this.mailSender.sendMail(null, null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void InvalidMailMethodCall() throws MessagingException {
         String content = String.format(MAIL_CONTENT, user.getUsername(), TEST);
-        this.mailSender.sendMail(TEST,content,TEST);
+        this.mailSender.sendMail(TEST, content, TEST);
     }
 }
