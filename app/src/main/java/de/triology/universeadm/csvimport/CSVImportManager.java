@@ -44,26 +44,26 @@ public class CSVImportManager {
     }
 
     public void importUsers(InputStream inputStream) throws IOException {
-
         final BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        final List<String> lines = new ArrayList<>();
 
+        final List<String> lines = new ArrayList<>();
+        String line;
         if (br.readLine().split(SEMICOLON_SPLIT).length != 6) {
             throw new IllegalArgumentException();
         }
-
-        String line;
         while ((line = br.readLine()) != null) {
             lines.add(line);
         }
+
         createProtocolEntry(languageConfiguration.getStartingProtocol());
         createProtocolEntry(String.format(languageConfiguration.getCsvWithLinesReadSuccessful(), lines.size()));
 
         for (int index = 0; index < lines.size(); index++) {
+            int protocolPosition = index + 2;
             final String userDataString = lines.get(index);
             final String[] userValues = userDataString.split(SEMICOLON_SPLIT, -1);
             if (userValues.length != 6 && userValues.length != 5) {
-                createProtocolEntry(String.format(languageConfiguration.getIncompleteLine(), (index + 2)));
+                createProtocolEntry(String.format(languageConfiguration.getIncompleteLine(), protocolPosition));
                 continue;
             }
 
@@ -77,7 +77,7 @@ public class CSVImportManager {
             final List<String> validationErrors = getUserValidationErrors(potentialNewUser);
 
             if (validationErrors.size() != 0) {
-                String errorMessage = String.format(languageConfiguration.getErrorOnCreatingUser(), (index + 2));
+                String errorMessage = String.format(languageConfiguration.getErrorOnCreatingUser(), protocolPosition);
                 for (int position = 0; position < validationErrors.size(); position++) {
                     if (position + 1 != validationErrors.size()) {
                         errorMessage += String.format(ERROR_INFORMATION_WITH_COMMA, validationErrors.get(position));
@@ -99,7 +99,6 @@ public class CSVImportManager {
             }
 
             addGroupsToUser(potentialNewUser, memberOf);
-
             createProtocolEntry(languageConfiguration.getEndingProtocol());
         }
     }
@@ -141,6 +140,7 @@ public class CSVImportManager {
             createProtocolEntry(username, languageConfiguration.getUserAlreadyExists());
             return false;
         }
+
         try {
             userManager.create(user);
         } catch (Exception e) {
@@ -167,9 +167,11 @@ public class CSVImportManager {
                 createProtocolEntry(username, String.format(languageConfiguration.getGroupDoesNotExist(), group));
                 continue;
             }
+
             if (userManager.get(username).getMemberOf().contains(group)) {
                 createProtocolEntry(username, String.format(languageConfiguration.getUserPartOfGroupAlready(), group));
             }
+
             user.getMemberOf().add(group);
             userManager.modify(user);
             createProtocolEntry(username, String.format(languageConfiguration.getUserAdded(), group));

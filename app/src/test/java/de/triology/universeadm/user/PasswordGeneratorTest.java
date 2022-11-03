@@ -3,10 +3,11 @@ package de.triology.universeadm.user;
 import org.junit.Test;
 
 import java.util.regex.Pattern;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PasswordGeneratorTest {
-
     private static final String SPECIAL_CASE_REGEX = "[^a-z0-9A-Z]";
     private static final String LOWER_CASE_REGEX = "[a-z]";
     private static final String UPPERCASE_REGEX = "[A-Z]";
