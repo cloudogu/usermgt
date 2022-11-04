@@ -72,7 +72,9 @@ public class UserResource extends AbstractManagerResource<User> {
         try {
             this.csvImportManager.importUsers(inputStream);
             builder = Response.status(Response.Status.OK);
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException e) {
+            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR);
+        } catch ( IllegalArgumentException e) {
             builder = Response.status(Response.Status.BAD_REQUEST);
         }
         return builder.build();

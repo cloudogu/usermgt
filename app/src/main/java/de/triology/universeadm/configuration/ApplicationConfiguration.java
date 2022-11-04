@@ -5,10 +5,10 @@ import javax.xml.bind.annotation.XmlElement;
 public class ApplicationConfiguration {
     @XmlElement(name = "sender-mail")
     String senderMail;
-    @XmlElement(name = "subject")
-    String subject;
-    @XmlElement(name = "content")
-    String content;
+    @XmlElement(name = "import-mail-subject")
+    String importMailSubject;
+    @XmlElement(name = "import-mail-content")
+    String importMailContent;
     @XmlElement(name = "admin-group")
     String adminGroup;
     @XmlElement(name = "manager-group")
@@ -22,12 +22,12 @@ public class ApplicationConfiguration {
         return senderMail;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getImportMailSubject() {
+        return importMailSubject;
     }
 
-    public String getContent() {
-        return content;
+    public String getImportMailContent() {
+        return importMailContent;
     }
 
     public String getAdminGroup() {

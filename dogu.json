@@ -63,6 +63,21 @@
       }
     },
     {
+    "Name": "mail_address",
+    "Description": "The mail address all automatic generated mails are send with",
+    "Optional": true
+    },
+    {
+      "Name": "import/mail/subject",
+      "Description": "The Subject of Mail, which is send when a User is imported via the csv import feature",
+      "Optional": true
+    },
+    {
+      "Name": "import/mail/content",
+      "Description": "The Content of Mail, which is send when a User is imported via the csv import feature",
+      "Optional": true
+    },
+    {
       "Name": "container_config/memory_limit",
       "Description": "Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). We recommend at least 200m of memory for usermgt.",
       "Optional": true,

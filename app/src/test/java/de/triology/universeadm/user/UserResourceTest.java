@@ -316,8 +316,8 @@ public class UserResourceTest {
 
     private ApplicationConfiguration mockApplicationConfig() {
         ApplicationConfiguration applicationConfig = mock(ApplicationConfiguration.class);
-        when(applicationConfig.getSubject()).thenReturn("New Account for CES");
-        when(applicationConfig.getContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
+        when(applicationConfig.getImportMailSubject()).thenReturn("New Account for CES");
+        when(applicationConfig.getImportMailContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
         return applicationConfig;
     }
 }

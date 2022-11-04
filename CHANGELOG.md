@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Add Backend Endpoint for the User Import via CSV-File (#69)
-  - Endpoint accepts any CSV File with 5 or 6 entries in the first Line.
+  - For more information see [docs](docs/operations/csv-import_en.md)
 
 ## [v1.8.1-1] - 2022-10-20
 ### Fixed

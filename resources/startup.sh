@@ -32,6 +32,11 @@ if [ ! -d "/var/lib/usermgt/logs" ]; then
 	chown -R tomcat:tomcat /var/lib/usermgt/logs
 fi
 
+GLOBAL_MAIL_ADDRESS="$(doguctl config --global --default "info@cloudogu.com" mail_address)"
+MAIL_ADDRESS="$(doguctl config --default "${GLOBAL_MAIL_ADDRESS}" mail_address)"
+
+export MAIL_ADDRESS
+
 # render templates
 doguctl template "/var/lib/usermgt/conf/cas.xml.tpl" "/var/lib/usermgt/conf/cas.xml"
 doguctl template "/var/lib/usermgt/conf/ldap.xml.tpl" "/var/lib/usermgt/conf/ldap.xml"

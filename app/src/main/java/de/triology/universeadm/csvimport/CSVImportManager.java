@@ -59,11 +59,11 @@ public class CSVImportManager {
         createProtocolEntry(String.format(languageConfiguration.getCsvWithLinesReadSuccessful(), lines.size()));
 
         for (int index = 0; index < lines.size(); index++) {
-            int protocolPosition = index + 2;
+            int currentCSVLineIndex = index + 2;
             final String userDataString = lines.get(index);
             final String[] userValues = userDataString.split(SEMICOLON_SPLIT, -1);
             if (userValues.length != 6 && userValues.length != 5) {
-                createProtocolEntry(String.format(languageConfiguration.getIncompleteLine(), protocolPosition));
+                createProtocolEntry(String.format(languageConfiguration.getIncompleteLine(), currentCSVLineIndex));
                 continue;
             }
 
@@ -77,14 +77,8 @@ public class CSVImportManager {
             final List<String> validationErrors = getUserValidationErrors(potentialNewUser);
 
             if (validationErrors.size() != 0) {
-                String errorMessage = String.format(languageConfiguration.getErrorOnCreatingUser(), protocolPosition);
-                for (int position = 0; position < validationErrors.size(); position++) {
-                    if (position + 1 != validationErrors.size()) {
-                        errorMessage += String.format(ERROR_INFORMATION_WITH_COMMA, validationErrors.get(position));
-                        continue;
-                    }
-                    errorMessage += validationErrors.get(position);
-                }
+                String errorMessage = String.format(languageConfiguration.getErrorOnCreatingUser(), currentCSVLineIndex);
+                errorMessage += String.join(", ", validationErrors);
                 createProtocolEntry(errorMessage);
                 continue;
             }
@@ -92,7 +86,7 @@ public class CSVImportManager {
             boolean created = addUser(potentialNewUser);
             if (created) {
                 try {
-                    mailSender.sendMail(applicationConfiguration.getSubject(), String.format(applicationConfiguration.getContent(), potentialNewUser.getUsername(), password), potentialNewUser.getMail());
+                    mailSender.sendMail(applicationConfiguration.getImportMailSubject(), String.format(applicationConfiguration.getImportMailContent(), potentialNewUser.getUsername(), password), potentialNewUser.getMail());
                 } catch (MessagingException e) {
                     createProtocolEntry(potentialNewUser.getUsername(), languageConfiguration.getCouldNotSendMail());
                 }
@@ -178,13 +172,12 @@ public class CSVImportManager {
         }
     }
 
-    public void createProtocolEntry(String username, String content) {
-        System.out.println(content);
-        protocolWriter.writeLine(username + ": " + content);
+    private void createProtocolEntry(String username, String content) {
+        createProtocolEntry(username + ": " + content);
 
     }
 
-    public void createProtocolEntry(String content) {
+    private void createProtocolEntry(String content) {
         protocolWriter.writeLine(content);
     }
 }

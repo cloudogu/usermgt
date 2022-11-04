@@ -107,8 +107,8 @@ public class CSVImportManagerTest {
     }
 
     private void mockStrings() {
-        when(applicationConfig.getSubject()).thenReturn("New Account for CES");
-        when(applicationConfig.getContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
+        when(applicationConfig.getImportMailSubject()).thenReturn("New Account for CES");
+        when(applicationConfig.getImportMailContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
         when(languageConfig.getStartingProtocol()).thenReturn("---Beginne Protocol---");
         when(languageConfig.getEndingProtocol()).thenReturn("---Beende Protocol---");
         when(languageConfig.getCsvWithLinesReadSuccessful()).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
