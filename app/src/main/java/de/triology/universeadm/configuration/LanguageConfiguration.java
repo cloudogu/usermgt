@@ -4,39 +4,39 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class LanguageConfiguration {
     @XmlElement(name = "starting-protocol")
-    String startingProtocol;
+    private String startingProtocol;
     @XmlElement(name = "ending-protocol")
-    String endingProtocol;
+    private String endingProtocol;
     @XmlElement(name = "csv-with-lines-read-successful")
-    String csvWithLinesReadSuccessful;
+    private String csvWithLinesReadSuccessful;
     @XmlElement(name = "added-successful")
-    String addedSuccessful;
+    private String addedSuccessful;
     @XmlElement(name = "incomplete-line")
-    String incompleteLine;
+    private String incompleteLine;
     @XmlElement(name = "user-already-exists")
-    String userAlreadyExists;
+    private String userAlreadyExists;
     @XmlElement(name = "error-on-creating-user")
-    String errorOnCreatingUser;
+    private String errorOnCreatingUser;
     @XmlElement(name = "empty-username")
-    String emptyUsername;
+    private String emptyUsername;
     @XmlElement(name = "empty-displayname")
-    String emptyDisplayname;
+    private String emptyDisplayname;
     @XmlElement(name = "empty-surname")
-    String emptySurname;
+    private String emptySurname;
     @XmlElement(name = "empty-mail")
-    String emptyMail;
+    private String emptyMail;
     @XmlElement(name = "user-added")
-    String userAdded;
+    private String userAdded;
     @XmlElement(name = "user-part-of-group-already")
-    String userPartOfGroupAlready;
+    private String userPartOfGroupAlready;
     @XmlElement(name = "group-does-not-exist")
-    String groupDoesNotExist;
+    private String groupDoesNotExist;
     @XmlElement(name = "could-not-send-mail")
-    String couldNotSendMail;
+    private String couldNotSendMail;
     @XmlElement(name = "unknown-error")
-    String unknownError;
+    private String unknownError;
     @XmlElement(name = "unique-mail-error")
-    String uniqueMailError;
+    private String uniqueMailError;
 
     public String getStartingProtocol() {
         return startingProtocol;

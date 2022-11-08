@@ -3,6 +3,10 @@
     <sender-mail>info@cloudogu.com</sender-mail>
     <admin-group>cesAdmin</admin-group>
     <manager-group>cesManager</manager-group>
-    <subject>Ihr neues Kennwort</subject>
-    <content>Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern"</content>
+    <import-mail-subject>New Account for CES</import-mail-subject>
+    <import-mail-content>Willkommen zum Cloudogu Ecosystem!
+Dies ist ihr Benutzeraccount
+Benutzername = %s
+Passwort = %s
+Bei der ersten Anmeldung müssen sie ihr Passwort ändern</import-mail-content>
 </application-configuration>

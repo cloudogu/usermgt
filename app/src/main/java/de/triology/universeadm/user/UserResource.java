@@ -74,7 +74,7 @@ public class UserResource extends AbstractManagerResource<User> {
             builder = Response.status(Response.Status.OK);
         } catch (IOException e) {
             builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR);
-        } catch ( IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             builder = Response.status(Response.Status.BAD_REQUEST);
         }
         return builder.build();

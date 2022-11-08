@@ -24,7 +24,7 @@ public class BaseDirectoryTest {
         ApplicationConfiguration config = BaseDirectory.getConfiguration("application-configuration.xml", ApplicationConfiguration.class);
 
         assertNotNull(config);
-        assertEquals(config.getImportMailSubject(), "Ihr neues Kennwort");
+        assertEquals(config.getImportMailSubject(), "New Account for CES");
     }
 
     @Test(expected = DataBindingException.class)

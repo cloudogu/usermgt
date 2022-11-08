@@ -1,8 +1,10 @@
 package de.triology.universeadm.csvimport;
 
+import de.triology.universeadm.BaseDirectory;
 import de.triology.universeadm.EntityException;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
-import de.triology.universeadm.configuration.LanguageConfiguration;
+import de.triology.universeadm.configuration.I18nConfiguration;
+import de.triology.universeadm.configuration.Language;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.mail.MailSender;
@@ -10,7 +12,9 @@ import de.triology.universeadm.user.PasswordGenerator;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import javax.mail.MessagingException;
@@ -52,10 +56,10 @@ public class CSVImportManagerTest {
             "Tester1;Tes;Ter;Tester1;test1@test.com;doesnotexist";
     private static final String HEADERS_AND_ONE_USER_WITH_GROUP = "Username;FirstName;Surname;DisplayName;EMail;Group\n" +
             "Tester2;Tes;Ter;Tester2;test2@test.com;exist";
-    private static final String PROTOCOL_ENTRY_EMPTY_USER = "Fehler in Zeile 2. Benutzer nicht angelegt. Errors: " +
-            "Nutzername ist leer, " +
+    private static final String PROTOCOL_ENTRY_EMPTY_USER = "Fehler in Zeile 2. Benutzer nicht angelegt. Fehlermeldung: " +
+            "Benutzername ist leer, " +
             "DisplayName ist leer, " +
-            "Surname ist leer, " +
+            "Nachname ist leer, " +
             "Mail ist leer";
     private static final String PROTOCOL_ENTRY_ALREADY_EXIST = "Tester1: konnte nicht angelegt werden(Nutzer existiert bereits)";
     private static final String PROTOCOL_ENTRY_GROUP_DOES_NOT_EXIST = "Tester1: doesnotexist existiert nicht";
@@ -64,10 +68,11 @@ public class CSVImportManagerTest {
     private User user2;
     private GroupManager groupManager;
     private UserManager userManager;
+    private ProtocolWriter.ProtocolWriterBuilder protocolWriterBuilder;
     private ProtocolWriter protocolWriter;
     private CSVImportManager csvImportManager;
     private PasswordGenerator pwdGen;
-    private LanguageConfiguration languageConfig;
+    private I18nConfiguration languageConfigs;
     private ApplicationConfiguration applicationConfig;
     private MailSender mailSender;
 
@@ -76,13 +81,13 @@ public class CSVImportManagerTest {
         userManager = mockUserManager();
         groupManager = mockGroupManager();
         protocolWriter = mockProtocolWriter();
+        protocolWriterBuilder = mockProtocolWriterBuilder();
         mailSender = mockMailSender();
         pwdGen = mockPasswordGenerator();
-        languageConfig = mockLanguageConfig();
+        languageConfigs = mockLanguageConfigs();
         applicationConfig = mockApplicationConfig();
-        mockStrings();
 
-        csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfig, applicationConfig);
+        csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriterBuilder, mailSender, pwdGen, languageConfigs, applicationConfig);
 
         user1 = new User(
                 "Tester1",
@@ -92,7 +97,7 @@ public class CSVImportManagerTest {
                 "test1@test.com",
                 "temp",
                 true,
-                new ArrayList<String>());
+                new ArrayList<>());
 
         user2 = new User(
                 "Tester2",
@@ -102,34 +107,19 @@ public class CSVImportManagerTest {
                 "test2@test.com",
                 "temp",
                 true,
-                new ArrayList<String>()
+                new ArrayList<>()
         );
-    }
-
-    private void mockStrings() {
-        when(applicationConfig.getImportMailSubject()).thenReturn("New Account for CES");
-        when(applicationConfig.getImportMailContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
-        when(languageConfig.getStartingProtocol()).thenReturn("---Beginne Protocol---");
-        when(languageConfig.getEndingProtocol()).thenReturn("---Beende Protocol---");
-        when(languageConfig.getCsvWithLinesReadSuccessful()).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
-        when(languageConfig.getAddedSuccessful()).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
-        when(languageConfig.getIncompleteLine()).thenReturn("Zeile %d ist unvollständig");
-        when(languageConfig.getUserAlreadyExists()).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
-        when(languageConfig.getErrorOnCreatingUser()).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
-        when(languageConfig.getEmptyUsername()).thenReturn("Nutzername ist leer");
-        when(languageConfig.getEmptyDisplayname()).thenReturn("DisplayName ist leer");
-        when(languageConfig.getCouldNotSendMail()).thenReturn("Mail konnte nicht vesendet werden");
-        when(languageConfig.getGroupDoesNotExist()).thenReturn("%s existiert nicht");
-        when(languageConfig.getUserPartOfGroupAlready()).thenReturn("Nutzer ist bereits Teil von %s");
-        when(languageConfig.getUserAdded()).thenReturn("%s zugeordnet");
-        when(languageConfig.getEmptyMail()).thenReturn("Mail ist leer");
-        when(languageConfig.getEmptySurname()).thenReturn("Surname ist leer");
-        when(languageConfig.getUniqueMailError()).thenReturn("Die Mail für diesen Nutzer wird bereits verwendet.");
     }
 
     private InputStream stringToStream(final String input) {
         return new ByteArrayInputStream(input.getBytes());
     }
+
+    @BeforeClass
+    public static void beforeClass() {
+        System.setProperty("universeadm.home", "src/test/resources/");
+    }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void throwsIllegalArgumentExceptionWhenNotEnoughColumnsInHeadline() throws IOException {
@@ -235,6 +225,12 @@ public class CSVImportManagerTest {
         return mock(ProtocolWriter.class);
     }
 
+    private ProtocolWriter.ProtocolWriterBuilder mockProtocolWriterBuilder() {
+        ProtocolWriter.ProtocolWriterBuilder pWBuilder = mock(ProtocolWriter.ProtocolWriterBuilder.class);
+        when(pWBuilder.build(Matchers.anyString())).thenReturn(protocolWriter);
+        return pWBuilder;
+    }
+
     private MailSender mockMailSender() {
         return mock(MailSender.class);
     }
@@ -243,11 +239,12 @@ public class CSVImportManagerTest {
         return mock(PasswordGenerator.class);
     }
 
-    private LanguageConfiguration mockLanguageConfig() {
-        return mock(LanguageConfiguration.class);
+    private I18nConfiguration mockLanguageConfigs() {
+        return new I18nConfiguration(Language.en, Language.de);
     }
 
     private ApplicationConfiguration mockApplicationConfig() {
-        return mock(ApplicationConfiguration.class);
+        return BaseDirectory.getConfiguration("application-configuration.xml", ApplicationConfiguration.class);
+
     }
 }

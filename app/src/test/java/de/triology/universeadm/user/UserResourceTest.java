@@ -35,7 +35,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import de.triology.universeadm.*;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
-import de.triology.universeadm.configuration.LanguageConfiguration;
+import de.triology.universeadm.configuration.I18nConfiguration;
+import de.triology.universeadm.configuration.Language;
 import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.csvimport.ProtocolWriter;
 import de.triology.universeadm.group.GroupManager;
@@ -45,7 +46,9 @@ import org.codehaus.jackson.JsonNode;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Matchers;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -72,9 +75,9 @@ public class UserResourceTest {
     private CSVImportManager csvImportManager;
     private UserResource resource;
     private UserManager userManager;
-    private ProtocolWriter protocolWriter;
+    private ProtocolWriter.ProtocolWriterBuilder protocolWriterBuilder;
     private MailSender mailSender;
-    private LanguageConfiguration languageConfiguration;
+    private I18nConfiguration i18nConfiguration;
     private ApplicationConfiguration applicationConfiguration;
 
     @Test
@@ -251,12 +254,12 @@ public class UserResourceTest {
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
-        this.protocolWriter = mockProtocolWriter();
+        this.protocolWriterBuilder = mockProtocolWriterBuilder();
         this.mailSender = mockMailSender();
-        this.languageConfiguration = mockLanguageConfig();
+        this.i18nConfiguration = mockLanguageConfigs();
         this.applicationConfiguration = mockApplicationConfig();
         PasswordGenerator pwdGen = new PasswordGenerator();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriter, mailSender, pwdGen, languageConfiguration, applicationConfiguration);
+        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriterBuilder, mailSender, pwdGen, i18nConfiguration, applicationConfiguration);
         this.resource = new UserResource(userManager, groupManager, csvImportManager);
     }
 
@@ -285,39 +288,28 @@ public class UserResourceTest {
         return manager;
     }
 
-    private ProtocolWriter mockProtocolWriter() {
-        return mock(ProtocolWriter.class);
+    @BeforeClass
+    public static void beforeClass()
+    {
+        System.setProperty("universeadm.home", "src/test/resources/");
+    }
+
+
+    private ProtocolWriter.ProtocolWriterBuilder mockProtocolWriterBuilder() {
+        ProtocolWriter.ProtocolWriterBuilder pWBuilder= mock(ProtocolWriter.ProtocolWriterBuilder.class);
+        when(pWBuilder.build(Matchers.anyString())).thenReturn(mock(ProtocolWriter.class));
+        return pWBuilder;
     }
 
     private MailSender mockMailSender() {
         return mock(MailSender.class);
     }
 
-    private LanguageConfiguration mockLanguageConfig() {
-        LanguageConfiguration languageConfig = mock(LanguageConfiguration.class);
-        when(languageConfig.getStartingProtocol()).thenReturn("---Beginne Protocol---");
-        when(languageConfig.getEndingProtocol()).thenReturn("---Beende Protocol---");
-        when(languageConfig.getCsvWithLinesReadSuccessful()).thenReturn("CSV-Datei mit %d Zeilen erfolgreich eingelesen.");
-        when(languageConfig.getAddedSuccessful()).thenReturn("erfolgreich angelegt(%s, %s, %s, %s, %s)");
-        when(languageConfig.getIncompleteLine()).thenReturn("Zeile %d ist unvollständig");
-        when(languageConfig.getUserAlreadyExists()).thenReturn("konnte nicht angelegt werden(Nutzer existiert bereits)");
-        when(languageConfig.getErrorOnCreatingUser()).thenReturn("Fehler in Zeile %d. Benutzer nicht angelegt. Errors: ");
-        when(languageConfig.getEmptyUsername()).thenReturn("Nutzername ist leer");
-        when(languageConfig.getEmptyDisplayname()).thenReturn("DisplayName ist leer");
-        when(languageConfig.getCouldNotSendMail()).thenReturn("Mail konnte nicht vesendet werden");
-        when(languageConfig.getGroupDoesNotExist()).thenReturn("%s existiert nicht");
-        when(languageConfig.getUserPartOfGroupAlready()).thenReturn("Nutzer ist bereits Teil von %s");
-        when(languageConfig.getUserAdded()).thenReturn("%s zugeordnet");
-        when(languageConfig.getEmptyMail()).thenReturn("Mail ist leer");
-        when(languageConfig.getEmptySurname()).thenReturn("Surname ist leer");
-        when(languageConfig.getUniqueMailError()).thenReturn("Die Mail für diesen Nutzer wird bereits verwendet.");
-        return languageConfig;
+    private I18nConfiguration mockLanguageConfigs() {
+        return new I18nConfiguration(Language.en, Language.de);
     }
 
     private ApplicationConfiguration mockApplicationConfig() {
-        ApplicationConfiguration applicationConfig = mock(ApplicationConfiguration.class);
-        when(applicationConfig.getImportMailSubject()).thenReturn("New Account for CES");
-        when(applicationConfig.getImportMailContent()).thenReturn("Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern");
-        return applicationConfig;
+       return BaseDirectory.getConfiguration("application-configuration.xml", ApplicationConfiguration.class);
     }
 }

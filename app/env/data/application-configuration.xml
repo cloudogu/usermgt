@@ -4,5 +4,9 @@
     <admin-group>cesAdmin</admin-group>
     <manager-group>cesManager</manager-group>
     <import-mail-subject>Ihr neuer CES Account</import-mail-subject>
-    <import-mail-content>Willkommen zum Cloudogu Ecosystem!\nDies ist ihr Benutzeraccount\nBenutzername = %s\nPasswort = %s\nBei der ersten Anmeldung müssen sie ihr Passwort ändern"</import-mail-content>
+    <import-mail-content>Willkommen zum Cloudogu Ecosystem!
+Dies ist ihr Benutzeraccount
+Benutzername = %s
+Passwort = %s
+Bei der ersten Anmeldung müssen sie ihr Passwort ändern"</import-mail-content>
 </application-configuration>

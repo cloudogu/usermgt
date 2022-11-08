@@ -26,8 +26,8 @@ public class ProtcolWriterTest {
     public void createBuilder() throws IOException {
         this.mockWriterBuilder = mock(ProtocolWriter.FileWriterBuilder.class);
         this.fileWriter = mock(FileWriter.class);
-        this.protocolWriter = new ProtocolWriter(TESTFILE, this.mockWriterBuilder);
         when(this.mockWriterBuilder.build(TESTFILE)).thenReturn(fileWriter);
+        this.protocolWriter = new ProtocolWriter(TESTFILE, this.mockWriterBuilder);
     }
 
     @Test
@@ -51,8 +51,8 @@ public class ProtcolWriterTest {
         final Logger loggerMock = mock(Logger.class);
         field.set(null, loggerMock);
         when(this.mockWriterBuilder.build(TESTFILE)).thenThrow(new IOException());
-        this.protocolWriter.writeLine(TESTLINE);
-        final String COULD_NOT_WRITE_PROTOCOL_ENTRY = "Could not write Protocol Entry";
+        new ProtocolWriter(TESTFILE, mockWriterBuilder);
+        final String COULD_NOT_WRITE_PROTOCOL_ENTRY = "Could not open Protocol";
 
         verify(loggerMock).error(eq(COULD_NOT_WRITE_PROTOCOL_ENTRY), Matchers.<IOException>any());
     }
