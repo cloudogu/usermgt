@@ -41,12 +41,12 @@ werden alle Nutzer angelegt.
 Für den Import wird ein Protocol-Eintrag angelegt. Dieses Protokoll ist im Volume user-import-protocol unter
 `/var/lib/usermgt/protocol/user-import-protocol` zu finden. Für jeden Nutzer und für jede Gruppenzuweisung wird ein 
 Eintrag über den Status der Durchführung erstellt. Der Status kann erfolgreich, fehlerhaft oder existiert bereits sein.
-In der `i18n/de.json` können die Protokolleinträge angepasst werden.
 
 ## Email
 
 Für jeden erstellten Nutzer wird diesem eine Mail mit seinen Nutzerdaten verschickt. In der Konfigurationsdatei des UserMgt
-kann der `Host` und `Port` definiert werden. In der `i18n/de.json` kann das Subject und der Inhalt der Mail angepasst werden.
+kann der `Host` und `Port` definiert werden. Über die Konfigurationsschlüssel `import/mail/subject` und `import/mail/content`
+können weitere Einstellungen vorgenommen werden.
 
 ## Vollständig nutzbare CSV-Datei
 ```csv

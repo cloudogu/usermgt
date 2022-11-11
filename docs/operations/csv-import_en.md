@@ -40,12 +40,12 @@ manual creation. The users can be listed compactly and efficiently via the impor
 A protocol entry is created for the import. This protocol is stored in the volume user-import-protocol under
 `/var/lib/usermgt/protocol/user-import-protocol`. For each user and for each group assignment a
 entry is created about the status of the process. The status can be successful, incomplete or already exists.
-The protocol entries can be customized in the `i18n/en.json`.
 
 ## Email
 
 For every created user a mail with his user data will be sent to him. In the configuration file of the UserMgt
-the `host` and `port` can be defined. In the `i18n/en.json` the subject and the content of the mail can be customized.
+the `host` and `port` can be defined. To customize the subject and content of the auto generated emails you can set the 
+configuration keys `import/mail/subject` and `import/mail/content`.
 
 ## Fully usable CSV file
 `csv
