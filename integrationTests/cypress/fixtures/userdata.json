@@ -14,5 +14,13 @@
     "surname": "nomanager",
     "displayName": "Tester",
     "mail": "nomanager@cloudogu.com"
+  },
+  {
+    "username": "testuser",
+    "password": "testuserpassword1234A$",
+    "givenname": "test",
+    "surname": "test",
+    "displayName": "Tester",
+    "mail": "test@cloudogu.com"
   }
 ]
