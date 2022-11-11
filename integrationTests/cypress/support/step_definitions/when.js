@@ -75,30 +75,29 @@ When("the user enters a valid password", function () {
     })
 })
 
-When(`the user {string} sends the upload request`, function (username) {
-    cy.fixture(`userdata-${username}`).then(function (newUser) {
-        cy.logout()
-        cy.api({
-            method: "POST",
-            url: Cypress.config().baseUrl + "/usermgt/api/users/import",
-            auth: {
-                'user': newUser.username,
-                'pass': newUser.password
-            },
-
-            body: "Username;FirstName;Surname;DisplayName;EMail;Group\n" +
-                "Tester1;Tes;Ter;Tester1;test1@test.com;exist"
-        }).then((response) => {
-            expect(response.status).to.eq(200)
+When("the user {string} sends the upload request with {int} users", (username, userCount) => {
+    cy.withUser(username).then(userData => {
+        cy.withImportData(userCount).then(importData => {
+            cy.logout()
+            cy.api({
+                method: "POST",
+                url: Cypress.config().baseUrl + "/usermgt/api/users/import",
+                auth: {
+                    'user': userData.username,
+                    'pass': userData.password
+                },
+                failOnStatusCode: false,
+                body: importData.data
+            }).then((response) => {
+                cy.wrap(response.status).as("responseStatus")
+            })
         })
-    })
+    });
 })
 
 When(`the user {string} sends the upload request, but is not allowed to`, function (username) {
     cy.fixture(`userdata-${username}`).then(function (newUser) {
-        Cypress.Cookies.debug(true)
-        console.log(cy.getCookies())
-        cy.clearCookie("JSESSIONID")
+        cy.clearCookies();
         cy.api({
             method: "POST",
             url: Cypress.config().baseUrl + "/usermgt/api/users/import",
@@ -107,9 +106,9 @@ When(`the user {string} sends the upload request, but is not allowed to`, functi
                 'pass': newUser.password
             },
             body: "Username;FirstName;Surname;DisplayName;EMail;Group\n" +
-                "Tester1;Tes;Ter;Tester1;test1@test.com;exist"
+                "Tester2;Tes;Ter;Tester2;test2@test.com;exist",
+            failOnStatusCode: false,
         }).then((response) => {
-            cy.log(JSON.stringify(response))
             expect(response.status).to.eq(401)
         })
     })

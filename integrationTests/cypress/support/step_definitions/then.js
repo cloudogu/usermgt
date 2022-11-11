@@ -69,8 +69,10 @@ Then("all password rules are displayed", function () {
     cy.get('p[data-testid="password-policy-rules"]').contains('at least 14 character')
 });
 
-Then("the import is done successful", function () {
-
+Then("the import finished with status code {int}", (statusCode) => {
+    cy.get("@responseStatus").then((status) => {
+       expect(status).to.eq(statusCode)
+    });
 })
 
 Then("the access to the endpoint is denied", function () {
@@ -79,8 +81,8 @@ Then("the access to the endpoint is denied", function () {
     })
 })
 
-Then("the user {string} exists",function (username) {
-    cy.request({
+Then("the user {string} was created",function (username) {
+    cy.api({
         method: "GET",
         url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
         auth: {
@@ -93,16 +95,17 @@ Then("the user {string} exists",function (username) {
 })
 
 Then("the user {string} does not exists",function (username) {
+    cy.clearCookies();
     cy.request({
         method: "GET",
         url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
         auth: {
             'user': env.GetAdminUsername(),
-            'pass': env.GetAdminPassword
+            'pass': env.GetAdminPassword()
         },
+        failOnStatusCode: false,
     }).then((response) => {
-        cy.log(JSON.stringify(response))
-        //expect(response.status).to.eq(404)
+        expect(response.status).to.eq(404)
     })
 })
 

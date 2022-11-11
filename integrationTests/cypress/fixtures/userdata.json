@@ -1,0 +1,18 @@
+[
+  {
+    "username": "manager",
+    "password": "newuserpassword1234A$",
+    "givenname": "manager",
+    "surname": "manager",
+    "displayName": "Tester",
+    "mail": "manager@cloudogu.com"
+  },
+  {
+    "username": "nomanager",
+    "password": "newuserpassword1234A$",
+    "givenname": "nomanager",
+    "surname": "nomanager",
+    "displayName": "Tester",
+    "mail": "nomanager@cloudogu.com"
+  }
+]

@@ -145,6 +145,7 @@ public class CSVImportManagerTest {
     @Test
     public void generateMultipleUsersSuccessful() throws IOException {
         this.csvImportManager.importUsers(this.stringToStream(HEADERS_AND_TWO_USERS));
+
         verify(userManager).create(user1);
         verify(userManager).create(user2);
     }
