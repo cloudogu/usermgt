@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.9.0-1] - 2022-11-14
 ### Changed
 - Add Backend Endpoint for the User Import via CSV-File (#69)
   - For more information see [docs](docs/operations/csv-import_en.md)
