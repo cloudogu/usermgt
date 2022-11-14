@@ -2,6 +2,11 @@ const {
     Then
 } = require("cypress-cucumber-preprocessor/steps");
 
+import env from '@cloudogu/dogu-integration-test-library/lib/environment_variables';
+
+
+
+
 Then("the newly created user is asked to change his password", function () {
     cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
     cy.get('input[data-testid="password-input"]').should('be.visible')
@@ -63,4 +68,45 @@ Then("all password rules are displayed", function () {
     cy.get('p[data-testid="password-policy-rules"]').contains('at least 1 capital letter')
     cy.get('p[data-testid="password-policy-rules"]').contains('at least 14 character')
 });
+
+Then("the import finished with status code {int}", (statusCode) => {
+    cy.get("@responseStatus").then((status) => {
+       expect(status).to.eq(statusCode)
+    });
+})
+
+Then("the access to the endpoint is denied", function () {
+    then((response) => {
+        expect(response.status).to.eq(400)
+    })
+})
+
+Then("the user {string} was created",function (username) {
+    cy.api({
+        method: "GET",
+        url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
+        auth: {
+            'user': env.GetAdminUsername(),
+            'pass': env.GetAdminPassword
+        },
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
+Then("the user {string} does not exists",function (username) {
+    cy.clearCookies();
+    cy.request({
+        method: "GET",
+        url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
+        auth: {
+            'user': env.GetAdminUsername(),
+            'pass': env.GetAdminPassword()
+        },
+        failOnStatusCode: false,
+    }).then((response) => {
+        expect(response.status).to.eq(404)
+    })
+})
+
 

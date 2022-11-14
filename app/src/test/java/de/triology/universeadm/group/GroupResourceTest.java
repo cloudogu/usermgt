@@ -32,6 +32,8 @@ import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -57,6 +59,9 @@ public class GroupResourceTest
   
   @Mock
   private GroupManager groupManager;
+
+  @Mock
+  private UndeletableGroupManager undeletableGroupManager;
   
   private GroupResource resource;
   
@@ -65,7 +70,11 @@ public class GroupResourceTest
     when(groupManager.get("heartOfGold")).thenReturn(Groups.createHeartOfGold());
     when(groupManager.get("brockian")).thenReturn(Groups.createBrockianUltraCricket());
     when(userManager.get("dent")).thenReturn(Users.createDent());
-    this.resource = new GroupResource(groupManager, userManager);
+    List<String> undeletableGroups = new ArrayList<>();
+    undeletableGroups.add("admin");
+    undeletableGroups.add("cesManager");
+    when(undeletableGroupManager.getNonDeleteClassList()).thenReturn(undeletableGroups);
+    this.resource = new GroupResource(groupManager, userManager, undeletableGroupManager);
   }
   
   @Test
