@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.8.1-1",
+  "Version": "1.9.0-1",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -63,9 +63,9 @@
       }
     },
     {
-    "Name": "mail_address",
-    "Description": "The mail address all automatic generated mails are send with",
-    "Optional": true
+      "Name": "mail_address",
+      "Description": "The mail address all automatic generated mails are send with",
+      "Optional": true
     },
     {
       "Name": "import/mail/subject",
