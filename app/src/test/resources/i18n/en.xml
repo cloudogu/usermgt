@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <added-successful>successfully added(%s, %s, %s, %s, %s)</added-successful>
+    <could-not-send-mail>Mail could not been send</could-not-send-mail>
+    <csv-with-lines-read-successful>CSV-File with %d Lines successfully added.</csv-with-lines-read-successful>
+    <empty-displayname>DisplayName is empty</empty-displayname>
+    <empty-mail>Mail is empty</empty-mail>
+    <empty-surname>Surname is empty</empty-surname>
+    <empty-username>Username is empty</empty-username>
+    <ending-protocol>---Ending Protocol---</ending-protocol>
+    <error-on-creating-user>Error in Line %d. User not added. Error message: </error-on-creating-user>
+    <group-does-not-exist>%s doesn't exist</group-does-not-exist>
+    <incomplete-line>Line %d is incomplete</incomplete-line>
+    <starting-protocol>---Starting Protocol---</starting-protocol>
+    <unique-mail-error>The Mail of this user is already in use.</unique-mail-error>
+    <unknown-error>An unknown error occurred during user creation.</unknown-error>
+    <user-added>%s added</user-added>
+    <user-already-exists>could not been added(User already exists)</user-already-exists>
+    <user-part-of-group-already>User already member of %s</user-part-of-group-already>
+</root>

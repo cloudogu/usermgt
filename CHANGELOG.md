@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.9.0-1] - 2022-11-14
+### Changed
+- Add Backend Endpoint for the User Import via CSV-File (#69)
+  - For more information see [docs](docs/operations/csv-import_en.md)
+
 ## [v1.8.1-1] - 2022-10-20
 ### Fixed
 - in User Managment  an empty Password will not suffice for lowercase and minimum lenght of 9 or less (#67)

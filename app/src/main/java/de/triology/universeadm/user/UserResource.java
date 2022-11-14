@@ -26,24 +26,21 @@
  */
 
 
-
 package de.triology.universeadm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
 import de.triology.universeadm.AbstractManagerResource;
+import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * TODO remove package cycle with group.
@@ -51,137 +48,133 @@ import javax.ws.rs.core.Response;
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
 @Path("users")
-public class UserResource extends AbstractManagerResource<User>
-{
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param userManager
-   * @param groupManager
-   */
-  @Inject
-  public UserResource(UserManager userManager, GroupManager groupManager)
-  {
-    super(userManager);
-    this.userManager = userManager;
-    this.groupManager = groupManager;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   * @param groupname
-   *
-   * @return
-   */
-  @POST
-  @Path("{user}/groups/{group}")
-  public Response addMembership(@PathParam("user") String username,
-    @PathParam("group") String groupname)
-  {
-    Response.ResponseBuilder builder;
-
-    User user = userManager.get(username);
-    Group group = groupManager.get(groupname);
-
-    if (user == null)
-    {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if (group == null)
-    {
-      builder = Response.status(Response.Status.BAD_REQUEST);
-    }
-    else if (user.getMemberOf().contains(groupname))
-    {
-      builder = Response.status(Response.Status.CONFLICT);
-    }
-    else
-    {
-      user.getMemberOf().add(groupname);
-      userManager.modify(user);
-      builder = Response.noContent();
+public class UserResource extends AbstractManagerResource<User> {
+    /**
+     * Constructs ...
+     *
+     * @param userManager
+     * @param groupManager
+     */
+    @Inject
+    public UserResource(UserManager userManager, GroupManager groupManager, CSVImportManager csvImportManager) {
+        super(userManager);
+        this.userManager = userManager;
+        this.groupManager = groupManager;
+        this.csvImportManager = csvImportManager;
     }
 
-    return builder.build();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   * @param group
-   *
-   * @return
-   */
-  @DELETE
-  @Path("{user}/groups/{group}")
-  public Response removeMember(@PathParam("user") String username,
-    @PathParam("group") String group)
-  {
-    Response.ResponseBuilder builder;
-
-    User user = userManager.get(username);
-
-    if (user == null)
-    {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    else if (!user.getMemberOf().contains(group))
-    {
-      builder = Response.status(Response.Status.CONFLICT);
-    }
-    else
-    {
-      user.getMemberOf().remove(group);
-      userManager.modify(user);
-      builder = Response.noContent();
+    //~--- methods --------------------------------------------------------------
+    @POST
+    @Path("/import")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response importUsers(InputStream inputStream) {
+        Response.ResponseBuilder builder;
+        try {
+            this.csvImportManager.importUsers(inputStream);
+            builder = Response.status(Response.Status.OK);
+        } catch (IOException e) {
+            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR);
+        } catch (IllegalArgumentException e) {
+            builder = Response.status(Response.Status.BAD_REQUEST);
+        }
+        return builder.build();
     }
 
-    return builder.build();
-  }
+    /**
+     * Method description
+     *
+     * @param username
+     * @param groupname
+     * @return
+     */
+    @POST
+    @Path("{user}/groups/{group}")
+    public Response addMembership(@PathParam("user") String username,
+                                  @PathParam("group") String groupname) {
+        Response.ResponseBuilder builder;
+        User user = userManager.get(username);
+        Group group = groupManager.get(groupname);
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param user
-   */
-  @Override
-  protected void prepareForModify(String id, User user)
-  {
-    user.setUsername(id);
-  }
+        if (user == null) {
+            builder = Response.status(Response.Status.NOT_FOUND);
+        } else if (group == null) {
+            builder = Response.status(Response.Status.BAD_REQUEST);
+        } else if (user.getMemberOf().contains(groupname)) {
+            builder = Response.status(Response.Status.CONFLICT);
+        } else {
+            user.getMemberOf().add(groupname);
+            userManager.modify(user);
+            builder = Response.noContent();
+        }
 
-  //~--- get methods ----------------------------------------------------------
+        return builder.build();
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
-  @Override
-  protected String getId(User user)
-  {
-    return user.getUsername();
-  }
+    /**
+     * Method description
+     *
+     * @param username
+     * @param group
+     * @return
+     */
+    @DELETE
+    @Path("{user}/groups/{group}")
+    public Response removeMember(@PathParam("user") String username,
+                                 @PathParam("group") String group) {
+        Response.ResponseBuilder builder;
 
-  //~--- fields ---------------------------------------------------------------
+        User user = userManager.get(username);
 
-  /** Field description */
-  private final GroupManager groupManager;
+        if (user == null) {
+            builder = Response.status(Response.Status.NOT_FOUND);
+        } else if (!user.getMemberOf().contains(group)) {
+            builder = Response.status(Response.Status.CONFLICT);
+        } else {
+            user.getMemberOf().remove(group);
+            userManager.modify(user);
+            builder = Response.noContent();
+        }
+        return builder.build();
+    }
 
-  /** Field description */
-  private final UserManager userManager;
+    /**
+     * Method description
+     *
+     * @param id
+     * @param user
+     */
+    @Override
+    protected void prepareForModify(String id, User user) {
+        user.setUsername(id);
+    }
+
+    //~--- get methods ----------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    protected String getId(User user) {
+        return user.getUsername();
+    }
+
+    //~--- fields ---------------------------------------------------------------
+
+    /**
+     * Field description
+     */
+    private final GroupManager groupManager;
+
+    /**
+     * Field description
+     */
+    private final UserManager userManager;
+
+    /**
+     * Field description
+     */
+    private final CSVImportManager csvImportManager;
 }

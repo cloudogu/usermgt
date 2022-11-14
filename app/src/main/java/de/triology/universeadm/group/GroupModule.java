@@ -54,5 +54,6 @@ public class GroupModule extends AbstractModule
     bind(GroupManager.class).to(LDAPGroupManager.class);
     bind(MemberOfListener.class).asEagerSingleton();
     bind(GroupResource.class);
+    bind(UndeletableGroupManager.class);
   }
 }

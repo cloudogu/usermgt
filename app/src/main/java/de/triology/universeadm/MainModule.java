@@ -26,101 +26,99 @@
  */
 
 
-
 package de.triology.universeadm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
 import com.github.legman.guice.LegmanModule;
-
 import com.google.inject.Module;
 import com.google.inject.servlet.ServletModule;
-
+import de.triology.universeadm.configuration.ApplicationConfiguration;
+import de.triology.universeadm.configuration.I18nConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.ServiceLoader;
 
 /**
- *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class MainModule extends ServletModule
-{
+public class MainModule extends ServletModule {
 
-  /**
-   * the logger for MainModule
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(MainModule.class);
+    /**
+     * the logger for MainModule
+     */
+    private static final Logger logger =
+            LoggerFactory.getLogger(MainModule.class);
 
-  //~--- constructors ---------------------------------------------------------
+    //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param ldapConfiguration
-   */
-  public MainModule(LDAPConfiguration ldapConfiguration)
-  {
-    this.ldapConfiguration = ldapConfiguration;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Override
-  protected void configureServlets()
-  {
-    logger.info("bind resources");
-
-    bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
-
-    // events
-    EventBus eventBus = new EventBus();
-
-    install(new LegmanModule(eventBus));
-    bind(EventBus.class).toInstance(eventBus);
-
-    // ldap stuff
-    bind(LDAPHasher.class).toInstance(new LDAPHasher());
-    bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
-
-    // install package modules
-    logger.info("load modules from classpath and install them");
-
-    for (Module module : ServiceLoader.load(Module.class))
-    {
-      logger.info("install module {}", module.getClass());
-      install(module);
+    /**
+     * Constructs ...
+     *
+     * @param ldapConfiguration
+     */
+    public MainModule(LDAPConfiguration ldapConfiguration, ApplicationConfiguration applicationConfiguration, I18nConfiguration i18nConfiguration) {
+        this.ldapConfiguration = ldapConfiguration;
+        this.applicationConfiguration = applicationConfiguration;
+        this.i18nConfiguration = i18nConfiguration;
     }
 
-    // other jax-rs stuff
-    bind(DisableCacheResponseFilter.class);
-    bind(CatchAllExceptionMapper.class);
-    bind(SubjectResource.class);
-    bind(LogoutResource.class);
+    //~--- methods --------------------------------------------------------------
 
-    // filter
-    filter("/*").through(LDAPConnectionStrategyBindFilter.class);
+    /**
+     * Method description
+     */
+    @Override
+    protected void configureServlets() {
+        logger.info("bind resources");
 
-    // serve resources
-    serve("/components/*", "/scripts/*",
-      "/style/*").with(ResourceServlet.class);
+        bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
+        bind(ApplicationConfiguration.class).toInstance(applicationConfiguration);
+        bind(I18nConfiguration.class).toInstance(i18nConfiguration);
 
-    // serve index pages
-    serve("/", "/index.html", "/index-debug.html").with(TemplateServlet.class);
-  }
+        // events
+        EventBus eventBus = new EventBus();
 
-  //~--- fields ---------------------------------------------------------------
+        install(new LegmanModule(eventBus));
+        bind(EventBus.class).toInstance(eventBus);
 
-  /** Field description */
-  private final LDAPConfiguration ldapConfiguration;
+        // ldap stuff
+        bind(LDAPHasher.class).toInstance(new LDAPHasher());
+        bind(LDAPConnectionStrategy.class).to(DefaultLDAPConnectionStrategy.class);
+
+        // install package modules
+        logger.info("load modules from classpath and install them");
+
+        for (Module module : ServiceLoader.load(Module.class)) {
+            logger.info("install module {}", module.getClass());
+            install(module);
+        }
+
+        // other jax-rs stuff
+        bind(DisableCacheResponseFilter.class);
+        bind(CatchAllExceptionMapper.class);
+        bind(SubjectResource.class);
+        bind(LogoutResource.class);
+
+        // filter
+        filter("/*").through(LDAPConnectionStrategyBindFilter.class);
+
+        // serve resources
+        serve("/components/*", "/scripts/*",
+                "/style/*").with(ResourceServlet.class);
+
+        // serve index pages
+        serve("/", "/index.html", "/index-debug.html").with(TemplateServlet.class);
+    }
+
+    //~--- fields ---------------------------------------------------------------
+
+    /**
+     * Field description
+     */
+    private final LDAPConfiguration ldapConfiguration;
+    private final ApplicationConfiguration applicationConfiguration;
+    private final I18nConfiguration i18nConfiguration;
 }

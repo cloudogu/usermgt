@@ -14,4 +14,8 @@ After({tags: "@requires_new_user"}, () => {
     cy.clearCookies()
 });
 
+After(() => {
+    cy.usermgtCleanupTestUsers()
+})
+
 

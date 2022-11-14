@@ -2,6 +2,7 @@
   "dependencies": {
     "cypress": "8.6.0",
     "cypress-cucumber-preprocessor": "4.1.0",
+    "cypress-plugin-api": "1.6.0",
     "@cloudogu/dogu-integration-test-library": "5.0.0"
   },
   "scripts": {

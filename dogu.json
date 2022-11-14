@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.8.1-1",
+  "Version": "1.9.0-1",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -26,6 +26,10 @@
     {
       "Type": "dogu",
       "Name": "nginx"
+    },
+    {
+      "Type": "dogu",
+      "Name": "postfix"
     }
   ],
   "Volumes": [
@@ -35,6 +39,13 @@
       "Owner": "1000",
       "Group": "1000",
       "NeedsBackup": false
+    },
+    {
+      "Name": "protocol",
+      "Path": "/var/lib/usermgt/protocol",
+      "Owner": "1000",
+      "Group": "1000",
+      "NeedsBackup": true
     }
   ],
   "Configuration": [
@@ -50,6 +61,21 @@
           "false"
         ]
       }
+    },
+    {
+      "Name": "mail_address",
+      "Description": "The mail address all automatic generated mails are send with",
+      "Optional": true
+    },
+    {
+      "Name": "import/mail/subject",
+      "Description": "The Subject of Mail, which is send when a User is imported via the csv import feature",
+      "Optional": true
+    },
+    {
+      "Name": "import/mail/content",
+      "Description": "The Content of Mail, which is send when a User is imported via the csv import feature",
+      "Optional": true
     },
     {
       "Name": "container_config/memory_limit",
