@@ -1,6 +1,8 @@
 import {cl} from "dynamic-class-list";
 import {useRef, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
+import {User} from "./user";
+import {ArrowRightOnRectangleIcon} from "@heroicons/react/24/solid";
 
 const contextPath = process.env.PUBLIC_URL || "/admin";
 
@@ -70,17 +72,17 @@ export function Navbar(props: NavbarProps) {
             </ul>
             <ul className={"z-50 border-b border-base-border sm:border-b-0 bg-background flex flex-col sm:flex-row"}>
                 <li className="px-2 bg-default flex h-12 items-center whitespace-nowrap cursor-default">
-                    <svg className={"h-4 w-4 text-red-500"} width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z"/>
-                        <circle cx="12" cy="7" r="4"/>
-                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                    </svg>
-                    admin
+
+                    <Link key={"/account"}
+                          to={"/account"}
+                          style={{marginLeft: "0px"}}><User/></Link>
                 </li>
                 <li>
+
                     <a className="px-2 bg-default flex h-12 items-center whitespace-nowrap hover:bg-base-hover-primary
-                       hover:text-base-font-hover" id="logout" href={contextPath + "/api/logout"}>Logout</a>
+                       hover:text-base-font-hover" id="logout" href={contextPath + "/api/logout"}>
+                        <ArrowRightOnRectangleIcon className={"w-5 h-5"}/>
+                        <span className={"ml-2"}>Logout</span></a>
                 </li>
             </ul>
 
