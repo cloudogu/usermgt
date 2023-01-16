@@ -3,6 +3,8 @@ import {useRef, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
 import {User} from "./user";
 import {ArrowRightOnRectangleIcon} from "@heroicons/react/24/solid";
+import lightLogo from '../assets/logo.svg';
+import darkLogo from '../assets/logo_white.svg'
 
 const contextPath = process.env.PUBLIC_URL || "/admin";
 
@@ -15,15 +17,12 @@ type Site = {
     path: string
 }
 
-const logoLightSource = "/src/assets/logo.svg"
-const logoDarkSource = "/src/assets/logo_white.svg"
-
 export function Navbar(props: NavbarProps) {
     const [collapse, setCollapse] = useState(true);
 
     const location = useLocation();
-    const administrationLinkRef = useRef<HTMLAnchorElement>(null);
-    const loggingLinkRef = useRef<HTMLAnchorElement>(null)
+    const administrationLinkRef = useRef<HTMLAnchorElement>(null as HTMLAnchorElement);
+    const loggingLinkRef = useRef<HTMLAnchorElement>(null as HTMLAnchorElement)
 
 
     function toogleCollapse() {
@@ -50,9 +49,9 @@ export function Navbar(props: NavbarProps) {
                             administrationLinkRef.current?.blur();
                             loggingLinkRef.current?.focus();
                         }}>
-                        <img src={logoLightSource} alt="Logo"
+                        <img src={lightLogo} alt="Logo"
                              className="group-hover:hidden h-8 my-2 pr-2 justify-center py-2"/>
-                        <img src={logoDarkSource} alt="Logo"
+                        <img src={darkLogo} alt="Logo"
                              className="hidden group-hover:block h-8 my-2 pr-2 justify-center py-2"/>
                         <span className={"flex h-12 items-center whitespace-nowrap text-lg"}>
                             User Management

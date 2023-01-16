@@ -295,7 +295,6 @@
 
   <build>
     <plugins>
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -337,7 +336,25 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>position-react-build</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>prepare-package</phase>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${frontend-src-dir}/dist</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
@@ -523,7 +540,6 @@
           </reportPlugins>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
@@ -578,7 +594,6 @@
   </pluginRepositories>
 
   <distributionManagement>
-
     <repository>
       <id>universe.triology.de</id>
       <name>Triology Nexus Release Repository</name>
@@ -590,7 +605,6 @@
       <name>Triology Nexus Snapshot Repository</name>
       <url>https://universe.triology.de/nexus/content/repositories/snapshots/</url>
     </snapshotRepository>
-
   </distributionManagement>
 
   <profiles>
@@ -601,7 +615,6 @@
       </activation>
       <build>
         <plugins>
-
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -610,50 +623,49 @@
               <failOnMissingWebXml>false</failOnMissingWebXml>
               <webResources>
                 <webResource>
-                  <directory>target/gulp</directory>
+                  <directory>src/main/ui/dist</directory>
                 </webResource>
               </webResources>
             </configuration>
           </plugin>
           <plugin>
-            <groupId>com.github.sdorra</groupId>
-            <artifactId>buildfrontend-maven-plugin</artifactId>
-            <version>2.1.0</version>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>${frontend-maven-plugin.version}</version>
+
             <configuration>
-              <node>
-                <version>8.11.4</version>
-              </node>
-              <pkgManager>
-                <type>NPM</type>
-                <version>6.1.0</version>
-              </pkgManager>
+              <nodeVersion>${node.version}</nodeVersion>
+              <yarnVersion>${yarn.version}</yarnVersion>
+              <workingDirectory>${frontend-src-dir}</workingDirectory>
+              <installDirectory>${project.build.directory}</installDirectory>
             </configuration>
+
             <executions>
               <execution>
-                <id>install</id>
-                <phase>process-resources</phase>
+                <id>install-frontend-tools</id>
                 <goals>
-                  <goal>install</goal>
+                  <goal>install-node-and-yarn</goal>
                 </goals>
               </execution>
+
               <execution>
-                <id>bower</id>
-                <phase>process-resources</phase>
+                <id>yarn-install</id>
                 <goals>
-                  <goal>run</goal>
+                  <goal>yarn</goal>
                 </goals>
                 <configuration>
-                  <script>bower</script>
+                  <arguments>install</arguments>
                 </configuration>
               </execution>
+
               <execution>
-                <id>gulp</id>
-                <phase>process-resources</phase>
+                <id>build-frontend</id>
                 <goals>
-                  <goal>run</goal>
+                  <goal>yarn</goal>
                 </goals>
+                <phase>prepare-package</phase>
                 <configuration>
-                  <script>gulp</script>
+                  <arguments>build</arguments>
                 </configuration>
               </execution>
               <execution>
@@ -668,7 +680,6 @@
               </execution>
             </executions>
           </plugin>
-
         </plugins>
       </build>
     </profile>
@@ -709,6 +720,10 @@
     <guice.version>3.0</guice.version>
     <shiro.version>1.4.2</shiro.version>
     <legman.version>1.2.0</legman.version>
+    <frontend-src-dir>${project.basedir}/src/main/ui</frontend-src-dir>
+    <node.version>v18.7.0</node.version>
+    <yarn.version>v1.22.19</yarn.version>
+    <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
   </properties>
 
 </project>

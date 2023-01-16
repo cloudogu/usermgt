@@ -1,9 +1,8 @@
-FROM openjdk:8u302-jdk as builder
+FROM timbru31/java-node:8-jdk-18 as builder
 COPY app/ /usermgt
 RUN set -x \
  && cd /usermgt \
  && ./mvnw package
-
 
 FROM registry.cloudogu.com/official/java:8u302-3
 

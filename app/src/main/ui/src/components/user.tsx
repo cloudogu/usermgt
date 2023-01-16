@@ -22,7 +22,7 @@ export function User() {
         content =
             <div aria-hidden={true}>
                 <UserIcon/>
-                <span id={"user-field-username"}>{user?.name}</span>
+                <span id={"user-field-username"}>{user?.username}</span>
             </div>
 
     }
