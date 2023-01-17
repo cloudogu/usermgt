@@ -1,5 +1,5 @@
 import './App.css'
-import {Navbar} from "./components/Navbar";
+import {Navbar} from "../../ces-theme-react/src/components/Navbar";
 import {Route, Routes} from "react-router-dom";
 import {QueryClient, QueryClientProvider} from "react-query";
 

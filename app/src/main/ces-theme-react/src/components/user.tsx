@@ -1,10 +1,8 @@
 import {useUser} from "../hooks/useUser";
 import {UserIcon} from "@heroicons/react/24/outline";
-import React from "react";
-
 
 export function User() {
-    const {data: user, isLoading, isError} = useUser();
+    const {data: user, isLoading, isError} = {data: {username: "MyAdmin"}, isLoading: false, isError: false}//useUser();
 
     let content;
     if (isLoading) {
