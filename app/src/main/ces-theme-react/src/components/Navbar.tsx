@@ -53,7 +53,7 @@ export function Navbar(props: NavbarProps) {
                             {props.toolName}
                         </span>
           </Link>
-          <div className={"flex items-center"}>
+          <div className={"flex items-center pr-1"}>
             <button className={cl(
               "sm:hidden w-11 h-9 z-50 rounded-md group",
               "space-y-1 flex-0 space-between",
