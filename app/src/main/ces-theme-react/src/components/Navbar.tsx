@@ -35,7 +35,7 @@ export function Navbar(props: NavbarProps) {
         (collapse) ? "overflow-hidden" : "border-b"
       )}>
       <ul className={"z-50 flex flex-col sm:flex-row"}>
-        <li className={"flex h-12 border-nav-primary-border sm:border-b-0 sm:cursor-pointer border-b"}>
+        <li className={"flex h-12 border-nav-primary-border sm:border-b-0 sm:cursor-pointer border-b justify-between"}>
           <Link
             className={cl("group flex px-2 h-12 hover:bg-nav-primary-hover text-nav-primary-font hover:text-nav-primary-font-hover sm:border-b-0 " +
               "sm:cursor-pointer sm:hover:text-base-font-hover")}
@@ -53,6 +53,16 @@ export function Navbar(props: NavbarProps) {
                             {props.toolName}
                         </span>
           </Link>
+          <div className={"flex items-center"}>
+            <button className={cl(
+              "sm:hidden w-11 h-9 z-50 rounded-md group",
+              "space-y-1 flex-0 space-between",
+              "text-button-primary-font",
+              "bg-button-primary hover:bg-button-primary-hover"
+            )} onClick={toggleCollapse}>
+              <Bars3Icon className={cl("mx-1 mb-1")}/>
+            </button>
+          </div>
         </li>
         {props.sites && props.sites.map((element) => {
           return <li key={element.path}>
@@ -93,15 +103,6 @@ export function Navbar(props: NavbarProps) {
           </a>
         </li>
       </ul>
-
-      <button className={cl(
-        "sm:hidden w-11 h-9 z-50 rounded-md group",
-        "absolute right-4 top-[1.375rem] space-y-1",
-        "text-button-primary-font",
-        "bg-button-primary hover:bg-button-primary-hover"
-      )} onClick={toggleCollapse}>
-        <Bars3Icon className={cl("mx-1 mb-1 ")}/>
-      </button>
     </nav>
   );
 }

@@ -1,5 +1,5 @@
 import './App.css'
-import {Navbar} from "../../ces-theme-react/src/components/Navbar";
+import {Navbar} from "@cloudogu/ces-theme-react/src/components/Navbar";
 import {Route, Routes} from "react-router-dom";
 import {QueryClient, QueryClientProvider} from "react-query";
 
@@ -14,8 +14,8 @@ function App() {
     return (
         <div>
             <QueryClientProvider client={queryClient}>
-            <Navbar sites={availableSites}></Navbar>
-            <main className={"container"}>
+            <Navbar sites={availableSites} currentPath={"/users"} toolName={"User Management"}></Navbar>
+            <main className={"container text-base"}>
                 <Routes>
                     <Route path="/logging" element={<div/>}/>
                     <Route index path="/" element={<div/>}/>
