@@ -23,7 +23,7 @@ export type Site = {
 }
 
 export function Navbar(props: NavbarProps) {
-  const [collapse, toggleCollapse] = useReducer((oldValue) => !oldValue, false);
+  const [collapsed, toggleCollapse] = useReducer((oldValue) => !oldValue, false);
   const administrationLinkRef = useRef<HTMLAnchorElement>(null);
   const loggingLinkRef = useRef<HTMLAnchorElement>(null);
 
@@ -31,11 +31,11 @@ export function Navbar(props: NavbarProps) {
     <nav
       className={cl(
         "flex text-nav-primary-font border-nav-primary-border flex-col sm:flex-row justify-between h-12 p-0",
-        "box-content font-sans text-xs",
-        (collapse) ? "overflow-hidden" : "border-b"
+        "box-content font-sans text-xs border-b",
+        (collapsed) ? "overflow-hidden" : ""
       )}>
       <ul className={"z-50 flex flex-col sm:flex-row"}>
-        <li className={"flex h-12 border-nav-primary-border sm:border-b-0 sm:cursor-pointer border-b justify-between"}>
+        <li className={cl("flex h-12 border-nav-primary-border sm:border-b-0 sm:cursor-pointer justify-between", (collapsed) ? "": "border-b")}>
           <Link
             className={cl("group flex px-2 h-12 hover:bg-nav-primary-hover text-nav-primary-font hover:text-nav-primary-font-hover sm:border-b-0 " +
               "sm:cursor-pointer sm:hover:text-base-font-hover")}
