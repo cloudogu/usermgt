@@ -86,7 +86,7 @@ export function Navbar(props: NavbarProps) {
           <Link key={"/account"}
                 to={"/account"}
                 className={cl(
-                  "px-2 bg-nav-primary flex h-12 items-center whitespace-nowrap",
+                  "px-2 flex h-12 items-center whitespace-nowrap",
                   "hover:text-nav-primary-font-hover hover:bg-nav-primary-hover",
                   ((props.currentPath === "/account") ? "bg-nav-primary-selected" : ""))}>
             <UserIcon className={"w-5 h-5 mr-2"}/>

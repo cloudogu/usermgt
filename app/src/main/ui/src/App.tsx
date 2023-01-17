@@ -1,20 +1,23 @@
 import './App.css'
 import {Navbar} from "@cloudogu/ces-theme-react/src/components/Navbar";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useLocation} from "react-router-dom";
 import {QueryClient, QueryClientProvider} from "react-query";
 
 const availableSites: { name: string, path: string }[] = [
-    {name: "Users", path: "users"},
-    {name: "Groups", path: "groups"},
+    {name: "Users", path: "/users"},
+    {name: "Groups", path: "/groups"},
 ];
 
 const queryClient = new QueryClient();
 
 function App() {
+    const location = useLocation();
+    console.log(location?.pathname);
+
     return (
         <div>
             <QueryClientProvider client={queryClient}>
-            <Navbar sites={availableSites} currentPath={"/users"} toolName={"User Management"}></Navbar>
+            <Navbar sites={availableSites} currentPath={location?.pathname} toolName={"User Management"}></Navbar>
             <main className={"container text-base"}>
                 <Routes>
                     <Route path="/logging" element={<div/>}/>
