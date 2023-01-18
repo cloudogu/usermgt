@@ -1,28 +1,32 @@
 import {cl} from "dynamic-class-list";
-import {createElement, useReducer, useRef} from "react";
+import {useReducer, useRef} from "react";
 import {Link} from "react-router-dom";
-import {ArrowRightOnRectangleIcon} from "@heroicons/react/24/solid";
 // @ts-ignore
 import lightLogo from '../assets/logo.svg';
 // @ts-ignore
 import darkLogo from '../assets/logo_white.svg';
-import {Bars3Icon, UserIcon} from "@heroicons/react/24/outline";
-
-const contextPath = process.env.PUBLIC_URL || "/admin";
+import {Bars3Icon} from "@heroicons/react/24/outline";
+import NavIcon from "./NavIcon";
 
 type NavbarProps = {
   sites: Array<Site>;
   currentPath: string;
   toolName: string;
-}
+  loggedInUser: User;
+  logoutUri: string;
+};
 
 export type Site = {
   name: string,
   path: string,
   icon?: any,
-}
+};
 
-export function Navbar(props: NavbarProps) {
+export type User = {
+  name: string,
+};
+
+export default function Navbar(props: NavbarProps) {
   const [collapsed, toggleCollapse] = useReducer((oldValue) => !oldValue, false);
   const administrationLinkRef = useRef<HTMLAnchorElement>(null);
   const loggingLinkRef = useRef<HTMLAnchorElement>(null);
@@ -34,8 +38,9 @@ export function Navbar(props: NavbarProps) {
         "box-content font-sans text-xs border-b",
         (collapsed) ? "overflow-hidden" : ""
       )}>
-      <ul className={"z-50 flex flex-col sm:flex-row"}>
-        <li className={cl("flex h-12 border-nav-primary-border sm:border-b-0 sm:cursor-pointer justify-between", (collapsed) ? "": "border-b")}>
+      <ul className={"z-50 flex flex-col sm:flex-row sm:ml-auto sm:min-w-[800px]"}>
+        <li
+          className={cl("flex h-12 border-nav-primary-border sm:border-b-0 sm:cursor-pointer justify-between", (collapsed) ? "" : "border-b")}>
           <Link
             className={cl("group flex px-2 h-12 hover:bg-nav-primary-hover text-nav-primary-font hover:text-nav-primary-font-hover sm:border-b-0 " +
               "sm:cursor-pointer sm:hover:text-base-font-hover")}
@@ -73,15 +78,14 @@ export function Navbar(props: NavbarProps) {
                     (element.path === props.currentPath) ? "bg-nav-primary-selected" : ""
                   )}
                   to={element.path}>
-              {element.icon && createElement(element.icon, {className: "w-5 h-5 sm:hidden mr-2"})}
+              <NavIcon type={element.icon} className={"sm:hidden"}/>
               {element.name}
             </Link>
           </li>;
         })}
       </ul>
-
       <ul
-        className={"z-50 border-b border-nav-primary-border sm:border-b-0 bg-nav-primary flex flex-col sm:flex-row bg-default"}>
+        className={"z-50 border-b border-nav-primary-border sm:border-b-0 bg-nav-primary flex flex-col sm:flex-row bg-default sm:mr-auto sm:min-w-[170px]"}>
         <li>
           <Link key={"/account"}
                 to={"/account"}
@@ -89,16 +93,16 @@ export function Navbar(props: NavbarProps) {
                   "px-2 flex h-12 items-center whitespace-nowrap",
                   "hover:text-nav-primary-font-hover hover:bg-nav-primary-hover",
                   ((props.currentPath === "/account") ? "bg-nav-primary-selected" : ""))}>
-            <UserIcon className={"w-5 h-5 mr-2"}/>
-            <span>Account</span>
+            <NavIcon type={"user"}/>
+            <span>{props?.loggedInUser?.name}</span>
           </Link>
         </li>
         <li>
-          <a href={contextPath + "/api/logout"} id="logout" className={cl(
+          <a href={props.logoutUri} id="logout" className={cl(
             "px-2 bg-nav-primary flex h-12 items-center whitespace-nowrap",
             "hover:text-nav-primary-font-hover hover:bg-nav-primary-hover"
           )}>
-            <ArrowRightOnRectangleIcon className={"w-5 h-5 mr-2"}/>
+            <NavIcon type={"logout"}/>
             <span>Logout</span>
           </a>
         </li>
