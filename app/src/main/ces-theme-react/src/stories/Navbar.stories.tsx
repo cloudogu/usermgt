@@ -1,5 +1,5 @@
 import { withRouter } from 'storybook-addon-react-router-v6'
-import { Navbar } from '../components'
+import Navbar from '../components/Navbar'
 
 export default {
   title: 'Navbar',

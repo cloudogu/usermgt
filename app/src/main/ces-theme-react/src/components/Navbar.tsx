@@ -38,7 +38,7 @@ export default function Navbar(props: NavbarProps) {
         "box-content font-sans text-xs border-b",
         (collapsed) ? "overflow-hidden" : ""
       )}>
-      <ul className={"z-50 flex flex-col sm:flex-row sm:ml-auto sm:min-w-[800px]"}>
+      <ul className={"z-50 flex flex-col sm:flex-row sm:ml-auto 2xl:w-[1000px] lg:w-[800px] md:w-[580px] sm:w-[440px]"}>
         <li
           className={cl("flex h-12 border-nav-primary-border sm:border-b-0 sm:cursor-pointer justify-between", (collapsed) ? "" : "border-b")}>
           <Link
