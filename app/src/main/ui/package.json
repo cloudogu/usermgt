@@ -17,8 +17,7 @@
     "react-router-dom": "^6.6.2"
   },
   "devDependencies": {
-    "@cloudogu/ces-theme-react": "file:../ces-theme-react",
-    "@cloudogu/ces-theme-tailwind": "file:../ces-theme-react/theme",
+    "@cloudogu/ces-theme-tailwind": "file:ces-theme-tailwind",
     "@mertasan/tailwindcss-variables": "^2.5.1",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.26",
