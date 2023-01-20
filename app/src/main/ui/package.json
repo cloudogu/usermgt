@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "backend": "cd api-mock && json-server --watch db.json --p 8080 --routes routes.json"
   },
   "dependencies": {
     "dynamic-class-list": "^2.0.2",
