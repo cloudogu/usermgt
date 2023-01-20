@@ -7,7 +7,7 @@ export type ApiUser = {
 }
 
 export function useUser(): ApiUser {
-  const [user, setUser] = useState<ApiUser>({principal: "..."});
+  const [user, setUser] = useState<ApiUser>({principal: ""});
 
   useEffect(() => {
     fetch(contextPath + `/api/subject`)
