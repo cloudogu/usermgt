@@ -2,7 +2,7 @@ FROM timbru31/java-node:8-jdk-18 as builder
 COPY app/ /usermgt
 RUN set -x \
  && cd /usermgt \
- && ./mvnw package -DskipTests
+ && ./mvnw package
 
 FROM registry.cloudogu.com/official/java:8u302-3
 
