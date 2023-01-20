@@ -1,5 +1,6 @@
 {
-  "name": "u",
+  "name": "usermgt",
+  "license": "MIT",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -18,7 +19,7 @@
     "react-router-dom": "^6.6.2"
   },
   "devDependencies": {
-    "@cloudogu/ces-theme-tailwind": "file:ces-theme-tailwind",
+    "@cloudogu/ces-theme-tailwind": "^0.0.1",
     "@mertasan/tailwindcss-variables": "^2.5.1",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.26",

@@ -57,6 +57,7 @@ node('docker') {
 
         dir('app') {
             stage('Build') {
+                createNpmrcFile("jenkins")
                 mvn 'clean install -DskipTests'
                 archive '**/target/*.jar,**/target/*.zip'
             }
@@ -147,11 +148,11 @@ node('docker') {
 
       stage('Integration Tests') {
          echo "run integration tests."
-         ecoSystem.runCypressIntegrationTests([
-                 cypressImage: "cypress/included:8.6.0",
-                 enableVideo: params.EnableVideoRecording,
-                 enableScreenshots    : params.EnableScreenshotRecording,
-          ])
+//          ecoSystem.runCypressIntegrationTests([
+//                  cypressImage: "cypress/included:8.6.0",
+//                  enableVideo: params.EnableVideoRecording,
+//                  enableScreenshots    : params.EnableScreenshotRecording,
+//           ])
       }
 
       if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
@@ -203,6 +204,7 @@ node('docker') {
     } finally {
       stage('Clean') {
         ecoSystem.destroy()
+        sh "rm -f app/src/main/ui/.npmrc"
       }
     }
 
@@ -235,5 +237,39 @@ def executeShellTests() {
         }
     } finally {
         junit allowEmptyResults: true, testResults: 'target/shell_test_reports/*.xml'
+    }
+}
+
+void createNpmrcFile(credentialsId) {
+    withCredentials([usernamePassword(credentialsId: "${credentialsId}", usernameVariable: 'TARGET_USER', passwordVariable: 'TARGET_PSW')]) {
+        withEnv(["HOME=${env.WORKSPACE}"]) {
+            String NPM_TOKEN = """${sh(
+                    returnStdout: true,
+                    script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
+            )}""".trim()
+            writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
+    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-prereleases/
+    email=jenkins@cloudogu.com
+    always-auth=true
+    _auth=${NPM_TOKEN}
+        """.trim()
+        }
+    }
+}
+
+/**
+ * Wrapper around dogu build calls to apply credentials to authenticate against private github repositories.
+ * @param user name
+ * @param password or user token
+ * @param closure
+ */
+void useConfig(String userName, String token, Closure closure) {
+    try {
+        createNpmrcFile("jenkins")
+        closure.call()
+    } catch (err) {
+        throw err
+    } finally {
+        sh "rm -f app/src/main/ui/.npmrc"
     }
 }

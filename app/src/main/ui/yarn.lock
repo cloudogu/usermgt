@@ -1120,8 +1120,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/ces-theme-tailwind@file:ces-theme-tailwind":
+"@cloudogu/ces-theme-tailwind@^0.0.1":
   version "0.0.1"
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.0.1.tgz#8996acdde6376bd7e9438d939ae1e3ebb9c6cc70"
+  integrity sha512-tOhIhCjGtNudfxtgb2R0ymrkxebPw7W7zc98Gz3CIZO+SZlFPOqYpJ6bDqGeD6/zODy7uCC3crD/tJGJCLTDEQ==
   dependencies:
     "@heroicons/react" "^2.0.13"
     dynamic-class-list "^2.0.2"
