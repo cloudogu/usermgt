@@ -10,7 +10,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router basename={contextPath}>
       <Routes>
-        <Route path="/logging" element={<div/>}/>
         <Route index path="/" element={<div/>}/>
         <Route path="/account" element={<div/>}/>
         <Route path="/users" element={<div/>}/>

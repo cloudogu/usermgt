@@ -20,8 +20,9 @@ function App() {
               currentPath={location?.pathname}
               toolName={"User Management"}
               loggedInUser={{name: user.principal, accountUri: '/account'}}
-              logoutUri={`${contextPath}/api/logout`}
+              logoutUri={`/api/logout`}
               homeUri={`/account`}
+              contextPath={contextPath}
       />
     </>
   )
