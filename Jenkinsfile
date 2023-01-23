@@ -37,6 +37,7 @@ node('docker') {
         checkout scm
         //  Don't remove folders starting in "." like * .m2 (maven), .npm, .cache, .local (bower)
         git.clean('".*/"')
+        createNpmrcFile("jenkins")
     }
 
     stage('Lint') {
@@ -51,13 +52,12 @@ node('docker') {
 
     // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
     // builds run concurrently (e.g. feature branch, PR and develop)
-    new Docker(this).image('openjdk:8-jdk')
+    new Docker(this).image('timbru31/java-node:8-jdk-18')
             .mountJenkinsUser()
             .inside {
 
         dir('app') {
             stage('Build') {
-                createNpmrcFile("jenkins")
                 mvn 'clean install -DskipTests'
                 archive '**/target/*.jar,**/target/*.zip'
             }
@@ -204,7 +204,7 @@ node('docker') {
     } finally {
       stage('Clean') {
         ecoSystem.destroy()
-        sh "rm -f app/src/main/ui/.npmrc"
+        sh "rm -f ${WORKSPACE}/app/src/main/ui/.npmrc"
       }
     }
 
@@ -248,7 +248,7 @@ void createNpmrcFile(credentialsId) {
                     script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
             )}""".trim()
             writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
-    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-prereleases/
+    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
     email=jenkins@cloudogu.com
     always-auth=true
     _auth=${NPM_TOKEN}
@@ -270,6 +270,6 @@ void useConfig(String userName, String token, Closure closure) {
     } catch (err) {
         throw err
     } finally {
-        sh "rm -f app/src/main/ui/.npmrc"
+        sh "rm -f ${WORKSPACE}/app/src/main/ui/.npmrc"
     }
 }
