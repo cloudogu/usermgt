@@ -45,5 +45,18 @@
         "Variables": []
       }
     ]
+  },
+  "account": {
+    "displayName": "Admin User",
+    "givenname": "Admin",
+    "mail": "admin@admin.test",
+    "memberOf": [
+      "cesManager",
+      "ecosystemAdmins"
+    ],
+    "password": "__dummypassword",
+    "pwdReset": false,
+    "surname": "User",
+    "username": "admin"
   }
 }

@@ -1,4 +1,5 @@
 {
   "/usermgt/api/subject":  "/subject",
+  "/usermgt/api/account":  "/account",
   "/usermgt/api/account/passwordpolicy":  "/passwordpolicy"
 }
