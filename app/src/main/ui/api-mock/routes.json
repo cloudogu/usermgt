@@ -1,3 +1,4 @@
 {
-  "/usermgt/api/subject":  "/subject"
+  "/usermgt/api/subject":  "/subject",
+  "/usermgt/api/account/passwordpolicy":  "/passwordpolicy"
 }

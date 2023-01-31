@@ -1,25 +1,12 @@
-import * as Yup from "yup";
-import useFormHandler from "@cloudogu/ces-theme-tailwind/src/components/forms/hooks/useFormHandler";
 import Form from "@cloudogu/ces-theme-tailwind/src/components/forms/Form";
 import H1 from "@cloudogu/ces-theme-tailwind/src/components/text/H1";
-import TextInput from "@cloudogu/ces-theme-tailwind/src/components/inputs/TextInput";
-import PrimaryButton from "@cloudogu/ces-theme-tailwind/src/components/inputs/PrimaryButton";
+import ValidatedTextInput from "@cloudogu/ces-theme-tailwind/src/components/inputs/ValidatedTextInput";
+import Button from "@cloudogu/ces-theme-tailwind/src/components/inputs/Button";
+import useFormHandler from "@cloudogu/ces-theme-tailwind/src/components/forms/hooks/useFormHandler";
+import {useValidationSchema} from "../hooks/useValidationSchema";
 
 export default function Account() {
-  const validationSchema = Yup.object({
-    "surname": Yup.string().required('Surname is required.'),
-    "displayname": Yup.string().required('Display name is required.'),
-    "mail": Yup.string()
-      .matches(/[a-zA-Z._-]*@[a-zA-Z-]*\.[a-zA-Z-]/, "E-mail address is invalid.")
-      .required('Mail is required.'),
-    "password": Yup.string()
-      .matches(/[A-ZÄÖÜ]/, 'The password must contain at least 1 capital letter')
-      .matches(/[0-9]/, 'The password must contain at least 1 number')
-      .matches(/[^a-zäöüßA-ZÄÖÜ0-9]/, 'The password must contain at least 1 special character')
-      .matches(/^.{8,}$/, 'The password must contain at least 8 characters')
-      .matches(/[a-zäöüß]/, 'The password must contain at least 1 lower case letter'),
-    "password_confirm": Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-  });
+  const validationSchema = useValidationSchema();
 
   const handler = useFormHandler<any>({
     initialValues: {
@@ -40,15 +27,16 @@ export default function Account() {
 
   return <Form handler={handler}>
     <H1>Account</H1>
-    <TextInput name={"username"} handler={handler} disabled={true}>Username</TextInput>
-    <TextInput name={"givenname"} handler={handler} showValidation={false}>Given name</TextInput>
-    <TextInput name={"surname"} handler={handler}>Surname</TextInput>
-    <TextInput name={"displayname"} handler={handler}>Display Name</TextInput>
-    <TextInput name={"mail"} handler={handler}>E-Mail</TextInput>
-    <TextInput name={"password"} handler={handler} isPassword={true}>Password</TextInput>
-    <TextInput name={"password_confirm"} handler={handler} isPassword={true}>Confirm Password</TextInput>
+    <ValidatedTextInput type={"text"} name={"username"} handler={handler} disabled={true}>Username</ValidatedTextInput>
+    <ValidatedTextInput type={"text"} name={"givenname"} handler={handler}>Given name</ValidatedTextInput>
+    <ValidatedTextInput type={"text"} name={"surname"} handler={handler}>Surname</ValidatedTextInput>
+    <ValidatedTextInput type={"text"} name={"displayname"} handler={handler}>Display Name</ValidatedTextInput>
+    <ValidatedTextInput type={"text"} name={"mail"} handler={handler}>E-Mail</ValidatedTextInput>
+    <ValidatedTextInput type={"password"} name={"password"} handler={handler}>Password</ValidatedTextInput>
+    <ValidatedTextInput type={"password"} name={"password_confirm"} handler={handler}>Confirm
+      Password</ValidatedTextInput>
     <div className={"mt-4"}>
-      <PrimaryButton type={"submit"} disabled={!handler.dirty}>Save</PrimaryButton>
+      <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>Save</Button>
     </div>
   </Form>
 }

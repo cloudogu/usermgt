@@ -7,7 +7,10 @@ import Users from "./pages/Users";
 import Groups from "./pages/Groups";
 import {useUser} from "./hooks/useUser";
 import Navbar, {Site} from "@cloudogu/ces-theme-tailwind/src/components/navbar/Navbar";
-import Main from "../ces-theme-tailwind/src/components/Main";
+import Main from "@cloudogu/ces-theme-tailwind/src/components/Main";
+
+// import i18n (needs to be bundled)
+import './i18n';
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 

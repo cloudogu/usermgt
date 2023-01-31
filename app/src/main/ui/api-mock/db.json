@@ -1,5 +1,49 @@
 {
   "subject": {
     "principal": "localtestadmin"
+  },
+  "passwordpolicy": {
+    "Rules": [
+      {
+        "Description": "The password must contain at least 8 characters",
+        "Rule": ".{8,}",
+        "Type": "regex",
+        "Name": "length",
+        "Variables": [
+          {
+            "Name": "length",
+            "Value": "8"
+          }
+        ]
+      },
+      {
+        "Description": "The password must contain at least 1 characters",
+        "Rule": "[A-ZÄÖÜ]",
+        "Type": "regex",
+        "Name": "capital",
+        "Variables": []
+      },
+      {
+        "Description": "The password must contain at least 1 lower case letter",
+        "Rule": "[a-zäöüß]",
+        "Type": "regex",
+        "Name": "lowercase",
+        "Variables": []
+      },
+      {
+        "Description": "The password must contain at least 1 number",
+        "Rule": "[0-9]",
+        "Type": "regex",
+        "Name": "numeric",
+        "Variables": []
+      },
+      {
+        "Description": "The password must contain at least 1 special character.",
+        "Rule": "[^a-zäöüßA-ZÄÖÜ0-9]",
+        "Type": "regex",
+        "Name": "special",
+        "Variables": []
+      }
+    ]
   }
 }
