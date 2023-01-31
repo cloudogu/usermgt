@@ -1,8 +1,4 @@
-import Form from "@cloudogu/ces-theme-tailwind/src/components/forms/Form";
-import H1 from "@cloudogu/ces-theme-tailwind/src/components/text/H1";
-import ValidatedTextInput from "@cloudogu/ces-theme-tailwind/src/components/inputs/ValidatedTextInput";
-import Button from "@cloudogu/ces-theme-tailwind/src/components/inputs/Button";
-import useFormHandler from "@cloudogu/ces-theme-tailwind/src/components/forms/hooks/useFormHandler";
+import {Button, Form, H1, useFormHandler, ValidatedTextInput} from "@cloudogu/ces-theme-tailwind";
 import {useValidationSchema} from "../hooks/useValidationSchema";
 
 export default function Account() {
