@@ -48,7 +48,7 @@
   },
   "account": {
     "displayName": "Admin User",
-    "givenname": "Admin",
+    "givenName": "Admin",
     "mail": "admin@admin.test",
     "memberOf": [
       "cesManager",
