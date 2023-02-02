@@ -28,7 +28,7 @@ gen-npmrc-release: info
 	@echo "email=jenkins@cloudogu.com" >> ${UI_SRC}/.npmrc
 	@echo "always-auth=true" >> ${UI_SRC}/.npmrc
 	@echo "_auth=$(shell bash -c 'read -p "Username: " usrname;read -s -p "Password: " pwd;echo -n "$$usrname:$$pwd" | openssl base64')" >> ${UI_SRC}/.npmrc
-	@echo "registry=${NPM_REGISTRY_RELEASE}" >> ${UI_SRC}/.npmrc
+	@echo "@cloudogu:registry=${NPM_REGISTRY_RELEASE}" >> ${UI_SRC}/.npmrc
 
 .PHONY gen-npmrc-prerelease:
 gen-npmrc-prerelease: info
@@ -36,4 +36,4 @@ gen-npmrc-prerelease: info
 	@echo "email=jenkins@cloudogu.com" >> ${UI_SRC}/.npmrc
 	@echo "always-auth=true" >> ${UI_SRC}/.npmrc
 	@echo "_auth=$(shell bash -c 'read -p "Username: " usrname;read -s -p "Password: " pwd;echo -n "$$usrname:$$pwd" | openssl base64')" >> ${UI_SRC}/.npmrc
-	@echo "registry=${NPM_REGISTRY_RC}" >> ${UI_SRC}/.npmrc
+	@echo "@cloudogu:registry=${NPM_REGISTRY_RC}" >> ${UI_SRC}/.npmrc
