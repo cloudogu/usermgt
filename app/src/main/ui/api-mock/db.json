@@ -54,7 +54,8 @@
       "cesManager",
       "ecosystemAdmins"
     ],
-    "password": "__dummypassword",
+    "password": "__Dummypassword11",
+    "password_confirm": "__Dummypassword11",
     "pwdReset": false,
     "surname": "User",
     "username": "admin"

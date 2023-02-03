@@ -17,6 +17,10 @@ i18n
       en: {
         translation: {
           editUser: {
+            alerts: {
+              success:'Account information saved successfully.',
+              error:'Account information could not be saved. Please try again later.',
+            },
             errors: {
               password: {
                 length: 'The password must contain at least {{length}} characters.',
@@ -29,7 +33,23 @@ i18n
           }
         }
       }, de: {
-        translation: {}
+        translation: {
+          editUser: {
+            alerts: {
+              success:'Die Account Informationen wurden erfolgreich gespeichert.',
+              error:'Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.',
+            },
+            errors: {
+              password: {
+                length: 'Das Passwort muss mindestens {{length}} Zeichen lang sein.',
+                capital: 'Das Passwort muss mindestens ein Großbuchstaben enthalten.',
+                lowercase: 'Das Passwort muss mindestens ein Kleinbuchstaben enthalten.',
+                numeric: 'Das Passwort muss mindestens eine Zahl enthalten.',
+                special: 'Das Passwort muss mindestens ein Sonderzeichen enthalten.',
+              }
+            },
+          }
+        }
       },
     }
   });

@@ -35,7 +35,7 @@ function createValidationSchema(passwordPolicy: PasswordPolicy) {
 
   return Yup.object({
     "surname": Yup.string().required('Surname is required.'),
-    "displayname": Yup.string().required('Display name is required.'),
+    "displayName": Yup.string().required('Display name is required.'),
     "mail": Yup.string()
       .matches(/[a-zA-Z._-]*@[a-zA-Z-]*\.[a-zA-Z-]/, "E-mail address is invalid.")
       .required('Mail is required.'),

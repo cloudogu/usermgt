@@ -1,9 +1,11 @@
-import {Button, Form, H1, useFormHandler, ValidatedTextInput} from "@cloudogu/ces-theme-tailwind";
-import {ApiAccount} from "../../hooks/useAccount";
+import {Alert, Button, Form, H1, useFormHandler, ValidatedTextInput} from "@cloudogu/ces-theme-tailwind";
+import {ApiAccount, putAccount} from "../../hooks/useAccount";
+import {useState} from "react";
 
 
 type AccountFormProps = {
     account: ApiAccount
+    resetOnSave: boolean
     validationSchema: any
 
 }
@@ -13,12 +15,22 @@ export default function AccountForm(props: AccountFormProps) {
         initialValues: props.account,
         validationSchema: props.validationSchema,
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
-            handler.resetForm();
+            putAccount(values).catch(error => {
+                setAlert(<Alert variant={"error"} onClose={() => {setAlert(<></>)}}>{error}</Alert>)
+            }).then(value => {
+                if (value !== undefined) {
+                    setAlert(<Alert variant={"primary"} onClose={() => {setAlert(<></>)}}>{value}</Alert>)
+                }
+                if (props.resetOnSave){
+                    handler.resetForm()
+                }
+            });
         },
     })
+    const [alert, setAlert] = useState(<></>)
     return <Form handler={handler}>
         <H1>Account</H1>
+        {alert}
         <ValidatedTextInput type={"text"} name={"username"} handler={handler}
                             disabled={true}>Username</ValidatedTextInput>
         <ValidatedTextInput type={"text"} name={"givenName"} handler={handler}>Given name</ValidatedTextInput>

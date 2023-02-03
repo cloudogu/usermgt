@@ -1,4 +1,6 @@
 import {useEffect, useState} from "react";
+import i18n from 'i18next';
+
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -38,4 +40,18 @@ export function useAccount() {
     }, []);
 
     return {account, isLoading};
+}
+
+export function putAccount(account: ApiAccount) {
+    return fetch(contextPath + `/api/account`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(account)
+    }).then(async function (response) {
+        if (!response.ok) {
+            throw new Error(i18n.t('editUser.alerts.error') as string)
+        }
+        return i18n.t('editUser.alerts.success') as string
+    })
+
 }

@@ -12,6 +12,6 @@ export default function Account() {
         )
     }
     return (
-        <AccountForm account={account} validationSchema={validationSchema}></AccountForm>
+        <AccountForm account={account} validationSchema={validationSchema} resetOnSave={true}></AccountForm>
     )
 }
