@@ -42,7 +42,7 @@ export function useAccount() {
             });
     }, []);
 
-    return {account, isLoading};
+    return {account, isLoading, setAccount};
 }
 
 export function putAccount(account: ApiAccount) {

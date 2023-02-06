@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
-import Account from "./pages/Account";
+import Account from "./pages/account/Account";
 import Users from "./pages/Users";
 import Groups from "./pages/Groups";
 import {useUser} from "./hooks/useUser";
