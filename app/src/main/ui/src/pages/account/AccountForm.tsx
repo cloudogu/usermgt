@@ -16,19 +16,33 @@ export default function AccountForm(props: AccountFormProps) {
     validationSchema: props.validationSchema,
     enableReinitialize: true,
     onSubmit: values => {
-      putAccount(values).catch(error => {
-        setAlert(<Alert variant={"danger"} onClose={() => {
-          setAlert(<></>)
-        }}>{error}</Alert>)
-      }).then(value => {
-        if (value !== undefined) {
-          setAlert(<Alert variant={"primary"} onClose={() => {
-            setAlert(<></>)
-          }}>{value}</Alert>)
-        }
-        props.setAccount(values);
-        handler.resetForm(values);
-      });
+      putAccount(values)
+        .catch(error => {
+          setAlert(
+            <Alert
+              variant={"danger"}
+              onClose={() => {
+                setAlert(<></>);
+              }}>
+              {error}
+            </Alert>
+          );
+        })
+        .then(value => {
+          if (value !== undefined) {
+            setAlert(
+              <Alert
+                variant={"primary"}
+                onClose={() => {
+                  setAlert(<></>);
+                }}>
+                {value}
+              </Alert>);
+          }
+
+          props.setAccount(values);
+          handler.resetForm(values);
+        });
     },
   });
   const [alert, setAlert] = useState(<></>)

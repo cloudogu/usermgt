@@ -47,7 +47,7 @@ export function useAccount() {
 
 export function putAccount(account: ApiAccount) {
     return fetch(contextPath + `/api/account`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(account)
     }).then(async function (response) {
@@ -55,6 +55,5 @@ export function putAccount(account: ApiAccount) {
             throw new Error(i18n.t('editUser.alerts.error') as string)
         }
         return i18n.t('editUser.alerts.success') as string
-    })
-
+    });
 }
