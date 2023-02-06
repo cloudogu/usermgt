@@ -11,7 +11,6 @@ export type ApiAccount = {
     surname: string,
     username: string,
     password: string,
-    confirmPassword: string
     pwdReset: boolean,
     memberOf: string[];
 }
@@ -23,7 +22,6 @@ const initialState: ApiAccount = {
     surname: "",
     username: "",
     password: "",
-    confirmPassword: "",
     pwdReset: false,
     memberOf: []
 }
@@ -36,7 +34,6 @@ export function useAccount() {
         fetch(contextPath + `/api/account`)
             .then(async function (response) {
                 const json: ApiAccount = await response.json();
-                json.confirmPassword = json.password;
                 setAccount(json);
                 setIsLoading(false);
             });
@@ -49,7 +46,7 @@ export function saveAccount(account: ApiAccount) {
     return fetch(contextPath + `/api/account`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(account)
+        body: JSON.stringify(account, ['displayName', 'password', 'username', 'surname', 'mail', 'givenname', 'memberOf', 'pwdReset']),
     }).then(async function (response) {
         if (!response.ok) {
             throw new Error(i18n.t('editUser.alerts.error') as string)

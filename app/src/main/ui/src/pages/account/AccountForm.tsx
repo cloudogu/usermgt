@@ -2,7 +2,9 @@ import {Alert, Button, Form, H1, useFormHandler, ValidatedTextInput} from "@clou
 import {ApiAccount, saveAccount} from "../../hooks/useAccount";
 import {useState} from "react";
 import i18n from 'i18next';
-
+import {useValidationSchema} from "../../hooks/useValidationSchema";
+import * as Yup from "yup";
+import {validateYupSchema} from "formik";
 
 type AccountFormProps = {
   account: ApiAccount;
@@ -14,10 +16,14 @@ export default function AccountForm(props: AccountFormProps) {
   const [alert, setAlert] = useState(<></>);
 
   const handler = useFormHandler<any>({
-    initialValues: props.account,
+    initialValues: {
+      ...props.account,
+      confirmPassword: props.account.password,
+      hiddenPasswordField: props.account.password,
+    },
     validationSchema: props.validationSchema,
     enableReinitialize: true,
-    onSubmit: values => {
+    onSubmit: (values: any) => {
       saveAccount(values)
         .catch(error => {
           setAlert(

@@ -3,18 +3,20 @@ import {useAccount} from "../../hooks/useAccount";
 import AccountForm from "./AccountForm";
 import {useEffect} from "react";
 
-export default function Account(props: {title: string}) {
-    const validationSchema = useValidationSchema();
-    const {account, isLoading, setAccount} = useAccount();
+export default function Account(props: { title: string }) {
+  const validationSchema = useValidationSchema()
+  const {account, isLoading, setAccount} = useAccount();
 
-    useEffect(() => {(document.title = props.title)}, []);
+  useEffect(() => {
+    (document.title = props.title)
+  }, []);
 
-    if (isLoading) {
-        return (
-            <div>Loading</div>
-        )
-    }
+  if (isLoading) {
     return (
-        <AccountForm account={account} validationSchema={validationSchema} setAccount={setAccount}></AccountForm>
+      <div>Loading</div>
     )
+  }
+  return (
+    <AccountForm account={account} setAccount={setAccount} validationSchema={validationSchema}></AccountForm>
+  )
 }
