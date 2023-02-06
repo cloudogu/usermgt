@@ -45,7 +45,7 @@ export function useAccount() {
     return {account, isLoading, setAccount};
 }
 
-export function putAccount(account: ApiAccount) {
+export function saveAccount(account: ApiAccount) {
     return fetch(contextPath + `/api/account`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},

@@ -1,5 +1,5 @@
 import {Alert, Button, Form, H1, useFormHandler, ValidatedTextInput} from "@cloudogu/ces-theme-tailwind";
-import {ApiAccount, putAccount} from "../../hooks/useAccount";
+import {ApiAccount, saveAccount} from "../../hooks/useAccount";
 import {useState} from "react";
 import i18n from 'i18next';
 
@@ -11,12 +11,14 @@ type AccountFormProps = {
 }
 
 export default function AccountForm(props: AccountFormProps) {
+  const [alert, setAlert] = useState(<></>);
+
   const handler = useFormHandler<any>({
     initialValues: props.account,
     validationSchema: props.validationSchema,
     enableReinitialize: true,
     onSubmit: values => {
-      putAccount(values)
+      saveAccount(values)
         .catch(error => {
           setAlert(
             <Alert
@@ -45,7 +47,7 @@ export default function AccountForm(props: AccountFormProps) {
         });
     },
   });
-  const [alert, setAlert] = useState(<></>)
+
   return <Form handler={handler}>
     <H1>Account</H1>
     {alert}
