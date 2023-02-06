@@ -48,14 +48,13 @@
   },
   "account": {
     "displayName": "Admin User",
-    "givenName": "Admin",
+    "givenname": "Admin",
     "mail": "admin@admin.test",
     "memberOf": [
       "cesManager",
       "ecosystemAdmins"
     ],
     "password": "__Dummypassword11",
-    "password_confirm": "__Dummypassword11",
     "pwdReset": false,
     "surname": "User",
     "username": "admin"

@@ -17,7 +17,7 @@ export default function AccountForm(props: AccountFormProps) {
         validationSchema: props.validationSchema,
         onSubmit: values => {
             putAccount(values).catch(error => {
-                setAlert(<Alert variant={"error"} onClose={() => {
+                setAlert(<Alert variant={"danger"} onClose={() => {
                     setAlert(<></>)
                 }}>{error}</Alert>)
             }).then(value => {

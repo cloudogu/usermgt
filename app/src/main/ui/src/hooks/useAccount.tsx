@@ -6,22 +6,24 @@ const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
 export type ApiAccount = {
     displayName: string,
-    givenName: string,
+    givenname: string,
     mail: string,
     surname: string,
     username: string,
     password: string,
+    confirmPassword: string
     pwdReset: boolean,
     memberOf: string[];
 }
 
 const initialState: ApiAccount = {
     displayName: "",
-    givenName: "",
+    givenname: "",
     mail: "",
     surname: "",
     username: "",
     password: "",
+    confirmPassword: "",
     pwdReset: false,
     memberOf: []
 }
@@ -34,6 +36,7 @@ export function useAccount() {
         fetch(contextPath + `/api/account`)
             .then(async function (response) {
                 const json: ApiAccount = await response.json();
+                json.confirmPassword = json.password;
                 setAccount(json);
                 setIsLoading(false);
             });
