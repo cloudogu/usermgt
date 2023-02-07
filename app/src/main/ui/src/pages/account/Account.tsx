@@ -2,6 +2,7 @@ import {useValidationSchema} from "../../hooks/useValidationSchema";
 import {useAccount} from "../../hooks/useAccount";
 import AccountForm from "./AccountForm";
 import {useEffect} from "react";
+import {LoadingIcon} from "@cloudogu/ces-theme-tailwind";
 
 export default function Account(props: { title: string }) {
   const validationSchema = useValidationSchema()
@@ -13,7 +14,9 @@ export default function Account(props: { title: string }) {
 
   if (isLoading) {
     return (
-      <div>Loading</div>
+      <div className={"flex row justify-center w-[100%] mt-16"}>
+        <LoadingIcon className={"w-64 h-64"}/>
+      </div>
     )
   }
   return (
