@@ -1,10 +1,7 @@
-import {Alert, Button, Form, H1, useFormHandler, ValidatedTextInput} from "@cloudogu/ces-theme-tailwind";
+import {Alert, Button, Form, H1, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import {ApiAccount, saveAccount} from "../../hooks/useAccount";
 import {useState} from "react";
 import i18n from 'i18next';
-import {useValidationSchema} from "../../hooks/useValidationSchema";
-import * as Yup from "yup";
-import {validateYupSchema} from "formik";
 
 type AccountFormProps = {
   account: ApiAccount;
@@ -57,20 +54,20 @@ export default function AccountForm(props: AccountFormProps) {
   return <Form handler={handler}>
     <H1>Account</H1>
     {alert}
-    <ValidatedTextInput type={"text"} name={"username"} handler={handler}
-                        disabled={true}>{i18n.t('editUser.labels.username')}</ValidatedTextInput>
-    <ValidatedTextInput type={"text"} name={"givenname"}
-                        handler={handler}>{i18n.t('editUser.labels.givenName')}</ValidatedTextInput>
-    <ValidatedTextInput type={"text"} name={"surname"}
-                        handler={handler}>{i18n.t('editUser.labels.surname')}</ValidatedTextInput>
-    <ValidatedTextInput type={"text"} name={"displayName"}
-                        handler={handler}>{i18n.t('editUser.labels.displayName')}</ValidatedTextInput>
-    <ValidatedTextInput type={"text"} name={"mail"}
-                        handler={handler}>{i18n.t('editUser.labels.email')}</ValidatedTextInput>
-    <ValidatedTextInput type={"password"} name={"password"}
-                        handler={handler}>{i18n.t('editUser.labels.password')}</ValidatedTextInput>
-    <ValidatedTextInput type={"password"} name={"confirmPassword"}
-                        handler={handler}>{i18n.t('editUser.labels.confirmPassword')}</ValidatedTextInput>
+    <Form.ValidatedTextInput type={"text"} name={"username"}
+                        disabled={true}>{i18n.t('editUser.labels.username')}</Form.ValidatedTextInput>
+    <Form.ValidatedTextInput type={"text"} name={"givenname"}
+                        >{i18n.t('editUser.labels.givenName')}</Form.ValidatedTextInput>
+    <Form.ValidatedTextInput type={"text"} name={"surname"}
+                        >{i18n.t('editUser.labels.surname')}</Form.ValidatedTextInput>
+    <Form.ValidatedTextInput type={"text"} name={"displayName"}
+                        >{i18n.t('editUser.labels.displayName')}</Form.ValidatedTextInput>
+    <Form.ValidatedTextInput type={"text"} name={"mail"}
+                        >{i18n.t('editUser.labels.email')}</Form.ValidatedTextInput>
+    <Form.ValidatedTextInput type={"password"} name={"password"}
+                        >{i18n.t('editUser.labels.password')}</Form.ValidatedTextInput>
+    <Form.ValidatedTextInput type={"password"} name={"confirmPassword"}
+                        >{i18n.t('editUser.labels.confirmPassword')}</Form.ValidatedTextInput>
     <div className={"mt-4"}>
       <Button variant={"primary"} type={"submit"}
               disabled={!handler.dirty}>{i18n.t('editUser.buttons.save')}</Button>
