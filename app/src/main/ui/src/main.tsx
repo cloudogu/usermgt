@@ -8,6 +8,7 @@ import Groups from "./pages/Groups";
 import {useUser} from "./hooks/useUser";
 import {Main, Navbar} from "@cloudogu/ces-theme-tailwind";
 import i18n from 'i18next';
+import usermgtIcon from './assets/usermgt_icon_detailed.svg';
 
 // import i18n (needs to be bundled)
 import './i18n';
@@ -44,8 +45,12 @@ function Nav() {
     <>
       <Navbar currentPath={location?.pathname}>
         <Navbar.LeftAlignedList>
-          <Navbar.HomeLink homeUri={"/home"}>
-            <Navbar.HomeLink.CloudoguIcon/>
+          <Navbar.HomeLink homeUri={"/account"}>
+            <div className={"flex items-center mr-2"}>
+              <div className={"rounded-full p-2 bg-nav-primary"}>
+                <img src={usermgtIcon} className={"w-6 h-6"}/>
+              </div>
+            </div>
             <Navbar.HomeLink.LinkText>{"User Management"}</Navbar.HomeLink.LinkText>
           </Navbar.HomeLink>
           <Navbar.ListItem path={"/users"}>
