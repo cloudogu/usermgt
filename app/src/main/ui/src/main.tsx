@@ -48,18 +48,18 @@ function Nav() {
           <Navbar.HomeLink homeUri={"/account"}>
             <div className={"flex items-center mr-2"}>
               <div className={"rounded-full p-2 bg-nav-primary"}>
-                <img src={usermgtIcon} className={"w-6 h-6"}/>
+                <img src={usermgtIcon} className={"w-6 h-6"} alt={t("navbar.logoAltText") as string}/>
               </div>
             </div>
             <Navbar.HomeLink.LinkText>{"User Management"}</Navbar.HomeLink.LinkText>
           </Navbar.HomeLink>
           <Navbar.ListItem path={"/users"}>
             <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
-            Users
+            {t("pages.users")}
           </Navbar.ListItem>
           <Navbar.ListItem path={"/groups"}>
             <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
-            Groups
+            {t("pages.groups")}
           </Navbar.ListItem>
         </Navbar.LeftAlignedList>
         <Navbar.RightAlignedList>

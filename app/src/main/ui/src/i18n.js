@@ -23,6 +23,7 @@ i18n
           },
           navbar: {
             logout: 'Logout',
+            logoAltText: 'User Management icon: magnifying glass directed to a user icon.',
           },
           editUser: {
             labels: {
@@ -69,6 +70,7 @@ i18n
           },
           navbar: {
             logout: 'Abmelden',
+            logoAltText: 'Icon des User Managements: Lupe, die auf einen Benutzer-Icon gerichtet ist.',
           },
           editUser: {
             labels: {
@@ -92,7 +94,7 @@ i18n
               surname: 'Nachname muss ausgefüllt sein.',
               displayName: 'Anzeigename muss ausgefüllt sein.',
               email: {
-                invalid: 'E-Mail ist nicht valide',
+                invalid: 'E-Mail ist ungültig.',
                 required: 'E-Mail Addresse muss ausgefüllt sein.',
               },
               confirmPassword: 'Password stimmt nicht überein.',
