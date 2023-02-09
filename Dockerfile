@@ -58,7 +58,7 @@ COPY resources /
 EXPOSE 8080
 
 # healtcheck
-HEALTHCHECK CMD doguctl healthy usermgt || exit 1
+HEALTHCHECK --interval=5s CMD doguctl healthy usermgt || exit 1
 
 # execution
 CMD /startup.sh
