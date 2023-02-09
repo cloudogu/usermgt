@@ -48,15 +48,15 @@
   },
   "account": {
     "displayName": "Admin User",
-    "givenname": "Admin",
+    "password": "__dummypassword",
+    "username": "admin",
+    "surname": "Usera",
     "mail": "admin@admin.test",
+    "givenname": "Admin",
     "memberOf": [
       "cesManager",
       "ecosystemAdmins"
     ],
-    "password": "__dummypassword",
-    "pwdReset": false,
-    "surname": "User",
-    "username": "admin"
+    "pwdReset": false
   }
 }
