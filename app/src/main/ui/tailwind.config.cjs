@@ -4,6 +4,6 @@ module.exports = {
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/@cloudogu/ces-theme-tailwind/src/**/*.{js,ts,jsx,tsx}'
+    './node_modules/@cloudogu/ces-theme-tailwind/build/**/*.{js,ts,jsx,tsx,mjs}'
   ],
 };
