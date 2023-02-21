@@ -216,10 +216,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/ces-theme-tailwind@^0.0.64":
-  version "0.0.64"
-  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.0.64.tgz#8a8f85c67455748cb5f52e10073e4ccbd92ab901"
-  integrity sha512-eDTBBa4yXJWzuP60H71FWdH4YbFvopqmeMoX7Wf3fmyVYWsgpcWzb+ObyVEoVOT3aeyz2A+62f6kHdKWdgcMfA==
+"@cloudogu/ces-theme-tailwind@^0.0.66":
+  version "0.0.66"
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.0.66.tgz#4f4b36df98eecc3109006c0d9c541f877d68ca11"
+  integrity sha512-E6+6oD8o0f55BpngYB77VA6J/j96pV8ORZ/QHtHrLf15ORoq3mTfUOYb/kWu7q53cYSTUeO+GMqtJt3SbU1Ycg==
   dependencies:
     "@heroicons/react" "^2.0.13"
     dynamic-class-list "^2.0.2"
@@ -341,9 +341,9 @@
   integrity sha512-y+EHuSchhL7FjHgvQL/0fnnFmO4T1bhvWANX6gcnqTjtnKWbTvUMCpGnv2+t+31d7RzyEAYAd4u2fnIhHL6N/Q==
 
 "@heroicons/react@^2.0.13":
-  version "2.0.14"
-  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.14.tgz#9cc23b8978b1829239250b3d7846cff16c58e9f5"
-  integrity sha512-eFL4if6L7woL1fUvk/jjXx4z9NxVESHHrQnEd2qKVelTFTIr/3VLGWdPb0biia9ZVe26P0JSs/xmOlRNur3SrQ==
+  version "2.0.16"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.16.tgz#562883c19ba2690c83380b42a9a5cce39dcbdb4a"
+  integrity sha512-x89rFxH3SRdYaA+JCXwfe+RkE1SFTo9GcOkZettHer71Y3T7V+ogKmfw5CjTazgS3d0ClJ7p1NA+SP7VQLQcLw==
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"

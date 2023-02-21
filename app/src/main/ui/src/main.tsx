@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {BrowserRouter as Router, Navigate, Route, Routes, useLocation} from "react-router-dom";
 import Account from "./pages/account/Account";
-import Users from "./pages/Users";
-import Groups from "./pages/Groups";
+import Users from "./pages/users/Users";
+import Groups from "./pages/groups/Groups";
 import {useUser} from "./hooks/useUser";
 import {Main, Navbar} from "@cloudogu/ces-theme-tailwind";
 import i18n from 'i18next';
@@ -43,7 +43,7 @@ function Nav() {
 
   return (
     <>
-      <Navbar currentPath={location?.pathname}>
+      <Navbar currentPath={location?.pathname ?? ""}>
         <Navbar.LeftAlignedList>
           <Navbar.HomeLink homeUri={"/account"}>
             <div className={"flex items-center mr-2"}>
