@@ -58,5 +58,56 @@
       "ecosystemAdmins"
     ],
     "pwdReset": false
+  },
+  "groups": {
+    "entries": [
+      {
+        "name": "cesAdmin",
+        "description": "This group grants administrative rights to all development applications of cloudogu",
+        "members": [
+          "gary"
+        ]
+      },
+      {
+        "name": "cesManager",
+        "description": "Members of the cesManager group have full access to the cloudogu administration applications",
+        "members": [
+          "gary"
+        ]
+      }
+    ]
+  },
+  "users": {
+    "entries": [
+      {
+        "displayName": "User1",
+        "givenname": "User1",
+        "mail": "User1@cloudogu.com",
+        "memberOf": [
+          "cesAdmin",
+          "cesManager"
+        ],
+        "password": "__dummypassword",
+        "pwdReset": false,
+        "surname": "User1",
+        "username": "User1"
+      },
+      {
+        "displayName": "User2",
+        "givenname": "User2",
+        "mail": "user2@cloudogu.com",
+        "memberOf": [
+          "cesAdmin",
+          "cesManager"
+        ],
+        "password": "__dummypassword",
+        "pwdReset": false,
+        "surname": "User2",
+        "username": "User2"
+      }
+    ],
+    "start": 0,
+    "limit": 20,
+    "totalEntries": 1
   }
 }
