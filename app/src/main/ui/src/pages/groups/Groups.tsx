@@ -3,20 +3,25 @@ import {Button, H1, LoadingIcon, Searchbar, Table} from "@cloudogu/ces-theme-tai
 import {useGroups} from "../../hooks/useGroups";
 import {TrashIcon, PencilIcon} from "@heroicons/react/24/outline";
 import {t} from "../../helpers/i18nHelpers";
-import {Group} from "../../api/GroupsAPI";
+import {Group, GroupsModel} from "../../api/GroupsAPI";
 import {QueryOptions} from "../../hooks/useAPI";
 
 export default function Groups(props: { title: string }) {
     const [query, setQuery] = useState<string>();
     const [opts, setOpts] = useState<QueryOptions>(new QueryOptions(undefined, 20, query));
+    const [page, setPage] = useState<number>(1)
+
+    const changePage = (selectedPage: number) => {
+      setPage(selectedPage)
+    };
     const onSearch = (query: string) => {
         setQuery(query);
-    }
+    };
     const [groups, isLoading] = useGroups(opts);
 
     useEffect(() => {
-        setOpts(new QueryOptions(undefined, 20, query));
-    }, [query]);
+        setOpts(new QueryOptions((page === 1 ? 0 : 20 * (page - 1)), 20, query));
+    }, [query, page]);
 
     useEffect(() => {
         (document.title = props.title)
@@ -46,10 +51,21 @@ export default function Groups(props: { title: string }) {
                     </Table.Head.Tr>
                 </Table.Head>
                 <Table.Body>
-                    {groups.map(createGroupRow)}
+                    {groups?.groups?.map(createGroupRow)}
                 </Table.Body>
             </Table>}
+        {renderPager(changePage, groups)}
     </>;
+}
+
+function renderPager(changePage: (page: number) => void, model?: GroupsModel) {
+    return <div className="flex justify-between">
+        <Button variant={"secondary"}>{"<"}</Button>
+        {[...Array(model?.maxPages)].map((x, i) =>
+            <Button variant={"secondary"} key={i} onClick={() => changePage(i+1)}>{i+1}</Button>
+        )}
+        <Button variant={"secondary"}>{">"}</Button>
+    </div>;
 }
 
 function createGroupRow(group: Group) {
