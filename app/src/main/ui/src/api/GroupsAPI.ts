@@ -1,4 +1,5 @@
 import {Axios} from "./axios";
+import {QueryOptions} from "../hooks/useAPI";
 
 export interface Group {
     name: string;
@@ -7,17 +8,19 @@ export interface Group {
     isSystemGroup: boolean;
 }
 
-type GroupsResponse = {
+interface GroupsResponse {
     entries: Group[];
 }
 
 export type UndeletableGroups = string[];
 
 export const GroupsAPI = {
-    getAll: async (): Promise<Group[]> => {
+    getAll: async (opts?: QueryOptions): Promise<Group[]> => {
         return new Promise<Group[]>(async (resolve, reject) => {
             try {
-                const groupsResponse = await Axios<GroupsResponse>("/groups");
+                const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
+                    params: opts
+                });
                 const undeletableGroups = await Axios<UndeletableGroups>("/groups/undeletable");
                 resolve(mapSystemGroups(groupsResponse.data.entries, undeletableGroups.data));
             } catch (e) {

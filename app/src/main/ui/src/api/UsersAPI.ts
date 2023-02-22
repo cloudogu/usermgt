@@ -1,4 +1,5 @@
 import {Axios} from "./axios";
+import {QueryOptions} from "../hooks/useAPI";
 
 export interface User {
     username: string;
@@ -11,10 +12,12 @@ export interface UsersResponse {
 }
 
 export const UsersAPI = {
-    getAll: async (): Promise<User[]> => {
+    getAll: async (opts?: QueryOptions): Promise<User[]> => {
         return new Promise<User[]>(async (resolve, reject) => {
             try {
-                const usersResponse = await Axios<UsersResponse>("/users");
+                const usersResponse = await Axios.get<UsersResponse>("/users", {
+                    params: opts
+                });
                 resolve(usersResponse.data.entries)
             } catch (e) {
                 reject(e);

@@ -38,7 +38,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 
 function Nav() {
   const location = useLocation();
-  const [user, _] = useUser();
+  const [user] = useUser();
   const {t} = useTranslation();
   return (
     <>

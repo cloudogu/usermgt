@@ -1,7 +1,8 @@
 import {Group, GroupsAPI} from "../api/GroupsAPI";
-import {useAPI} from "./useAPI";
+import {QueryOptions, StateSetter, useAPI} from "./useAPI";
 
-export const useGroups = (): [Group[], boolean] => {
-    const [groups, isLoading] = useAPI<Group[]>(GroupsAPI.getAll)
-    return [groups ?? [], isLoading]
+
+export const useGroups = (opts: QueryOptions): [Group[], boolean, StateSetter<Group[]>] => {
+    const [groups, isLoading, setGroups] = useAPI<Group[]>(GroupsAPI.getAll, opts)
+    return [groups ?? [], isLoading, setGroups]
 }

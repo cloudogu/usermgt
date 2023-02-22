@@ -58,6 +58,7 @@ i18n
                         logoAltText: 'User Management icon: magnifying glass directed to a user icon.',
                     },
                     users: {
+                        create: "Create user",
                         table: {
                             username: user.en.username,
                             displayName: user.en.displayName,
@@ -71,10 +72,11 @@ i18n
                         },
                     },
                     groups: {
-                        name: group.en.name,
-                        description: group.en.description,
-                        users: "Members",
+                        create: "Create group",
                         table: {
+                            name: group.en.name,
+                            description: group.en.description,
+                            users: "Members",
                             systemGroup: "This is a system group and cannot be deleted.",
                             actions: {
                                 edit: "Edit group",
@@ -131,6 +133,7 @@ i18n
                         logoAltText: 'Icon des User Managements: Lupe, die auf einen Benutzer-Icon gerichtet ist.',
                     },
                     users: {
+                        create: "Nutzer anlegen",
                         table: {
                             username: user.de.username,
                             displayName: user.de.displayName,
@@ -144,10 +147,11 @@ i18n
                         },
                     },
                     groups: {
-                        name: group.de.name,
-                        description: group.de.description,
-                        users: "Mitglieder",
+                        create: "Gruppe anlegen",
                         table: {
+                            name: group.de.name,
+                            description: group.de.description,
+                            users: "Mitglieder",
                             systemGroup: "Dies ist eine Systemgruppe und darf nicht gelöscht werden.",
                             actions: {
                                 edit: "Gruppe bearbeiten",
