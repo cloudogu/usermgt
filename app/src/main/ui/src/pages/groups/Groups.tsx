@@ -59,12 +59,14 @@ export default function Groups(props: { title: string }) {
 }
 
 function renderPager(changePage: (page: number) => void, model?: GroupsModel) {
+    const currentPage = model?.currentPage ?? 1;
+    const maxPages = model?.maxPages ?? 1;
     return <div className="flex justify-between">
-        <Button variant={"secondary"}>{"<"}</Button>
+        <Button variant={"secondary"} disabled={currentPage === 1} onClick={() => changePage(currentPage-1)}>{"<"}</Button>
         {[...Array(model?.maxPages)].map((x, i) =>
-            <Button variant={"secondary"} key={i} onClick={() => changePage(i+1)}>{i+1}</Button>
+            <Button variant={currentPage === (i+1) ? "primary" : "secondary"} key={i} onClick={() => changePage(i+1)}>{i+1}</Button>
         )}
-        <Button variant={"secondary"}>{">"}</Button>
+        <Button variant={"secondary"} disabled={maxPages===currentPage} onClick={() => changePage(currentPage+1)}>{">"}</Button>
     </div>;
 }
 
