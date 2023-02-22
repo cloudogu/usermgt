@@ -1,21 +1,7 @@
-import {useEffect, useState} from "react";
+import {useAPI} from "./useAPI";
+import {ApiUser, CasUserAPI} from "../api/CasUserAPI";
 
-const contextPath = process.env.PUBLIC_URL || "/usermgt";
-
-export type ApiUser = {
-  principal: string;
-}
-
-export function useUser(): ApiUser {
-  const [user, setUser] = useState<ApiUser>({principal: ""});
-
-  useEffect(() => {
-    fetch(contextPath + `/api/subject`)
-      .then(async function (response) {
-        const json: ApiUser = await response.json();
-        setUser(json);
-      });
-  }, []);
-
-  return user;
+export const useUser = (): [ApiUser, boolean] => {
+    const [user, isLoading] = useAPI<ApiUser>(CasUserAPI.get)
+    return [user ?? {principal: "default"}, isLoading]
 }

@@ -1,8 +1,6 @@
 import {useEffect, useState} from "react";
-import i18n from 'i18next';
-
-
-const contextPath = process.env.PUBLIC_URL || "/usermgt";
+import {Axios} from "../api/axios";
+import {t} from "../helpers/i18nHelpers";
 
 export type ApiAccount = {
     displayName: string,
@@ -31,10 +29,10 @@ export function useAccount() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        fetch(contextPath + `/api/account`)
+        Axios<ApiAccount>('/account')
             .then(async function (response) {
-                const json: ApiAccount = await response.json();
-                setAccount(json);
+                const account = await response.data;
+                setAccount(account);
                 setIsLoading(false);
             });
     }, []);
@@ -43,14 +41,17 @@ export function useAccount() {
 }
 
 export function saveAccount(account: ApiAccount) {
-    return fetch(contextPath + `/api/account`, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(account, ['displayName', 'password', 'username', 'surname', 'mail', 'givenname', 'memberOf', 'pwdReset']),
-    }).then(async function (response) {
-        if (!response.ok) {
-            throw new Error(i18n.t('editUser.alerts.error') as string)
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await Axios('/account', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                data: JSON.stringify(account, ['displayName', 'password', 'username', 'surname', 'mail', 'givenname', 'memberOf', 'pwdReset']),
+            });
+            console.log(response)
+            resolve(t('editUser.alerts.success') as string);
+        } catch {
+            reject(new Error(t('editUser.alerts.error') as string));
         }
-        return i18n.t('editUser.alerts.success') as string
-    });
+    })
 }

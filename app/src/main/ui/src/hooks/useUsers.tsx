@@ -1,27 +1,7 @@
-import {useEffect, useState} from "react";
+import {useAPI} from "./useAPI";
+import {User, UsersAPI} from "../api/UsersAPI";
 
-const contextPath = process.env.PUBLIC_URL || "/usermgt";
-
-export type User = {
-    username: string;
-    displayName: string;
-    mail: string;
-}
-
-export type UsersResponse = {
-    entries: User[];
-}
-
-export function useUsers(): User[] {
-  const [groups, setGroups] = useState<User[]>([]);
-
-  useEffect(() => {
-    fetch(contextPath + `/api/users`)
-      .then(async function (response) {
-        const json: UsersResponse = await response.json();
-        setGroups(json.entries);
-      });
-  }, []);
-
-  return groups;
+export const useUsers = (): [User[], boolean] => {
+    const [users, isLoading] = useAPI<User[]>(UsersAPI.getAll)
+    return [users ?? [], isLoading]
 }

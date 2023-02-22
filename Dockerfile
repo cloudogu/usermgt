@@ -1,8 +1,15 @@
 FROM timbru31/java-node:8-jdk-18 as builder
+COPY app/pom.xml /usermgt/pom.xml
+COPY app/mvnw /usermgt/mvnw
+COPY app/.mvn /usermgt/.mvn
+RUN set -x \
+    && cd /usermgt \
+    && ./mvnw dependency:resolve-plugins dependency:resolve
+
 COPY app/ /usermgt
 RUN set -x \
- && cd /usermgt \
- && ./mvnw package
+     && cd /usermgt \
+     && ./mvnw package
 
 FROM registry.cloudogu.com/official/java:8u302-3
 

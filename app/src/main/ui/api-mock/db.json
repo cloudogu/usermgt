@@ -115,6 +115,7 @@
     "totalEntries": 2
   },
   "groups_undeletable": [
-    "cesAdmin", "cesManager"
+    "cesAdmin",
+    "cesManager"
   ]
 }

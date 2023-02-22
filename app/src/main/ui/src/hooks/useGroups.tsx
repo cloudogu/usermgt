@@ -1,27 +1,7 @@
-import {useEffect, useState} from "react";
+import {Group, GroupsAPI} from "../api/GroupsAPI";
+import {useAPI} from "./useAPI";
 
-const contextPath = process.env.PUBLIC_URL || "/usermgt";
-
-export type Group = {
-    name: string;
-    description: string;
-    members: string[];
-}
-
-export type GroupsResponse = {
-    entries: Group[];
-}
-
-export function useGroups(): Group[] {
-  const [groups, setGroups] = useState<Group[]>([]);
-
-  useEffect(() => {
-    fetch(contextPath + `/api/groups`)
-      .then(async function (response) {
-        const json: GroupsResponse = await response.json();
-        setGroups(json.entries);
-      });
-  }, []);
-
-  return groups;
+export const useGroups = (): [Group[], boolean] => {
+    const [groups, isLoading] = useAPI<Group[]>(GroupsAPI.getAll)
+    return [groups ?? [], isLoading]
 }

@@ -7,12 +7,12 @@ import Users from "./pages/users/Users";
 import Groups from "./pages/groups/Groups";
 import {useUser} from "./hooks/useUser";
 import {Main, Navbar} from "@cloudogu/ces-theme-tailwind";
-import i18n from 'i18next';
 import usermgtIcon from './assets/usermgt_icon_detailed.svg';
 
 // import i18n (needs to be bundled)
 import './i18n';
 import {useTranslation} from "react-i18next";
+import {t} from "./helpers/i18nHelpers";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -27,9 +27,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             element={<Navigate to={"/account"}></Navigate>}
           />
           <Route index path="/account"
-                 element={<Account title={i18n.t("pages.account") + " | User Management"}/>}/>
-          <Route path="/users" element={<Users title={i18n.t("pages.users") + " | User Management"}/>}/>
-          <Route path="/groups" element={<Groups title={i18n.t("pages.groups") + " | User Management"}/>}/>
+                 element={<Account title={t("pages.account") + " | User Management"}/>}/>
+          <Route path="/users" element={<Users title={t("pages.users") + " | User Management"}/>}/>
+          <Route path="/groups" element={<Groups title={t("pages.groups") + " | User Management"}/>}/>
         </Routes>
       </Main>
     </Router>
@@ -38,9 +38,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 
 function Nav() {
   const location = useLocation();
-  const user = useUser();
+  const [user, _] = useUser();
   const {t} = useTranslation();
-
   return (
     <>
       <Navbar currentPath={location?.pathname ?? ""}>
