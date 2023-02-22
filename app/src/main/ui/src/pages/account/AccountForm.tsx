@@ -1,4 +1,4 @@
-import {Alert, Button, Form, H1, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {Alert, Button, Form, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import {ApiAccount, saveAccount} from "../../hooks/useAccount";
 import {useState} from "react";
 import {t} from "../../helpers/i18nHelpers";
@@ -52,7 +52,7 @@ export default function AccountForm(props: AccountFormProps) {
   });
 
   return <Form handler={handler}>
-    <H1 className="uppercase">Account</H1>
+
     {alert}
     <Form.ValidatedTextInput type={"text"} name={"username"}
                         disabled={true}>{t('editUser.labels.username')}</Form.ValidatedTextInput>
