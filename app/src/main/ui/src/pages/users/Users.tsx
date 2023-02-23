@@ -1,25 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Button, H1, LoadingIcon, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
 import {useUsers} from "../../hooks/useUsers";
 import {TrashIcon, PencilIcon} from "@heroicons/react/24/outline";
 import {t} from "../../helpers/i18nHelpers";
-import {QueryOptions} from "../../hooks/useAPI";
 import {User} from "../../api/UsersAPI";
+import {useSetPageTitle} from "../../hooks/useSetPageTitle";
+import {useFilter} from "../../hooks/useFilter";
 
 export default function Users(props: { title: string }) {
-    const [query, setQuery] = useState<string>();
-    const [opts, setOpts] = useState<QueryOptions>(new QueryOptions(undefined, 20, query));
+    useSetPageTitle(props.title)
+    const [setQuery, _, opts] = useFilter();
     const onSearch = (query: string) => {
         setQuery(query);
     }
     const [users, isLoading] = useUsers(opts)
-    useEffect(() => {
-        setOpts(new QueryOptions(undefined, 20, query));
-    }, [query]);
-
-    useEffect(() => {
-        (document.title = props.title)
-    }, []);
 
     return <>
         <div className="flex justify-between">

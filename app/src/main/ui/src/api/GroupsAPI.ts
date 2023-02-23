@@ -10,6 +10,7 @@ export interface Group {
 
 export interface GroupsModel {
     groups: Group[];
+    // pagination: PaginationModel;
     currentPage: number;
     maxPages: number;
 }

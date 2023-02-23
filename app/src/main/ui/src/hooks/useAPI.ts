@@ -1,5 +1,7 @@
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 
+export const DEFAULT_QUERY_LIMIT = 20;
+
 export class QueryOptions {
     private start?: number;
     private limit?: number;
@@ -9,6 +11,10 @@ export class QueryOptions {
         this.start = start;
         this.limit = limit;
         this.query = query;
+    }
+
+    public toString = () : string => {
+        return `start: ${this.start} | limit: ${this.limit} | query: ${this.query}`;
     }
 }
 
