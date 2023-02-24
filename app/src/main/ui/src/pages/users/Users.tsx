@@ -1,19 +1,30 @@
 import React from "react";
 import {Button, H1, LoadingIcon, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
 import {useUsers} from "../../hooks/useUsers";
-import {TrashIcon, PencilIcon} from "@heroicons/react/24/outline";
 import {t} from "../../helpers/i18nHelpers";
-import {User} from "../../api/UsersAPI";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 import {useFilter} from "../../hooks/useFilter";
+import {User, UsersService} from "../../services/Users";
+import {useUser} from "../../hooks/useUser";
+import {CasUser} from "../../api/CasUserAPI";
+import {DeleteButton, EditButton} from "../../components/DeleteButton";
 
 export default function Users(props: { title: string }) {
     useSetPageTitle(props.title)
-    const [setQuery, _, opts] = useFilter();
+    const [setQuery, setPage, refetch, opts] = useFilter();
+    const [usersModel, isLoading] = useUsers(opts)
+    const [casUser, _] = useUser();
+    const changePage = (selectedPage: number) => {
+        setPage(selectedPage)
+    };
     const onSearch = (query: string) => {
         setQuery(query);
+    };
+
+    const onDelete = async (groupName: string) => {
+        await UsersService.delete(groupName)
+        refetch();
     }
-    const [users, isLoading] = useUsers(opts)
 
     return <>
         <div className="flex justify-between">
@@ -38,13 +49,19 @@ export default function Users(props: { title: string }) {
                     </Table.Head.Tr>
                 </Table.Head>
                 <Table.Body>
-                    {users.map(createUsersRow)}
+                    {usersModel.users.map(user => createUsersRow(user, casUser, onDelete))}
                 </Table.Body>
+                <Table.Foot>
+                    <Table.Foot.Pagination
+                        currentPage={usersModel.pagination.current ?? 1}
+                        pageCount={usersModel.pagination.pageCount ?? 1}
+                        onPageChange={changePage}/>
+                </Table.Foot>
             </Table>)}
     </>;
 }
 
-function createUsersRow(user: User) {
+function createUsersRow(user: User, casUser: CasUser, onDelete: (userName: string) => void) {
     return <Table.Body.Tr key={user.username}>
         <Table.Body.Td>
             <span className="font-bold">{user.username}</span>
@@ -57,12 +74,10 @@ function createUsersRow(user: User) {
             </a>
         </Table.Body.Td>
         <Table.Body.Td className="flex justify-center">
-            <button className={"text-text-primary hover:text-text-primary-hover mr-2.5"}>
-                <PencilIcon className={"w-6 h-6"}/>
-            </button>
-            <button className={"text-text-primary hover:text-text-primary-hover"}>
-                <TrashIcon className={"w-6 h-6"}/>
-            </button>
+            <EditButton />
+            <DeleteButton
+                disabled={user.username === casUser.principal}
+                onClick={() => onDelete(user.username)} />
         </Table.Body.Td>
     </Table.Body.Tr>;
 }

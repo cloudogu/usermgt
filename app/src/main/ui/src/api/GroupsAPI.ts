@@ -1,19 +1,7 @@
 import {Axios} from "./axios";
 import {QueryOptions} from "../hooks/useAPI";
+import {Group} from "../services/Groups";
 
-export interface Group {
-    name: string;
-    description: string;
-    members: string[];
-    isSystemGroup: boolean;
-}
-
-export interface GroupsModel {
-    groups: Group[];
-    // pagination: PaginationModel;
-    currentPage: number;
-    maxPages: number;
-}
 
 interface GroupsResponse {
     entries: Group[];
@@ -22,42 +10,49 @@ interface GroupsResponse {
     totalEntries: number;
 }
 
-export type UndeletableGroups = string[];
+export type UndeletableGroupsResponse = string[];
 
 export const GroupsAPI = {
-    getAll: async (opts?: QueryOptions): Promise<GroupsModel> => {
-        return new Promise<GroupsModel>(async (resolve, reject) => {
+    async get(opts?: QueryOptions): Promise<GroupsResponse> {
+        return new Promise<GroupsResponse>(async (resolve, reject) => {
             try {
                 const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
                     params: opts
                 });
-                const undeletableGroups = await Axios<UndeletableGroups>("/groups/undeletable");
-                const groups = mapSystemGroups(groupsResponse.data.entries, undeletableGroups.data);
-                const [curr, max] = getPageInfo(groupsResponse.data.start, groupsResponse.data.limit, groupsResponse.data.totalEntries)
-                let model: GroupsModel = {
-                    groups: groups,
-                    currentPage: curr,
-                    maxPages: max
+                if (!groupsResponse.data) {
+                    reject(new Error("failed to load group data: " + groupsResponse.status));
                 }
-                resolve(model);
+                resolve(groupsResponse.data)
+            } catch (e) {
+                reject(e);
+            }
+        })
+    },
+    async undeletable(): Promise<UndeletableGroupsResponse> {
+        return new Promise<UndeletableGroupsResponse>(async (resolve, reject) => {
+            try {
+                const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable");
+                if (!undeletableGroupsResponse.data) {
+                    reject(new Error("failed to load undeletable groups information: " + undeletableGroupsResponse.status));
+                }
+                resolve(undeletableGroupsResponse.data);
+            } catch (e) {
+                reject(e)
+            }
+        })
+
+    },
+    async delete(groupName: string): Promise<void> {
+        return new Promise( async (resolve, reject) => {
+            try {
+                const response = await Axios.delete(`/groups/${groupName}`);
+                if (response.status !== 204) {
+                    reject(new Error(`failed to delete group '${groupName}': ${response.status}`))
+                }
+                resolve()
             } catch (e) {
                 reject(e);
             }
         })
     }
-}
-
-const getPageInfo = (start: number, limit: number, all: number): [number, number] => {
-    const pages = Math.floor(all / limit) + 1;
-    const currentPage = Math.floor(start / limit) + 1
-    return [currentPage, pages]
-}
-
-const mapSystemGroups = (groups: Group[], undeletableGroups: UndeletableGroups): Group[] =>{
-     return groups.map(grp => {
-        if (undeletableGroups.includes(grp.name)) {
-            grp.isSystemGroup = true;
-        }
-        return grp
-    });
 }

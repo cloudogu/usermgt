@@ -1,11 +1,9 @@
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 
-export const DEFAULT_QUERY_LIMIT = 20;
-
 export class QueryOptions {
-    private start?: number;
-    private limit?: number;
-    private query?: string;
+    private readonly start?: number;
+    private readonly limit?: number;
+    private readonly query?: string;
 
     constructor(start?: number, limit?: number, query?: string) {
         this.start = start;

@@ -163,17 +163,17 @@
   "users": {
     "entries": [
       {
-        "displayName": "User1",
-        "givenname": "User1",
-        "mail": "User1@cloudogu.com",
+        "displayName": "localtestadmin",
+        "givenname": "localtestadmin",
+        "mail": "localtestadmin@cloudogu.com",
         "memberOf": [
           "cesAdmin",
           "cesManager"
         ],
         "password": "__dummypassword",
         "pwdReset": false,
-        "surname": "User1",
-        "username": "User1"
+        "surname": "localtestadmin",
+        "username": "localtestadmin"
       },
       {
         "displayName": "User2",

@@ -1,24 +1,39 @@
 import {Axios} from "./axios";
 import {QueryOptions} from "../hooks/useAPI";
+import {User} from "../services/Users";
 
-export interface User {
-    username: string;
-    displayName: string;
-    mail: string;
-}
 
 export interface UsersResponse {
     entries: User[];
+    start: number;
+    limit: number;
+    totalEntries: number;
 }
 
 export const UsersAPI = {
-    getAll: async (opts?: QueryOptions): Promise<User[]> => {
-        return new Promise<User[]>(async (resolve, reject) => {
+    async get(opts?: QueryOptions): Promise<UsersResponse> {
+        return new Promise<UsersResponse>(async (resolve, reject) => {
             try {
                 const usersResponse = await Axios.get<UsersResponse>("/users", {
                     params: opts
                 });
-                resolve(usersResponse.data.entries)
+                if(!usersResponse.data) {
+                    reject(new Error("failed to load user data: " + usersResponse.status))
+                }
+                resolve(usersResponse.data)
+            } catch (e) {
+                reject(e);
+            }
+        })
+    },
+    async delete(userName: string): Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                const usersResponse = await Axios.delete<UsersResponse>(`/users/${userName}`);
+                if(!usersResponse.data) {
+                    reject(new Error("failed to load user data: " + usersResponse.status))
+                }
+                resolve()
             } catch (e) {
                 reject(e);
             }
