@@ -44,7 +44,8 @@ export default function Users(props: { title: string }) {
             <div className="flex justify-between py-1">
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                         disabled={isLoading}>{t("users.create")}</Button>
-                <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch} className="mt-5 mb-2.5"/>
+                <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
+                           className="mt-5 mb-2.5"  disabled={isLoading}/>
             </div>
         </div>
         {notification}
