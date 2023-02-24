@@ -10,6 +10,7 @@ import {DeleteButton, EditButton} from "../../components/DeleteButton";
 export default function Groups(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
+    const [groupsModel, isLoading] = useGroups(opts);
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };
@@ -19,9 +20,13 @@ export default function Groups(props: { title: string }) {
 
     const onDelete = async (groupName: string) => {
         await GroupsService.delete(groupName)
-        refetch();
+        const isLastItemOnPage = (groupsModel?.groups.length ?? 0) === 1;
+        if (isLastItemOnPage){
+            setPage((groupsModel?.pagination.current ?? 2) - 1);
+        } else {
+            refetch();
+        }
     }
-    const [groups, isLoading] = useGroups(opts);
 
     return <>
         <div className="flex justify-between">
@@ -48,12 +53,12 @@ export default function Groups(props: { title: string }) {
                     </Table.Head.Tr>
                 </Table.Head>
                 <Table.Body key={"table-body"}>
-                    {groups?.groups?.map(group => createGroupRow(group, onDelete))}
+                    {groupsModel?.groups?.map(group => createGroupRow(group, onDelete))}
                 </Table.Body>
                 <Table.Foot>
                     <Table.Foot.Pagination
-                        currentPage={groups?.pagination.current ?? 1}
-                        pageCount={groups?.pagination.pageCount ?? 1}
+                        currentPage={groupsModel?.pagination.current ?? 1}
+                        pageCount={groupsModel?.pagination.pageCount ?? 1}
                         onPageChange={changePage}/>
                 </Table.Foot>
             </Table>}

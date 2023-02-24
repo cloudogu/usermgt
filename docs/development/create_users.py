@@ -12,15 +12,15 @@ url = 'https://192.168.56.2/usermgt/api/users'
 basic = HTTPBasicAuth('gary', 'admin')
 headers = {"Content-Type": "application/json; charset=UTF-8"}
 
-def create_user(id):
-    user = f'user{id}'
-    mail = f'{user}@cloudogu.com'
+def create_user(new_id):
+    new_user = f'user{new_id}'
+    new_mail = f'{new_user}@cloudogu.com'
     return {
-	"username": user,
-	"givenname": user,
-	"surname": user,
-	"displayName": user,
-	"mail": mail,
+	"username": new_user,
+	"givenname": new_user,
+	"surname": new_user,
+	"displayName": new_user,
+	"mail": new_mail,
         "password": "admin",
         "pwdReset": False,
         "memberOf": []

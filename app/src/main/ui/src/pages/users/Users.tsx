@@ -13,7 +13,7 @@ export default function Users(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [usersModel, isLoading] = useUsers(opts)
-    const [casUser, _] = useUser();
+    const [casUser] = useUser();
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };
@@ -23,7 +23,12 @@ export default function Users(props: { title: string }) {
 
     const onDelete = async (groupName: string) => {
         await UsersService.delete(groupName)
-        refetch();
+        const isLastItemOnPage = (usersModel?.users.length ?? 0) === 1;
+        if (isLastItemOnPage){
+            setPage((usersModel?.pagination.current ?? 2) - 1);
+        } else {
+            refetch();
+        }
     }
 
     return <>

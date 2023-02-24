@@ -30,8 +30,8 @@ export const UsersAPI = {
         return new Promise<void>(async (resolve, reject) => {
             try {
                 const usersResponse = await Axios.delete<UsersResponse>(`/users/${userName}`);
-                if(!usersResponse.data) {
-                    reject(new Error("failed to load user data: " + usersResponse.status))
+                if(usersResponse.status !== 204) {
+                    reject(new Error("failed to delete user: " + usersResponse.status))
                 }
                 resolve()
             } catch (e) {

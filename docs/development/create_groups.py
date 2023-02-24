@@ -12,11 +12,11 @@ url = 'https://192.168.56.2/usermgt/api/groups'
 basic = HTTPBasicAuth('gary', 'admin')
 headers = {"Content-Type": "application/json; charset=UTF-8"}
 
-def create_group(id):
-    group = f'group{id}'
+def create_group(new_id):
+    new_group = f'group{new_id}'
     return {
-	"name": group,
-	"description": f'this is group {group}',
+	"name": new_group,
+	"description": f'this is group {new_group}',
     }
 
 count = 5
