@@ -8,7 +8,7 @@ from requests.auth import HTTPBasicAuth
 
 urllib3.disable_warnings()
 
-url = 'https://localhost/usermgt/api/groups'
+url = 'https://192.168.56.2/usermgt/api/groups'
 basic = HTTPBasicAuth('gary', 'admin')
 headers = {"Content-Type": "application/json; charset=UTF-8"}
 
