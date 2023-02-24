@@ -6,28 +6,33 @@ import {Group, GroupsService} from "../../services/Groups";
 import {useFilter} from "../../hooks/useFilter";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
+import {useChangeNotification} from "../../hooks/useChangeNotification";
 
 export default function Groups(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [groupsModel, isLoading] = useGroups(opts);
+    const [notification, success, error] = useChangeNotification();
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };
     const onSearch = (query: string) => {
         setQuery(query);
     };
-
+    const updatePage = () => (groupsModel?.groups.length ?? 0) === 1
+        && setPage((groupsModel?.pagination.current ?? 2) - 1)
+        || refetch();
     const onDelete = async (groupName: string) => {
-        await GroupsService.delete(groupName)
-        const isLastItemOnPage = (groupsModel?.groups.length ?? 0) === 1;
-        if (isLastItemOnPage){
-            setPage((groupsModel?.pagination.current ?? 2) - 1);
-        } else {
-            refetch();
+        try {
+            await GroupsService.delete(groupName);
+            updatePage();
+            success(t("groups.notification.success", {groupName: groupName}));
+        } catch (e) {
+            updatePage();
+            error(t("groups.notification.error", {groupName: groupName}));
         }
-    }
 
+    }
     return <>
         <div className="flex justify-between">
             <H1 className="uppercase">{t("pages.groups")}</H1>
@@ -38,6 +43,7 @@ export default function Groups(props: { title: string }) {
                            className="mt-5 mb-2.5"/>
             </div>
         </div>
+        {notification}
         {isLoading ?
             <div className={"flex justify-center w-[100%] mt-4"}>
                 <LoadingIcon className={"w-64 h-64"}/>

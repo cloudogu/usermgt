@@ -8,12 +8,14 @@ import {User, UsersService} from "../../services/Users";
 import {useUser} from "../../hooks/useUser";
 import {CasUser} from "../../api/CasUserAPI";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
+import {useChangeNotification} from "../../hooks/useChangeNotification";
 
 export default function Users(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [usersModel, isLoading] = useUsers(opts)
     const [casUser] = useUser();
+    const [notification, success, error] = useChangeNotification();
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };
@@ -21,13 +23,18 @@ export default function Users(props: { title: string }) {
         setQuery(query);
     };
 
-    const onDelete = async (groupName: string) => {
-        await UsersService.delete(groupName)
-        const isLastItemOnPage = (usersModel?.users.length ?? 0) === 1;
-        if (isLastItemOnPage){
-            setPage((usersModel?.pagination.current ?? 2) - 1);
-        } else {
-            refetch();
+    const updatePage = () => (usersModel?.users.length ?? 0) === 1
+        && setPage((usersModel?.pagination.current ?? 2) - 1)
+        || refetch();
+
+    const onDelete = async (username: string) => {
+        try {
+            await UsersService.delete(username);
+            updatePage();
+            success(t("users.notification.success", {username: username}));
+        } catch (e) {
+            updatePage();
+            error(t("users.notification.error", {username: username}));
         }
     }
 
@@ -35,10 +42,12 @@ export default function Users(props: { title: string }) {
         <div className="flex justify-between">
             <H1 className="uppercase">{t("pages.users")}</H1>
             <div className="flex justify-between py-1">
-                <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5" disabled={isLoading}>{t("users.create")}</Button>
+                <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
+                        disabled={isLoading}>{t("users.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch} className="mt-5 mb-2.5"/>
             </div>
         </div>
+        {notification}
         {isLoading ?
             <div className={"flex justify-center w-[100%] mt-4"}>
                 <LoadingIcon className={"w-64 h-64"}/>
@@ -79,10 +88,11 @@ function createUsersRow(user: User, casUser: CasUser, onDelete: (userName: strin
             </a>
         </Table.Body.Td>
         <Table.Body.Td className="flex justify-center">
-            <EditButton />
+            <EditButton title={t("users.table.actions.edit")}/>
             <DeleteButton
                 disabled={user.username === casUser.principal}
-                onClick={() => onDelete(user.username)} />
+                title={t("users.table.actions.delete")}
+                onClick={() => onDelete(user.username)}/>
         </Table.Body.Td>
     </Table.Body.Tr>;
 }

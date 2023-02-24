@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {ValidationError} from "yup";
-import {useTranslation} from "react-i18next";
+import {t} from "../helpers/i18nHelpers";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -24,8 +24,6 @@ export function useValidationSchema(): any {
 }
 
 function createValidationSchema(passwordPolicy: PasswordPolicy) {
-  const {t} = useTranslation<string>();
-
   const passwordValidationFunction = (value: any) => {
     if (value === "__dummypassword") {
       return true;
@@ -38,7 +36,7 @@ function createValidationSchema(passwordPolicy: PasswordPolicy) {
       if (!matches) {
         let translatedErrorMessage: string = t(`editUser.errors.password.${rule.Name}`);
         for (const variable of rule.Variables) {
-          translatedErrorMessage = translatedErrorMessage.replace(`{{${variable.Name}}}`, variable.Value)
+          translatedErrorMessage = t(translatedErrorMessage, {[variable.Name]: variable.Value})
         }
         errors.push(new ValidationError(translatedErrorMessage, "password", "password"));
       }

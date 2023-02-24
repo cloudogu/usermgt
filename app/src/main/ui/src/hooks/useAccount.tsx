@@ -41,17 +41,16 @@ export function useAccount() {
 }
 
 export function saveAccount(account: ApiAccount) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<string>(async (resolve, reject) => {
         try {
-            const response = await Axios('/account', {
+            await Axios('/account', {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 data: JSON.stringify(account, ['displayName', 'password', 'username', 'surname', 'mail', 'givenname', 'memberOf', 'pwdReset']),
             });
-            console.log(response)
-            resolve(t('editUser.alerts.success') as string);
+            resolve(t('editUser.alerts.success'));
         } catch {
-            reject(new Error(t('editUser.alerts.error') as string));
+            reject(new Error(t('editUser.alerts.error')));
         }
     })
 }

@@ -70,6 +70,10 @@ i18n
                                 deleteAria: "remove"
                             }
                         },
+                        notification: {
+                            success: "The user '{{username}}' was deleted successfully.",
+                            error: "The user '{{username}}' could not be deleted."
+                        },
                     },
                     groups: {
                         create: "Create group",
@@ -84,6 +88,10 @@ i18n
                                 delete: "Remove group",
                                 deleteAria: "remove"
                             }
+                        },
+                        notification: {
+                            success: "The group '{{groupName}}' was deleted successfully.",
+                            error: "The group '{{groupName}}' could not be deleted."
                         },
                     },
                     editUser: {
@@ -145,6 +153,10 @@ i18n
                                 deleteAria: "entfernen"
                             }
                         },
+                        notification: {
+                            success: "Der Nutzer '{{username}}' wurde erfolgreich gelöscht.",
+                            error: "Der Nutzer '{{username}}' konnte nicht gelöscht werden."
+                        },
                     },
                     groups: {
                         create: "Gruppe anlegen",
@@ -159,6 +171,10 @@ i18n
                                 delete: "Gruppe entfernen",
                                 deleteAria: "entfernen"
                             }
+                        },
+                        notification: {
+                            success: "Die Gruppe '{{groupName}}' wurde erfolgreich gelöscht.",
+                            error: "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden."
                         },
                     },
                     editUser: {
