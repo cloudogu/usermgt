@@ -9,6 +9,8 @@ import {useUser} from "../../hooks/useUser";
 import {CasUser} from "../../api/CasUserAPI";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
+import {useConfirmation} from "../../hooks/useConfirmation";
+import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 
 export default function Users(props: { title: string }) {
     useSetPageTitle(props.title)
@@ -16,6 +18,7 @@ export default function Users(props: { title: string }) {
     const [usersModel, isLoading] = useUsers(opts)
     const [casUser] = useUser();
     const [notification, success, error] = useChangeNotification();
+    const [open, setOpen, username, setUsername] = useConfirmation();
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };
@@ -27,6 +30,10 @@ export default function Users(props: { title: string }) {
         && setPage((usersModel?.pagination.current ?? 2) - 1)
         || refetch();
 
+    const openConfirmationDialog = (groupName: string): void => {
+        setOpen(true);
+        setUsername(groupName);
+    }
     const onDelete = async (username: string) => {
         try {
             await UsersService.delete(username);
@@ -36,6 +43,7 @@ export default function Users(props: { title: string }) {
             updatePage();
             error(t("users.notification.error", {username: username}));
         }
+        setOpen(false);
     }
 
     return <>
@@ -49,6 +57,15 @@ export default function Users(props: { title: string }) {
             </div>
         </div>
         {notification}
+        <ConfirmationDialog open={open ?? false}
+                            onClose={() => setOpen(false)}
+                            onConfirm={async () => {
+                                await onDelete(username ?? "")
+                                setOpen(false);
+                            }}
+                            className="-relative z-[51] sm:w-3/4 md:w-1/2"
+                            title={t("users.confirmation.title")}
+                            message={t("users.confirmation.message", {username: username})}/>
         {isLoading ?
             <div className={"flex justify-center w-[100%] mt-4"}>
                 <LoadingIcon className={"w-64 h-64"}/>
@@ -64,7 +81,7 @@ export default function Users(props: { title: string }) {
                     </Table.Head.Tr>
                 </Table.Head>
                 <Table.Body>
-                    {usersModel.users.map(user => createUsersRow(user, casUser, onDelete))}
+                    {usersModel.users.map(user => createUsersRow(user, casUser, openConfirmationDialog))}
                 </Table.Body>
                 <Table.Foot>
                     <Table.Foot.Pagination

@@ -74,6 +74,10 @@ i18n
                             success: "The user '{{username}}' was deleted successfully.",
                             error: "The user '{{username}}' could not be deleted."
                         },
+                        confirmation: {
+                            title: "Remove user",
+                            message: "Remove user {{username}}?"
+                        },
                     },
                     groups: {
                         create: "Create group",
@@ -92,6 +96,10 @@ i18n
                         notification: {
                             success: "The group '{{groupName}}' was deleted successfully.",
                             error: "The group '{{groupName}}' could not be deleted."
+                        },
+                        confirmation: {
+                            title: "Remove group",
+                            message: "Remove group {{groupName}}?"
                         },
                     },
                     editUser: {
@@ -127,9 +135,14 @@ i18n
                                 special: 'The password must contain at least 1 special character.',
                             }
                         },
+                    },
+                    modal: {
+                        confirm: "Confirm",
+                        cancel: "Cancel"
                     }
                 }
-            }, de: {
+            },
+            de: {
                 translation: {
                     pages: {
                         account: 'Account',
@@ -157,6 +170,10 @@ i18n
                             success: "Der Nutzer '{{username}}' wurde erfolgreich gelöscht.",
                             error: "Der Nutzer '{{username}}' konnte nicht gelöscht werden."
                         },
+                        confirmation: {
+                            title: "Nutzer entfernen",
+                            message: "Soll der Nutzer {{username}} entfernt werden?"
+                        },
                     },
                     groups: {
                         create: "Gruppe anlegen",
@@ -175,6 +192,10 @@ i18n
                         notification: {
                             success: "Die Gruppe '{{groupName}}' wurde erfolgreich gelöscht.",
                             error: "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden."
+                        },
+                        confirmation: {
+                          title: "Gruppe entfernen",
+                          message: "Soll die Gruppe {{groupName}} entfernt werden?"
                         },
                     },
                     editUser: {
@@ -210,6 +231,10 @@ i18n
                                 special: 'Das Passwort muss mindestens ein Sonderzeichen enthalten.',
                             }
                         },
+                    },
+                    modal: {
+                        confirm: "Bestätigen",
+                        cancel: "Abbrechen"
                     }
                 }
             },

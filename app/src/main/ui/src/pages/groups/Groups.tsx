@@ -7,12 +7,16 @@ import {useFilter} from "../../hooks/useFilter";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
+import {ConfirmationDialog} from "../../components/ConfirmationDialog";
+import {useConfirmation} from "../../hooks/useConfirmation";
 
 export default function Groups(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [groupsModel, isLoading] = useGroups(opts);
     const [notification, success, error] = useChangeNotification();
+    const [open, setOpen, group, setGroup] = useConfirmation();
+
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };
@@ -22,6 +26,11 @@ export default function Groups(props: { title: string }) {
     const updatePage = () => (groupsModel?.groups.length ?? 0) === 1
         && setPage((groupsModel?.pagination.current ?? 2) - 1)
         || refetch();
+
+    const openConfirmationDialog = (groupName: string): void => {
+        setOpen(true);
+        setGroup(groupName);
+    }
     const onDelete = async (groupName: string) => {
         try {
             await GroupsService.delete(groupName);
@@ -31,7 +40,7 @@ export default function Groups(props: { title: string }) {
             updatePage();
             error(t("groups.notification.error", {groupName: groupName}));
         }
-
+        setOpen(false);
     }
     return <>
         <div className="flex justify-between">
@@ -44,6 +53,15 @@ export default function Groups(props: { title: string }) {
             </div>
         </div>
         {notification}
+        <ConfirmationDialog open={open ?? false}
+                            onClose={() => setOpen(false)}
+                            onConfirm={async () => {
+                                await onDelete(group ?? "")
+                                setOpen(false);
+                            }}
+                            className="-relative z-[51] sm:w-3/4 md:w-1/2"
+                            title={t("groups.confirmation.title")}
+                            message={t("groups.confirmation.message", {groupName: group})}/>
         {isLoading ?
             <div className={"flex justify-center w-[100%] mt-4"}>
                 <LoadingIcon className={"w-64 h-64"}/>
@@ -59,7 +77,7 @@ export default function Groups(props: { title: string }) {
                     </Table.Head.Tr>
                 </Table.Head>
                 <Table.Body key={"table-body"}>
-                    {groupsModel?.groups?.map(group => createGroupRow(group, onDelete))}
+                    {groupsModel?.groups?.map(group => createGroupRow(group, openConfirmationDialog))}
                 </Table.Body>
                 <Table.Foot>
                     <Table.Foot.Pagination
@@ -71,7 +89,7 @@ export default function Groups(props: { title: string }) {
     </>;
 }
 
-function createGroupRow(group: Group, onDelete: (groupName: string) => {}) {
+function createGroupRow(group: Group, onDelete: (groupName: string) => void) {
     return <Table.Body.Tr key={group.name}>
         <Table.Body.Td>
             <span className="font-bold">{group.name}</span>
@@ -88,10 +106,10 @@ function createGroupRow(group: Group, onDelete: (groupName: string) => {}) {
         </Table.Body.Td>
         <Table.Body.Td className="flex justify-center">
             <EditButton aria-label={t("groups.table.actions.editAria")}
-                    title={t("groups.table.actions.edit")} />
+                        title={t("groups.table.actions.edit")}/>
             <DeleteButton aria-label={t("groups.table.actions.deleteAria")} disabled={group.isSystemGroup}
-                    title={t("groups.table.actions.delete")}
-                    onClick={() => onDelete(group.name)} />
+                          title={t("groups.table.actions.delete")}
+                          onClick={() => onDelete(group.name)}/>
         </Table.Body.Td>
     </Table.Body.Tr>
 }
