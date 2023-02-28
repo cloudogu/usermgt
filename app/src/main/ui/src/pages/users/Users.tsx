@@ -12,13 +12,15 @@ import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 
+const FIRST_PAGE = 1;
+
 export default function Users(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [usersModel, isLoading] = useUsers(opts)
     const [casUser] = useUser();
     const [notification, success, error] = useChangeNotification();
-    const [open, setOpen, username, setUsername] = useConfirmation();
+    const [open, toggleModal, username, setUsername] = useConfirmation();
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };
@@ -27,11 +29,11 @@ export default function Users(props: { title: string }) {
     };
 
     const updatePage = () => (usersModel?.users.length ?? 0) === 1
-        && setPage((usersModel?.pagination.current ?? 2) - 1)
+        && setPage(Math.max((usersModel?.pagination.current ?? 2) - 1, FIRST_PAGE))
         || refetch();
 
     const openConfirmationDialog = (groupName: string): void => {
-        setOpen(true);
+        toggleModal(true);
         setUsername(groupName);
     }
     const onDelete = async (username: string) => {
@@ -43,7 +45,7 @@ export default function Users(props: { title: string }) {
             updatePage();
             error(t("users.notification.error", {username: username}));
         }
-        setOpen(false);
+        toggleModal(false);
     }
 
     return <>
@@ -53,43 +55,53 @@ export default function Users(props: { title: string }) {
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                         disabled={isLoading}>{t("users.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                           className="mt-5 mb-2.5"  disabled={isLoading}/>
+                           className="mt-5 mb-2.5" disabled={isLoading} startValueSearch={opts.queryString}/>
             </div>
         </div>
         {notification}
         <ConfirmationDialog open={open ?? false}
-                            onClose={() => setOpen(false)}
+                            onClose={() => toggleModal(false)}
                             onConfirm={async () => {
                                 await onDelete(username ?? "")
-                                setOpen(false);
                             }}
                             className="-relative z-[51] sm:w-3/4 md:w-1/2"
                             title={t("users.confirmation.title")}
                             message={t("users.confirmation.message", {username: username})}/>
-        {isLoading ?
-            <div className={"flex justify-center w-[100%] mt-4"}>
-                <LoadingIcon className={"w-64 h-64"}/>
-            </div>
-            :
-            (<Table className="mt-4 text-sm">
-                <Table.Head>
-                    <Table.Head.Tr className={"uppercase"}>
-                        <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>
-                        <Table.Head.Th>{t("users.table.displayName")}</Table.Head.Th>
-                        <Table.Head.Th>{t("users.table.email")}</Table.Head.Th>
-                        <Table.Head.Th className="w-0"></Table.Head.Th>
-                    </Table.Head.Tr>
-                </Table.Head>
+        <Table className="mt-4 text-sm">
+            <Table.Head>
+                <Table.Head.Tr className={"uppercase"}>
+                    <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>
+                    <Table.Head.Th>{t("users.table.displayName")}</Table.Head.Th>
+                    <Table.Head.Th>{t("users.table.email")}</Table.Head.Th>
+                    <Table.Head.Th className="w-0"></Table.Head.Th>
+                </Table.Head.Tr>
+            </Table.Head>
+            {isLoading ?
                 <Table.Body>
-                    {usersModel.users.map(user => createUsersRow(user, casUser, openConfirmationDialog))}
+                    <Table.Body.Tr>
+                        <Table.Body.Td colSpan={4}>
+                            <div className={"flex justify-center w-full mt-4"}>
+                                <LoadingIcon className={"w-64 h-64"}/>
+                            </div>
+                        </Table.Body.Td>
+                    </Table.Body.Tr>
                 </Table.Body>
-                <Table.Foot>
-                    <Table.Foot.Pagination
-                        currentPage={usersModel.pagination.current ?? 1}
-                        pageCount={usersModel.pagination.pageCount ?? 1}
-                        onPageChange={changePage}/>
-                </Table.Foot>
-            </Table>)}
+                :
+                <>
+                    <Table.Body>
+                        {(usersModel.users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog))}
+                    </Table.Body>
+                    {usersModel?.users?.length > 0 ?
+                    <Table.Foot>
+                        <Table.Foot.Pagination
+                            currentPage={usersModel.pagination.current ?? 1}
+                            pageCount={usersModel.pagination.pageCount ?? 1}
+                            onPageChange={changePage}/>
+                    </Table.Foot> : <></>
+                    }
+                </>
+            }
+        </Table>
     </>;
 }
 

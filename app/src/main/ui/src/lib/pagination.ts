@@ -16,7 +16,7 @@ export const calcPageStart = (currentPage: number): number => {
 }
 
 export const createPaginationData = (start: number, limit: number, all: number): PaginationData => {
-    const pages = Math.ceil(all / limit);
+    const pages = Math.max(Math.ceil(all / limit), 1);
     const currentPage = Math.floor(start / limit) + 1
     return {current: currentPage, pageCount: pages}
 }

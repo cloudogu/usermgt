@@ -17,7 +17,7 @@ export const UsersAPI = {
                 const usersResponse = await Axios.get<UsersResponse>("/users", {
                     params: opts
                 });
-                if(!usersResponse.data) {
+                if(usersResponse.status < 200 || usersResponse.status > 299) {
                     reject(new Error("failed to load user data: " + usersResponse.status))
                 }
                 resolve(usersResponse.data)

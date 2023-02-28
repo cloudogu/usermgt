@@ -10,6 +10,10 @@ export class QueryOptions {
         this.limit = limit;
         this.query = query;
     }
+
+    get queryString(): string {
+        return this.query ?? "";
+    }
 }
 
 export type StateSetter<T> = Dispatch<SetStateAction<T | undefined>>;

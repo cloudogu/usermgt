@@ -10,12 +10,14 @@ import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 import {useConfirmation} from "../../hooks/useConfirmation";
 
+const FIRST_PAGE = 1;
+
 export default function Groups(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [groupsModel, isLoading] = useGroups(opts);
     const [notification, success, error] = useChangeNotification();
-    const [open, setOpen, group, setGroup] = useConfirmation();
+    const [open, toggleModal, group, setGroup] = useConfirmation();
 
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
@@ -24,11 +26,11 @@ export default function Groups(props: { title: string }) {
         setQuery(query);
     };
     const updatePage = () => (groupsModel?.groups.length ?? 0) === 1
-        && setPage((groupsModel?.pagination.current ?? 2) - 1)
+        && setPage(Math.max((groupsModel?.pagination.current ?? 2) - 1, FIRST_PAGE))
         || refetch();
 
     const openConfirmationDialog = (groupName: string): void => {
-        setOpen(true);
+        toggleModal(true);
         setGroup(groupName);
     }
     const onDelete = async (groupName: string) => {
@@ -40,7 +42,7 @@ export default function Groups(props: { title: string }) {
             updatePage();
             error(t("groups.notification.error", {groupName: groupName}));
         }
-        setOpen(false);
+        toggleModal(false);
     }
     return <>
         <div className="flex justify-between">
@@ -49,43 +51,52 @@ export default function Groups(props: { title: string }) {
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                         disabled={isLoading}>{t("groups.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                           className="mt-5 mb-2.5" disabled={isLoading}/>
+                           className="mt-5 mb-2.5" disabled={isLoading} startValueSearch={opts.queryString}/>
             </div>
         </div>
         {notification}
         <ConfirmationDialog open={open ?? false}
-                            onClose={() => setOpen(false)}
+                            onClose={() => toggleModal(false)}
                             onConfirm={async () => {
                                 await onDelete(group ?? "")
-                                setOpen(false);
                             }}
                             className="-relative z-[51] sm:w-3/4 md:w-1/2"
                             title={t("groups.confirmation.title")}
                             message={t("groups.confirmation.message", {groupName: group})}/>
-        {isLoading ?
-            <div className={"flex justify-center w-[100%] mt-4"}>
-                <LoadingIcon className={"w-64 h-64"}/>
-            </div>
-            :
-            <Table className="mt-4 text-sm">
-                <Table.Head key={"table-head"}>
-                    <Table.Head.Tr className={"uppercase"}>
-                        <Table.Head.Th>{t("groups.table.name")}</Table.Head.Th>
-                        <Table.Head.Th>{t("groups.table.description")}</Table.Head.Th>
-                        <Table.Head.Th>{t("groups.table.users")}</Table.Head.Th>
-                        <Table.Head.Th className="w-0"></Table.Head.Th>
-                    </Table.Head.Tr>
-                </Table.Head>
-                <Table.Body key={"table-body"}>
-                    {groupsModel?.groups?.map(group => createGroupRow(group, openConfirmationDialog))}
+
+        <Table className="mt-4 text-sm">
+            <Table.Head key={"table-head"}>
+                <Table.Head.Tr className={"uppercase"}>
+                    <Table.Head.Th>{t("groups.table.name")}</Table.Head.Th>
+                    <Table.Head.Th>{t("groups.table.description")}</Table.Head.Th>
+                    <Table.Head.Th>{t("groups.table.users")}</Table.Head.Th>
+                    <Table.Head.Th className="w-0"></Table.Head.Th>
+                </Table.Head.Tr>
+            </Table.Head>
+            {isLoading ?
+                <Table.Body>
+                    <Table.Body.Tr>
+                        <Table.Body.Td colSpan={4}>
+                            <div className={"flex justify-center w-full mt-4"}>
+                                <LoadingIcon className={"w-64 h-64"}/>
+                            </div>
+                        </Table.Body.Td>
+                    </Table.Body.Tr>
                 </Table.Body>
-                <Table.Foot>
-                    <Table.Foot.Pagination
-                        currentPage={groupsModel?.pagination.current ?? 1}
-                        pageCount={groupsModel?.pagination.pageCount ?? 1}
-                        onPageChange={changePage}/>
-                </Table.Foot>
-            </Table>}
+                :
+                <>
+                    <Table.Body>
+                        {groupsModel?.groups?.map(group => createGroupRow(group, openConfirmationDialog))}
+                    </Table.Body>
+                    <Table.Foot>
+                        <Table.Foot.Pagination
+                            currentPage={groupsModel?.pagination.current ?? 1}
+                            pageCount={groupsModel?.pagination.pageCount ?? 1}
+                            onPageChange={changePage}/>
+                    </Table.Foot>
+                </>
+            }
+        </Table>
     </>;
 }
 

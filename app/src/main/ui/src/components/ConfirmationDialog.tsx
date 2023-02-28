@@ -1,5 +1,5 @@
 import {Modal, H3, Button} from "@cloudogu/ces-theme-tailwind";
-import React from "react";
+import React, {useState} from "react";
 import {twMerge} from "tailwind-merge";
 import {t} from "../helpers/i18nHelpers";
 
@@ -16,8 +16,14 @@ export function ConfirmationDialog({
                                        open, title, message,
                                        onClose, onConfirm, ...props
                                    }: ConfirmationDialogProps) {
+    const [disable, setDisable] = useState(false)
+    const onClick = async () => {
+        setDisable(true);
+        await onConfirm();
+        setDisable(false);
+    }
     return <>
-        <Modal {...props} open={open} onClose={onClose}>
+        <Modal {...props} open={open} onConfirm={() => {}} onCancel={() => {}}>
             <Modal.Header>
                 <H3 className="uppercase">{title}</H3>
             </Modal.Header>
@@ -25,10 +31,10 @@ export function ConfirmationDialog({
                 <p>{message}</p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant={"danger"} className={"uppercase"} onClick={onConfirm}>
-                    {t("modal.confirm")}
-                </Button>
-                <Button variant={"secondary"} onClick={onClose} className="ml-5">{t("modal.cancel")}</Button>
+                <Button variant={"danger"} onClick={onClick} disabled={disable}
+                        className={"uppercase"}>{t("modal.confirm")}</Button>
+                <Button variant={"secondary"} onClick={onClose} disabled={disable}
+                        className={"ml-5"}>{t("modal.cancel")}</Button>
             </Modal.Footer>
         </Modal>
         <div className={twMerge("w-full h-full z-50 top-0 left-0 fixed",

@@ -35,20 +35,26 @@ import java.util.List;
  */
 public final class Paginations
 {
+  private static final int PAGING_DEFAULT_START = 0;
   private Paginations(){
     
   }
   
   public static <T> PagedResultList<T> createPaging(List<T> list, int start, int limit){
-    PagedResultList<T> result = null;
     int size = list.size();
-    if ( start < size ){
-      int end = start + limit;
-      if ( end > size ){
-        end = size;
-      }
-      result = new PagedResultList<>(list.subList(start, end), start, limit, size); 
+    int end = limit;
+    int actualStartValue = start;
+    if ( start < size ) {
+      end = start + limit;
+    } else {
+      actualStartValue = PAGING_DEFAULT_START;
     }
+
+    if ( end > size ) {
+      end = size;
+    }
+
+    PagedResultList<T> result = new PagedResultList<>(list.subList(actualStartValue, end), actualStartValue, limit, size);
     return result;
   }
 }
