@@ -51,7 +51,7 @@ export default function AccountForm(props: AccountFormProps) {
         >{t('editUser.labels.password')}</Form.ValidatedTextInput>
         <Form.ValidatedTextInput type={"password"} name={"confirmPassword"}
         >{t('editUser.labels.confirmPassword')}</Form.ValidatedTextInput>
-        <div className={"mt-4"}>
+        <div className={"my-4"}>
             <Button variant={"primary"} type={"submit"}
                     disabled={!handler.dirty}>{t('editUser.buttons.save')}</Button>
         </div>

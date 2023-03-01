@@ -68,7 +68,7 @@ export default function Users(props: { title: string }) {
                             className="-relative z-[51] sm:w-3/4 md:w-1/2"
                             title={t("users.confirmation.title")}
                             message={t("users.confirmation.message", {username: username})}/>
-        <Table className="mt-4 text-sm">
+        <Table className="my-4 text-sm">
             <Table.Head>
                 <Table.Head.Tr className={"uppercase"}>
                     <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>
