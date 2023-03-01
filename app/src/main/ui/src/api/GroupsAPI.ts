@@ -13,11 +13,12 @@ interface GroupsResponse {
 export type UndeletableGroupsResponse = string[];
 
 export const GroupsAPI = {
-    async get(opts?: QueryOptions): Promise<GroupsResponse> {
+    async get(signal?: AbortSignal, opts?: QueryOptions): Promise<GroupsResponse> {
         return new Promise<GroupsResponse>(async (resolve, reject) => {
             try {
                 const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
-                    params: opts
+                    params: opts,
+                    signal: signal
                 });
                 if (!groupsResponse.data) {
                     reject(new Error("failed to load group data: " + groupsResponse.status));
@@ -28,10 +29,12 @@ export const GroupsAPI = {
             }
         })
     },
-    async undeletable(): Promise<UndeletableGroupsResponse> {
+    async undeletable(signal?: AbortSignal): Promise<UndeletableGroupsResponse> {
         return new Promise<UndeletableGroupsResponse>(async (resolve, reject) => {
             try {
-                const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable");
+                const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable", {
+                    signal: signal
+                });
                 if (!undeletableGroupsResponse.data) {
                     reject(new Error("failed to load undeletable groups information: " + undeletableGroupsResponse.status));
                 }

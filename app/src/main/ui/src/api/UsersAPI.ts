@@ -11,7 +11,7 @@ export interface UsersResponse {
 }
 
 export const UsersAPI = {
-    async get(opts?: QueryOptions): Promise<UsersResponse> {
+    async get(_?: AbortSignal,opts?: QueryOptions): Promise<UsersResponse> {
         return new Promise<UsersResponse>(async (resolve, reject) => {
             try {
                 const usersResponse = await Axios.get<UsersResponse>("/users", {

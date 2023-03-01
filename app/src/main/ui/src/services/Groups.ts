@@ -14,11 +14,11 @@ export type Group = {
 }
 
 export const GroupsService = {
-    async get(opts?: QueryOptions): Promise<GroupsModel> {
+    async get(signal?: AbortSignal, opts?: QueryOptions): Promise<GroupsModel> {
         return new Promise<GroupsModel>(async (resolve, reject) => {
             try {
-                const groupsData = await GroupsAPI.get(opts);
-                const undeletableGroupsResponse = await GroupsAPI.undeletable();
+                const groupsData = await GroupsAPI.get(signal, opts);
+                const undeletableGroupsResponse = await GroupsAPI.undeletable(signal);
                 const groups = mapSystemGroups(groupsData.entries, undeletableGroupsResponse);
                 const paginationModel = createPaginationData(groupsData.start, groupsData.limit, groupsData.totalEntries)
                 let model: GroupsModel = {groups: groups, pagination: paginationModel}

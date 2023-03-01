@@ -15,10 +15,10 @@ export type UsersModel = PagedModel & {
 export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPaginationData}
 
 export const UsersService = {
-    async get(opts?: QueryOptions): Promise<UsersModel> {
+    async get(signal?: AbortSignal, opts?: QueryOptions): Promise<UsersModel> {
         return new Promise<UsersModel>(async (resolve, reject) => {
             try {
-                const usersData = await UsersAPI.get(opts);
+                const usersData = await UsersAPI.get(signal, opts);
                 const paginationModel = createPaginationData(usersData.start, usersData.limit, usersData.totalEntries)
                 let model: UsersModel = {users: usersData.entries, pagination: paginationModel}
                 resolve(model);
