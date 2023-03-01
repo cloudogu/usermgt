@@ -1,16 +1,16 @@
 import React from "react";
-import {Button, H1, LoadingIcon, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1, LoadingIcon, MailHref, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
 import {useUsers} from "../../hooks/useUsers";
 import {t} from "../../helpers/i18nHelpers";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 import {useFilter} from "../../hooks/useFilter";
 import {User, UsersService} from "../../services/Users";
-import {useUser} from "../../hooks/useUser";
-import {CasUser} from "../../api/CasUserAPI";
+import {useCasUser} from "../../hooks/useCasUser";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
+import {CasUser} from "../../services/CasUser";
 
 const FIRST_PAGE = 1;
 
@@ -18,7 +18,7 @@ export default function Users(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [usersModel, isLoading] = useUsers(opts)
-    const [casUser] = useUser();
+    const [casUser] = useCasUser();
     const [notification, success, error] = useChangeNotification();
     const [open, toggleModal, username, setUsername] = useConfirmation();
     const changePage = (selectedPage: number) => {
@@ -108,15 +108,10 @@ export default function Users(props: { title: string }) {
 
 function createUsersRow(user: User, casUser: CasUser, onDelete: (userName: string) => void) {
     return <Table.Body.Tr key={user.username}>
+        <Table.Body.Td className="font-bold">{user.username}</Table.Body.Td>
+        <Table.Body.Td className={"break-all"}>{user.displayName}</Table.Body.Td>
         <Table.Body.Td>
-            <span className="font-bold">{user.username}</span>
-        </Table.Body.Td>
-        <Table.Body.Td>{user.displayName}</Table.Body.Td>
-        <Table.Body.Td>
-            <a className="hover:underline decoration-solid text-link-primary-font"
-               href={"https://ecosystem.cloudogu.com/"}>
-                {user.mail}
-            </a>
+            <MailHref mail={user.mail} />
         </Table.Body.Td>
         <Table.Body.Td className="flex justify-center">
             <EditButton title={t("users.table.actions.edit")}/>

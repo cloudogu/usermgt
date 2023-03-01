@@ -5,7 +5,7 @@ import {BrowserRouter as Router, Navigate, Route, Routes, useLocation} from "rea
 import Account from "./pages/account/Account";
 import Users from "./pages/users/Users";
 import Groups from "./pages/groups/Groups";
-import {useUser} from "./hooks/useUser";
+import {useCasUser} from "./hooks/useCasUser";
 import {Main, Navbar} from "@cloudogu/ces-theme-tailwind";
 import usermgtIcon from './assets/usermgt_icon_detailed.svg';
 
@@ -38,7 +38,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 
 function Nav() {
   const location = useLocation();
-  const [user] = useUser();
+  const [user] = useCasUser();
   const {t} = useTranslation();
   return (
     <>

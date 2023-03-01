@@ -1,11 +1,10 @@
-import {Axios} from "./axios";
-
+import {Axios} from "../api/axios";
 
 export type CasUser = {
     principal: string;
 }
 
-export const CasUserAPI = {
+export const CasUserService = {
     get: async (signal?: AbortSignal) : Promise<CasUser> => {
         return new Promise<CasUser>(async (resolve, reject) => {
             try {
