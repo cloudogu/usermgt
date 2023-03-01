@@ -22,9 +22,9 @@ export function useFilter(): [(_: string) => void, (_: number) => void, () => vo
     const updateQuery = (newQuery: string): void => {
         setSearchParams(current => {
             current.set(SEARCH_QUERY_PARAM, `${newQuery}`)
+            current.set(PAGE_QUERY_PARAM, `${1}`)
             return current;
         });
-        updatePage(1);
     };
 
     useEffect(() => {

@@ -14,6 +14,7 @@ export class QueryOptions {
     get queryString(): string {
         return this.query ?? "";
     }
+
 }
 
 export type StateSetter<T> = Dispatch<SetStateAction<T | undefined>>;

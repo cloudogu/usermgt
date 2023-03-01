@@ -1,5 +1,5 @@
 import {Modal, H3, Button} from "@cloudogu/ces-theme-tailwind";
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {twMerge} from "tailwind-merge";
 import {t} from "../helpers/i18nHelpers";
 
@@ -17,13 +17,20 @@ export function ConfirmationDialog({
                                        onClose, onConfirm, ...props
                                    }: ConfirmationDialogProps) {
     const [disable, setDisable] = useState(false)
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const onClick = async () => {
         setDisable(true);
         await onConfirm();
         setDisable(false);
     }
+
+    useEffect(() => {
+        if(open) {
+            buttonRef.current?.focus();
+        }
+    }, [open])
     return <>
-        <Modal {...props} open={open} onConfirm={() => {}} onCancel={() => {}}>
+        <Modal {...props} open={open}>
             <Modal.Header>
                 <H3 className="uppercase">{title}</H3>
             </Modal.Header>

@@ -51,7 +51,8 @@ export default function Groups(props: { title: string }) {
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                         disabled={isLoading}>{t("groups.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                           className="mt-5 mb-2.5" disabled={isLoading} startValueSearch={opts.queryString}/>
+                           onClear={() => setQuery("")} startValueSearch={opts.queryString}
+                           className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
         {notification}
