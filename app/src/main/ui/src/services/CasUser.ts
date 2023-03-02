@@ -2,6 +2,7 @@ import {Axios} from "../api/axios";
 
 export type CasUser = {
     principal: string;
+    admin: boolean;
 }
 
 export const CasUserService = {
