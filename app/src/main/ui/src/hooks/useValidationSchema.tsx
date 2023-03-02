@@ -1,26 +1,13 @@
-import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {ValidationError} from "yup";
 import {t} from "../helpers/i18nHelpers";
-
-const contextPath = process.env.PUBLIC_URL || "/usermgt";
-
-export type PasswordPolicy = {
-  Rules: { Rule: string, Type: "regex", Name: string, Variables: { Name: string; Value: string }[] }[],
-}
+import {defaultPasswordPolicy, PasswordPolicy, ValidationSchemaService} from "../services/ValidationSchema";
+import {useAPI} from "./useAPI";
 
 export function useValidationSchema(): any {
-  const [passwordPolicy, setPasswordPolicy] = useState<PasswordPolicy>({Rules: []});
+  const [passwordPolicy, _isLoading, _setPasswordPolicy] = useAPI<PasswordPolicy>(ValidationSchemaService.get)
 
-  useEffect(() => {
-    fetch(contextPath + `/api/account/passwordpolicy`)
-      .then(async function (response) {
-        const json: PasswordPolicy = await response.json();
-        setPasswordPolicy(json);
-      });
-  }, []);
-
-  return createValidationSchema(passwordPolicy);
+  return createValidationSchema(passwordPolicy ?? defaultPasswordPolicy);
 }
 
 function createValidationSchema(passwordPolicy: PasswordPolicy) {

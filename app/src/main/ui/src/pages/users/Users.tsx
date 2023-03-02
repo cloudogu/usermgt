@@ -21,6 +21,7 @@ export default function Users(props: { title: string }) {
     const [casUser] = useCasUser();
     const [notification, success, error] = useChangeNotification();
     const [open, toggleModal, username, setUsername] = useConfirmation();
+
     const changePage = (selectedPage: number) => {
         setPage(selectedPage)
     };

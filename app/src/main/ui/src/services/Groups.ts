@@ -30,7 +30,7 @@ export const GroupsService = {
                     params: opts,
                     signal: signal
                 });
-                if (!groupsResponse.data) {
+                if (groupsResponse.status < 200 || groupsResponse.status > 299) {
                     reject(new Error("failed to load group data: " + groupsResponse.status));
                 }
                 const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable", {

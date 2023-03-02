@@ -62,8 +62,8 @@ function Nav() {
           </Navbar.ListItem>
         </Navbar.LeftAlignedList>
         <Navbar.RightAlignedList>
-          <Navbar.LogoutLink logoutUri={`/usermgt/api/logout`}>{t("navbar.logout")}</Navbar.LogoutLink>
           <Navbar.UserLink loggedInUser={{name: user.principal, accountUri: '/account'}}/>
+          <Navbar.LogoutLink logoutUri={`/usermgt/api/logout`}>{t("navbar.logout")}</Navbar.LogoutLink>
         </Navbar.RightAlignedList>
       </Navbar>
   </>

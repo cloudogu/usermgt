@@ -7,7 +7,7 @@ import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 export default function Account(props: { title: string }) {
     useSetPageTitle(props.title)
     const validationSchema = useValidationSchema()
-    const {account, isLoading, setAccount} = useAccount();
+    const [account, isLoading, setAccount] = useAccount();
 
     return <>
         <H1 className="uppercase">Account</H1>

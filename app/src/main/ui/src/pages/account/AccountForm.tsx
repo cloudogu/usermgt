@@ -1,7 +1,8 @@
 import {Button, Form, useFormHandler} from "@cloudogu/ces-theme-tailwind";
-import {ApiAccount, saveAccount} from "../../hooks/useAccount";
+import {saveAccount} from "../../hooks/useAccount";
 import {t} from "../../helpers/i18nHelpers";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
+import {ApiAccount} from "../../services/Account";
 
 type AccountFormProps = {
     account: ApiAccount;
