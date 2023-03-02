@@ -1,5 +1,4 @@
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {CanceledError} from "axios";
 
 export type QueryOptions = {start: number; limit: number; query: string;}
 
@@ -18,10 +17,8 @@ export function useAPI<T>(callBack: AbortableCallbackWithOptions<T>, opts?: Quer
                 setIsLoading(false);
             })
             .catch(err => {
-                if(err instanceof CanceledError) {
-                    // ignore canceled requests
-                } else {
-                    console.error(err)
+                if(!abortController.signal.aborted) {
+                    console.error(err);
                 }
                 });
         return () => {

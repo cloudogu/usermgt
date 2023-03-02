@@ -61,11 +61,10 @@ export default function Groups(props: { title: string }) {
                             onConfirm={async () => {
                                 await onDelete(group ?? "")
                             }}
-                            className="-relative z-[51] sm:w-3/4 md:w-1/2"
                             title={t("groups.confirmation.title")}
                             message={t("groups.confirmation.message", {groupName: group})}/>
 
-        <Table className="my-4 text-sm">
+        <Table className="my-4">
             <Table.Head key={"table-head"}>
                 <Table.Head.Tr className={"uppercase"}>
                     <Table.Head.Th>{t("groups.table.name")}</Table.Head.Th>
@@ -79,6 +78,7 @@ export default function Groups(props: { title: string }) {
             </Table.ConditionalBody>
             <Table.ConditionalFoot show={!isLoading}>
                 <Table.Foot.Pagination
+                    className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
                     currentPage={groupsModel?.pagination.current ?? 1}
                     pageCount={groupsModel?.pagination.pageCount ?? 1}
                     onPageChange={changePage}/>

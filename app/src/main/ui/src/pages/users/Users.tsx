@@ -66,7 +66,6 @@ export default function Users(props: { title: string }) {
                             onConfirm={async () => {
                                 await onDelete(username ?? "")
                             }}
-                            className="-relative z-[51] sm:w-3/4 md:w-1/2"
                             title={t("users.confirmation.title")}
                             message={t("users.confirmation.message", {username: username})}/>
         <Table className="my-4 text-sm">
@@ -81,8 +80,9 @@ export default function Users(props: { title: string }) {
             <Table.ConditionalBody show={!isLoading}>
                 {(usersModel.users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog))}
             </Table.ConditionalBody>
-            <Table.ConditionalFoot show={!isLoading}>
+            <Table.ConditionalFoot show={!isLoading && usersModel.users?.length > 0}>
                 <Table.Foot.Pagination
+                    className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
                     currentPage={usersModel.pagination.current ?? 1}
                     pageCount={usersModel.pagination.pageCount ?? 1}
                     onPageChange={changePage}/>
