@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, H1, LoadingIcon, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
 import {useGroups} from "../../hooks/useGroups";
 import {t} from "../../helpers/i18nHelpers";
 import {Group, GroupsService} from "../../services/Groups";
@@ -51,7 +51,7 @@ export default function Groups(props: { title: string }) {
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                         disabled={isLoading}>{t("groups.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                           onClear={() => setQuery("")} startValueSearch={opts.queryString}
+                           onClear={() => setQuery("")} startValueSearch={opts.query}
                            className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
@@ -74,29 +74,15 @@ export default function Groups(props: { title: string }) {
                     <Table.Head.Th className="w-0"></Table.Head.Th>
                 </Table.Head.Tr>
             </Table.Head>
-            {isLoading ?
-                <Table.Body>
-                    <Table.Body.Tr>
-                        <Table.Body.Td colSpan={4}>
-                            <div className={"flex justify-center w-full mt-4"}>
-                                <LoadingIcon className={"w-64 h-64"}/>
-                            </div>
-                        </Table.Body.Td>
-                    </Table.Body.Tr>
-                </Table.Body>
-                :
-                <>
-                    <Table.Body>
-                        {groupsModel?.groups?.map(group => createGroupRow(group, openConfirmationDialog))}
-                    </Table.Body>
-                    <Table.Foot>
-                        <Table.Foot.Pagination
-                            currentPage={groupsModel?.pagination.current ?? 1}
-                            pageCount={groupsModel?.pagination.pageCount ?? 1}
-                            onPageChange={changePage}/>
-                    </Table.Foot>
-                </>
-            }
+            <Table.ConditionalBody show={!isLoading}>
+                {groupsModel?.groups?.map(group => createGroupRow(group, openConfirmationDialog))}
+            </Table.ConditionalBody>
+            <Table.ConditionalFoot show={!isLoading}>
+                <Table.Foot.Pagination
+                    currentPage={groupsModel?.pagination.current ?? 1}
+                    pageCount={groupsModel?.pagination.pageCount ?? 1}
+                    onPageChange={changePage}/>
+            </Table.ConditionalFoot>
         </Table>
     </>;
 }

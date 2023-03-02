@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, H1, LoadingIcon, MailHref, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1, MailHref, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
 import {useUsers} from "../../hooks/useUsers";
 import {t} from "../../helpers/i18nHelpers";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
@@ -56,7 +56,7 @@ export default function Users(props: { title: string }) {
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                         disabled={isLoading}>{t("users.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                           onClear={() => setQuery("")} startValueSearch={opts.queryString}
+                           onClear={() => setQuery("")} startValueSearch={opts.query}
                            className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
@@ -78,31 +78,15 @@ export default function Users(props: { title: string }) {
                     <Table.Head.Th className="w-0"></Table.Head.Th>
                 </Table.Head.Tr>
             </Table.Head>
-            {isLoading ?
-                <Table.Body>
-                    <Table.Body.Tr>
-                        <Table.Body.Td colSpan={4}>
-                            <div className={"flex justify-center w-full mt-4"}>
-                                <LoadingIcon className={"w-64 h-64"}/>
-                            </div>
-                        </Table.Body.Td>
-                    </Table.Body.Tr>
-                </Table.Body>
-                :
-                <>
-                    <Table.Body>
-                        {(usersModel.users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog))}
-                    </Table.Body>
-                    {usersModel?.users?.length > 0 ?
-                    <Table.Foot>
-                        <Table.Foot.Pagination
-                            currentPage={usersModel.pagination.current ?? 1}
-                            pageCount={usersModel.pagination.pageCount ?? 1}
-                            onPageChange={changePage}/>
-                    </Table.Foot> : <></>
-                    }
-                </>
-            }
+            <Table.ConditionalBody show={!isLoading}>
+                {(usersModel.users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog))}
+            </Table.ConditionalBody>
+            <Table.ConditionalFoot show={!isLoading}>
+                <Table.Foot.Pagination
+                    currentPage={usersModel.pagination.current ?? 1}
+                    pageCount={usersModel.pagination.pageCount ?? 1}
+                    onPageChange={changePage}/>
+            </Table.ConditionalFoot>
         </Table>
     </>;
 }
@@ -112,7 +96,7 @@ function createUsersRow(user: User, casUser: CasUser, onDelete: (userName: strin
         <Table.Body.Td className="font-bold">{user.username}</Table.Body.Td>
         <Table.Body.Td className={"break-all"}>{user.displayName}</Table.Body.Td>
         <Table.Body.Td>
-            <MailHref mail={user.mail} />
+            <MailHref mail={user.mail}/>
         </Table.Body.Td>
         <Table.Body.Td className="flex justify-center">
             <EditButton title={t("users.table.actions.edit")}/>
