@@ -1,26 +1,28 @@
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {CanceledError} from "axios";
 
-export class QueryOptions {
-    private readonly start?: number;
-    private readonly limit?: number;
-    private readonly query?: string;
+export type QueryOptions = {start: number; limit: number; query: string;}
 
-    constructor(start?: number, limit?: number, query?: string) {
-        this.start = start;
-        this.limit = limit;
-        this.query = query;
-    }
-
-    get queryString(): string {
-        return this.query ?? "";
-    }
-
-    get StartValue(): number {
-        return this.start ?? 0;
-    }
-
-}
+// export class QueryOptions {
+//     private readonly start?: number;
+//     private readonly limit?: number;
+//     private readonly query?: string;
+//
+//     constructor(start?: number, limit?: number, query?: string) {
+//         this.start = start;
+//         this.limit = limit;
+//         this.query = query;
+//     }
+//
+//     get queryString(): string {
+//         return this.query ?? "";
+//     }
+//
+//     get StartValue(): number {
+//         return this.start ?? 0;
+//     }
+//
+// }
 
 export type StateSetter<T> = Dispatch<SetStateAction<T | undefined>>;
 export type AbortableCallbackWithOptions<T> = (signal?: AbortSignal, opts?: QueryOptions) => Promise<T>
