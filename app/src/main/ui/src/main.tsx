@@ -18,10 +18,10 @@ import {CasUser} from "./services/CasUser";
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
 type ApplicationContextProps = {
-    user: CasUser;
+    casUser: CasUser;
 }
 export const ApplicationContext = createContext<ApplicationContextProps>({
-    user: {
+    casUser: {
         principal: "default",
         admin: false
     }
@@ -34,7 +34,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(<Reac
 function SuperMain() {
     const [casUser] = useCasUser();
     return <Router basename={contextPath}>
-        <ApplicationContext.Provider value={{user: casUser}}>
+        <ApplicationContext.Provider value={{casUser: casUser}}>
             <Nav/>
             <Main>
                 <Routes>
@@ -55,7 +55,7 @@ function SuperMain() {
 function Nav() {
     const location = useLocation();
     const {t} = useTranslation();
-    const {user} = useContext(ApplicationContext);
+    const {casUser} = useContext(ApplicationContext);
     return (
         <>
             <Navbar currentPath={location?.pathname ?? ""}>
@@ -68,7 +68,7 @@ function Nav() {
                         </div>
                         <Navbar.HomeLink.LinkText>{"User Management"}</Navbar.HomeLink.LinkText>
                     </Navbar.HomeLink>
-                    {user.admin ?
+                    {casUser.admin ?
                         <>
                             <Navbar.ListItem path={"/users"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
@@ -83,7 +83,7 @@ function Nav() {
                     }
                 </Navbar.LeftAlignedList>
                 <Navbar.RightAlignedList>
-                    <Navbar.UserLink loggedInUser={{name: user.principal, accountUri: '/account'}}/>
+                    <Navbar.UserLink loggedInUser={{name: casUser.principal, accountUri: '/account'}}/>
                     <Navbar.LogoutLink logoutUri={`/usermgt/api/logout`}>{t("navbar.logout")}</Navbar.LogoutLink>
                 </Navbar.RightAlignedList>
             </Navbar>

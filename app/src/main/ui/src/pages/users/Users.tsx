@@ -1,16 +1,16 @@
-import React from "react";
+import React, {useContext} from "react";
 import {Button, H1, MailHref, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
 import {useUsers} from "../../hooks/useUsers";
 import {t} from "../../helpers/i18nHelpers";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 import {useFilter} from "../../hooks/useFilter";
 import {User, UsersService} from "../../services/Users";
-import {useCasUser} from "../../hooks/useCasUser";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 import {CasUser} from "../../services/CasUser";
+import {ApplicationContext} from "../../main";
 
 const FIRST_PAGE = 1;
 
@@ -18,7 +18,7 @@ export default function Users(props: { title: string }) {
     useSetPageTitle(props.title)
     const [setQuery, setPage, refetch, opts] = useFilter();
     const [usersModel, isLoading] = useUsers(opts)
-    const [casUser] = useCasUser();
+    const {casUser} = useContext(ApplicationContext);
     const [notification, success, error] = useChangeNotification();
     const [open, toggleModal, username, setUsername] = useConfirmation();
 
