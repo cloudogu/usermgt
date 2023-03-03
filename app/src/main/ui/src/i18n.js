@@ -1,27 +1,27 @@
-import i18n from 'i18next';
-import {initReactI18next} from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import {initReactI18next} from "react-i18next";
 
 const user = {
     en: {
-        username: 'Username',
-        givenName: 'Given Name',
-        surname: 'Surname',
-        displayName: 'Display Name',
-        email: 'E-Mail',
-        password: 'Password',
-        confirmPassword: 'Confirm Password'
+        username: "Username",
+        givenName: "Given Name",
+        surname: "Surname",
+        displayName: "Display Name",
+        email: "E-Mail",
+        password: "Password",
+        confirmPassword: "Confirm Password"
     },
     de: {
-        username: 'Nutzername',
-        givenName: 'Vorname',
-        surname: 'Nachname',
-        displayName: 'Anzeigename',
-        email: 'E-Mail',
-        password: 'Passwort',
-        confirmPassword: 'Passwort bestätigen'
+        username: "Nutzername",
+        givenName: "Vorname",
+        surname: "Nachname",
+        displayName: "Anzeigename",
+        email: "E-Mail",
+        password: "Passwort",
+        confirmPassword: "Passwort bestätigen"
     }
-}
+};
 
 const group = {
     en: {
@@ -32,7 +32,7 @@ const group = {
         name: "Name",
         description: "Beschreibung",
     }
-}
+};
 
 i18n
     // detect user language
@@ -43,19 +43,21 @@ i18n
     // init i18next
     // for all options read: https://www.i18next.com/overview/configuration-options
     .init({
-        debug: true, fallbackLng: 'en', interpolation: {
+        debug: true, fallbackLng: "en", interpolation: {
             escapeValue: false, // not needed for react as it escapes by default
         }, resources: {
             en: {
                 translation: {
                     pages: {
-                        account: 'Account',
-                        users: 'Users',
-                        groups: 'Groups',
+                        account: "Account",
+                        users: "Users",
+                        groups: "Groups",
+                        groupsNew: "New Group",
+                        groupsEdit: "Edit group",
                     },
                     navbar: {
-                        logout: 'Logout',
-                        logoAltText: 'User Management icon: magnifying glass directed to a user icon.',
+                        logout: "Logout",
+                        logoAltText: "User Management icon: magnifying glass directed to a user icon.",
                     },
                     users: {
                         create: "Create user",
@@ -102,6 +104,39 @@ i18n
                             message: "Remove group {{groupName}}?"
                         },
                     },
+                    editGroup: {
+                        labels: {
+                            name: group.en.name,
+                            description: group.en.description,
+                        },
+                        buttons: {
+                            save: "Save",
+                            back: "Back",
+                            remove: "Remove",
+                        },
+                        notification: {
+                            success: "The group was saved successfully.",
+                            error: "The group could not be saved. Please try again later.",
+                        }
+                    },
+                    newGroup: {
+                        labels: {
+                            name: group.de.name,
+                            description: group.de.description,
+                        },
+                        buttons: {
+                            save: "Save",
+                            back: "Back"
+                        },
+                        errors: {
+                            name: "Name is required.",
+                            nameLength: "Name must have at least 2 characters.",
+                        },
+                        notification: {
+                            success: "The group was saved successfully.",
+                            error: "The group could not be created. Please try again later.",
+                        },
+                    },
                     editUser: {
                         labels: {
                             username: user.en.username,
@@ -113,26 +148,26 @@ i18n
                             confirmPassword: user.en.confirmPassword
                         },
                         buttons: {
-                            save: 'Save'
+                            save: "Save"
                         },
                         alerts: {
-                            success: 'Account information saved successfully.',
-                            error: 'Account information could not be saved. Please try again later.',
+                            success: "Account information saved successfully.",
+                            error: "Account information could not be saved. Please try again later.",
                         },
                         errors: {
-                            surname: 'Surname is required.',
-                            displayName: 'Display name is required.',
+                            surname: "Surname is required.",
+                            displayName: "Display name is required.",
                             email: {
-                                invalid: 'E-mail address is invalid.',
-                                required: '\'E-mail address is required.\'',
+                                invalid: "E-mail address is invalid.",
+                                required: "'E-mail address is required.'",
                             },
-                            confirmPassword: 'Passwords must match.',
+                            confirmPassword: "Passwords must match.",
                             password: {
-                                length: 'The password must contain at least {{length}} characters.',
-                                capital: 'The password must contain at least one capital letter.',
-                                lowercase: 'The password must contain at least one lower case letter.',
-                                numeric: 'The password must contain at least 1 number.',
-                                special: 'The password must contain at least 1 special character.',
+                                length: "The password must contain at least {{length}} characters.",
+                                capital: "The password must contain at least one capital letter.",
+                                lowercase: "The password must contain at least one lower case letter.",
+                                numeric: "The password must contain at least 1 number.",
+                                special: "The password must contain at least 1 special character.",
                             }
                         },
                     },
@@ -145,13 +180,15 @@ i18n
             de: {
                 translation: {
                     pages: {
-                        account: 'Account',
-                        users: 'Nutzer',
-                        groups: 'Gruppen',
+                        account: "Account",
+                        users: "Nutzer",
+                        groups: "Gruppen",
+                        groupsNew: "Neue Gruppe",
+                        groupsEdit: "Gruppe bearbeiten",
                     },
                     navbar: {
-                        logout: 'Abmelden',
-                        logoAltText: 'Icon des User Managements: Lupe, die auf einen Benutzer-Icon gerichtet ist.',
+                        logout: "Abmelden",
+                        logoAltText: "Icon des User Managements: Lupe, die auf einen Benutzer-Icon gerichtet ist.",
                     },
                     users: {
                         create: "Nutzer anlegen",
@@ -194,8 +231,40 @@ i18n
                             error: "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden."
                         },
                         confirmation: {
-                          title: "Gruppe entfernen",
-                          message: "Soll die Gruppe {{groupName}} entfernt werden?"
+                            title: "Gruppe entfernen",
+                            message: "Soll die Gruppe {{groupName}} entfernt werden?"
+                        },
+                    },
+                    editGroup: {
+                        labels: {
+                            name: group.de.name,
+                            description: group.de.description,
+                        },
+                        buttons: {
+                            save: "Speichern",
+                            back: "Zurück",
+                            remove: "Entfernen",
+                        },
+                        notification: {
+                            success: "Die Gruppe wurde erfolgreich gespeichert.",
+                            error: "Die Gruppe konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
+                        }
+                    },
+                    newGroup: {
+                        labels: {
+                            name: group.de.name,
+                            description: group.de.description,
+                        },
+                        buttons: {
+                            save: "Speichern"
+                        },
+                        errors: {
+                            name: "Name muss ausgefüllt sein.",
+                            nameLength: "Der Name muss eine Mindestlänge von 2 Zeichen haben.",
+                        },
+                        notification: {
+                            success: "Die Gruppe wurde erfolgreich gespeichert.",
+                            error: "Die Gruppe konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
                         },
                     },
                     editUser: {
@@ -209,26 +278,26 @@ i18n
                             confirmPassword: user.de.confirmPassword
                         },
                         buttons: {
-                            save: 'Speichern'
+                            save: "Speichern"
                         },
                         alerts: {
-                            success: 'Die Account Informationen wurden erfolgreich gespeichert.',
-                            error: 'Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.',
+                            success: "Die Account Informationen wurden erfolgreich gespeichert.",
+                            error: "Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
                         },
                         errors: {
-                            surname: 'Nachname muss ausgefüllt sein.',
-                            displayName: 'Anzeigename muss ausgefüllt sein.',
+                            surname: "Nachname muss ausgefüllt sein.",
+                            displayName: "Anzeigename muss ausgefüllt sein.",
                             email: {
-                                invalid: 'E-Mail ist ungültig.',
-                                required: 'E-Mail Addresse muss ausgefüllt sein.',
+                                invalid: "E-Mail ist ungültig.",
+                                required: "E-Mail Addresse muss ausgefüllt sein.",
                             },
-                            confirmPassword: 'Password stimmt nicht überein.',
+                            confirmPassword: "Password stimmt nicht überein.",
                             password: {
-                                length: 'Das Passwort muss mindestens {{length}} Zeichen lang sein.',
-                                capital: 'Das Passwort muss mindestens ein Großbuchstaben enthalten.',
-                                lowercase: 'Das Passwort muss mindestens ein Kleinbuchstaben enthalten.',
-                                numeric: 'Das Passwort muss mindestens eine Zahl enthalten.',
-                                special: 'Das Passwort muss mindestens ein Sonderzeichen enthalten.',
+                                length: "Das Passwort muss mindestens {{length}} Zeichen lang sein.",
+                                capital: "Das Passwort muss mindestens ein Großbuchstaben enthalten.",
+                                lowercase: "Das Passwort muss mindestens ein Kleinbuchstaben enthalten.",
+                                numeric: "Das Passwort muss mindestens eine Zahl enthalten.",
+                                special: "Das Passwort muss mindestens ein Sonderzeichen enthalten.",
                             }
                         },
                     },
