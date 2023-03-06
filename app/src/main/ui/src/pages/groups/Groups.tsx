@@ -1,6 +1,6 @@
 import {Button, H1, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
-import React, {useEffect} from "react";
-import {useNavigate, useLocation} from "react-router-dom";
+import React from "react";
+import {useNavigate} from "react-router-dom";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
@@ -8,6 +8,7 @@ import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {useFilter} from "../../hooks/useFilter";
 import {useGroups} from "../../hooks/useGroups";
+import {useNotificationAfterRedirect} from "../../hooks/useNotificationAfterRedirect";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 import { GroupsService} from "../../services/Groups";
 import type {Group} from "../../services/Groups";
@@ -15,27 +16,24 @@ import type {Group} from "../../services/Groups";
 const FIRST_PAGE = 1;
 
 export default function Groups(props: { title: string }) {
-    useSetPageTitle(props.title);
-    const {state} = useLocation();
+    const {updateQuery:setQuery, updatePage:setPage, refetch, opts} = useFilter();
+    const {groups:model, isLoading} = useGroups(opts);
     const navigate = useNavigate();
-    const {notification, notify} = useChangeNotification();
-    const [setQuery, setPage, refetch, opts] = useFilter();
-    const [groupsModel, isLoading] = useGroups(opts);
-    const [open, toggleModal, group, setGroup] = useConfirmation();
-
-    useEffect(() => {
-        state && notify(state.message, state.type);
-        window.history.replaceState({}, document.title);
-    }, []);
+    const {notification, notify, clearNotification} = useChangeNotification();
+    useNotificationAfterRedirect(notify);
+    useSetPageTitle(props.title);
+    const {open, setOpen:toggleModal, targetName:group, setTargetName:setGroup} = useConfirmation();
 
     const changePage = (selectedPage: number) => {
+        clearNotification();
         setPage(selectedPage);
     };
     const onSearch = (query: string) => {
+        clearNotification();
         setQuery(query);
     };
-    const updatePage = () => (groupsModel?.groups.length ?? 0) === 1
-        && setPage(Math.max((groupsModel?.pagination.current ?? 2) - 1, FIRST_PAGE))
+    const updatePage = () => (model?.groups.length ?? 0) === 1
+        && setPage(Math.max((model?.pagination.current ?? 2) - 1, FIRST_PAGE))
         || refetch();
 
     const openConfirmationDialog = (groupName: string): void => {
@@ -87,13 +85,13 @@ export default function Groups(props: { title: string }) {
                 </Table.Head.Tr>
             </Table.Head>
             <Table.ConditionalBody show={!isLoading}>
-                {groupsModel?.groups?.map(group => createGroupRow(group, openConfirmationDialog, editGroup))}
+                {model?.groups?.map(group => createGroupRow(group, openConfirmationDialog, editGroup))}
             </Table.ConditionalBody>
             <Table.ConditionalFoot show={!isLoading}>
                 <Table.Foot.Pagination
                     className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
-                    currentPage={groupsModel?.pagination.current ?? 1}
-                    pageCount={groupsModel?.pagination.pageCount ?? 1}
+                    currentPage={model?.pagination.current ?? 1}
+                    pageCount={model?.pagination.pageCount ?? 1}
                     onPageChange={changePage}/>
             </Table.ConditionalFoot>
         </Table>

@@ -1,8 +1,10 @@
+import { isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import {createPaginationData} from "../lib/pagination";
 import type {QueryOptions} from "../hooks/useAPI";
 import type {PagedModel} from "../lib/pagination";
+import type {AxiosError} from "axios";
 
 export type GroupsModel = PagedModel & {
     groups: Group[];
@@ -55,19 +57,31 @@ export const GroupsService = {
         });
         if (groupResponse.status < 200 || groupResponse.status > 299) {
             throw new Error("failed to load group data: " + groupResponse.status);
+        }// set empty string if given name is null
+        // formik expects each form value to be at least undefined or empty
+        if (groupResponse.data.description === null) {
+            groupResponse.data.description = "";
         }
         return groupResponse.data;
     },
     async save(group: Group): Promise<void> {
-        const response = await Axios.post("/groups", group);
-        if (response.status !== 201) {
+        try {
+            await Axios.post("/groups", group);
+        } catch (e: AxiosError | unknown) {
+            if (isAxiosError(e)) {
+                const axiosError = e as AxiosError;
+                if (axiosError.response?.status === 409) {
+                    throw new Error(t("newGroup.notification.errorDuplicate"));
+                }
+            }
             throw new Error(t("newGroup.notification.error"));
         }
     },
     async update(group: Group): Promise<void> {
-        const response = await Axios.put(`/groups/${group.name}`, group);
-        if (response.status !== 204) {
-            throw new Error(t("editGroup.notification.error"));
+        try {
+            await Axios.put(`/groups/${group.name}`, group);
+        } catch (e: AxiosError | unknown) {
+            throw new Error(t("newGroup.notification.error"));
         }
     },
     async delete(groupName: string): Promise<void> {

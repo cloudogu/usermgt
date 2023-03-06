@@ -129,12 +129,15 @@ i18n
                             back: "Back"
                         },
                         errors: {
-                            name: "Name is required.",
-                            nameLength: "Name must have at least 2 characters.",
+                            name: "Value is required",
+                            nameMinLength: "Minimum length is 2 characters",
+                            nameMaxLength: "Maximum length is 128 characters",
+                            nameFormat: "Value contains illegal characters",
                         },
                         notification: {
                             success: "The group was saved successfully.",
                             error: "The group could not be created. Please try again later.",
+                            errorDuplicate: "The group could not be created. The name is already in use.",
                         },
                     },
                     editUser: {
@@ -150,7 +153,7 @@ i18n
                         buttons: {
                             save: "Save"
                         },
-                        alerts: {
+                        notification: {
                             success: "Account information saved successfully.",
                             error: "Account information could not be saved. Please try again later.",
                         },
@@ -259,12 +262,15 @@ i18n
                             save: "Speichern"
                         },
                         errors: {
-                            name: "Name muss ausgefüllt sein.",
-                            nameLength: "Der Name muss eine Mindestlänge von 2 Zeichen haben.",
+                            name: "Der Wert muss ausgefüllt sein.",
+                            nameMinLength: "Die Mindestlänge beträgt 2 Zeichen",
+                            nameMaxLength: "Die Maximallänge beträgt 128 Zeichen",
+                            nameFormat: "Der Wert enthält ungültige Zeichen.",
                         },
                         notification: {
                             success: "Die Gruppe wurde erfolgreich gespeichert.",
                             error: "Die Gruppe konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
+                            errorDuplicate: "Die Gruppe konnte nicht gespeichert werden. Der Name ist bereits vergeben."
                         },
                     },
                     editUser: {
@@ -280,7 +286,7 @@ i18n
                         buttons: {
                             save: "Speichern"
                         },
-                        alerts: {
+                        notification: {
                             success: "Die Account Informationen wurden erfolgreich gespeichert.",
                             error: "Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
                         },

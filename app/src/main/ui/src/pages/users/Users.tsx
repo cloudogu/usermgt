@@ -6,6 +6,7 @@ import {t} from "../../helpers/i18nHelpers";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {useFilter} from "../../hooks/useFilter";
+import {useNotificationAfterRedirect} from "../../hooks/useNotificationAfterRedirect";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
 import {useUsers} from "../../hooks/useUsers";
 import {ApplicationContext} from "../../main";
@@ -16,22 +17,25 @@ import type {User} from "../../services/Users";
 const FIRST_PAGE = 1;
 
 export default function Users(props: { title: string }) {
-    useSetPageTitle(props.title);
-    const [setQuery, setPage, refetch, opts] = useFilter();
-    const [usersModel, isLoading] = useUsers(opts);
+    const {updateQuery, updatePage, refetch, opts} = useFilter();
+    const {users:usersModel, isLoading} = useUsers(opts);
     const {casUser} = useContext(ApplicationContext);
-    const {notification, notify} = useChangeNotification();
-    const [open, toggleModal, username, setUsername] = useConfirmation();
+    const {notification, notify, clearNotification} = useChangeNotification();
+    useNotificationAfterRedirect(notify);
+    useSetPageTitle(props.title);
+    const {open, setOpen:toggleModal, targetName:username, setTargetName:setUsername} = useConfirmation();
 
     const changePage = (selectedPage: number) => {
-        setPage(selectedPage);
+        clearNotification();
+        updatePage(selectedPage);
     };
     const onSearch = (query: string) => {
-        setQuery(query);
+        clearNotification();
+        updateQuery(query);
     };
 
-    const updatePage = () => (usersModel?.users.length ?? 0) === 1
-        && setPage(Math.max((usersModel?.pagination.current ?? 2) - 1, FIRST_PAGE))
+    const reloadPage = () => (usersModel?.users.length ?? 0) === 1
+        && updatePage(Math.max((usersModel?.pagination.current ?? 2) - 1, FIRST_PAGE))
         || refetch();
 
     const openConfirmationDialog = (groupName: string): void => {
@@ -41,10 +45,10 @@ export default function Users(props: { title: string }) {
     const onDelete = async (username: string) => {
         try {
             await UsersService.delete(username);
-            updatePage();
+            reloadPage();
             notify(t("users.notification.success", {username: username}), "primary");
         } catch (e) {
-            updatePage();
+            reloadPage();
             notify(t("users.notification.error", {username: username}), "danger");
         }
         toggleModal(false);
@@ -57,7 +61,7 @@ export default function Users(props: { title: string }) {
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                     disabled={isLoading}>{t("users.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                    onClear={() => setQuery("")} startValueSearch={opts.query}
+                    onClear={() => updateQuery("")} startValueSearch={opts.query}
                     className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>

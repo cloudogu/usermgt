@@ -51,9 +51,9 @@ export const AccountService = {
         });
 
         if (saveResponse.status < 200 || saveResponse.status > 299) {
-            throw new Error(t("editUser.alerts.error"));
+            throw new Error(t("editUser.notification.error"));
         }
 
-        return t("editUser.alerts.success");
+        return t("editUser.notification.success");
     }
 };

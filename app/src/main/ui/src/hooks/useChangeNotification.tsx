@@ -10,16 +10,7 @@ export const useChangeNotification = () => {
         }}>
         {message}
     </Alert>);
+    const clearNotification = () => setNotification(<></>);
 
-    return {notification, notify};
+    return {notification, clearNotification, notify};
 };
-
-// function parseAlert(alertData: {type: "primary" | "danger", message: string}): JSX.Element {
-//     return <Alert
-//         variant={alertData.type}
-//         onClose={() => {
-//             setNotification(<></>);
-//         }}>
-//         {alertData.message}
-//     </Alert>;
-// }

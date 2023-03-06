@@ -8,9 +8,9 @@ import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import Account from "./pages/account/Account";
-import {EditGroupForm} from "./pages/groups/EditGroupForm";
+import {EditGroup} from "./pages/groups/EditGroup";
 import Groups from "./pages/groups/Groups";
-import {NewGroupForm} from "./pages/groups/NewGroupForm";
+import {NewGroup} from "./pages/groups/NewGroup";
 import Users from "./pages/users/Users";
 import type {CasUser} from "./services/CasUser";
 
@@ -26,7 +26,7 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
     casUser: {
         principal: "default",
         admin: false
-    }
+    },
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<React.StrictMode>
@@ -34,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<Reac
 </React.StrictMode>);
 
 function MainApplication() {
-    const [casUser] = useCasUser();
+    const {user:casUser} = useCasUser();
     return <Router basename={contextPath}>
         <ApplicationContext.Provider value={{casUser: casUser}}>
             <Nav/>
@@ -46,9 +46,9 @@ function MainApplication() {
                     <Route path="/users" element={<Users title={t("pages.users") + " | User Management"}/>}/>
                     <Route path="/groups" element={<Groups title={t("pages.groups") + " | User Management"}/>}/>
                     <Route path="/groups/new"
-                        element={<NewGroupForm title={t("pages.groupsNew") + " | User Management"}/>}/>
+                        element={<NewGroup title={t("pages.groupsNew") + " | User Management"}/>}/>
                     <Route path="/groups/:groupName/edit"
-                        element={<EditGroupForm edit={true} title={t("pages.groupsEdit") + " | User Management"}/>}/>
+                        element={<EditGroup title={t("pages.groupsEdit") + " | User Management"}/>}/>
                 </Routes>
             </Main>
         </ApplicationContext.Provider>

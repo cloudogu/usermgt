@@ -17,7 +17,7 @@ function updateQueryOptions(currentState: QueryOptions, newState: QueryOptionsRe
     return currentState;
 }
 
-export function useFilter(): [(_: string) => void, (_: number) => void, () => void, QueryOptions] {
+export function useFilter() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [page, query] = [+(searchParams.get(PAGE_QUERY_PARAM) ?? 1), searchParams.get(SEARCH_QUERY_PARAM) ?? ""];
     const [opts, updateOpts] = useReducer(updateQueryOptions, {start: 0, limit: DEFAULT_PAGE_SIZE, query: ""});
@@ -42,5 +42,5 @@ export function useFilter(): [(_: string) => void, (_: number) => void, () => vo
         updateOpts({start: newStart, limit: DEFAULT_PAGE_SIZE, query: query, force: false});
     }, [searchParams]);
 
-    return [updateQuery, updatePage, refetch, opts];
+    return {updateQuery, updatePage, refetch, opts};
 }

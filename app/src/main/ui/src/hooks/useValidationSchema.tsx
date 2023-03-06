@@ -6,8 +6,7 @@ import {useAPI} from "./useAPI";
 import type { PasswordPolicy} from "../services/ValidationSchema";
 
 export function useValidationSchema(): any {
-    const [passwordPolicy] = useAPI<PasswordPolicy>(ValidationSchemaService.get);
-
+    const {data:passwordPolicy} = useAPI<PasswordPolicy>(ValidationSchemaService.get);
     return createValidationSchema(passwordPolicy ?? defaultPasswordPolicy);
 }
 
