@@ -1,31 +1,16 @@
-import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {ValidationError} from "yup";
-import {useTranslation} from "react-i18next";
-
-const contextPath = process.env.PUBLIC_URL || "/usermgt";
-
-export type PasswordPolicy = {
-  Rules: { Rule: string, Type: "regex", Name: string, Variables: { Name: string; Value: string }[] }[],
-}
+import {t} from "../helpers/i18nHelpers";
+import {defaultPasswordPolicy, PasswordPolicy, ValidationSchemaService} from "../services/ValidationSchema";
+import {useAPI} from "./useAPI";
 
 export function useValidationSchema(): any {
-  const [passwordPolicy, setPasswordPolicy] = useState<PasswordPolicy>({Rules: []});
+  const [passwordPolicy, _isLoading, _setPasswordPolicy] = useAPI<PasswordPolicy>(ValidationSchemaService.get)
 
-  useEffect(() => {
-    fetch(contextPath + `/api/account/passwordpolicy`)
-      .then(async function (response) {
-        const json: PasswordPolicy = await response.json();
-        setPasswordPolicy(json);
-      });
-  }, []);
-
-  return createValidationSchema(passwordPolicy);
+  return createValidationSchema(passwordPolicy ?? defaultPasswordPolicy);
 }
 
 function createValidationSchema(passwordPolicy: PasswordPolicy) {
-  const {t} = useTranslation<string>();
-
   const passwordValidationFunction = (value: any) => {
     if (value === "__dummypassword") {
       return true;
@@ -38,7 +23,7 @@ function createValidationSchema(passwordPolicy: PasswordPolicy) {
       if (!matches) {
         let translatedErrorMessage: string = t(`editUser.errors.password.${rule.Name}`);
         for (const variable of rule.Variables) {
-          translatedErrorMessage = translatedErrorMessage.replace(`{{${variable.Name}}}`, variable.Value)
+          translatedErrorMessage = t(translatedErrorMessage, {[variable.Name]: variable.Value})
         }
         errors.push(new ValidationError(translatedErrorMessage, "password", "password"));
       }
