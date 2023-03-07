@@ -1,9 +1,6 @@
 import { useEffect, useState} from "react";
-import type {Dispatch, SetStateAction} from "react";
 
 export type QueryOptions = {start: number; limit: number; query: string;}
-
-export type StateSetter<T> = Dispatch<SetStateAction<T | undefined>>;
 
 export type AbortableCallbackWithArgs<T, Y> = (_signal?: AbortSignal, _args?: Y) => Promise<T>
 export type AbortableCallback<T> = (_signal?: AbortSignal) => Promise<T>

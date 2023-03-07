@@ -3,11 +3,12 @@ import React, {createContext, useContext} from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import {useTranslation} from "react-i18next";
-import {BrowserRouter as Router, Navigate, Route, Routes, useLocation} from "react-router-dom";
+import {Outlet, useLocation, createBrowserRouter, RouterProvider} from "react-router-dom";
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import Account from "./pages/account/Account";
+import ErrorPage from "./pages/error/Error";
 import {EditGroup} from "./pages/groups/EditGroup";
 import Groups from "./pages/groups/Groups";
 import {NewGroup} from "./pages/groups/NewGroup";
@@ -29,30 +30,51 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
     },
 });
 
+
+// ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<MainApplication/>);
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <MainApplication />,
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                path: "account",
+                element: <Account title={t("pages.account") + " | User Management"}/>,
+            },
+            {
+                path: "users",
+                element: <Users title={t("pages.users") + " | User Management"}/>,
+            },
+            {
+                path: "groups",
+                element: <Groups title={t("pages.groups") + " | User Management"}/>,
+            },
+            {
+                path: "groups/new",
+                element: <NewGroup title={t("pages.groupsNew") + " | User Management"}/>
+            },
+            {
+                path: "groups/:groupName/edit",
+                element: <EditGroup title={t("pages.groupsEdit") + " | User Management"}/>
+            }
+        ],
+    },
+], {basename: contextPath});
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<React.StrictMode>
-    <MainApplication/>
+    <RouterProvider router={router} />
 </React.StrictMode>);
 
 function MainApplication() {
     const {user:casUser} = useCasUser();
-    return <Router basename={contextPath}>
-        <ApplicationContext.Provider value={{casUser: casUser}}>
-            <Nav/>
-            <Main>
-                <Routes>
-                    <Route path="/" element={<Navigate to={"/account"}/>}/>
-                    <Route index path="/account"
-                        element={<Account title={t("pages.account") + " | User Management"}/>}/>
-                    <Route path="/users" element={<Users title={t("pages.users") + " | User Management"}/>}/>
-                    <Route path="/groups" element={<Groups title={t("pages.groups") + " | User Management"}/>}/>
-                    <Route path="/groups/new"
-                        element={<NewGroup title={t("pages.groupsNew") + " | User Management"}/>}/>
-                    <Route path="/groups/:groupName/edit"
-                        element={<EditGroup title={t("pages.groupsEdit") + " | User Management"}/>}/>
-                </Routes>
-            </Main>
-        </ApplicationContext.Provider>
-    </Router>;
+    return <ApplicationContext.Provider value={{casUser: casUser}}>
+        <Nav/>
+        <Main>
+            <Outlet />
+        </Main>
+    </ApplicationContext.Provider>;
 }
 
 function Nav() {

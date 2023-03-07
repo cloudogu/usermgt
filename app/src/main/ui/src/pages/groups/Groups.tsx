@@ -1,6 +1,6 @@
 import {Button, H1, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
@@ -10,13 +10,14 @@ import {useFilter} from "../../hooks/useFilter";
 import {useGroups} from "../../hooks/useGroups";
 import {useNotificationAfterRedirect} from "../../hooks/useNotificationAfterRedirect";
 import {useSetPageTitle} from "../../hooks/useSetPageTitle";
-import { GroupsService} from "../../services/Groups";
+import {GroupsService} from "../../services/Groups";
 import type {Group} from "../../services/Groups";
 
 const FIRST_PAGE = 1;
 
 export default function Groups(props: { title: string }) {
     const {updateQuery:setQuery, updatePage:setPage, refetch, opts} = useFilter();
+    const location = useLocation();
     const {groups:model, isLoading} = useGroups(opts);
     const navigate = useNavigate();
     const {notification, notify, clearNotification} = useChangeNotification();
@@ -52,14 +53,17 @@ export default function Groups(props: { title: string }) {
         toggleModal(false);
     };
     const editGroup = (groupName: string) => {
-        navigate(`/groups/${groupName}/edit`);
+        const backURL = `/groups${location.search}`;
+        const params = new URLSearchParams();
+        params.set("backURL", backURL);
+        navigate({pathname: `/groups/${groupName}/edit`, search: params.toString()});
     };
     return <>
         <div className="flex justify-between">
             <H1 className="uppercase">{t("pages.groups")}</H1>
             <div className="flex justify-between py-1">
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
-                    disabled={isLoading} onClick={() => navigate("/groups/new", {state: {name: "test"}})}>
+                    disabled={isLoading} onClick={() => navigate("/groups/new")}>
                     {t("groups.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
                     onClear={() => setQuery("")} startValueSearch={opts.query}

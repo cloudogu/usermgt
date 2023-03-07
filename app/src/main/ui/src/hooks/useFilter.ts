@@ -3,8 +3,8 @@ import {useSearchParams} from "react-router-dom";
 import {DEFAULT_PAGE_SIZE, calcPageStart} from "../lib/pagination";
 import type {QueryOptions} from "./useAPI";
 
-const PAGE_QUERY_PARAM = "p";
-const SEARCH_QUERY_PARAM = "q";
+export const PAGE_QUERY_PARAM = "p";
+export const SEARCH_QUERY_PARAM = "q";
 
 type QueryOptionsReducerArgs = QueryOptions & {
     force: boolean;
@@ -42,5 +42,5 @@ export function useFilter() {
         updateOpts({start: newStart, limit: DEFAULT_PAGE_SIZE, query: query, force: false});
     }, [searchParams]);
 
-    return {updateQuery, updatePage, refetch, opts};
+    return {updateQuery, updatePage, refetch, searchParams, opts};
 }

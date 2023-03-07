@@ -89,7 +89,7 @@ export const GroupsService = {
         if (response.status !== 204) {
             throw new Error(`failed to delete group '${groupName}': ${response.status}`);
         }
-    }
+    },
 };
 
 const mapSystemGroups = (groups: Group[], undeletableGroups: UndeletableGroupsResponse): Group[] => groups.map(grp => {

@@ -6,6 +6,6 @@ export const useGroup = (groupName?: string) => {
     if (!groupName) {
         return {name: "", description: "", members: []};
     }
-    const {data, setData, isLoading, error} = useAPI<Group, string>(GroupsService.get, groupName);
-    return {data, setData, isLoading, error};
+    const {data:group, setData:setGroup, isLoading, error} = useAPI<Group, string>(GroupsService.get, groupName);
+    return {group, setGroup, isLoading, error};
 };

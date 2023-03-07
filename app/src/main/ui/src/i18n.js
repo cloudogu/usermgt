@@ -112,7 +112,7 @@ i18n
                         buttons: {
                             save: "Save",
                             back: "Back",
-                            remove: "Remove",
+                            remove: "Delete",
                         },
                         notification: {
                             success: "The group was saved successfully.",
@@ -246,7 +246,7 @@ i18n
                         buttons: {
                             save: "Speichern",
                             back: "Zurück",
-                            remove: "Entfernen",
+                            remove: "Löschen",
                         },
                         notification: {
                             success: "Die Gruppe wurde erfolgreich gespeichert.",
