@@ -1,10 +1,9 @@
-import {Button, H1, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
-import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {useFilter} from "../../hooks/useFilter";
 import {useGroups} from "../../hooks/useGroups";
@@ -20,13 +19,13 @@ export default function Groups(props: { title: string }) {
     const location = useLocation();
     const {groups:model, isLoading} = useGroups(opts);
     const navigate = useNavigate();
-    const {notification, notify, clearNotification} = useChangeNotification();
+    const {notification, notify, clearNotification} = useAlertNotification();
     useNotificationAfterRedirect(notify);
     useSetPageTitle(props.title);
     const {open, setOpen:toggleModal, targetName:group, setTargetName:setGroup} = useConfirmation();
 
     const changePage = (selectedPage: number) => {
-        clearNotification();
+        // clearNotification();
         setPage(selectedPage);
     };
     const onSearch = (query: string) => {
@@ -64,7 +63,7 @@ export default function Groups(props: { title: string }) {
             <div className="flex justify-between py-1">
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                     disabled={isLoading} onClick={() => navigate("/groups/new")}>
-                    {t("groups.create")}</Button>
+                    {t("groups.buttons.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
                     onClear={() => setQuery("")} startValueSearch={opts.query}
                     className="mt-5 mb-2.5" disabled={isLoading}/>

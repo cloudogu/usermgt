@@ -1,9 +1,8 @@
-import {Button, H1, MailHref, Searchbar, Table} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1, MailHref, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import React, {useContext} from "react";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
 import {DeleteButton, EditButton} from "../../components/DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
-import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {useFilter} from "../../hooks/useFilter";
 import {useNotificationAfterRedirect} from "../../hooks/useNotificationAfterRedirect";
@@ -20,7 +19,7 @@ export default function Users(props: { title: string }) {
     const {updateQuery, updatePage, refetch, opts} = useFilter();
     const {users:usersModel, isLoading} = useUsers(opts);
     const {casUser} = useContext(ApplicationContext);
-    const {notification, notify, clearNotification} = useChangeNotification();
+    const {notification, notify, clearNotification} = useAlertNotification();
     useNotificationAfterRedirect(notify);
     useSetPageTitle(props.title);
     const {open, setOpen:toggleModal, targetName:username, setTargetName:setUsername} = useConfirmation();

@@ -30,9 +30,6 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
     },
 });
 
-
-// ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<MainApplication/>);
-
 const router = createBrowserRouter([
     {
         path: "/",

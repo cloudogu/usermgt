@@ -1,6 +1,5 @@
-import {Button, Form, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import {t} from "../../helpers/i18nHelpers";
-import {useChangeNotification} from "../../hooks/useChangeNotification";
 import { AccountService} from "../../services/Account";
 import type {ApiAccount,AccountModel} from "../../services/Account";
 
@@ -11,7 +10,7 @@ type AccountFormProps = {
 }
 
 export default function AccountForm(props: AccountFormProps) {
-    const {notification, notify} = useChangeNotification();
+    const {notification, notify} = useAlertNotification();
 
     const handler = useFormHandler<AccountModel>({
         initialValues: {
