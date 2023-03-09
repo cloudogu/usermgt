@@ -69,6 +69,7 @@
       "users": "Mitglieder"
     }
   },
+  "groups.labels.addMember": "Mitglied hinzufügen",
   "groups.labels.description": "Beschreibung",
   "groups.labels.members": "Mitglieder",
   "groups.labels.name": "Name",

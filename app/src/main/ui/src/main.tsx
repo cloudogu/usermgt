@@ -3,7 +3,7 @@ import React, {createContext, useContext} from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import {useTranslation} from "react-i18next";
-import {Outlet, useLocation, createBrowserRouter, RouterProvider} from "react-router-dom";
+import {Outlet, useLocation, createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
@@ -32,10 +32,14 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: "",
         element: <MainApplication />,
         errorElement: <ErrorPage />,
         children: [
+            {
+                path: "",
+                element: <Navigate to="/account" replace />,
+            },
             {
                 path: "account",
                 element: <Account title={t("pages.account") + " | User Management"}/>,

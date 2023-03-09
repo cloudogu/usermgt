@@ -69,6 +69,7 @@
       "users": "Members"
     }
   },
+  "groups.labels.addMember": "Add Member",
   "groups.labels.description": "Description",
   "groups.labels.members": "Members",
   "groups.labels.name": "Name",

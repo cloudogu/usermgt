@@ -37,7 +37,7 @@ export function Members(props: MembersProps) {
                 item.value = "";
                 setEntries([]);
             }}>
-        Mitglied hinzufügen
+            {t("groups.labels.addMember")}
         </SearchbarAutocomplete>
         <Table className="my-4 text-sm">
             <Table.Head>
