@@ -3,34 +3,17 @@ import {t} from "../../helpers/i18nHelpers";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
 import { AccountService} from "../../services/Account";
 import type {ApiAccount,AccountModel} from "../../services/Account";
+import useUserFormHandler from "../../hooks/useUserFormHandler";
 
-type AccountFormProps = {
-    account: ApiAccount;
-    validationSchema: any;
-    setAccount: (_: ApiAccount) => void;
+type UserFormProps = {
+    initialAccount: ApiAccount;
+    setAccount: (_account: ApiAccount) => void;
+    saveAccount: (_account: ApiAccount) => Promise<string>;
+    children?: JSX.Element;
 }
 
-export default function AccountForm(props: AccountFormProps) {
-    const {notification, notify} = useChangeNotification();
-
-    const handler = useFormHandler<AccountModel>({
-        initialValues: {
-            ...props.account,
-            confirmPassword: props.account.password,
-            hiddenPasswordField: props.account.password,
-        },
-        validationSchema: props.validationSchema,
-        enableReinitialize: true,
-        onSubmit: (values: any) => {
-            AccountService.update(values).then(value => {
-                notify(value, "primary");
-                props.setAccount(values);
-                handler.resetForm(values);
-            }).catch((error: Error) => {
-                notify(error.message, "danger");
-            });
-        },
-    });
+export default function UserForm(props: UserFormProps) {
+    const {handler, notification} = useUserFormHandler(props.initialAccount, props.saveAccount, props.setAccount);
 
     return <Form handler={handler}>
         {notification}
@@ -55,6 +38,7 @@ export default function AccountForm(props: AccountFormProps) {
         <Form.ValidatedTextInput type={"password"} name={"confirmPassword"}>
             {t("editUser.labels.confirmPassword")}
         </Form.ValidatedTextInput>
+        {props.children as JSX.Element}
         <div className={"my-4"}>
             <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>
                 {t("editUser.buttons.save")}

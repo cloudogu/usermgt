@@ -216,10 +216,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/ces-theme-tailwind@^0.0.98":
-  version "0.0.98"
-  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.0.98.tgz#8ec474e1f16558b6b6a49181ea0b6317664118c2"
-  integrity sha512-v/oWwFvzD3oZEPeZIG8rfuRrjjvdqokq0mjrMuvcFUCNjOr3oSA9UHmpAd8eUNRnnChrUvhRNuVpWV4C+b1fmg==
+"@cloudogu/ces-theme-tailwind@^0.0.102":
+  version "0.0.102"
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.0.102.tgz#022157075613d9962ca8591a43157047b8322efc"
+  integrity sha512-E4MQBBshx8ibisQpIXvvgZJAOPvJEnS1QDNSdkR4sgkHJoPIOGFyGliYnVZckiUKd+NyPMTSZANKX3aMAbPrHg==
   dependencies:
     "@heroicons/react" "^2.0.13"
     eslint-plugin-import "^2.27.5"
