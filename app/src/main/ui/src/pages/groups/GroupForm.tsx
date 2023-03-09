@@ -1,19 +1,19 @@
 import {
     Button,
     Form,
-    H2, SearchbarAutocomplete,
-    Table,
+    H2, 
     useFormHandler
 } from "@cloudogu/ces-theme-tailwind";
-import React, {useState} from "react";
+import React from "react";
 import {useNavigate} from "react-router-dom";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
-import {DeleteButton} from "../../components/DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
 import {useBackURL} from "../../hooks/useBackURL";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";
 import {UsersService} from "../../services/Users";
+import {Members} from "./Members";
+import type {QueryOptions} from "../../hooks/useAPI";
 import type {Group} from "../../services/Groups";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
@@ -28,7 +28,6 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     const isNewGroup = !group.name;
     const handler = useFormHandler<Group>(config);
     const {open, setOpen: toggleModal, targetName: username, setTargetName: setUsername} = useConfirmation();
-    const [users, setUsers] = useState<string[]>([]);
     const openConfirmationDialog = (username: string): void => {
         setUsername(username);
         toggleModal(true);
@@ -41,9 +40,19 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     };
 
     const addMember = (value: string) => {
+        const memberAlreadyAdded = handler.values.members.indexOf(value) >= 0;
+        if (memberAlreadyAdded) {
+            return;
+        }
         const newMembers = [...handler.values.members, value];
         handler.setValues({...handler.values, members: newMembers});
     };
+
+    const loadMembers = async (opts: QueryOptions): Promise<string[]> => {
+        const userData = await UsersService.get(undefined, opts);
+        return userData.users.map(x => x.username);
+    };
+
     return <>
         <ConfirmationDialog open={open ?? false}
             onClose={() => toggleModal(false)}
@@ -60,47 +69,8 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
             <Form.ValidatedTextArea name={"description"}>
                 {t("groups.labels.description")}
             </Form.ValidatedTextArea>
-            <H2>Mitglieder</H2>
-            <SearchbarAutocomplete
-                searchResults={users.map(x => <SearchbarAutocomplete.SearchResult type={"button"} key={x} value={x} />)}
-                onSelectItem={(val: string, item) => {
-                    addMember(val);
-                    item.value = "";
-                    setUsers([]);
-                }}
-                onTrigger={async (val) => {
-                    const userData = await UsersService.get(undefined, {start: 0, limit: 5, query: val});
-                    const newUsers = userData.users.map(x => x.username);
-                    const shouldUpdateResultList = containsNewUsers(users, newUsers);
-                    if (shouldUpdateResultList){
-                        setUsers(newUsers);
-                    }
-                }}
-                onCancelSelection={(item) => {
-                    item.value = "";
-                    setUsers([]);
-                }}>
-                Mitglied hinzufügen
-            </SearchbarAutocomplete>
-            <Table className="my-4 text-sm">
-                <Table.Head>
-                    <Table.Head.Tr className={"uppercase"}>
-                        <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>
-                        <Table.Head.Th className="w-0"/>
-                    </Table.Head.Tr>
-                </Table.Head>
-                <Table.Body>
-                    {(handler.values.members ?? []).map((user) => <Table.Body.Tr key={user}>
-                        <Table.Body.Td className="font-bold">{user}</Table.Body.Td>
-                        <Table.Body.Td className="flex justify-center">
-                            <DeleteButton
-                                type={"button"}
-                                title={t("users.table.actions.delete")}
-                                onClick={() => openConfirmationDialog(user)}/>
-                        </Table.Body.Td>
-                    </Table.Body.Tr>)}
-                </Table.Body>
-            </Table>
+            <H2>{`${t("groups.labels.members")} (${handler.values.members.length})`}</H2>
+            <Members entries={handler.values.members} loadFn={loadMembers} addEntry={addMember} removeEntry={openConfirmationDialog} />
             <div className={"my-4"}>
                 <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>
                     {t("editGroup.buttons.save")}
@@ -113,18 +83,6 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
         </Form>
     </>;
 }
-
-const containsNewUsers = (oldList: string[], newList: string[]) => {
-    if (oldList.length < newList.length) {
-        return true;
-    }
-    for (const newItem in newList){
-        if(oldList.indexOf(newItem) >= 0){
-            return true;
-        }
-    }
-    return false;
-};
 
 const removeMember = (members: string[], toRemove: string) => {
     const index = members.indexOf(toRemove);

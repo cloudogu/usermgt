@@ -52,10 +52,6 @@
       "message": "Soll die Gruppe {{groupName}} entfernt werden?",
       "title": "Gruppe entfernen"
     },
-    "labels": {
-      "description": "Beschreibung",
-      "name": "Name"
-    },
     "notification": {
       "error": "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden.",
       "success": "Die Gruppe '{{groupName}}' wurde erfolgreich gelöscht."
@@ -73,6 +69,9 @@
       "users": "Mitglieder"
     }
   },
+  "groups.labels.description": "Beschreibung",
+  "groups.labels.members": "Mitglieder",
+  "groups.labels.name": "Name",
   "modal": {
     "cancel": "Abbrechen",
     "confirm": "Bestätigen"

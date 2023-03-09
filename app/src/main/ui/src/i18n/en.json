@@ -52,10 +52,6 @@
       "message": "Remove group {{groupName}}?",
       "title": "Remove group"
     },
-    "labels": {
-      "description": "Description",
-      "name": "Name"
-    },
     "notification": {
       "error": "The group '{{groupName}}' could not be deleted.",
       "success": "The group '{{groupName}}' was deleted successfully."
@@ -73,6 +69,9 @@
       "users": "Members"
     }
   },
+  "groups.labels.description": "Description",
+  "groups.labels.members": "Members",
+  "groups.labels.name": "Name",
   "modal": {
     "cancel": "Cancel",
     "confirm": "Confirm"
