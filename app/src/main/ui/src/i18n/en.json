@@ -1,0 +1,130 @@
+{
+  "editGroup": {
+    "buttons": {
+      "back": "Back",
+      "remove": "Delete",
+      "save": "Save"
+    },
+    "notification": {
+      "error": "The group could not be saved. Please try again later.",
+      "success": "The group was saved successfully."
+    }
+  },
+  "editUser": {
+    "buttons": {
+      "save": "Save"
+    },
+    "errors": {
+      "confirmPassword": "Passwords must match.",
+      "displayName": "Display name is required.",
+      "email": {
+        "invalid": "E-mail address is invalid.",
+        "required": "'E-mail address is required.'"
+      },
+      "password": {
+        "capital": "The password must contain at least one capital letter.",
+        "length": "The password must contain at least {{length}} characters.",
+        "lowercase": "The password must contain at least one lower case letter.",
+        "numeric": "The password must contain at least 1 number.",
+        "special": "The password must contain at least 1 special character."
+      },
+      "surname": "Surname is required."
+    },
+    "labels": {
+      "confirmPassword": "Confirm Password",
+      "displayName": "Display Name",
+      "email": "E-Mail",
+      "givenName": "Given Name",
+      "password": "Password",
+      "surname": "Surname",
+      "username": "Username"
+    },
+    "notification": {
+      "error": "Account information could not be saved. Please try again later.",
+      "success": "Account information saved successfully."
+    }
+  },
+  "groups": {
+    "buttons": {
+      "create": "Create Group"
+    },
+    "confirmation": {
+      "message": "Remove group {{groupName}}?",
+      "title": "Remove group"
+    },
+    "notification": {
+      "error": "The group '{{groupName}}' could not be deleted.",
+      "success": "The group '{{groupName}}' was deleted successfully."
+    },
+    "table": {
+      "actions": {
+        "delete": "Remove group",
+        "deleteAria": "remove",
+        "edit": "Edit group",
+        "editAria": "edit"
+      },
+      "description": "Description",
+      "name": "Name",
+      "systemGroup": "This is a system group and cannot be deleted.",
+      "users": "Members"
+    }
+  },
+  "groups.labels.addMember": "Add Member",
+  "groups.labels.description": "Description",
+  "groups.labels.members": "Members",
+  "groups.labels.name": "Name",
+  "modal": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "navbar": {
+    "logoAltText": "User Management icon: magnifying glass directed to a user icon.",
+    "logout": "Logout"
+  },
+  "newGroup": {
+    "buttons": {
+      "back": "Back",
+      "save": "Save"
+    },
+    "errors": {
+      "name": "Value is required",
+      "nameFormat": "Value contains illegal characters",
+      "nameMaxLength": "Maximum length is 128 characters",
+      "nameMinLength": "Minimum length is 2 characters"
+    },
+    "notification": {
+      "error": "The group could not be created. Please try again later.",
+      "errorDuplicate": "The group could not be created. The name is already in use.",
+      "success": "The group {{groupName}} was created successfully."
+    }
+  },
+  "pages": {
+    "account": "Account",
+    "groups": "Groups",
+    "groupsEdit": "Edit group",
+    "groupsNew": "New Group",
+    "users": "Users"
+  },
+  "users": {
+    "confirmation": {
+      "message": "Remove user {{username}}?",
+      "title": "Remove user"
+    },
+    "create": "Create user",
+    "notification": {
+      "error": "The user '{{username}}' could not be deleted.",
+      "success": "The user '{{username}}' was deleted successfully."
+    },
+    "table": {
+      "actions": {
+        "delete": "Remove user",
+        "deleteAria": "remove",
+        "edit": "Edit user",
+        "editAria": "edit"
+      },
+      "displayName": "Displayname",
+      "email": "E-Mail",
+      "username": "Username"
+    }
+  }
+}

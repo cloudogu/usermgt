@@ -1,60 +1,58 @@
-import {Button, Form, H2, Table, useFormHandler} from "@cloudogu/ces-theme-tailwind";
-import React, {useState} from "react";
+import {
+    Button,
+    Form,
+    H2, 
+    useFormHandler
+} from "@cloudogu/ces-theme-tailwind";
+import React from "react";
 import {useNavigate} from "react-router-dom";
-import * as Yup from "yup";
 import {ConfirmationDialog} from "../../components/ConfirmationDialog";
-import {DeleteButton} from "../../components/DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
 import {useBackURL} from "../../hooks/useBackURL";
-import {useChangeNotification} from "../../hooks/useChangeNotification";
 import {useConfirmation} from "../../hooks/useConfirmation";
-import {useGroupValidationSchema} from "../../hooks/useGroupValidationSchema";
 import {Prompt} from "../../hooks/usePrompt";
+import {UsersService} from "../../services/Users";
+import {Members} from "./Members";
+import type {QueryOptions} from "../../hooks/useAPI";
 import type {Group} from "../../services/Groups";
+import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
-type GroupFormProps = {
+type GroupFormProps<T> = {
     group: Group;
-    onSubmit: (_: Group) => Promise<void>;
+    config: FormHandlerConfig<T>
 }
 
-export function GroupForm({group, onSubmit}: GroupFormProps) {
-    const validationSchema = useGroupValidationSchema();
-    const {notification, notify} = useChangeNotification();
+export function GroupForm({group, config}: GroupFormProps<Group>) {
     const {backURL} = useBackURL();
     const navigate = useNavigate();
     const isNewGroup = !group.name;
-    const [members, setMembers] = useState(group.members);
-    const handler = useFormHandler<Group>({
-        enableReinitialize: true,
-        initialValues: group,
-        validationSchema: isNewGroup ? validationSchema : Yup.object(),
-        onSubmit: (group: Group, {setFieldError}) => {
-            onSubmit(group).then(() => {
-                navigate(backURL ?? "/groups", {
-                    state: {
-                        alert: {
-                            message: t("editGroup.notification.success", {groupName: group.name}),
-                            variant: "primary"
-                        }
-                    }
-                });
-            }).catch((e: Error) => {
-                setFieldError("name", "duplicate");
-                notify(e.message, "danger");
-            });
-        }
-    });
-
+    const handler = useFormHandler<Group>(config);
     const {open, setOpen: toggleModal, targetName: username, setTargetName: setUsername} = useConfirmation();
     const openConfirmationDialog = (username: string): void => {
         setUsername(username);
         toggleModal(true);
     };
 
-    const onConfirmDeleteMember = async (memberName: string) => {
-        setMembers(currentMembers => removeMember(currentMembers, memberName));
+    const onConfirmDeleteMember = (memberName: string) => {
+        const newMembers = removeMember([...handler.values.members], memberName);
+        handler.setValues({...handler.values, members: newMembers});
         toggleModal(false);
     };
+
+    const addMember = (value: string) => {
+        const memberAlreadyAdded = handler.values.members.indexOf(value) >= 0;
+        if (memberAlreadyAdded) {
+            return;
+        }
+        const newMembers = [...handler.values.members, value];
+        handler.setValues({...handler.values, members: newMembers});
+    };
+
+    const loadMembers = async (opts: QueryOptions): Promise<string[]> => {
+        const userData = await UsersService.get(undefined, opts);
+        return userData.users.map(x => x.username);
+    };
+
     return <>
         <ConfirmationDialog open={open ?? false}
             onClose={() => toggleModal(false)}
@@ -63,27 +61,16 @@ export function GroupForm({group, onSubmit}: GroupFormProps) {
             }}
             title={t("users.confirmation.title")}
             message={t("users.confirmation.message", {username: username})}/>
-        <Prompt when={handler.dirty} message={"Halt Stop!"} />
-        {notification}
+        <Prompt when={handler.dirty && !handler.isSubmitting} message={"Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"} />
         <Form handler={handler}>
             <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup}>
-                {t("editGroup.labels.name")}
+                {t("groups.labels.name")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextArea name={"description"}>
-                {t("editGroup.labels.description")}
+                {t("groups.labels.description")}
             </Form.ValidatedTextArea>
-            <H2>Mitglieder</H2>
-            <Table className="my-4 text-sm">
-                <Table.Head>
-                    <Table.Head.Tr className={"uppercase"}>
-                        <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>
-                        <Table.Head.Th className="w-0"/>
-                    </Table.Head.Tr>
-                </Table.Head>
-                <Table.Body>
-                    {(members ?? []).map(user => createUsersRow(user, openConfirmationDialog))}
-                </Table.Body>
-            </Table>
+            <H2>{`${t("groups.labels.members")} (${handler.values.members.length})`}</H2>
+            <Members entries={handler.values.members} loadFn={loadMembers} addEntry={addMember} removeEntry={openConfirmationDialog} />
             <div className={"my-4"}>
                 <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>
                     {t("editGroup.buttons.save")}
@@ -97,21 +84,9 @@ export function GroupForm({group, onSubmit}: GroupFormProps) {
     </>;
 }
 
-function createUsersRow(user: string, onDelete: (_username: string) => void) {
-    return <Table.Body.Tr key={user}>
-        <Table.Body.Td className="font-bold">{user}</Table.Body.Td>
-        <Table.Body.Td className="flex justify-center">
-            <DeleteButton
-                type={"button"}
-                title={t("users.table.actions.delete")}
-                onClick={() => onDelete(user)}/>
-        </Table.Body.Td>
-    </Table.Body.Tr>;
-}
-
 const removeMember = (members: string[], toRemove: string) => {
     const index = members.indexOf(toRemove);
-    if (index <= 0) {
+    if (index < 0) {
         return members;
     }
     members.splice(index, 1);

@@ -1,0 +1,130 @@
+{
+  "editGroup": {
+    "buttons": {
+      "back": "Zurück",
+      "remove": "Löschen",
+      "save": "Speichern"
+    },
+    "notification": {
+      "error": "Die Gruppe {{groupName}} konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
+      "success": "Die Gruppe {{groupName}} wurde erfolgreich gespeichert."
+    }
+  },
+  "editUser": {
+    "buttons": {
+      "save": "Speichern"
+    },
+    "errors": {
+      "confirmPassword": "Password stimmt nicht überein.",
+      "displayName": "Anzeigename muss ausgefüllt sein.",
+      "email": {
+        "invalid": "E-Mail ist ungültig.",
+        "required": "E-Mail Addresse muss ausgefüllt sein."
+      },
+      "password": {
+        "capital": "Das Passwort muss mindestens ein Großbuchstaben enthalten.",
+        "length": "Das Passwort muss mindestens {{length}} Zeichen lang sein.",
+        "lowercase": "Das Passwort muss mindestens ein Kleinbuchstaben enthalten.",
+        "numeric": "Das Passwort muss mindestens eine Zahl enthalten.",
+        "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten."
+      },
+      "surname": "Nachname muss ausgefüllt sein."
+    },
+    "labels": {
+      "confirmPassword": "Passwort bestätigen",
+      "displayName": "Anzeigename",
+      "email": "E-Mail",
+      "givenName": "Vorname",
+      "password": "Passwort",
+      "surname": "Nachname",
+      "username": "Nutzername"
+    },
+    "notification": {
+      "error": "Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
+      "success": "Die Account Informationen wurden erfolgreich gespeichert."
+    }
+  },
+  "groups": {
+    "buttons": {
+      "create": "Gruppe anlegen"
+    },
+    "confirmation": {
+      "message": "Soll die Gruppe {{groupName}} entfernt werden?",
+      "title": "Gruppe entfernen"
+    },
+    "notification": {
+      "error": "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden.",
+      "success": "Die Gruppe '{{groupName}}' wurde erfolgreich gelöscht."
+    },
+    "table": {
+      "actions": {
+        "delete": "Gruppe löschen",
+        "deleteAria": "löschen",
+        "edit": "Gruppe bearbeiten",
+        "editAria": "bearbeiten"
+      },
+      "description": "Beschreibung",
+      "name": "Name",
+      "systemGroup": "Dies ist eine Systemgruppe und darf nicht gelöscht werden.",
+      "users": "Mitglieder"
+    }
+  },
+  "groups.labels.addMember": "Mitglied hinzufügen",
+  "groups.labels.description": "Beschreibung",
+  "groups.labels.members": "Mitglieder",
+  "groups.labels.name": "Name",
+  "modal": {
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen"
+  },
+  "navbar": {
+    "logoAltText": "Icon des User Managements: Lupe, die auf einen Benutzer-Icon gerichtet ist.",
+    "logout": "Abmelden"
+  },
+  "newGroup": {
+    "buttons": {
+      "back": "Zurück",
+      "save": "Speichern"
+    },
+    "errors": {
+      "name": "Der Wert muss ausgefüllt sein.",
+      "nameFormat": "Der Wert enthält ungültige Zeichen.",
+      "nameMaxLength": "Die Maximallänge beträgt 128 Zeichen",
+      "nameMinLength": "Die Mindestlänge beträgt 2 Zeichen"
+    },
+    "notification": {
+      "error": "Die Gruppe konnte nicht angelegt werden. Bitte versuchen Sie es später erneut.",
+      "errorDuplicate": "Die Gruppe konnte nicht angelegt werden. Der Name ist bereits vergeben.",
+      "success": "Die Gruppe {{groupName}} wurde erfolgreich angelegt."
+    }
+  },
+  "pages": {
+    "account": "Account",
+    "groups": "Gruppen",
+    "groupsEdit": "Gruppe bearbeiten",
+    "groupsNew": "Neue Gruppe",
+    "users": "Nutzer"
+  },
+  "users": {
+    "confirmation": {
+      "message": "Soll der Nutzer {{username}} entfernt werden?",
+      "title": "Nutzer entfernen"
+    },
+    "create": "Nutzer anlegen",
+    "notification": {
+      "error": "Der Nutzer '{{username}}' konnte nicht gelöscht werden.",
+      "success": "Der Nutzer '{{username}}' wurde erfolgreich gelöscht."
+    },
+    "table": {
+      "actions": {
+        "delete": "Nutzer entfernen",
+        "deleteAria": "entfernen",
+        "edit": "Nutzer bearbeiten",
+        "editAria": "bearbeiten"
+      },
+      "displayName": "Anzeigename",
+      "email": "E-Mail",
+      "username": "Nutzername"
+    }
+  }
+}

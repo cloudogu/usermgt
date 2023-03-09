@@ -1,8 +1,5 @@
 import {Button, Form, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import {t} from "../../helpers/i18nHelpers";
-import {useChangeNotification} from "../../hooks/useChangeNotification";
-import {AccountService} from "../../services/Account";
-import type {ApiAccount, AccountModel} from "../../services/Account";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {User} from "../../services/Users";
 
