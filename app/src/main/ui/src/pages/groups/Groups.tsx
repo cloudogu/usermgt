@@ -79,7 +79,7 @@ export default function Groups(props: { title: string }) {
             title={t("groups.confirmation.title")}
             message={t("groups.confirmation.message", {groupName: group})}/>
 
-        <Table className="my-4">
+        <Table className="my-4">7
             <Table.Head key={"table-head"}>
                 <Table.Head.Tr className={"uppercase"}>
                     <Table.Head.Th>{t("groups.table.name")}</Table.Head.Th>

@@ -1,23 +1,16 @@
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
+import {User} from "./Users";
 
-export type ApiAccount = {
-    displayName: string,
-    givenname: string,
-    mail: string,
-    surname: string,
-    username: string,
-    password: string,
-    pwdReset: boolean,
-    memberOf: string[];
-}
+
+export type ApiAccount = User;
 
 export type AccountModel = ApiAccount & {
     hiddenPasswordField?: string;
     confirmPassword?: string;
 }
 
-export const initialState: ApiAccount = {
+export const emptyUser: User = {
     displayName: "",
     givenname: "",
     mail: "",

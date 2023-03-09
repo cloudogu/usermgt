@@ -1,19 +1,20 @@
 import {Button, Form, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import {t} from "../../helpers/i18nHelpers";
 import {useChangeNotification} from "../../hooks/useChangeNotification";
-import { AccountService} from "../../services/Account";
-import type {ApiAccount,AccountModel} from "../../services/Account";
+import {AccountService} from "../../services/Account";
+import type {ApiAccount, AccountModel} from "../../services/Account";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
+import {User} from "../../services/Users";
 
-type UserFormProps = {
-    initialAccount: ApiAccount;
-    setAccount: (_account: ApiAccount) => void;
-    saveAccount: (_account: ApiAccount) => Promise<string>;
+export interface UserFormProps<T extends User> {
+    initialUser: T;
+    onUserChange: (_user: T) => void;
+    saveUser: (_user: T) => Promise<string>;
     children?: JSX.Element;
 }
 
-export default function UserForm(props: UserFormProps) {
-    const {handler, notification} = useUserFormHandler(props.initialAccount, props.saveAccount, props.setAccount);
+export default function UserForm<T extends User>(props: UserFormProps<T>) {
+    const {handler, notification} = useUserFormHandler(props.initialUser, props.saveUser, props.onUserChange);
 
     return <Form handler={handler}>
         {notification}

@@ -1,21 +1,21 @@
 import {useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
-import {AccountModel, ApiAccount} from "../services/Account";
 import {useValidationSchema} from "./useValidationSchema";
+import {User} from "../services/Users";
 
-export interface useUserFormHandlerResponse {
-    handler: ReturnType<typeof useFormHandler<AccountModel>>;
+export interface useUserFormHandlerResponse<T extends User> {
+    handler: ReturnType<typeof useFormHandler<T>>;
     notification: JSX.Element;
 }
 
-export default function useUserFormHandler(
-    initialUser: AccountModel,
-    callback: (account: AccountModel) => Promise<string>,
-    setAccount: (_account: ApiAccount) => void): useUserFormHandlerResponse {
+export default function useUserFormHandler<T extends User>(
+    initialUser: T,
+    callback: (_user: T) => Promise<string>,
+    setAccount: (_user: T) => void): useUserFormHandlerResponse<T> {
 
     const validationSchema = useValidationSchema();
     const {notification, notify} = useAlertNotification();
 
-    const handler = useFormHandler<AccountModel>(
+    const handler = useFormHandler<T>(
         {
             initialValues: {
                 ...initialUser,
