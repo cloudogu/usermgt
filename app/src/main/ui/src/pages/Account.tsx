@@ -1,8 +1,8 @@
 import {H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
-import {useAccount} from "../../hooks/useAccount";
-import {useSetPageTitle} from "../../hooks/useSetPageTitle";
-import UserForm from "../users/UserForm";
-import {AccountService} from "../../services/Account";
+import {useAccount} from "../hooks/useAccount";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import UserForm from "../components/users/UserForm";
+import {AccountService} from "../services/Account";
 
 export default function Account(props: { title: string }) {
     useSetPageTitle(props.title);

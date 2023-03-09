@@ -7,17 +7,17 @@ import {Outlet, useLocation, createBrowserRouter, RouterProvider, Navigate} from
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
-import Account from "./pages/account/Account";
-import ErrorPage from "./pages/error/Error";
-import {EditGroup} from "./pages/groups/EditGroup";
-import Groups from "./pages/groups/Groups";
-import {NewGroup} from "./pages/groups/NewGroup";
-import Users from "./pages/users/Users";
+import Account from "./pages/Account";
+import ErrorPage from "./pages/Error";
+import {EditGroup} from "./pages/EditGroup";
+import Groups from "./pages/Groups";
+import {NewGroup} from "./components/groups/NewGroup";
+import Users from "./pages/Users";
 import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
-import EditUser from "./pages/users/EditUser";
+import EditUser from "./pages/EditUser";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 

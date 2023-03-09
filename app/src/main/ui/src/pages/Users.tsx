@@ -1,17 +1,17 @@
 import {Button, H1, MailHref, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import React, {useContext} from "react";
-import {ConfirmationDialog} from "../../components/ConfirmationDialog";
-import {DeleteButton, EditButton} from "../../components/DeleteButton";
-import {t} from "../../helpers/i18nHelpers";
-import {useConfirmation} from "../../hooks/useConfirmation";
-import {useFilter} from "../../hooks/useFilter";
-import {useNotificationAfterRedirect} from "../../hooks/useNotificationAfterRedirect";
-import {useSetPageTitle} from "../../hooks/useSetPageTitle";
-import {useUsers} from "../../hooks/useUsers";
-import {ApplicationContext} from "../../main";
-import { UsersService} from "../../services/Users";
-import type {CasUser} from "../../services/CasUser";
-import type {User} from "../../services/Users";
+import {ConfirmationDialog} from "../components/ConfirmationDialog";
+import {DeleteButton, EditButton} from "../components/DeleteButton";
+import {t} from "../helpers/i18nHelpers";
+import {useConfirmation} from "../hooks/useConfirmation";
+import {useFilter} from "../hooks/useFilter";
+import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import {useUsers} from "../hooks/useUsers";
+import {ApplicationContext} from "../main";
+import { UsersService} from "../services/Users";
+import type {CasUser} from "../services/CasUser";
+import type {User} from "../services/Users";
 
 const FIRST_PAGE = 1;
 

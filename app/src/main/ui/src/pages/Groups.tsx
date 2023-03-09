@@ -1,16 +1,16 @@
 import {Button, H1, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import {ConfirmationDialog} from "../../components/ConfirmationDialog";
-import {DeleteButton, EditButton} from "../../components/DeleteButton";
-import {t} from "../../helpers/i18nHelpers";
-import {useConfirmation} from "../../hooks/useConfirmation";
-import {useFilter} from "../../hooks/useFilter";
-import {useGroups} from "../../hooks/useGroups";
-import {useNotificationAfterRedirect} from "../../hooks/useNotificationAfterRedirect";
-import {useSetPageTitle} from "../../hooks/useSetPageTitle";
-import {GroupsService} from "../../services/Groups";
-import type {Group} from "../../services/Groups";
+import {ConfirmationDialog} from "../components/ConfirmationDialog";
+import {DeleteButton, EditButton} from "../components/DeleteButton";
+import {t} from "../helpers/i18nHelpers";
+import {useConfirmation} from "../hooks/useConfirmation";
+import {useFilter} from "../hooks/useFilter";
+import {useGroups} from "../hooks/useGroups";
+import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import {GroupsService} from "../services/Groups";
+import type {Group} from "../services/Groups";
 
 const FIRST_PAGE = 1;
 

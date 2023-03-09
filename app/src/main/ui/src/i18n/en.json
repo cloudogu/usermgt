@@ -103,7 +103,8 @@
     "groups": "Groups",
     "groupsEdit": "Edit group",
     "groupsNew": "New Group",
-    "users": "Users"
+    "users": "Users",
+    "usersEdit": "Edit user"
   },
   "users": {
     "confirmation": {

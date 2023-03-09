@@ -3,15 +3,15 @@ import {cl} from "dynamic-class-list";
 import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import * as Yup from "yup";
-import {ConfirmationDialog} from "../../components/ConfirmationDialog";
-import {t} from "../../helpers/i18nHelpers";
-import {useBackURL} from "../../hooks/useBackURL";
-import {useConfirmation} from "../../hooks/useConfirmation";
-import {useGroup} from "../../hooks/useGroup";
-import {useSetPageTitle} from "../../hooks/useSetPageTitle";
-import { GroupsService} from "../../services/Groups";
-import {GroupForm} from "./GroupForm";
-import type {Group} from "../../services/Groups";
+import {ConfirmationDialog} from "../components/ConfirmationDialog";
+import {t} from "../helpers/i18nHelpers";
+import {useBackURL} from "../hooks/useBackURL";
+import {useConfirmation} from "../hooks/useConfirmation";
+import {useGroup} from "../hooks/useGroup";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import { GroupsService} from "../services/Groups";
+import {GroupForm} from "../components/groups/GroupForm";
+import type {Group} from "../services/Groups";
 import type { FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
 export function EditGroup(props: { title: string }) {

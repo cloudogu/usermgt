@@ -6,7 +6,7 @@ import {
 } from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {ConfirmationDialog} from "../../components/ConfirmationDialog";
+import {ConfirmationDialog} from "../ConfirmationDialog";
 import {t} from "../../helpers/i18nHelpers";
 import {useBackURL} from "../../hooks/useBackURL";
 import {useConfirmation} from "../../hooks/useConfirmation";

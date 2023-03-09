@@ -1,6 +1,6 @@
 import {SearchbarAutocomplete, Table} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
-import {DeleteButton} from "../../components/DeleteButton";
+import {DeleteButton} from "../DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
 import {usePagination} from "../../hooks/usePagination";
 import type {QueryOptions} from "../../hooks/useAPI";

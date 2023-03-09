@@ -103,7 +103,8 @@
     "groups": "Gruppen",
     "groupsEdit": "Gruppe bearbeiten",
     "groupsNew": "Neue Gruppe",
-    "users": "Nutzer"
+    "users": "Nutzer",
+    "usersEdit": "Nutzer bearbeiten"
   },
   "users": {
     "confirmation": {
