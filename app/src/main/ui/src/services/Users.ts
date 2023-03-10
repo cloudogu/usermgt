@@ -4,6 +4,7 @@ import {createPaginationData, defaultPaginationData} from "../lib/pagination";
 import type {QueryOptions} from "../hooks/useAPI";
 import {AxiosError, isAxiosError} from "axios";
 import {t} from "../helpers/i18nHelpers";
+import {emptyUser} from "./Account";
 
 export interface UsersResponse {
     entries: User[];
@@ -54,24 +55,27 @@ export const UsersService = {
         }
         return userResponse.data as User;
     },
-    async save(user: User): Promise<void> {
+    async save(user: User): Promise<string> {
         try {
-            await Axios.post("/users", user);
+            await Axios.post("/users", removeNonRelevantUserFields(user));
+            return t("newUser.notification.success", {username: user.username});
         } catch (e: AxiosError | unknown) {
             if (isAxiosError(e)) {
                 const axiosError = e as AxiosError;
                 if (axiosError.response?.status === 409) {
-                    throw new Error(t("newUser.notification.errorDuplicate"));
+                    throw new Error(t("newUser.notification.errorDuplicate", {username: user.username}));
                 }
             }
-            throw new Error(t("newUser.notification.error"));
+            throw new Error(t("newUser.notification.error", {username: user.username}));
         }
     },
-    async update(user: User): Promise<void> {
+    async update(user: User): Promise<string> {
         try {
-            await Axios.put(`/users/${user.username}`, user);
+
+            await Axios.put(`/users/${user.username}`, removeNonRelevantUserFields(user));
+            return t("newUser.notification.success", {username: user.username});
         } catch (e: AxiosError | unknown) {
-            throw new Error(t("newUser.notification.error"));
+            throw new Error(t("newUser.notification.error", {username: user.username}));
         }
     },
     async delete(userName: string): Promise<void> {
@@ -81,3 +85,12 @@ export const UsersService = {
         }
     }
 };
+
+function removeNonRelevantUserFields(user: User) {
+    return Object
+        .keys(emptyUser)
+        .reduce((newUser, key) => {
+            newUser[key] = user[key];
+            return newUser
+        }, {});
+}

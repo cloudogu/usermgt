@@ -35,6 +35,7 @@
       "displayName": "Display Name",
       "email": "E-Mail",
       "givenName": "Given Name",
+      "mustChangePassword": "The user must change the password at the next login",
       "password": "Password",
       "surname": "Surname",
       "username": "Username"
@@ -98,13 +99,21 @@
       "success": "The group {{groupName}} was created successfully."
     }
   },
+  "newUser": {
+    "notification": {
+      "error": "Could not save user '{{username}}'.",
+      "errorDuplicate": "The user '{{username}}' already exists.",
+      "success": "User '{{username}}' was saved successfully."
+    }
+  },
   "pages": {
     "account": "Account",
     "groups": "Groups",
     "groupsEdit": "Edit group",
     "groupsNew": "New Group",
     "users": "Users",
-    "usersEdit": "Edit user"
+    "usersEdit": "Edit user",
+    "usersNew": "New user"
   },
   "users": {
     "confirmation": {

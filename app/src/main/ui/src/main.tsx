@@ -18,6 +18,7 @@ import type {CasUser} from "./services/CasUser";
 // import i18n (needs to be bundled)
 import "./i18n";
 import EditUser from "./pages/EditUser";
+import NewUser from "./pages/NewUser";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -50,6 +51,14 @@ const router = createBrowserRouter([
                 element: <Users title={t("pages.users") + " | User Management"}/>,
             },
             {
+                path: "users/:username/edit",
+                element: <EditUser title={t("pages.usersEdit") + " | User Management"}/>
+            },
+            {
+                path: "users/new",
+                element: <NewUser title={t("pages.usersNew") + " | User Management"}/>
+            },
+            {
                 path: "groups",
                 element: <Groups title={t("pages.groups") + " | User Management"}/>,
             },
@@ -61,10 +70,6 @@ const router = createBrowserRouter([
                 path: "groups/:groupName/edit",
                 element: <EditGroup title={t("pages.groupsEdit") + " | User Management"}/>
             },
-            {
-                path: "users/:username/edit",
-                element: <EditUser title={t("pages.usersEdit") + " | User Management"}/>
-            }
         ],
     },
 ], {basename: contextPath});

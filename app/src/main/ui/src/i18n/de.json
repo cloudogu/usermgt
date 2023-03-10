@@ -35,6 +35,7 @@
       "displayName": "Anzeigename",
       "email": "E-Mail",
       "givenName": "Vorname",
+      "mustChangePassword": "Nutzer muss sein Passwort beim nächsten Login ändern",
       "password": "Passwort",
       "surname": "Nachname",
       "username": "Nutzername"
@@ -98,13 +99,21 @@
       "success": "Die Gruppe {{groupName}} wurde erfolgreich angelegt."
     }
   },
+  "newUser": {
+    "notification": {
+      "error": "Der Nutzer '{{username}}' konnte nicht gespeichert werden.",
+      "errorDuplicate": "Der Nutzer '{{username}}' existiert bereits.",
+      "success": "Nutzer '{{username}}' erfolgreich gespeichert."
+    }
+  },
   "pages": {
     "account": "Account",
     "groups": "Gruppen",
     "groupsEdit": "Gruppe bearbeiten",
     "groupsNew": "Neue Gruppe",
     "users": "Nutzer",
-    "usersEdit": "Nutzer bearbeiten"
+    "usersEdit": "Nutzer bearbeiten",
+    "usersNew": "Nutzer anlegen"
   },
   "users": {
     "confirmation": {

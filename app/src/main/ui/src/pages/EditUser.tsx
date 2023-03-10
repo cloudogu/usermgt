@@ -1,10 +1,11 @@
-import {H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
+import {Form, H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import UserForm from "../components/users/UserForm";
 import {useUser} from "../hooks/useUser";
-import {User} from "../services/Users";
+import {User, UsersService} from "../services/Users";
 import {useParams} from "react-router-dom";
 import {t} from "../helpers/i18nHelpers";
+import {AccountService} from "../services/Account";
 
 export default function EditUser(props: { title: string }) {
     useSetPageTitle(props.title);
@@ -18,9 +19,23 @@ export default function EditUser(props: { title: string }) {
                 <LoadingIcon className={"w-64 h-64"}/>
             </div>
             :
-            <UserForm<User> initialUser={user} onUserChange={setUser} saveUser={async () => {
-                return "success"
-            }}></UserForm>
+            <UserForm<User>
+                initialUser={user}
+                onSubmit={(user, notify, handler) => {
+                    return UsersService.update(user)
+                        .then((msg: string) => {
+                            notify(msg, "primary");
+                            setUser(user);
+                            handler.resetForm(user);
+                        }).catch((error: Error) => {
+                            notify(error.message, "danger");
+                        });
+                }}
+            >
+                <Form.ValidatedCheckboxLabelRight name={"pwdReset"}>
+                    {t("editUser.labels.mustChangePassword")}
+                </Form.ValidatedCheckboxLabelRight>
+            </UserForm>
         }
     </>;
 }

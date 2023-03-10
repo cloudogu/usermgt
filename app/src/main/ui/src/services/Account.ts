@@ -27,7 +27,7 @@ export const AccountService = {
             signal: signal
         });
         if (accountResponse.status < 200 || accountResponse.status > 299) {
-            throw new Error("failed to load group data: " + accountResponse.status);
+            throw new Error("failed to load account data: " + accountResponse.status);
         }
         // set empty string if given name is null
         // formik expects each form value to be at least undefined or empty

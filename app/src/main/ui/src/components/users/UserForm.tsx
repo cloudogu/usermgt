@@ -5,17 +5,19 @@ import {User} from "../../services/Users";
 
 export interface UserFormProps<T extends User> {
     initialUser: T;
-    onUserChange: (_user: T) => void;
-    saveUser: (_user: T) => Promise<string>;
     children?: JSX.Element;
+    disableUsernameField?: boolean;
+    onSubmit: (values: T, notify: any, handler: any) => Promise<void> | void;
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
-    const {handler, notification} = useUserFormHandler(props.initialUser, props.saveUser, props.onUserChange);
+    const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => {
+        return props.onSubmit(values, notify, handler);
+    });
 
     return <Form handler={handler}>
         {notification}
-        <Form.ValidatedTextInput type={"text"} name={"username"} disabled={true}>
+        <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}>
             {t("editUser.labels.username")}
         </Form.ValidatedTextInput>
         <Form.ValidatedTextInput type={"text"} name={"givenname"}>

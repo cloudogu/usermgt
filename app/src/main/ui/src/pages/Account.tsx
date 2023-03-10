@@ -3,6 +3,7 @@ import {useAccount} from "../hooks/useAccount";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import UserForm from "../components/users/UserForm";
 import {AccountService} from "../services/Account";
+import {User} from "../services/Users";
 
 export default function Account(props: { title: string }) {
     useSetPageTitle(props.title);
@@ -15,7 +16,20 @@ export default function Account(props: { title: string }) {
                 <LoadingIcon className={"w-64 h-64"}/>
             </div>
             :
-            <UserForm initialUser={account} onUserChange={setAccount} saveUser={AccountService.update}></UserForm>
+            <UserForm<User>
+                initialUser={account}
+                saveUser={AccountService.update}
+                onSubmit={(user, notify, handler) => {
+                    return AccountService.update(user)
+                        .then((msg: string) => {
+                            notify(msg, "primary");
+                            setAccount(user);
+                            handler.resetForm(user);
+                        }).catch((error: Error) => {
+                            notify(error.message, "danger");
+                        });
+                }}
+            />
         }
     </>;
 }

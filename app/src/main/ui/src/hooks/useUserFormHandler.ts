@@ -5,12 +5,11 @@ import {User} from "../services/Users";
 export interface useUserFormHandlerResponse<T extends User> {
     handler: ReturnType<typeof useFormHandler<T>>;
     notification: JSX.Element;
+    notify: any;
 }
-
 export default function useUserFormHandler<T extends User>(
     initialUser: T,
-    callback: (_user: T) => Promise<string>,
-    setAccount: (_user: T) => void): useUserFormHandlerResponse<T> {
+    onSubmit: any): useUserFormHandlerResponse<T> {
 
     const validationSchema = useValidationSchema();
     const {notification, notify} = useAlertNotification();
@@ -24,17 +23,9 @@ export default function useUserFormHandler<T extends User>(
             },
             validationSchema: validationSchema,
             enableReinitialize: true,
-            onSubmit: (values: any) => {
-                callback(values).then((msg: string) => {
-                    notify(msg, "primary");
-                    setAccount(values);
-                    handler.resetForm(values);
-                }).catch((error: Error) => {
-                    notify(error.message, "danger");
-                });
-            },
+            onSubmit: onSubmit,
         }
     );
 
-    return {handler: handler, notification: notification};
+    return {handler: handler, notification: notification, notify: notify};
 }
