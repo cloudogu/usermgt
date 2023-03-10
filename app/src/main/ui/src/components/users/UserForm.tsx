@@ -1,13 +1,15 @@
-import {Button, Form, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 import {t} from "../../helpers/i18nHelpers";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {User} from "../../services/Users";
+
+export type OnSubmitUserForm<T> = <T>(values: T, notify: NotifyFunction, handler: UseFormHandlerFunctions) => Promise<void> | void;
 
 export interface UserFormProps<T extends User> {
     initialUser: T;
     children?: JSX.Element;
     disableUsernameField?: boolean;
-    onSubmit: (values: T, notify: any, handler: any) => Promise<void> | void;
+    onSubmit: OnSubmitUserForm<T>;
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
