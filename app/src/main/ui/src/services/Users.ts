@@ -31,7 +31,7 @@ export type UsersModel = PagedModel & {
 export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPaginationData};
 
 export const UsersService = {
-    async get(signal?: AbortSignal, opts?: QueryOptions): Promise<UsersModel> {
+    async find(signal?: AbortSignal, opts?: QueryOptions): Promise<UsersModel> {
         const usersResponse = await Axios.get<UsersResponse>("/users", {
             params: opts,
             signal: signal
@@ -43,7 +43,7 @@ export const UsersService = {
         const paginationModel = createPaginationData(usersData.start, usersData.limit, usersData.totalEntries);
         return {users: usersData.entries, pagination: paginationModel};
     },
-    async getOne(signal?: AbortSignal, username?: string): Promise<User> {
+    async get(signal?: AbortSignal, username?: string): Promise<User> {
         if (!username) {
             throw new Error("the user name must not be empty");
         }

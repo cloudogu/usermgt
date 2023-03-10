@@ -49,7 +49,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     };
 
     const loadMembers = async (opts: QueryOptions): Promise<string[]> => {
-        const userData = await UsersService.get(undefined, opts);
+        const userData = await UsersService.find(undefined, opts);
         return userData.users.map(x => x.username);
     };
 
