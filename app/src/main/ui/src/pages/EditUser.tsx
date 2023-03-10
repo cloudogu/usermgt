@@ -1,16 +1,19 @@
-import {Form, H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import UserForm from "../components/users/UserForm";
 import {useUser} from "../hooks/useUser";
 import {User, UsersService} from "../services/Users";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {t} from "../helpers/i18nHelpers";
-import {AccountService} from "../services/Account";
+import {useBackURL} from "../hooks/useBackURL";
+import React from "react";
 
 export default function EditUser(props: { title: string }) {
     useSetPageTitle(props.title);
     const {username} = useParams();
-    const {setUser, user, isLoading} = useUser(username);
+    const {user, isLoading} = useUser(username);
+    const navigate = useNavigate();
+    const {backURL} = useBackURL();
 
     return <>
         <H1 className="uppercase">{t("pages.usersEdit")}</H1>
@@ -24,13 +27,24 @@ export default function EditUser(props: { title: string }) {
                 onSubmit={(user, notify, handler) => {
                     return UsersService.update(user)
                         .then((msg: string) => {
-                            notify(msg, "primary");
-                            setUser(user);
-                            handler.resetForm(user);
+                            navigate(backURL ?? "/users", {
+                                state: {
+                                    alert: {
+                                        message: msg,
+                                        variant: "primary"
+                                    }
+                                }
+                            });
                         }).catch((error: Error) => {
                             notify(error.message, "danger");
                         });
                 }}
+                additionalButtons={
+                    <Button variant={"secondary"} type={"button"} className={"ml-4"}
+                            onClick={() => navigate(backURL ?? "/users")}>
+                        {t("editGroup.buttons.back")}
+                    </Button>
+                }
             >
                 <Form.ValidatedCheckboxLabelRight name={"pwdReset"}>
                     {t("editUser.labels.mustChangePassword")}

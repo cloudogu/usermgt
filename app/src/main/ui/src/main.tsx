@@ -35,7 +35,7 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
 const router = createBrowserRouter([
     {
         path: "",
-        element: <MainApplication />,
+        element: <React.StrictMode><MainApplication /></React.StrictMode>,
         errorElement: <ErrorPage />,
         children: [
             {
@@ -74,9 +74,7 @@ const router = createBrowserRouter([
     },
 ], {basename: contextPath});
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<React.StrictMode>
-    <RouterProvider router={router} />
-</React.StrictMode>);
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router} />);
 
 function MainApplication() {
     const {user:casUser} = useCasUser();

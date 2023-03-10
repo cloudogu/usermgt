@@ -2,14 +2,17 @@ import {Button, Form, NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/c
 import {t} from "../../helpers/i18nHelpers";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {User} from "../../services/Users";
+import React from "react";
 
 export type OnSubmitUserForm<T> = <T>(values: T, notify: NotifyFunction, handler: UseFormHandlerFunctions) => Promise<void> | void;
 
 export interface UserFormProps<T extends User> {
     initialUser: T;
     children?: JSX.Element;
+    additionalButtons?: JSX.Element;
     disableUsernameField?: boolean;
     onSubmit: OnSubmitUserForm<T>;
+    backButton?: boolean;
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
@@ -45,6 +48,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>
                 {t("editUser.buttons.save")}
             </Button>
+            {props.additionalButtons as JSX.Element}
         </div>
     </Form>;
 }
