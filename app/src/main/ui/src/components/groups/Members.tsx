@@ -79,7 +79,7 @@ const containsNewEntries = (oldList: string[], newList: string[]) => {
         return true;
     }
     for (const newItem in newList){
-        if(oldList.indexOf(newItem) >= 0){
+        if(oldList.indexOf(newItem) === -1){
             return true;
         }
     }
