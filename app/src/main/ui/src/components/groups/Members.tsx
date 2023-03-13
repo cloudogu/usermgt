@@ -1,8 +1,8 @@
 import {SearchbarAutocomplete, Table} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
-import {DeleteButton} from "../DeleteButton";
 import {t} from "../../helpers/i18nHelpers";
 import {usePagination} from "../../hooks/usePagination";
+import {DeleteButton} from "../DeleteButton";
 import type {QueryOptions} from "../../hooks/useAPI";
 
 const PAGE_SIZE=5;
@@ -16,7 +16,7 @@ export type MembersProps = {
 
 export function Members(props: MembersProps) {
     const [entries, setEntries] = useState<string[]>([]);
-    const {pgData, pageStart, setCurrentPage} = usePagination(entries.length);
+    const {pgData, pageStart, setCurrentPage} = usePagination(props.entries.length);
     return <>
         <SearchbarAutocomplete
             searchResults={entries.map(x => <SearchbarAutocomplete.SearchResult type={"button"} key={x} value={x} />)}
@@ -58,7 +58,7 @@ export function Members(props: MembersProps) {
                 </Table.Body.Tr>)}
             </Table.Body>
             <Table.ConditionalFoot show={true}>
-                <Table.Foot.Pagination pageCount={pgData.pageCount} currentPage={pgData.pageCount} onPageChange={(page) => setCurrentPage(page)} />
+                <Table.Foot.Pagination pageCount={pgData.pageCount} currentPage={pgData.current} onPageChange={(page) => setCurrentPage(page)} />
             </Table.ConditionalFoot>
         </Table>
     </>;
