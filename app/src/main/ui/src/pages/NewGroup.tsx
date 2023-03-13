@@ -1,12 +1,12 @@
 import { H1, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import {useNavigate} from "react-router-dom";
-import {t} from "../../helpers/i18nHelpers";
-import {useBackURL} from "../../hooks/useBackURL";
-import {useGroupValidationSchema} from "../../hooks/useGroupValidationSchema";
-import {useSetPageTitle} from "../../hooks/useSetPageTitle";
-import { GroupsService} from "../../services/Groups";
-import {GroupForm} from "./GroupForm";
-import type {Group} from "../../services/Groups";
+import {t} from "../helpers/i18nHelpers";
+import {useBackURL} from "../hooks/useBackURL";
+import {useGroupValidationSchema} from "../hooks/useGroupValidationSchema";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import { GroupsService} from "../services/Groups";
+import {GroupForm} from "../components/groups/GroupForm";
+import type {Group} from "../services/Groups";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
 export function NewGroup(props: { title: string }) {
