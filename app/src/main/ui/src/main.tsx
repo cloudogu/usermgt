@@ -11,7 +11,7 @@ import Account from "./pages/Account";
 import ErrorPage from "./pages/Error";
 import {EditGroup} from "./pages/EditGroup";
 import Groups from "./pages/Groups";
-import {NewGroup} from "./components/groups/NewGroup";
+import {NewGroup} from "./pages/NewGroup";
 import Users from "./pages/Users";
 import type {CasUser} from "./services/CasUser";
 
