@@ -1,8 +1,6 @@
-const {Given} = require("cypress-cucumber-preprocessor/steps");
-
-const env = require('@cloudogu/dogu-integration-test-library/lib/environment_variables');
-
-Given("the user {string} exists", (username) => {
+import { Given } from "@badeball/cypress-cucumber-preprocessor";
+import env from "@cloudogu/dogu-integration-test-library/environment_variables";
+Given("the user {string} exists", (username: string) => {
     cy.withUser(username).then(userData => {
         cy.log(userData)
         cy.usermgtTryDeleteUser(userData.username);
@@ -22,6 +20,3 @@ Given("the user {string} is member of the group {string}", function (username, g
         expect(response.status).to.eq(204)
     })
 })
-
-
-
