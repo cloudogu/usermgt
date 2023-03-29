@@ -1,10 +1,6 @@
-import 'cypress-plugin-api';
-
-const {
-    When
-} = require("cypress-cucumber-preprocessor/steps");
-
-const env = require('@cloudogu/dogu-integration-test-library/lib/environment_variables')
+import '@bahmutov/cy-api'
+import { When } from "@badeball/cypress-cucumber-preprocessor";
+import env from "@cloudogu/dogu-integration-test-library/environment_variables";
 
 //Implement all necessary steps fore dogu integration test library
 When("the user clicks the dogu logout button", function () {
@@ -12,7 +8,7 @@ When("the user clicks the dogu logout button", function () {
 });
 
 When("the user opens the users page", function () {
-    cy.visit('/usermgt/#/users')
+    cy.visit('/usermgt/users')
     cy.clickWarpMenuCheckboxIfPossible()
 })
 
@@ -75,7 +71,7 @@ When("the user enters a valid password", function () {
     })
 })
 
-When("the user {string} sends the upload request with {int} users", (username, userCount) => {
+When("the user {string} sends the upload request with {int} users", (username: string, userCount: number) => {
     cy.withUser(username).then(userData => {
         cy.withImportData(userCount).then(importData => {
             cy.logout()
