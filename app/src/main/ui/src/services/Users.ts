@@ -1,10 +1,11 @@
+import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
-import type {PagedModel} from "../lib/pagination";
-import {createPaginationData, defaultPaginationData} from "../lib/pagination";
-import type {QueryOptions} from "../hooks/useAPI";
-import {AxiosError, isAxiosError} from "axios";
 import {t} from "../helpers/i18nHelpers";
+import {createPaginationData, defaultPaginationData} from "../lib/pagination";
 import {emptyUser} from "./Account";
+import type {QueryOptions} from "../hooks/useAPI";
+import type {PagedModel} from "../lib/pagination";
+import type {AxiosError} from "axios";
 
 export interface UsersResponse {
     entries: User[];
@@ -89,8 +90,8 @@ export const UsersService = {
 function removeNonRelevantUserFields(user: User) {
     return Object
         .keys(emptyUser)
-        .reduce((newUser, key) => {
-            newUser[key] = user[key];
-            return newUser
+        .reduce((newUser: any, key) => {
+            newUser[key] = user[key as keyof User];
+            return newUser;
         }, {});
 }

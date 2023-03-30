@@ -1,9 +1,10 @@
-import {NotifyFunction, useAlertNotification, useFormHandler, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
+import {useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import {useValidationSchema} from "./useValidationSchema";
-import {User} from "../services/Users";
+import type {User} from "../services/Users";
+import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 
 export interface useUserFormHandlerResponse<T extends User> {
-    handler: UseFormHandlerFunctions;
+    handler: UseFormHandlerFunctions<T>;
     notification: JSX.Element;
     notify: NotifyFunction;
 }

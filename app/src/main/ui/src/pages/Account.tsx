@@ -1,9 +1,9 @@
 import {H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
+import UserForm from "../components/users/UserForm";
 import {useAccount} from "../hooks/useAccount";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import UserForm from "../components/users/UserForm";
 import {AccountService} from "../services/Account";
-import {User} from "../services/Users";
+import type {User} from "../services/Users";
 
 export default function Account(props: { title: string }) {
     useSetPageTitle(props.title);
@@ -18,17 +18,14 @@ export default function Account(props: { title: string }) {
             :
             <UserForm<User>
                 initialUser={account}
-                saveUser={AccountService.update}
-                onSubmit={(user, notify, handler) => {
-                    return AccountService.update(user)
-                        .then((msg: string) => {
-                            notify(msg, "primary");
-                            setAccount(user);
-                            handler.resetForm(user);
-                        }).catch((error: Error) => {
-                            notify(error.message, "danger");
-                        });
-                }}
+                onSubmit={(user, notify, handler) => AccountService.update(user)
+                    .then((msg: string) => {
+                        notify(msg, "primary");
+                        setAccount(user);
+                        handler.resetForm({values: user});
+                    }).catch((error: Error) => {
+                        notify(error.message, "danger");
+                    })}
             />
         }
     </>;

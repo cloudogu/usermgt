@@ -1,10 +1,12 @@
-import {Button, Form, NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form} from "@cloudogu/ces-theme-tailwind";
+import React from "react";
 import {t} from "../../helpers/i18nHelpers";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
-import {User} from "../../services/Users";
-import React from "react";
+import type {User} from "../../services/Users";
+import type { NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 
-export type OnSubmitUserForm<T> = <T>(values: T, notify: NotifyFunction, handler: UseFormHandlerFunctions) => Promise<void> | void;
+// eslint-disable-next-line autofix/no-unused-vars
+export type OnSubmitUserForm<T extends User> = (values: T, notify: NotifyFunction, handler: UseFormHandlerFunctions<T>) => Promise<void> | void;
 
 export interface UserFormProps<T extends User> {
     initialUser: T;
@@ -16,9 +18,7 @@ export interface UserFormProps<T extends User> {
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
-    const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => {
-        return props.onSubmit(values, notify, handler);
-    });
+    const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
 
     return <Form handler={handler}>
         {notification}
