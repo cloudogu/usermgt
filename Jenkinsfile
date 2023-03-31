@@ -30,9 +30,6 @@ node('docker') {
     GitHub github = new GitHub(this, git)
     Changelog changelog = new Changelog(this)
 
-    // Workaround SUREFIRE-1588 on Debian/Ubuntu. Should be fixed in Surefire 3.0.0
-    mvn.additionalArgs = '-DargLine="-Djdk.net.URLClassPath.disableClassPathURLCheck=true"'
-
     stage('Checkout') {
         checkout scm
         //  Don't remove folders starting in "." like * .m2 (maven), .npm, .cache, .local (bower)
@@ -63,10 +60,7 @@ node('docker') {
             }
 
             stage('Unit Test') {
-                sh "pwd"
-                sh "ls -l ./target"
-                mvn 'install test jacoco:prepare-agent jacoco:report -debug'
-                sh "ls -l ./target"
+                mvn 'test jacoco:report'
             }
         }
     }
