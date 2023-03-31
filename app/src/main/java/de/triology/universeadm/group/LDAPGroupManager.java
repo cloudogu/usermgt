@@ -93,7 +93,7 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
                 violatedConstraints.add(constraint.getUniqueID());
             }
         }
-        if (violatedConstraints.size() > 0) {
+        if (!violatedConstraints.isEmpty()) {
             throw new ConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[2]));
         }
     }
