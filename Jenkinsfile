@@ -63,7 +63,10 @@ node('docker') {
             }
 
             stage('Unit Test') {
-                mvn 'test jacoco:report'
+                sh "pwd"
+                sh "ls -l ./target"
+                mvn 'install test jacoco:prepare-agent jacoco:report -debug'
+                sh "ls -l ./target"
             }
         }
     }
