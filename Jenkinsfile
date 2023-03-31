@@ -63,7 +63,7 @@ node('docker') {
             }
 
             stage('Unit Test') {
-                mvn 'test'
+                mvn 'test' 'jacoco:report'
             }
         }
     }
