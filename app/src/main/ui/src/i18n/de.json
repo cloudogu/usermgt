@@ -45,6 +45,16 @@
       "success": "Die Account Informationen wurden erfolgreich gespeichert."
     }
   },
+  "generic": {
+    "labels": {
+      "addEntry": "Hinzufügen"
+    },
+    "table": {
+      "actions": {
+        "delete": "Eintrag entfernen"
+      }
+    }
+  },
   "groups": {
     "buttons": {
       "create": "Gruppe anlegen"

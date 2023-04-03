@@ -15,27 +15,27 @@ export type MembersProps = {
 }
 
 export function Members(props: MembersProps) {
-    const [entries, setEntries] = useState<string[]>([]);
+    const [searchResults, setSearchResults] = useState<string[]>([]);
     const {pgData, pageStart, setCurrentPage} = usePagination(props.entries.length);
     return <>
         <SearchbarAutocomplete
-            searchResults={entries.map(x => <SearchbarAutocomplete.SearchResult type={"button"} key={x} value={x} />)}
+            searchResults={searchResults.map(x => <SearchbarAutocomplete.SearchResult type={"button"} key={x} value={x} />)}
             onSelectItem={(val: string, item) => {
                 props.addEntry(val);
                 item.value = "";
                 item.focus();
-                setEntries([]);
+                setSearchResults([]);
             }}
             onTrigger={async (val) => {
                 const newEntries = await props.loadFn({start: 0, limit: PAGE_SIZE, query: val});
-                const shouldUpdateResultList = containsNewEntries(entries, newEntries);
+                const shouldUpdateResultList = containsNewEntries(searchResults, newEntries);
                 if (shouldUpdateResultList){
-                    setEntries(newEntries);
+                    setSearchResults(newEntries);
                 }
             }}
             onCancelSelection={(item) => {
                 item.value = "";
-                setEntries([]);
+                setSearchResults([]);
             }}>
             {t("groups.labels.addMember")}
         </SearchbarAutocomplete>

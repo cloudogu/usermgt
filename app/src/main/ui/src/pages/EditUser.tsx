@@ -1,4 +1,4 @@
-import {Button, Form, H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H1, H2, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import UserForm from "../components/users/UserForm";
 import {useUser} from "../hooks/useUser";
@@ -6,7 +6,8 @@ import {User, UsersService} from "../services/Users";
 import {useNavigate, useParams} from "react-router-dom";
 import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
-import React from "react";
+import React, {useState} from "react";
+import {ListWithSearchbar} from "../components/groups/ListWithSearchbar";
 
 export default function EditUser(props: { title: string }) {
     useSetPageTitle(props.title);
@@ -14,6 +15,7 @@ export default function EditUser(props: { title: string }) {
     const {user, isLoading} = useUser(username);
     const navigate = useNavigate();
     const {backURL} = useBackURL();
+    const [entries, setEntries] = useState(["group1", "group2", "group3", "group4", "group5"]);
 
     return <>
         <H1 className="uppercase">{t("pages.usersEdit")}</H1>
@@ -49,8 +51,16 @@ export default function EditUser(props: { title: string }) {
                 <Form.ValidatedCheckboxLabelRight name={"pwdReset"}>
                     {t("editUser.labels.mustChangePassword")}
                 </Form.ValidatedCheckboxLabelRight>
+                <H2>Gruppen</H2>
+                <ListWithSearchbar
+                    entries={entries}
+                    setEntries={setEntries}
+                    loadSearchResults={async () => {
+                        return ["groupasd", "groupasd2", "groupasdf123"];
+                    }}
+                    tableTitle={"Gruppen"}
+                />
             </UserForm>
         }
     </>;
 }
-

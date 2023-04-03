@@ -45,6 +45,16 @@
       "success": "Account information saved successfully."
     }
   },
+  "generic": {
+    "labels": {
+      "addEntry": "Add"
+    },
+    "table": {
+      "actions": {
+        "delete": "Remove entry"
+      }
+    }
+  },
   "groups": {
     "buttons": {
       "create": "Create Group"
