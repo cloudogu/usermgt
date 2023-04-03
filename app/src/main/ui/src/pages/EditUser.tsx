@@ -1,13 +1,13 @@
-import {Button, Form, H1, H2, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import UserForm from "../components/users/UserForm";
-import {useUser} from "../hooks/useUser";
-import {User, UsersService} from "../services/Users";
+import {Button, H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
+import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
+import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
-import React, {useState} from "react";
-import {ListWithSearchbar} from "../components/groups/ListWithSearchbar";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import {useUser} from "../hooks/useUser";
+import { UsersService} from "../services/Users";
+import type {User} from "../services/Users";
 
 export default function EditUser(props: { title: string }) {
     useSetPageTitle(props.title);
@@ -15,7 +15,6 @@ export default function EditUser(props: { title: string }) {
     const {user, isLoading} = useUser(username);
     const navigate = useNavigate();
     const {backURL} = useBackURL();
-    const [entries, setEntries] = useState(["group1", "group2", "group3", "group4", "group5"]);
 
     return <>
         <H1 className="uppercase">{t("pages.usersEdit")}</H1>
@@ -26,8 +25,10 @@ export default function EditUser(props: { title: string }) {
             :
             <UserForm<User>
                 initialUser={user}
-                onSubmit={(user, notify, handler) => {
-                    return UsersService.update(user)
+                editGroups={true}
+                passwordReset={true}
+                onSubmit={(user, notify) =>
+                    UsersService.update(user)
                         .then((msg: string) => {
                             navigate(backURL ?? "/users", {
                                 state: {
@@ -39,28 +40,14 @@ export default function EditUser(props: { title: string }) {
                             });
                         }).catch((error: Error) => {
                             notify(error.message, "danger");
-                        });
-                }}
+                        })}
                 additionalButtons={
                     <Button variant={"secondary"} type={"button"} className={"ml-4"}
-                            onClick={() => navigate(backURL ?? "/users")}>
+                        onClick={() => navigate(backURL ?? "/users")}>
                         {t("editGroup.buttons.back")}
                     </Button>
                 }
-            >
-                <Form.ValidatedCheckboxLabelRight name={"pwdReset"}>
-                    {t("editUser.labels.mustChangePassword")}
-                </Form.ValidatedCheckboxLabelRight>
-                <H2>Gruppen</H2>
-                <ListWithSearchbar
-                    entries={entries}
-                    setEntries={setEntries}
-                    loadSearchResults={async () => {
-                        return ["groupasd", "groupasd2", "groupasdf123"];
-                    }}
-                    tableTitle={"Gruppen"}
-                />
-            </UserForm>
+            />
         }
     </>;
 }

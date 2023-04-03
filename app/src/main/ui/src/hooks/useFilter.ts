@@ -1,6 +1,6 @@
+import {calcPageStart, DEFAULT_PAGE_SIZE} from "@cloudogu/ces-theme-tailwind";
 import {useEffect, useReducer} from "react";
 import {useSearchParams} from "react-router-dom";
-import {DEFAULT_PAGE_SIZE, calcPageStart} from "../lib/pagination";
 import type {QueryOptions} from "./useAPI";
 
 export const PAGE_QUERY_PARAM = "p";

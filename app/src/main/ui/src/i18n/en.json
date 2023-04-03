@@ -15,6 +15,10 @@
       "save": "Save"
     },
     "errors": {
+      "username": {
+        "invalid": "Username is invalid.",
+        "required": "Username is required."
+      },
       "confirmPassword": "Passwords must match.",
       "displayName": "Display name is required.",
       "email": {
@@ -80,7 +84,8 @@
       "users": "Members"
     }
   },
-  "groups.labels.addMember": "Add Member",
+  "groups.labels.addMember": "Add member",
+  "groups.labels.removeMember": "Remove member",
   "groups.labels.description": "Description",
   "groups.labels.members": "Members",
   "groups.labels.name": "Name",
@@ -145,6 +150,10 @@
       "displayName": "Displayname",
       "email": "E-Mail",
       "username": "Username"
+    },
+    "labels": {
+      "addGroup": "Add group",
+      "removeGroup": "Remove group"
     }
   }
 }

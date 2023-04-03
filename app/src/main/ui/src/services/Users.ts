@@ -1,10 +1,10 @@
+import {createPaginationData, defaultPaginationData} from "@cloudogu/ces-theme-tailwind";
 import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
-import {createPaginationData, defaultPaginationData} from "../lib/pagination";
 import {emptyUser} from "./Account";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {PagedModel} from "../lib/pagination";
+import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
 import type {AxiosError} from "axios";
 
 export interface UsersResponse {

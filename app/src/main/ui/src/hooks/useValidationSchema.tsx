@@ -37,6 +37,9 @@ function createValidationSchema(passwordPolicy: PasswordPolicy) {
     };
 
     return Yup.object({
+        "username": Yup.string()
+            .matches(/[a-zA-Z0-9-_@.]{2,128}/, t("editUser.errors.username.invalid") as string)
+            .required(t("editUser.errors.username.required") as string),
         "surname": Yup.string().required(t("editUser.errors.surname") as string),
         "displayName": Yup.string().required(t("editUser.errors.displayName") as string),
         "mail": Yup.string()

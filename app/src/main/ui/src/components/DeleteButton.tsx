@@ -17,8 +17,8 @@ export function EditButton(props: ButtonProps) {
 
 function IconButton({children, ...props}: ButtonProps) {
     return <button {...props}
-                   className={"enabled:text-text-primary enabled:hover:text-text-primary-hover text-text-primary-disabled disabled:cursor-not-allowed"}
+        className={"enabled:text-text-primary enabled:hover:text-text-primary-hover text-text-primary-disabled disabled:cursor-not-allowed"}
     >
         {children}
-    </button>
+    </button>;
 }

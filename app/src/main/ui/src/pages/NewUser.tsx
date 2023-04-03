@@ -1,4 +1,4 @@
-import {Button, Form, H1} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useNavigate} from "react-router-dom";
 import UserForm from "../components/users/UserForm";
@@ -18,6 +18,8 @@ export default function NewUser(props: { title: string }) {
         <H1 className="uppercase">{t("pages.usersNew")}</H1>
         <UserForm<User>
             initialUser={emptyUser}
+            editGroups={true}
+            passwordReset={true}
             disableUsernameField={false}
             onSubmit={(user, notify) => UsersService.save(user)
                 .then((msg: string) => {
@@ -38,11 +40,7 @@ export default function NewUser(props: { title: string }) {
                     {t("editGroup.buttons.back")}
                 </Button>
             }
-        >
-            <Form.ValidatedCheckboxLabelRight name={"pwdReset"}>
-                {t("editUser.labels.mustChangePassword")}
-            </Form.ValidatedCheckboxLabelRight>
-        </UserForm>
+        />
     </>;
 }
 
