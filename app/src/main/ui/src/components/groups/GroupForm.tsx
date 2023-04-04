@@ -59,14 +59,15 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
             message={t("users.confirmation.message", {username: username})}/>
         <Prompt when={handler.dirty && !handler.isSubmitting} message={"Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"} />
         <Form handler={handler}>
-            <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup}>
+            <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup} data-testid="name">
                 {t("groups.labels.name")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextArea name={"description"}>
+            <Form.ValidatedTextArea name={"description"} data-testid="description">
                 {t("groups.labels.description")}
             </Form.ValidatedTextArea>
             <H2>{`${t("groups.labels.members")} (${handler.values.members.length})`}</H2>
             <ListWithSearchbar
+                data-testid="groups"
                 items={handler.values.members}
                 addItem={addMember}
                 removeItem={openConfirmationDialog}

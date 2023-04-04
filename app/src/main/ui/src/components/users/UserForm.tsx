@@ -20,7 +20,7 @@ export interface UserFormProps<T extends User> {
     disableUsernameField?: boolean;
     onSubmit: OnSubmitUserForm<T>;
     backButton?: boolean;
-    editGroups?: boolean;
+    groupsReadonly?: boolean;
     passwordReset?: boolean;
 }
 
@@ -66,48 +66,51 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             message={t("groups.confirmation.message", {groupName: groupName})}/>
         <Form handler={handler}>
             {notification}
-            <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}>
+            <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username">
                 {t("editUser.labels.username")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"givenname"}>
+            <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname">
                 {t("editUser.labels.givenName")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"surname"}>
+            <Form.ValidatedTextInput type={"text"} name={"surname"} data-testid="surname">
                 {t("editUser.labels.surname")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"displayName"}>
+            <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName">
                 {t("editUser.labels.displayName")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"mail"}>
+            <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail">
                 {t("editUser.labels.email")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"password"} name={"password"}>
+            <Form.ValidatedTextInput type={"password"} name={"password"} data-testid="password">
                 {t("editUser.labels.password")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"password"} name={"confirmPassword"}>
+            <Form.ValidatedTextInput type={"password"} name={"confirmPassword"} data-testid="confirmPassword">
                 {t("editUser.labels.confirmPassword")}
             </Form.ValidatedTextInput>
 
             {props.passwordReset ?
-                <Form.ValidatedCheckboxLabelRight name={"pwdReset"}>
+                <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
                     {t("editUser.labels.mustChangePassword")}
                 </Form.ValidatedCheckboxLabelRight> : <></>
             }
 
-            {props.editGroups ?
-                <>
-                    <H2>Gruppen ({handler.values.memberOf.length})</H2>
-                    <ListWithSearchbar
-                        items={handler.values.memberOf}
-                        addItem={addGroup}
-                        removeItem={openConfirmationRemoveGroupDialog}
-                        queryItems={queryGroups}
-                        tableTitle={t("groups.table.name")}
-                        addLable={t("users.labels.addGroup")}
-                        removeLable={t("users.labels.removeGroup")}
-                        removeIcon={<TrashIcon className={"w-6 h-6"}/>}
-                    />
-                </> : <></>
+            <H2>Gruppen ({handler.values.memberOf.length})</H2>
+            {props.groupsReadonly ?
+                <ul className="ml-2 list-inside list-disc">
+                    {handler.values.memberOf.map(group => (<li key={group}>{group}</li>))}
+                </ul>
+                :
+                <ListWithSearchbar
+                    data-testid="groups"
+                    items={handler.values.memberOf}
+                    addItem={addGroup}
+                    removeItem={openConfirmationRemoveGroupDialog}
+                    queryItems={queryGroups}
+                    tableTitle={t("groups.table.name")}
+                    addLable={t("users.labels.addGroup")}
+                    removeLable={t("users.labels.removeGroup")}
+                    removeIcon={<TrashIcon className={"w-6 h-6"}/>}
+                />
             }
 
 

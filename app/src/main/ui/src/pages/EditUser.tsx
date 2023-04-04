@@ -25,7 +25,7 @@ export default function EditUser(props: { title: string }) {
             :
             <UserForm<User>
                 initialUser={user}
-                editGroups={true}
+                groupsReadonly={false}
                 passwordReset={true}
                 onSubmit={(user, notify) =>
                     UsersService.update(user)

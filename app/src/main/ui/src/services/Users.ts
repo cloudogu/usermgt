@@ -64,7 +64,7 @@ export const UsersService = {
             if (isAxiosError(e)) {
                 const axiosError = e as AxiosError;
                 if (axiosError.response?.status === 409) {
-                    throw new Error(t("newUser.notification.errorDuplicate", {username: user.username}));
+                    throw new Error(t("newUser.notification.errorDuplicate", {username: user.username, mail: user.mail}));
                 }
             }
             throw new Error(t("newUser.notification.error", {username: user.username}));

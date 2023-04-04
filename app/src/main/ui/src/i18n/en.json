@@ -117,7 +117,7 @@
   "newUser": {
     "notification": {
       "error": "Could not save user '{{username}}'.",
-      "errorDuplicate": "The user '{{username}}' already exists.",
+      "errorDuplicate": "A user with the username '{{username}}' or the E-Mail '{{mail}}' already exists.",
       "success": "User '{{username}}' was saved successfully."
     }
   },

@@ -117,7 +117,7 @@
   "newUser": {
     "notification": {
       "error": "Der Nutzer '{{username}}' konnte nicht gespeichert werden.",
-      "errorDuplicate": "Der Nutzer '{{username}}' existiert bereits.",
+      "errorDuplicate": "Ein Nutzer mit dem Nutzernamen '{{username}}' oder der E-Mail '{{mail}}' existiert bereits.",
       "success": "Nutzer '{{username}}' erfolgreich gespeichert."
     }
   },

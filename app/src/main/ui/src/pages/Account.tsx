@@ -18,6 +18,7 @@ export default function Account(props: { title: string }) {
             :
             <UserForm<User>
                 initialUser={account}
+                groupsReadonly={true}
                 onSubmit={(user, notify, handler) => AccountService.update(user)
                     .then((msg: string) => {
                         notify(msg, "primary");

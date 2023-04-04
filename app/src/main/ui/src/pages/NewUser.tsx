@@ -18,7 +18,7 @@ export default function NewUser(props: { title: string }) {
         <H1 className="uppercase">{t("pages.usersNew")}</H1>
         <UserForm<User>
             initialUser={emptyUser}
-            editGroups={true}
+            groupsReadonly={false}
             passwordReset={true}
             disableUsernameField={false}
             onSubmit={(user, notify) => UsersService.save(user)
