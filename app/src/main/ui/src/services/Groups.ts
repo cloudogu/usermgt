@@ -1,5 +1,5 @@
 import {createPaginationData} from "@cloudogu/ces-theme-tailwind";
-import { isAxiosError} from "axios";
+import {AxiosResponse, isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {QueryOptions} from "../hooks/useAPI";
@@ -26,23 +26,28 @@ export type Group = {
 
 export type UndeletableGroupsResponse = string[];
 
+export type GroupListQueryOptions = QueryOptions & {exclude?: string[]}
+
 export const GroupsService = {
-    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<GroupsModel> {
+    async list(signal?: AbortSignal, opts?: GroupListQueryOptions): Promise<GroupsModel> {
         const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
-            params: opts,
+            params: {...opts, exclude: (opts?.exclude || []).join(",")},
             signal: signal
-        });
+        } as any);
         if (groupsResponse.status < 200 || groupsResponse.status > 299) {
             throw new Error("failed to load group data: " + groupsResponse.status);
         }
         const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable", {
             signal: signal
-        });
+        } as any);
+
         if (undeletableGroupsResponse.status < 200 || undeletableGroupsResponse.status > 299) {
             throw new Error("failed to load undeletable groups information: " + undeletableGroupsResponse.status);
         }
         const groupsData = groupsResponse.data;
         const undeletableGroupsData = undeletableGroupsResponse.data;
+        console.log(groupsData.entries);
+        console.log(undeletableGroupsData);
         const groups = mapSystemGroups(groupsData.entries, undeletableGroupsData);
         const paginationModel = createPaginationData(groupsData.start, groupsData.limit, groupsData.totalEntries);
 
@@ -52,9 +57,9 @@ export const GroupsService = {
         if (!groupName) {
             throw new Error("the group name must not be empty");
         }
-        const groupResponse = await Axios.get<Group>(`/groups/${groupName}`, {
+        const groupResponse:AxiosResponse<any> = await Axios.get<Group>(`/groups/${groupName}`, {
             signal: signal
-        });
+        } as any);
         if (groupResponse.status < 200 || groupResponse.status > 299) {
             throw new Error("failed to load group data: " + groupResponse.status);
         }// set empty string if given name is null

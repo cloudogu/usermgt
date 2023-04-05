@@ -38,7 +38,7 @@ export function useFilter() {
     };
 
     useEffect(() => {
-        const newStart = calcPageStart(page ?? 1);
+        const newStart = calcPageStart(page ?? 1, 20);
         updateOpts({start: newStart, limit: DEFAULT_PAGE_SIZE, query: query, force: false});
     }, [searchParams]);
 
