@@ -46,8 +46,6 @@ export const GroupsService = {
         }
         const groupsData = groupsResponse.data;
         const undeletableGroupsData = undeletableGroupsResponse.data;
-        console.log(groupsData.entries);
-        console.log(undeletableGroupsData);
         const groups = mapSystemGroups(groupsData.entries, undeletableGroupsData);
         const paginationModel = createPaginationData(groupsData.start, groupsData.limit, groupsData.totalEntries);
 

@@ -113,8 +113,11 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     items={handler.values.memberOf}
                     addItem={addGroup}
                     removeItem={openConfirmationRemoveGroupDialog}
-                    queryItems={(val) => {
-                        return queryGroups(val, handler.values.memberOf);
+                    queryItems={async (val) => {
+                        console.log("val: " + val);
+                        const groups = await queryGroups(val, handler.values.memberOf);
+                        console.log(groups);
+                        return groups;
                     }}
                     tableTitle={t("groups.table.name")}
                     addLable={t("users.labels.addGroup")}
