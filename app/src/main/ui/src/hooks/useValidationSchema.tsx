@@ -38,7 +38,9 @@ function createValidationSchema(passwordPolicy: PasswordPolicy) {
 
     return Yup.object({
         "username": Yup.string()
-            .matches(/[a-zA-Z0-9-_@.]{2,128}/, t("editUser.errors.username.invalid") as string)
+            .matches(/^.{2,}$/, t("editUser.errors.username.minlength") as string)
+            .matches(/^.{0,128}$/, t("editUser.errors.username.maxlength") as string)
+            .matches(/^[a-zA-Z0-9-_@.]*$/, t("editUser.errors.username.invalid") as string)
             .required(t("editUser.errors.username.required") as string),
         "surname": Yup.string().required(t("editUser.errors.surname") as string),
         "displayName": Yup.string().required(t("editUser.errors.displayName") as string),

@@ -15,10 +15,6 @@
       "save": "Save"
     },
     "errors": {
-      "username": {
-        "invalid": "Username is invalid.",
-        "required": "Username is required."
-      },
       "confirmPassword": "Passwords must match.",
       "displayName": "Display name is required.",
       "email": {
@@ -32,7 +28,13 @@
         "numeric": "The password must contain at least 1 number.",
         "special": "The password must contain at least 1 special character."
       },
-      "surname": "Surname is required."
+      "surname": "Surname is required.",
+      "username": {
+        "invalid": "The username may only contain letters, numbers, hyphens, underscores, periods and @.",
+        "maxlength": "May contain a maximum of 128 characters",
+        "minlength": "Must contain at least 2 characters",
+        "required": "Username is required."
+      }
     },
     "labels": {
       "confirmPassword": "Confirm Password",
@@ -85,10 +87,10 @@
     }
   },
   "groups.labels.addMember": "Add member",
-  "groups.labels.removeMember": "Remove member",
   "groups.labels.description": "Description",
   "groups.labels.members": "Members",
   "groups.labels.name": "Name",
+  "groups.labels.removeMember": "Remove member",
   "modal": {
     "cancel": "Cancel",
     "confirm": "Confirm"
@@ -136,6 +138,10 @@
       "title": "Remove user"
     },
     "create": "Create user",
+    "labels": {
+      "addGroup": "Add group",
+      "removeGroup": "Remove group"
+    },
     "notification": {
       "error": "The user '{{username}}' could not be deleted.",
       "success": "The user '{{username}}' was deleted successfully."
@@ -150,10 +156,6 @@
       "displayName": "Displayname",
       "email": "E-Mail",
       "username": "Username"
-    },
-    "labels": {
-      "addGroup": "Add group",
-      "removeGroup": "Remove group"
     }
   }
 }
