@@ -34,9 +34,9 @@ export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPagi
 export const UsersService = {
     async find(signal?: AbortSignal, opts?: QueryOptions): Promise<UsersModel> {
         const usersResponse = await Axios.get<UsersResponse>("/users", {
-            params: opts,
+            params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
-        });
+        } as any);
         if (usersResponse.status < 200 || usersResponse.status > 299) {
             throw new Error("failed to load user data: " + usersResponse.status);
         }
@@ -50,7 +50,7 @@ export const UsersService = {
         }
         const userResponse = await Axios.get<User>(`/users/${username}`, {
             signal: signal
-        });
+        } as any);
         if (userResponse.status < 200 || userResponse.status > 299) {
             throw new Error("failed to load user data: " + userResponse.status);
         }

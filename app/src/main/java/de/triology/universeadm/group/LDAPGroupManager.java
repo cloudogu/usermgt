@@ -144,4 +144,8 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
         return mapping.search(query);
     }
 
+    @Override
+    protected String typeToString(Group e) {
+        return e.getName();
+    }
 }

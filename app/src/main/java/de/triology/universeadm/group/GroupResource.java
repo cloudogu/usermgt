@@ -27,6 +27,7 @@
 
 package de.triology.universeadm.group;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import de.triology.universeadm.AbstractManagerResource;
 import de.triology.universeadm.PagedResultList;
@@ -126,41 +127,6 @@ public class GroupResource extends AbstractManagerResource<Group> {
             logger.error("call /api/groups/undeletable without prior authentication");
             builder = Response.status(Response.Status.BAD_REQUEST);
         }
-        return builder.build();
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("start") int s, @QueryParam("limit") int l, @QueryParam("query") String query, @QueryParam("exclude") final String exclude) {
-        Response.ResponseBuilder builder;
-        try {
-            final List<String> excludedGroups = Arrays
-                    .asList(exclude.split(","));
-
-            final PagedResultList<Group> result = groupManager
-                    .search(query, AbstractManagerResource.PAGING_DEFAULT_START, AbstractManagerResource.PAGING_MAXIMUM);
-
-            final List<Group> filtered = result
-                    .getEntries()
-                    .stream()
-                    .filter(g -> !excludedGroups.contains(g.getName()))
-                    .collect(Collectors.toList());
-
-            final List<Group> limited = filtered.stream().limit(l).collect(Collectors.toList());
-
-            final PagedResultList<Group> paged = new PagedResultList<>(
-                    limited,
-                    AbstractManagerResource.PAGING_DEFAULT_START,
-                    AbstractManagerResource.PAGING_MAXIMUM,
-                    limited.size()
-            );
-
-            builder = Response.ok(paged, MediaType.APPLICATION_JSON);
-        } catch (Exception e) {
-            logger.error("call /api/groups/filtered failed: " + e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST);
-        }
-
         return builder.build();
     }
 }

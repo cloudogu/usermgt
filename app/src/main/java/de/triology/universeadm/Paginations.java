@@ -54,7 +54,6 @@ public final class Paginations
       end = size;
     }
 
-    PagedResultList<T> result = new PagedResultList<>(list.subList(actualStartValue, end), actualStartValue, limit, size);
-    return result;
+    return new PagedResultList<>(list.subList(actualStartValue, end), actualStartValue, limit, size);
   }
 }

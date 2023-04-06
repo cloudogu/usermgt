@@ -33,7 +33,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @param <T>
@@ -184,7 +186,7 @@ public abstract class AbstractManagerResource<T> {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("start") int s, @QueryParam("limit") int l, @QueryParam("query") String query) {
+    public Response getAll(@QueryParam("start") int s, @QueryParam("limit") int l, @QueryParam("query") String query, @QueryParam("exclude") final String exclude) {
         int start = s;
         int limit = l;
         if (start < 0) {
@@ -198,6 +200,8 @@ public abstract class AbstractManagerResource<T> {
         PagedResultList<T> result;
         if (Strings.isNullOrEmpty(query)) {
             result = manager.getAll(start, limit);
+        } else if (!Strings.isNullOrEmpty(exclude)){
+            result = manager.search(query, start, limit, Arrays.asList(exclude.split(",")));
         } else {
             result = manager.search(query, start, limit);
         }

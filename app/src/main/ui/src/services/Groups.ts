@@ -26,12 +26,10 @@ export type Group = {
 
 export type UndeletableGroupsResponse = string[];
 
-export type GroupListQueryOptions = QueryOptions & {exclude?: string[]}
-
 export const GroupsService = {
-    async list(signal?: AbortSignal, opts?: GroupListQueryOptions): Promise<GroupsModel> {
+    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<GroupsModel> {
         const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
-            params: {...opts, exclude: (opts?.exclude || []).join(",")},
+            params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
         } as any);
         if (groupsResponse.status < 200 || groupsResponse.status > 299) {
