@@ -1,4 +1,3 @@
-import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import React from "react";
@@ -8,6 +7,7 @@ import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
 import type {User} from "../../services/Users";
+import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 
 const MAX_SEARCH_RESULTS = 10;
 
@@ -50,14 +50,14 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         toggleModal(false);
     };
 
-    const queryGroups = async (searchValue: string, currentGroups?: string[]): Promise<string[]> => {
+    const queryGroups = async (searchValue: string): Promise<string[]> => {
         const groupsData = await GroupsService.list(
             undefined,
             {
                 start: 0,
                 limit: MAX_SEARCH_RESULTS,
                 query: searchValue,
-                exclude: currentGroups ?? [],
+                exclude: handler.values.memberOf ?? [],
             }
         );
         return groupsData.groups.map(x => x.name);
@@ -113,12 +113,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     items={handler.values.memberOf}
                     addItem={addGroup}
                     removeItem={openConfirmationRemoveGroupDialog}
-                    queryItems={async (val) => {
-                        console.log("val: " + val);
-                        const groups = await queryGroups(val, handler.values.memberOf);
-                        console.log(groups);
-                        return groups;
-                    }}
+                    queryItems={queryGroups}
                     tableTitle={t("groups.table.name")}
                     addLable={t("users.labels.addGroup")}
                     removeLable={t("users.labels.removeGroup")}
