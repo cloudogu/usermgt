@@ -110,7 +110,7 @@ public class MainModule extends ServletModule {
                 "/style/*").with(ResourceServlet.class);
 
         // serve index pages
-        serve("/", "/index.html", "/index-debug.html", "/account", "/users", "/groups").with(TemplateServlet.class);
+        serve("/", "/index.html", "/index-debug.html", "/account", "/users*", "/groups*").with(TemplateServlet.class);
     }
 
     //~--- fields ---------------------------------------------------------------
