@@ -38,6 +38,6 @@ export function NewGroup(props: { title: string }) {
 }
 
 const successData = (group: Group) => ({alert: {
-    message: t("newGroup.notification.success", {groupName: <span>{group.name}</span>}),
+    message: t("newGroup.notification.success", {groupName: group.name}),
     variant: "primary"
 }});

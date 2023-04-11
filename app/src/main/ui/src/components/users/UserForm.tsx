@@ -1,8 +1,9 @@
-import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H2, Table, ListWithSearchbar, usePagination} from "@cloudogu/ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import React from "react";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
+import {Prompt} from "../../hooks/usePrompt";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
@@ -10,6 +11,7 @@ import type {User} from "../../services/Users";
 import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 
 const MAX_SEARCH_RESULTS = 10;
+const DEFAULT_PAGE_SIZE = 5;
 
 // eslint-disable-next-line autofix/no-unused-vars
 export type OnSubmitUserForm<T extends User> = (values: T, notify: NotifyFunction, handler: UseFormHandlerFunctions<T>) => Promise<void> | void;
@@ -27,6 +29,7 @@ export interface UserFormProps<T extends User> {
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
     const {open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName} = useConfirmation();
+    const {pgData, pageStart, setCurrentPage} = usePagination(handler.values.memberOf.length, DEFAULT_PAGE_SIZE);
 
     const addGroup = (groupName: string): void => {
         if (handler.values.memberOf.indexOf(groupName) < 0) {
@@ -72,6 +75,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             }}
             title={t("groups.confirmation.title")}
             message={t("groups.confirmation.message", {groupName: groupName})}/>
+        <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
         <Form handler={handler}>
             {notification}
             <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username">
@@ -104,9 +108,12 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
 
             <H2>Gruppen ({handler.values.memberOf.length})</H2>
             {props.groupsReadonly ?
-                <ul className="ml-2 list-inside list-disc">
-                    {handler.values.memberOf.map(group => (<li key={group}>{group}</li>))}
-                </ul>
+                <>
+                    <ul className="ml-2 list-inside list-disc">
+                        { handler.values.memberOf.slice(pageStart, pageStart + DEFAULT_PAGE_SIZE).map(group => (<li key={group}>{group}</li>))}
+                    </ul>
+                    <Table.Foot.Pagination pageCount={pgData.pageCount} currentPage={pgData.current} onPageChange={(page) => setCurrentPage(page)}/>
+                </>
                 :
                 <ListWithSearchbar
                     data-testid="groups"

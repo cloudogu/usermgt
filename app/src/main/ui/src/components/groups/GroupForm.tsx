@@ -57,7 +57,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
             }}
             title={t("users.confirmation.title")}
             message={t("users.confirmation.message", {username: username})}/>
-        <Prompt when={handler.dirty && !handler.isSubmitting} message={"Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"} />
+        <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
         <Form handler={handler}>
             <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup} data-testid="name">
                 {t("groups.labels.name")}

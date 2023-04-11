@@ -26,7 +26,8 @@
         "length": "Das Passwort muss mindestens {{length}} Zeichen lang sein.",
         "lowercase": "Das Passwort muss mindestens ein Kleinbuchstaben enthalten.",
         "numeric": "Das Passwort muss mindestens eine Zahl enthalten.",
-        "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten."
+        "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten.",
+        "nonWhitespace": "Das Passwort darf nicht ausschließlich Leerzeichen enthalten."
       },
       "surname": "Nachname muss ausgefüllt sein.",
       "username": {
@@ -59,6 +60,9 @@
       "actions": {
         "delete": "Eintrag entfernen"
       }
+    },
+    "notification": {
+      "form.prompt": "Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"
     }
   },
   "groups": {

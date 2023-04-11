@@ -47,7 +47,9 @@ function createValidationSchema(passwordPolicy: PasswordPolicy) {
         "mail": Yup.string()
             .matches(/[a-zA-Z._-]*@[a-zA-Z-]*\.[a-zA-Z-]/, t("editUser.errors.email.invalid") as string)
             .required(t("editUser.errors.email.required") as string),
-        "password": Yup.string().test("", "", passwordValidationFunction),
+        "password": Yup.string()
+            .test("", "", passwordValidationFunction)
+            .matches(/^.*\S.*$/, t("editUser.errors.password.nonWhitespace") as string),
         "confirmPassword": Yup.string().oneOf([Yup.ref("password"), null], t("editUser.errors.confirmPassword") as string),
     });
 }
