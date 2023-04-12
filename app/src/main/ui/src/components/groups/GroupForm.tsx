@@ -55,8 +55,8 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
             onConfirm={async () => {
                 await onConfirmDeleteMember(username ?? "");
             }}
-            title={t("users.confirmation.title")}
-            message={t("users.confirmation.message", {username: username})}/>
+            title={t("groups.labels.removeMember")}
+            message={t("groups.labels.removeMemberConfirmationMessage", {username: username})}/>
         <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
         <Form handler={handler}>
             <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup} data-testid="name">
@@ -72,7 +72,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
                 addItem={addMember}
                 removeItem={openConfirmationDialog}
                 queryItems={loadMembers}
-                tableTitle={t("users.table.username")}
+                tableTitle={t("groups.labels.name")}
                 addLable={t("groups.labels.addMember")}
                 removeLable={t("groups.labels.removeMember")}
                 removeIcon={<TrashIcon className={"w-6 h-6"}/>}

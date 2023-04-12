@@ -53,14 +53,6 @@
     }
   },
   "generic": {
-    "labels": {
-      "addEntry": "Hinzufügen"
-    },
-    "table": {
-      "actions": {
-        "delete": "Eintrag entfernen"
-      }
-    },
     "notification": {
       "form.prompt": "Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"
     }
@@ -70,8 +62,8 @@
       "create": "Gruppe anlegen"
     },
     "confirmation": {
-      "message": "Soll die Gruppe {{groupName}} entfernt werden?",
-      "title": "Gruppe entfernen"
+      "message": "Soll die Gruppe {{groupName}} gelöscht werden?",
+      "title": "Gruppe löschen"
     },
     "notification": {
       "error": "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden.",
@@ -88,13 +80,17 @@
       "name": "Name",
       "systemGroup": "Dies ist eine Systemgruppe und darf nicht gelöscht werden.",
       "users": "Mitglieder"
+    },
+    "labels": {
+      "addMember": "Mitglied hinzufügen",
+      "description": "Beschreibung",
+      "members": "Mitglieder",
+      "name": "Name",
+      "removeMember": "Mitglied entfernen",
+      "removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?"
     }
   },
-  "groups.labels.addMember": "Mitglied hinzufügen",
-  "groups.labels.description": "Beschreibung",
-  "groups.labels.members": "Mitglieder",
-  "groups.labels.name": "Name",
-  "groups.labels.removeMember": "Mitglied entfernen",
+
   "modal": {
     "cancel": "Abbrechen",
     "confirm": "Bestätigen"
@@ -138,13 +134,14 @@
   },
   "users": {
     "confirmation": {
-      "message": "Soll der Nutzer {{username}} entfernt werden?",
-      "title": "Nutzer entfernen"
+      "message": "Soll der Nutzer {{username}} gelöscht werden?",
+      "title": "Nutzer löschen"
     },
     "create": "Nutzer anlegen",
     "labels": {
       "addGroup": "Gruppe hinzufügen",
-      "removeGroup": "Gruppe entfernen"
+      "removeGroup": "Gruppenzuordnung entfernen",
+      "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?"
     },
     "notification": {
       "error": "Der Nutzer '{{username}}' konnte nicht gelöscht werden.",
@@ -153,8 +150,8 @@
     "table": {
       "actions": {
         "add": "Nutzer hinzufügen",
-        "delete": "Nutzer entfernen",
-        "deleteAria": "entfernen",
+        "delete": "Nutzer löschen",
+        "deleteAria": "löschen",
         "edit": "Nutzer bearbeiten",
         "editAria": "bearbeiten"
       },

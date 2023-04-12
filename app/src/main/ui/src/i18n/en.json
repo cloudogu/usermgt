@@ -53,14 +53,6 @@
     }
   },
   "generic": {
-    "labels": {
-      "addEntry": "Add"
-    },
-    "table": {
-      "actions": {
-        "delete": "Remove entry"
-      }
-    },
     "notification": {
       "form.prompt": "The form contains unsaved changes. Do you really want to leave the page?"
     }
@@ -70,8 +62,8 @@
       "create": "Create Group"
     },
     "confirmation": {
-      "message": "Remove group {{groupName}}?",
-      "title": "Remove group"
+      "message": "Delete group {{groupName}}?",
+      "title": "Delete group"
     },
     "notification": {
       "error": "The group '{{groupName}}' could not be deleted.",
@@ -79,8 +71,8 @@
     },
     "table": {
       "actions": {
-        "delete": "Remove group",
-        "deleteAria": "remove",
+        "delete": "Delete group",
+        "deleteAria": "delete",
         "edit": "Edit group",
         "editAria": "edit"
       },
@@ -88,13 +80,16 @@
       "name": "Name",
       "systemGroup": "This is a system group and cannot be deleted.",
       "users": "Members"
+    },
+    "labels": {
+      "addMember": "Add member",
+      "description": "Description",
+      "members": "Members",
+      "name": "Name",
+      "removeMember": "Remove member",
+      "removeMemberConfirmationMessage": "Should the member {{username}} be removed?"
     }
   },
-  "groups.labels.addMember": "Add member",
-  "groups.labels.description": "Description",
-  "groups.labels.members": "Members",
-  "groups.labels.name": "Name",
-  "groups.labels.removeMember": "Remove member",
   "modal": {
     "cancel": "Cancel",
     "confirm": "Confirm"
@@ -138,13 +133,14 @@
   },
   "users": {
     "confirmation": {
-      "message": "Remove user {{username}}?",
-      "title": "Remove user"
+      "message": "Delete user {{username}}?",
+      "title": "Delete user"
     },
     "create": "Create user",
     "labels": {
       "addGroup": "Add group",
-      "removeGroup": "Remove group"
+      "removeGroup": "Remove group assigment",
+      "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?"
     },
     "notification": {
       "error": "The user '{{username}}' could not be deleted.",
@@ -152,8 +148,8 @@
     },
     "table": {
       "actions": {
-        "delete": "Remove user",
-        "deleteAria": "remove",
+        "delete": "Delete user",
+        "deleteAria": "delete",
         "edit": "Edit user",
         "editAria": "edit"
       },
