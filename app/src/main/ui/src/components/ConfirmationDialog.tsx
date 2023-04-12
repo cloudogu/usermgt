@@ -40,7 +40,7 @@ export function ConfirmationDialog({
             <Modal.Footer>
                 <Button variant={"danger"} onClick={onClick} disabled={disable}
                     className={"uppercase"}>{t("modal.confirm")}</Button>
-                <Button variant={"secondary"} onClick={onClose} disabled={disable}
+                <Button variant={"secondary"} onClick={onClose} disabled={disable} ref={buttonRef}
                     className={"ml-5"}>{t("modal.cancel")}</Button>
             </Modal.Footer>
         </Modal>
