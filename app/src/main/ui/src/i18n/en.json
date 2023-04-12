@@ -138,6 +138,7 @@
     },
     "create": "Create user",
     "labels": {
+      "groups": "Groups",
       "addGroup": "Add group",
       "removeGroup": "Remove group assigment",
       "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?"

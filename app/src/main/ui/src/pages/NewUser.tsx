@@ -3,7 +3,6 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
-import {useBackURL} from "../hooks/useBackURL";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {emptyUser} from "../services/Account";
 import { UsersService} from "../services/Users";
@@ -12,7 +11,6 @@ import type {User} from "../services/Users";
 export default function NewUser(props: { title: string }) {
     useSetPageTitle(props.title);
     const navigate = useNavigate();
-    const {backURL} = useBackURL();
 
     return <>
         <H1 className="uppercase">{t("pages.usersNew")}</H1>
@@ -23,7 +21,7 @@ export default function NewUser(props: { title: string }) {
             disableUsernameField={false}
             onSubmit={(user, notify) => UsersService.save(user)
                 .then((msg: string) => {
-                    navigate(backURL ?? "/users", {
+                    navigate("/users", {
                         state: {
                             alert: {
                                 message: msg,
@@ -36,7 +34,7 @@ export default function NewUser(props: { title: string }) {
                 })}
             additionalButtons={
                 <Button variant={"secondary"} type={"button"} className={"ml-4"}
-                    onClick={() => navigate(backURL ?? "/users")}>
+                    onClick={() => navigate("/users")}>
                     {t("editGroup.buttons.back")}
                 </Button>
             }

@@ -1,4 +1,4 @@
-import {Button, Form, H2, Table, ListWithSearchbar, usePagination} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H2, ListWithSearchbar, usePagination, Pagination} from "@cloudogu/ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import React from "react";
 import {t} from "../../helpers/i18nHelpers";
@@ -13,8 +13,7 @@ import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-
 const MAX_SEARCH_RESULTS = 10;
 const DEFAULT_PAGE_SIZE = 5;
 
-// eslint-disable-next-line autofix/no-unused-vars
-export type OnSubmitUserForm<T extends User> = (values: T, notify: NotifyFunction, handler: UseFormHandlerFunctions<T>) => Promise<void> | void;
+export type OnSubmitUserForm<T extends User> = (_values: T, _notify: NotifyFunction, _handler: UseFormHandlerFunctions<T>) => Promise<void> | void;
 
 export interface UserFormProps<T extends User> {
     initialUser: T;
@@ -73,8 +72,8 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             onConfirm={async () => {
                 await removeGroup(groupName ?? "");
             }}
-            title={t("groups.confirmation.title")}
-            message={t("groups.confirmation.message", {groupName: groupName})}/>
+            title={t("users.labels.removeGroup")}
+            message={t("users.labels.removeGroupConfirmationMessage", {groupName: groupName})}/>
         <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
         <Form handler={handler}>
             {notification}
@@ -106,13 +105,13 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 </Form.ValidatedCheckboxLabelRight> : <></>
             }
 
-            <H2>Gruppen ({handler.values.memberOf.length})</H2>
+            <H2>{t("users.labels.groups")} ({handler.values.memberOf.length})</H2>
             {props.groupsReadonly ?
                 <>
                     <ul className="ml-2 list-inside list-disc">
                         { handler.values.memberOf.slice(pageStart, pageStart + DEFAULT_PAGE_SIZE).map(group => (<li key={group}>{group}</li>))}
                     </ul>
-                    <Table.Foot.Pagination pageCount={pgData.pageCount} currentPage={pgData.current} onPageChange={(page) => setCurrentPage(page)}/>
+                    <Pagination pageCount={pgData.pageCount} currentPage={pgData.current} onPageChange={(page) => setCurrentPage(page)}/>
                 </>
                 :
                 <ListWithSearchbar

@@ -139,6 +139,7 @@
     },
     "create": "Nutzer anlegen",
     "labels": {
+      "groups": "Gruppen",
       "addGroup": "Gruppe hinzufügen",
       "removeGroup": "Gruppenzuordnung entfernen",
       "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?"
