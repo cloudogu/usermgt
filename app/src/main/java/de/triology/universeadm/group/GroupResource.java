@@ -27,10 +27,8 @@
 
 package de.triology.universeadm.group;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import de.triology.universeadm.AbstractManagerResource;
-import de.triology.universeadm.PagedResultList;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
 import org.slf4j.Logger;
@@ -39,9 +37,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
