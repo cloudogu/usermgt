@@ -119,7 +119,8 @@
   "newUser": {
     "notification": {
       "error": "Der Nutzer '{{username}}' konnte nicht gespeichert werden.",
-      "errorDuplicate": "Ein Nutzer mit dem Nutzernamen '{{username}}' oder der E-Mail '{{mail}}' existiert bereits.",
+      "errorDuplicateUsername": "Ein Nutzer mit dem Nutzernamen '{{username}}' existiert bereits.",
+      "errorDuplicateMail": "Ein Nutzer mit der E-Mail '{{mail}}' existiert bereits.",
       "success": "Nutzer '{{username}}' erfolgreich gespeichert."
     }
   },
@@ -140,6 +141,7 @@
     "create": "Nutzer anlegen",
     "labels": {
       "groups": "Gruppen",
+      "myGroups": "Meine Gruppen",
       "addGroup": "Gruppe hinzufügen",
       "removeGroup": "Gruppenzuordnung entfernen",
       "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?"

@@ -118,7 +118,8 @@
   "newUser": {
     "notification": {
       "error": "Could not save user '{{username}}'.",
-      "errorDuplicate": "A user with the username '{{username}}' or the E-Mail '{{mail}}' already exists.",
+      "errorDuplicateUsername": "A user with the username '{{username}}' already exists.",
+      "errorDuplicateMail": "A user with the E-Mail '{{mail}}' already exists.",
       "success": "User '{{username}}' was saved successfully."
     }
   },
@@ -139,6 +140,7 @@
     "create": "Create user",
     "labels": {
       "groups": "Groups",
+      "myGroups": "My Groups",
       "addGroup": "Add group",
       "removeGroup": "Remove group assigment",
       "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?"

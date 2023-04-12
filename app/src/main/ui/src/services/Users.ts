@@ -29,6 +29,19 @@ export type UsersModel = PagedModel & {
     users: User[];
 }
 
+export enum UserConstraints {
+    UniqueEmail = "UNIQUE_EMAIL",
+    UniqueUsername = "UNIQUE_USERNAME",
+}
+
+export type UsersConstraintsError = {
+    constraints: UserConstraints[];
+}
+
+export function isUsersConstraintsError(error: UsersConstraintsError | Error): error is UsersConstraintsError {
+    return (error as UsersConstraintsError).constraints !== undefined;
+}
+
 export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPaginationData};
 
 export const UsersService = {
@@ -64,7 +77,7 @@ export const UsersService = {
             if (isAxiosError(e)) {
                 const axiosError = e as AxiosError;
                 if (axiosError.response?.status === 409) {
-                    throw new Error(t("newUser.notification.errorDuplicate", {username: user.username, mail: user.mail}));
+                    throw axiosError.response.data as UsersConstraintsError;
                 }
             }
             throw new Error(t("newUser.notification.error", {username: user.username}));

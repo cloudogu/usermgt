@@ -1,4 +1,4 @@
-import {Button, Form, H2, ListWithSearchbar, usePagination, Pagination} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import React from "react";
 import {t} from "../../helpers/i18nHelpers";
@@ -28,7 +28,6 @@ export interface UserFormProps<T extends User> {
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
     const {open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName} = useConfirmation();
-    const {pgData, pageStart, setCurrentPage} = usePagination(handler.values.memberOf.length, DEFAULT_PAGE_SIZE);
 
     const addGroup = (groupName: string): void => {
         if (handler.values.memberOf.indexOf(groupName) < 0) {
@@ -105,28 +104,22 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 </Form.ValidatedCheckboxLabelRight> : <></>
             }
 
-            <H2>{t("users.labels.groups")} ({handler.values.memberOf.length})</H2>
-            {props.groupsReadonly ?
+            {props.groupsReadonly ? <></> :
                 <>
-                    <ul className="ml-2 list-inside list-disc">
-                        { handler.values.memberOf.slice(pageStart, pageStart + DEFAULT_PAGE_SIZE).map(group => (<li key={group}>{group}</li>))}
-                    </ul>
-                    <Pagination pageCount={pgData.pageCount} currentPage={pgData.current} onPageChange={(page) => setCurrentPage(page)}/>
+                    <H2>{t("users.labels.groups")} ({handler.values.memberOf.length})</H2>
+                    <ListWithSearchbar
+                        data-testid="groups"
+                        items={handler.values.memberOf}
+                        addItem={addGroup}
+                        removeItem={openConfirmationRemoveGroupDialog}
+                        queryItems={queryGroups}
+                        tableTitle={t("groups.table.name")}
+                        addLable={t("users.labels.addGroup")}
+                        removeLable={t("users.labels.removeGroup")}
+                        removeIcon={<TrashIcon className={"w-6 h-6"}/>}
+                    />
                 </>
-                :
-                <ListWithSearchbar
-                    data-testid="groups"
-                    items={handler.values.memberOf}
-                    addItem={addGroup}
-                    removeItem={openConfirmationRemoveGroupDialog}
-                    queryItems={queryGroups}
-                    tableTitle={t("groups.table.name")}
-                    addLable={t("users.labels.addGroup")}
-                    removeLable={t("users.labels.removeGroup")}
-                    removeIcon={<TrashIcon className={"w-6 h-6"}/>}
-                />
             }
-
 
             <div className={"my-4"}>
                 <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>
@@ -135,5 +128,25 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 {props.additionalButtons as JSX.Element}
             </div>
         </Form>
+
+        {props.groupsReadonly ?
+            <>
+                <H2>{t("users.labels.myGroups")} ({handler.values.memberOf.length})</H2>
+                <ListWithSearchbar
+                    data-testid="groups"
+                    readonly={true}
+                    items={handler.values.memberOf}
+                    addItem={addGroup}
+                    removeItem={openConfirmationRemoveGroupDialog}
+                    queryItems={queryGroups}
+                    tableTitle={t("groups.table.name")}
+                    addLable={t("users.labels.addGroup")}
+                    removeLable={t("users.labels.removeGroup")}
+                    removeIcon={<TrashIcon className={"w-6 h-6"}/>}
+                    pageSize={10}
+                />
+            </>
+            : <></>
+        }
     </>;
 }
