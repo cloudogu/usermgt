@@ -62,6 +62,7 @@ export default function Groups(props: { title: string }) {
             <H1 className="uppercase">{t("pages.groups")}</H1>
             <div className="flex justify-between py-1">
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
+                    data-testid="user-create"
                     disabled={isLoading} onClick={() => navigate("/groups/new")}>
                     {t("groups.buttons.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}

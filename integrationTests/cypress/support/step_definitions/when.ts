@@ -13,7 +13,7 @@ When("the user opens the users page", function () {
 })
 
 When("the user clicks on the create button", function () {
-    cy.get('a[href*="#/user/"]').click()
+    cy.get('button[data-testid="user-create"]').click()
 })
 
 When("the user waits a few seconds", function () {
@@ -24,7 +24,7 @@ When("the user clicks the edit function in his own user entry", function () {
 
     cy.fixture("testuser_data").then(function (testUser) {
         cy.get("tr").filter(`:contains("${testUser.username}")`).within((tr) => {
-            cy.get('.element-interactions button').first().click()
+            cy.get(`a[id="${testUser.username}-edit-link"]`).click()
         })
     })
 
@@ -36,14 +36,14 @@ When("the user fills the form to create a new user", function () {
         cy.get('#givenname').type(newUser.givenname)
         cy.get('#surname').type(newUser.surname)
         cy.get('#displayName').type(newUser.displayName)
-        cy.get('#email').type(newUser.mail)
+        cy.get('#mail').type(newUser.mail)
         cy.get('#password').type(newUser.password)
         cy.get('#confirmPassword').type(newUser.password)
     })
 })
 
 When("the user enables the password reset flag", function () {
-    cy.get('#pwdResetAtFirstLogin').click()
+    cy.get('label[data-testid="pwdReset-label"]').click()
 })
 
 When("the user clicks save", function () {
@@ -68,6 +68,12 @@ When("the user deletes his password input", function () {
 When("the user enters a valid password", function () {
     cy.fixture("newuser_data").then(function (newUser) {
         cy.get('input[id="password"]').type(newUser.password)
+    })
+})
+
+When("the user enters a valid confirm-password", function () {
+    cy.fixture("newuser_data").then(function (newUser) {
+        cy.get('input[id="confirmPassword"]').clear().type(newUser.password)
     })
 })
 

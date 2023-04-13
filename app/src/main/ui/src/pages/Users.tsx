@@ -1,7 +1,9 @@
 import {Button, H1, MailHref, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import React, {useContext} from "react";
+import {Link, useLocation} from "react-router-dom";
 import {ConfirmationDialog} from "../components/ConfirmationDialog";
 import {DeleteButton} from "../components/DeleteButton";
+import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useConfirmation} from "../hooks/useConfirmation";
 import {useFilter} from "../hooks/useFilter";
@@ -9,11 +11,9 @@ import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirec
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {useUsers} from "../hooks/useUsers";
 import {ApplicationContext} from "../main";
-import type {User} from "../services/Users";
 import {UsersService} from "../services/Users";
 import type {CasUser} from "../services/CasUser";
-import EditLink from "../components/EditLink";
-import {Link, useLocation} from "react-router-dom";
+import type {User} from "../services/Users";
 
 const FIRST_PAGE = 1;
 
@@ -32,7 +32,7 @@ export default function Users(props: { title: string }) {
         const params = new URLSearchParams();
         params.set("backURL", backURL);
         return params.toString();
-    }
+    };
 
     const changePage = (selectedPage: number) => {
         clearNotification();
@@ -69,22 +69,23 @@ export default function Users(props: { title: string }) {
             <div className="flex justify-between py-1">
                 <Link to={"/users/new"}>
                     <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
-                            disabled={isLoading}>{t("users.create")}
+                        data-testid="user-create"
+                        disabled={isLoading}>{t("users.create")}
                     </Button>
                 </Link>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                           onClear={() => updateQuery("")} startValueSearch={opts.query}
-                           className="mt-5 mb-2.5" disabled={isLoading}/>
+                    onClear={() => updateQuery("")} startValueSearch={opts.query}
+                    className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
         {notification}
         <ConfirmationDialog open={open ?? false}
-                            onClose={() => toggleModal(false)}
-                            onConfirm={async () => {
-                                await onDelete(username ?? "");
-                            }}
-                            title={t("users.confirmation.title")}
-                            message={t("users.confirmation.message", {username: username})}/>
+            onClose={() => toggleModal(false)}
+            onConfirm={async () => {
+                await onDelete(username ?? "");
+            }}
+            title={t("users.confirmation.title")}
+            message={t("users.confirmation.message", {username: username})}/>
         <Table className="my-4 text-sm">
             <Table.Head>
                 <Table.Head.Tr className={"uppercase"}>
@@ -117,7 +118,7 @@ function createUsersRow(user: User, casUser: CasUser, onDelete: (_: string) => v
                 <MailHref mail={user.mail}/>
             </Table.Body.Td>
             <Table.Body.Td className="flex justify-center">
-                <EditLink to={`/users/${user?.username ?? ""}/edit?${backUrlParams}`}></EditLink>
+                <EditLink to={`/users/${user?.username ?? ""}/edit?${backUrlParams}`} id={`${user?.username}-edit-link`} />
                 <DeleteButton
                     disabled={user.username === casUser.principal}
                     title={t("users.table.actions.delete")}

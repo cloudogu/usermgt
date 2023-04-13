@@ -7,8 +7,9 @@ Feature: Tests for the verification of the password policy
     And the user deletes his password input
     Then the password entry is marked as invalid
     And all password rules are displayed
-    And all password rules are marked as not fullfilled
     When the user enters a valid password
     Then the password entry is marked as valid
-    And all password rules are displayed
-    And all password rules are marked as fullfilled
+    And the password-confirm entry is marked as invalid
+    And the password-confirm rules are displayed
+    When the user enters a valid confirm-password
+    Then the password-confirm entry is marked as valid

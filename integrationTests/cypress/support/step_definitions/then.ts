@@ -11,12 +11,12 @@ Then("the newly created user is asked to change his password", function () {
 });
 
 Then("the password reset flag is not visible", function () {
-    cy.get('#pwdResetAtFirstLogin').should('not.be.visible')
+    cy.get('label[data-testid="pwdReset-label"]').should('not.exist')
 })
 
 Then("the password reset flag is unchecked", function () {
-    cy.get('#pwdResetAtFirstLogin').should('be.visible')
-    cy.get('#pwdResetAtFirstLogin').should('not.be.checked')
+    cy.get('label[data-testid="pwdReset-label"]').should('be.visible')
+    cy.get('input[data-testid="pwdReset-checkbox"]').should('not.be.checked')
 })
 
 
@@ -33,37 +33,54 @@ Then("the user has administrator privileges in the dogu", function () {
 Then("the password entry is marked as invalid", function () {
     // Since the validation is only carried out when the text field loses its focus,
     // the change of focus is effected by clicking on another position.
-    cy.get('p[data-testid="password-policy-rules"]').click()
-
-    cy.get('span[data-testid="password-invalid-marker"]').should('be.visible')
-    cy.get('span[data-testid="password-valid-marker"]').should('not.be.visible')
+    cy.get('input[data-testid="confirmPassword-input"]').click()
+    cy.get('input[data-testid="password-input"]').should('have.class', 'border-textfield-danger-border')
+    cy.get('div[data-testid="password-input-error-errors"]').should('be.visible')
 });
 
 Then("the password entry is marked as valid", function () {
     // Since the validation is only carried out when the text field loses its focus,
     // the change of focus is effected by clicking on another position.
-    cy.get('p[data-testid="password-policy-rules"]').click()
-
-    cy.get('span[data-testid="password-valid-marker"]').should('be.visible')
-    cy.get('span[data-testid="password-invalid-marker"]').should('not.be.visible')
-});
-
-Then("all password rules are marked as not fullfilled", function () {
-    cy.get('p[data-testid="password-policy-rules"]').children('span[ng-repeat="violation in passwordPolicy.violations"]').should('have.length', 5)
-});
-
-Then("all password rules are marked as fullfilled", function () {
-    cy.get('p[data-testid="password-policy-rules"]').children('span[ng-repeat="satisfaction in passwordPolicy.satisfactions"]').should('have.length', 5)
+    cy.get('input[data-testid="confirmPassword-input"]').click()
+    cy.get('input[data-testid="password-input"]').should('have.class', 'border-textfield-success-border')
+    cy.get('div[data-testid="password-input-error-errors"]').should('not.exist')
 });
 
 Then("all password rules are displayed", function () {
-    cy.get('p[data-testid="password-policy-rules"]').should('be.visible')
+    cy.get('span[data-testid="password-input-error-0"]').should('be.visible')
+    cy.get('span[data-testid="password-input-error-1"]').should('be.visible')
+    cy.get('span[data-testid="password-input-error-2"]').should('be.visible')
+    cy.get('span[data-testid="password-input-error-3"]').should('be.visible')
+    cy.get('span[data-testid="password-input-error-4"]').should('be.visible')
+    cy.get('span[data-testid="password-input-error-5"]').should('be.visible')
 
-    cy.get('p[data-testid="password-policy-rules"]').contains('at least 1 special character')
-    cy.get('p[data-testid="password-policy-rules"]').contains('at least 1 number')
-    cy.get('p[data-testid="password-policy-rules"]').contains('at least 1 lower case letter')
-    cy.get('p[data-testid="password-policy-rules"]').contains('at least 1 capital letter')
-    cy.get('p[data-testid="password-policy-rules"]').contains('at least 14 character')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least 14 characters.')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least one capital letter.')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least one lower case letter.')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least 1 number.')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least 1 special character.')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must not contain only spaces.')
+});
+
+Then("the password-confirm entry is marked as invalid", function () {
+    // Since the validation is only carried out when the text field loses its focus,
+    // the change of focus is effected by clicking on another position.
+    cy.get('input[data-testid="password-input"]').click()
+    cy.get('input[data-testid="confirmPassword-input"]').should('have.class', 'border-textfield-danger-border')
+    cy.get('div[data-testid="confirmPassword-input-error-errors"]').should('be.visible')
+});
+
+Then("the password-confirm entry is marked as valid", function () {
+    // Since the validation is only carried out when the text field loses its focus,
+    // the change of focus is effected by clicking on another position.
+    cy.get('input[data-testid="password-input"]').click()
+    cy.get('input[data-testid="confirmPassword-input"]').should('have.class', 'border-textfield-success-border')
+    cy.get('div[data-testid="confirmPassword-input-error-errors"]').should('not.exist')
+});
+
+Then("the password-confirm rules are displayed", function () {
+    cy.get('span[data-testid="confirmPassword-input-error-0"]').should('be.visible')
+    cy.get('div[data-testid="confirmPassword-input-error-errors"]').contains('Passwords must match.')
 });
 
 Then("the import finished with status code {int}", (statusCode) => {
