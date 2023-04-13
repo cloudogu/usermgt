@@ -92,7 +92,8 @@
       "members": "Mitglieder",
       "name": "Name",
       "removeMember": "Mitglied entfernen",
-      "removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?"
+      "removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?",
+      "emptyMembers": "Keine Mitglieder zugeordnet"
     }
   },
   "modal": {
@@ -148,7 +149,8 @@
       "myGroups": "Meine Gruppen",
       "addGroup": "Gruppe hinzufügen",
       "removeGroup": "Gruppenzuordnung entfernen",
-      "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?"
+      "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?",
+      "emptyGroups": "Keine Gruppen zugeordnet"
     },
     "notification": {
       "error": "Der Nutzer '{{username}}' konnte nicht gelöscht werden.",

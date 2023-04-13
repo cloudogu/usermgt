@@ -116,6 +116,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                         tableTitle={t("groups.table.name")}
                         addLable={t("users.labels.addGroup")}
                         removeLable={t("users.labels.removeGroup")}
+                        emptyItemsLable={t("users.labels.emptyGroups")}
                         removeIcon={<TrashIcon className={"w-6 h-6"}/>}
                     />
                 </>
@@ -142,6 +143,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     tableTitle={t("groups.table.name")}
                     addLable={t("users.labels.addGroup")}
                     removeLable={t("users.labels.removeGroup")}
+                    emptyItemsLable={t("users.labels.emptyGroups")}
                     removeIcon={<TrashIcon className={"w-6 h-6"}/>}
                     pageSize={10}
                 />

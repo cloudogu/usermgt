@@ -75,6 +75,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
                 tableTitle={t("groups.labels.name")}
                 addLable={t("groups.labels.addMember")}
                 removeLable={t("groups.labels.removeMember")}
+                emptyItemsLable={t("groups.labels.emptyMembers")}
                 removeIcon={<TrashIcon className={"w-6 h-6"}/>}
             />
             <div className={"my-4"}>

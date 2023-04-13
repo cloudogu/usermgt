@@ -92,7 +92,8 @@
       "members": "Members",
       "name": "Name",
       "removeMember": "Remove member",
-      "removeMemberConfirmationMessage": "Should the member {{username}} be removed?"
+      "removeMemberConfirmationMessage": "Should the member {{username}} be removed?",
+      "emptyMembers": "No members assigned"
     }
   },
   "modal": {
@@ -148,7 +149,8 @@
       "myGroups": "My Groups",
       "addGroup": "Add group",
       "removeGroup": "Remove group assigment",
-      "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?"
+      "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?",
+      "emptyGroups": "No groups assigned"
     },
     "notification": {
       "error": "The user '{{username}}' could not be deleted.",
