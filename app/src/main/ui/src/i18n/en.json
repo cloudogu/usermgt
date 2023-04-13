@@ -55,6 +55,11 @@
   "generic": {
     "notification": {
       "form.prompt": "The form contains unsaved changes. Do you really want to leave the page?"
+    },
+    "errors":{
+      "title": "Oops!",
+      "general": "An error occurred while loading the page.",
+      "notFound": "The page could not be found."
     }
   },
   "groups": {

@@ -8,17 +8,17 @@ import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import Account from "./pages/Account";
-import ErrorPage from "./pages/Error";
 import {EditGroup} from "./pages/EditGroup";
+import EditUser from "./pages/EditUser";
+import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
+import NewUser from "./pages/NewUser";
 import Users from "./pages/Users";
 import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
-import EditUser from "./pages/EditUser";
-import NewUser from "./pages/NewUser";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -35,8 +35,8 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
 const router = createBrowserRouter([
     {
         path: "",
-        element: <React.StrictMode><MainApplication /></React.StrictMode>,
-        errorElement: <ErrorPage />,
+        element: <React.StrictMode><ApplicationContainer children={<Outlet />} /></React.StrictMode>,
+        errorElement: <React.StrictMode><ApplicationContainer children={<ErrorPage />} /></React.StrictMode>,
         children: [
             {
                 path: "",
@@ -76,12 +76,15 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router} />);
 
-function MainApplication() {
+export type ApplicationContainerProps = {
+    children: JSX.Element;
+}
+function ApplicationContainer({children}: ApplicationContainerProps) {
     const {user:casUser} = useCasUser();
     return <ApplicationContext.Provider value={{casUser: casUser}}>
         <Nav/>
         <Main>
-            <Outlet />
+            {children}
         </Main>
     </ApplicationContext.Provider>;
 }

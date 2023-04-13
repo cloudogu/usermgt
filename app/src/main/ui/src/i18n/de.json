@@ -55,6 +55,11 @@
   "generic": {
     "notification": {
       "form.prompt": "Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"
+    },
+    "errors":{
+      "title": "Oops!",
+      "general": "Beim Laden der Seite ist ein Fehler aufgetreten.",
+      "notFound": "Die Seite konnte nicht gefunden werden."
     }
   },
   "groups": {
@@ -90,7 +95,6 @@
       "removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?"
     }
   },
-
   "modal": {
     "cancel": "Abbrechen",
     "confirm": "Bestätigen"

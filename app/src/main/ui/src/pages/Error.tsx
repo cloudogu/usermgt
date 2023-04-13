@@ -1,18 +1,34 @@
-import { useRouteError, isRouteErrorResponse } from "react-router-dom";
+import {H1, H2} from "@cloudogu/ces-theme-tailwind";
+import {useRouteError, isRouteErrorResponse} from "react-router-dom";
+import {t} from "../helpers/i18nHelpers";
 
 export default function ErrorPage() {
     const error = useRouteError();
     console.error(error);
-    if (isRouteErrorResponse(error)) {
+
+    const renderError = (error: any) => {
+        let errorMessage = t("generic.errors.general");
+        let errorDetail: string|undefined ;
+
+        if (isRouteErrorResponse(error)) {
+            if (error.status === 404) {
+                errorMessage = t("generic.errors.notFound");
+            } else {
+                errorDetail = `${error.status} - ${error.statusText}`;
+            }
+        }
         return (
-            <div>
-                <h1>Oops!</h1>
-                <h2>{error.status}</h2>
-                <p>{error.statusText}</p>
-                {error.data?.message && <p>{error.data.message}</p>}
-            </div>
+            <>
+                <H2>{errorMessage}</H2>
+                {errorDetail && <p>{errorDetail}</p>}
+            </>
         );
-    } else {
-        return <div>Oops</div>;
-    }
+    };
+
+    return (
+        <div className="text-center">
+            <H1>{t("generic.errors.title")}</H1>
+            {renderError(error)}
+        </div>
+    );
 }
