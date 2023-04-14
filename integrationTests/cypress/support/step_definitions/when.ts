@@ -142,7 +142,7 @@ When("the user selects the {string} groups-page", function (pageNum: string) {
     cy.get(`button[data-testid="groups-footer-pagination-li-${page}-btn"]`).click();
 })
 When("the user sets the groups-filter to {string}", function (filter: string) {
-    cy.get(`input[data-testid="groups-filter-input"]`).type(filter);
+    cy.get(`input[data-testid="groups-filter-input"]`).clear().type(filter);
     cy.get(`button[data-testid="groups-filter-button"]`).click();
 })
 
@@ -164,6 +164,10 @@ When("the user fills the group-form for a group with the name {string}", functio
     cy.get('textarea[data-testid="description-area"]').type(`Description for group ${name}`);
 })
 
+When("the user edits the group-description to {string}", function (description: string) {
+    cy.get('textarea[data-testid="description-area"]').clear().type(description);
+})
+
 When("the user submits the group-form", function () {
     cy.get('button[data-testid="save-button"]').click();
 })
@@ -172,4 +176,14 @@ When("the user adds the member {string} to the group", function (username: strin
     cy.get('input[data-testid="members-searchbar-input"]').type(username);
     cy.get('li[data-testid="members-searchbar-li-0"] button').click();
     cy.get('table[data-testid="members-table"] tbody tr').contains(username);
+})
+
+When("the user removes the member {string} from the group", function (username: string) {
+    cy.get('table[data-testid="members-table"] tbody tr td:nth-of-type(2) button').click();
+
+    cy.get('dialog[data-testid="remove-member-dialog"]').as('dialog');
+    cy.get('@dialog').should('be.visible');
+    cy.get('@dialog').find('h3').contains('Remove member');
+    cy.get('@dialog').find('button:nth-of-type(1)').click();
+
 })

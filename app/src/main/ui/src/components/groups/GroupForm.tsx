@@ -56,6 +56,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
                 await onConfirmDeleteMember(username ?? "");
             }}
             title={t("groups.labels.removeMember")}
+            data-testid="remove-member-dialog"
             message={t("groups.labels.removeMemberConfirmationMessage", {username: username})}/>
         <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
         <Form handler={handler} data-testid="group-from">

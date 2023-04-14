@@ -168,6 +168,14 @@ Then("the groups-page contains the group {string}", function (groupName:string) 
     cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${groupName}-delete-button"]`).should('be.visible');
 });
 
+Then("the groups-page contains the group-description {string}", function (description:string) {
+    cy.get('table[data-testid="groups-table"]')
+        .find('tr td:nth-of-type(2)').filter(`:contains("${description}")`).parent().as('row');
+    cy.get('@row').should('be.visible');
+    cy.get('@row').find("td").should('have.length', 4);
+    cy.get('@row').find("td:nth-of-type(2)").contains(description);
+});
+
 Then("the groups-page contains at least {string} groups", function (groupCountNum: string) {
     const groupCount = parseInt(groupCountNum);
     cy.get('table[data-testid="groups-table"] tbody tr').should('have.length.gte', groupCount);
@@ -199,3 +207,22 @@ Then("the group-name-field is marked as invalid", function () {
 Then("a user named {string} is member of the group", function (username: string) {
     cy.get('table[data-testid="members-table"] tbody tr').contains(username);
 })
+
+Then("the group has {string} members", function (memberNum: string) {
+    const memberCount = parseInt(memberNum);
+    cy.get('table[data-testid="members-table"] tbody tr').should('have.length', memberCount);
+})
+
+Then("the group has no members", function () {
+    cy.get('table[data-testid="members-table"] tbody tr').contains("No members assigned");
+})
+
+Then("the edit-group-page for group {string} is shown", function (name: string) {
+    cy.get('h1').contains("Edit group")
+    cy.get('input[data-testid="name-input"]').should('have.value', name)
+    cy.get('input[data-testid="name-input"]').should('be.disabled')
+    cy.get('textarea[data-testid="description-area"]').should('be.visible')
+    cy.get('div[data-testid="members"]').should('be.visible')
+    cy.get('button[data-testid="save-button"]').should('be.visible')
+    cy.get('button[data-testid="back-button"]').should('be.visible')
+});
