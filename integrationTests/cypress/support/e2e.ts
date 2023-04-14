@@ -20,6 +20,7 @@ declare global {
             usermgtCleanupTestUsers(): void
             usermgtGetGroup(groupname: string): void
             usermgtDeleteGroup(groupname: string): void
+            usermgtCleanupTestGroups(): void
             withUser(username: string): any
             withImportData(userCount: number): any
             logout(): void
@@ -168,6 +169,26 @@ const cleanupTestUsers = () => {
     });
 };
 
+const cleanupTestGroups = () => {
+    cy.api({
+        method: "GET",
+        url: Cypress.config().baseUrl + "/usermgt/api/groups?limit=100000",
+        failOnStatusCode: false,
+        auth: {
+            'user': env.GetAdminUsername(),
+            'pass': env.GetAdminPassword()
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200);
+        // @ts-ignore
+        return response.body.entries.filter(el => el.name.startsWith("testGroup"));
+    }).then(testGroups => {
+        testGroups.filter(testGroup => {
+            cy.usermgtDeleteGroup(testGroup.name);
+        })
+    });
+};
+
 function tryDeleteGroup(groupName) {
     cy.api({
         method: "DELETE",
@@ -294,3 +315,4 @@ Cypress.Commands.add("usermgtDeleteGroup", withClearCookies(deleteGroup))
 Cypress.Commands.add("usermgtTryDeleteGroup", withClearCookies(tryDeleteGroup))
 Cypress.Commands.add("usermgtAddMemberToGroup", addMemberToGroup)
 Cypress.Commands.add("usermgtRemoveMemberFromGroup", withClearCookies(removeMemberFromGroup))
+Cypress.Commands.add("usermgtCleanupTestGroups", withClearCookies(cleanupTestGroups))

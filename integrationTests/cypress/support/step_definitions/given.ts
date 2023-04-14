@@ -20,7 +20,6 @@ Given("{string} test-users exist", (users: string) => {
             const mailParts = testUser.mail.split("@");
             testUser.mail = `${mailParts[0]}${i}@${mailParts[1]}`;
 
-            cy.log(testUser);
             cy.usermgtTryDeleteUser(testUser.username);
             cy.usermgtCreateUser(testUser.username, testUser.givenname, testUser.surname, testUser.displayName, testUser.mail, testUser.password, testUser.pwdReset, testUser.groups)
         }
@@ -38,4 +37,21 @@ Given("the user {string} is member of the group {string}", function (username, g
     }).then((response) => {
         expect(response.status).to.eq(204)
     })
+})
+
+/* GROUPS */
+
+Given("{string} test-groups exist", (groups: string) => {
+    const userCount = parseInt(groups);
+    cy.withUser("testuser").then(groupData => {
+        for(let i = 1; i <= userCount; i++){
+            const testGroup = {
+                name: `testGroup_${i}`,
+                description: `Test Group ${i}`,
+            };
+
+            cy.usermgtTryDeleteGroup(testGroup.name);
+            cy.usermgtCreateGroup(testGroup.name, testGroup.description)
+        }
+    });
 })

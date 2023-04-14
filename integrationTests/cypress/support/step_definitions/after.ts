@@ -13,7 +13,8 @@ After({tags: "@requires_new_user"}, () => {
 });
 
 After(() => {
-    cy.usermgtCleanupTestUsers()
+    cy.usermgtCleanupTestUsers();
+    cy.usermgtCleanupTestGroups();
 })
 
 

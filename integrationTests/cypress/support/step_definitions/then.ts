@@ -148,3 +148,32 @@ Then("the users-page contains exactly {string} users", function (userCountNum: s
     const userCount = parseInt(userCountNum);
     cy.get('table[data-testid="users-table"] tbody tr').should('have.length', userCount);
 });
+
+/* GROUPS */
+
+Then("the groups-page is shown", function () {
+    cy.get('h1').contains("Groups")
+    cy.get('table[data-testid="groups-table"]').should('be.visible')
+    cy.get('button[data-testid="group-create"]').contains('Create Group')
+    cy.get('form[data-testid="groups-filter"]').should('be.visible')
+});
+
+Then("the groups-page contains the group {string}", function (groupName:string) {
+    cy.get('table[data-testid="groups-table"]')
+        .find('tr td:nth-of-type(1)').filter(`:contains("${groupName}")`).parent().as('row');
+    cy.get('@row').should('be.visible');
+    cy.get('@row').find("td").should('have.length', 4);
+    cy.get('@row').find("td:nth-of-type(1)").contains(groupName);
+    cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${groupName}-edit-button"]`).should('be.visible');
+    cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${groupName}-delete-button"]`).should('be.visible');
+});
+
+Then("the groups-page contains at least {string} groups", function (groupCountNum: string) {
+    const groupCount = parseInt(groupCountNum);
+    cy.get('table[data-testid="groups-table"] tbody tr').should('have.length.gte', groupCount);
+});
+
+Then("the groups-page contains exactly {string} groups", function (groupCountNum: string) {
+    const groupCount = parseInt(groupCountNum);
+    cy.get('table[data-testid="groups-table"] tbody tr').should('have.length', groupCount);
+});

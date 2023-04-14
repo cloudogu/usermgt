@@ -16,12 +16,12 @@ When("the user selects the {string} users-page", function (pageNum: string) {
     const page = parseInt(pageNum);
     cy.get(`button[data-testid="users-footer-pagination-li-${page}-btn"]`).click();
 })
-When("the user sets the filter to {string}", function (filter: string) {
+When("the user sets the users-filter to {string}", function (filter: string) {
     cy.get(`input[data-testid="users-filter-input"]`).type(filter);
     cy.get(`button[data-testid="users-filter-button"]`).click();
 })
 
-When("the user clears the filter", function () {
+When("the user clears the users-filter", function () {
     cy.get(`input[data-testid="users-filter-input"]`).clear();
     cy.get(`button[data-testid="users-filter-button"]`).click();
 })
@@ -128,4 +128,25 @@ When(`the user {string} sends the upload request, but is not allowed to`, functi
             expect(response.status).to.eq(401)
         })
     })
+})
+
+/* GROUPS */
+
+When("the user opens the groups page", function () {
+    cy.visit('/usermgt/groups')
+    cy.clickWarpMenuCheckboxIfPossible()
+})
+
+When("the user selects the {string} groups-page", function (pageNum: string) {
+    const page = parseInt(pageNum);
+    cy.get(`button[data-testid="groups-footer-pagination-li-${page}-btn"]`).click();
+})
+When("the user sets the groups-filter to {string}", function (filter: string) {
+    cy.get(`input[data-testid="groups-filter-input"]`).type(filter);
+    cy.get(`button[data-testid="groups-filter-button"]`).click();
+})
+
+When("the user clears the groups-filter", function () {
+    cy.get(`input[data-testid="groups-filter-input"]`).clear();
+    cy.get(`button[data-testid="groups-filter-button"]`).click();
 })

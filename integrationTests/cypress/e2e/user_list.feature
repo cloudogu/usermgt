@@ -24,9 +24,9 @@ Feature: Tests for list of users.
     And "25" test-users exist
     When the user opens the users page
     Then the users-page is shown
-    When the user sets the filter to "test_2"
+    When the user sets the users-filter to "test_2"
     Then the users-page contains exactly "7" users
-    When the user sets the filter to "forBar_Not_Found"
+    When the user sets the users-filter to "forBar_Not_Found"
     Then the users-page contains exactly "0" users
-    When the user clears the filter
+    When the user clears the users-filter
     Then the users-page contains exactly "20" users
