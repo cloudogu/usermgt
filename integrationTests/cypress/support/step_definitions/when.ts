@@ -150,3 +150,26 @@ When("the user clears the groups-filter", function () {
     cy.get(`input[data-testid="groups-filter-input"]`).clear();
     cy.get(`button[data-testid="groups-filter-button"]`).click();
 })
+
+When("the user clicks on the create-group button", function () {
+    cy.get('button[data-testid="group-create"]').click();
+})
+
+When("the user clicks on the edit-group button for the group {string}", function (name) {
+    cy.get(`button[id="${name}-edit-button"]`).click();
+})
+
+When("the user fills the group-form for a group with the name {string}", function (name: string) {
+    cy.get('input[data-testid="name-input"]').type(name);
+    cy.get('textarea[data-testid="description-area"]').type(`Description for group ${name}`);
+})
+
+When("the user submits the group-form", function () {
+    cy.get('button[data-testid="save-button"]').click();
+})
+
+When("the user adds the member {string} to the group", function (username: string) {
+    cy.get('input[data-testid="members-searchbar-input"]').type(username);
+    cy.get('li[data-testid="members-searchbar-li-0"] button').click();
+    cy.get('table[data-testid="members-table"] tbody tr').contains(username);
+})

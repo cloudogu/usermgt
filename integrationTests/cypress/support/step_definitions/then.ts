@@ -1,5 +1,5 @@
 import '@bahmutov/cy-api'
-import { Then } from "@badeball/cypress-cucumber-preprocessor";
+import {Then} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/environment_variables";
 
 
@@ -177,3 +177,25 @@ Then("the groups-page contains exactly {string} groups", function (groupCountNum
     const groupCount = parseInt(groupCountNum);
     cy.get('table[data-testid="groups-table"] tbody tr').should('have.length', groupCount);
 });
+
+Then("the new-group-page is shown", function () {
+    cy.get('h1').contains("New Group")
+    cy.get('input[data-testid="name-input"]').should('be.visible')
+    cy.get('textarea[data-testid="description-area"]').should('be.visible')
+    cy.get('div[data-testid="members"]').should('be.visible')
+    cy.get('button[data-testid="save-button"]').should('be.visible')
+    cy.get('button[data-testid="back-button"]').should('be.visible')
+});
+
+Then("the group-name-field is marked as invalid", function () {
+    // Since the validation is only carried out when the text field loses its focus,
+    // the change of focus is effected by clicking on another position.
+    cy.get('h1').click()
+    cy.get('input[data-testid="name-input"]').should('have.class', 'border-textfield-danger-border')
+    cy.get('div[data-testid="name-input-error-errors"]').should('be.visible')
+    cy.get('div[data-testid="name-input-error-errors"]').contains('Minimum length is 2 characters')
+});
+
+Then("a user named {string} is member of the group", function (username: string) {
+    cy.get('table[data-testid="members-table"] tbody tr').contains(username);
+})
