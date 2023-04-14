@@ -75,7 +75,7 @@ export default function Users(props: { title: string }) {
                 </Link>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
                     onClear={() => updateQuery("")} startValueSearch={opts.query}
-                    className="mt-5 mb-2.5" disabled={isLoading}/>
+                    data-testid="users-filter" className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
         {notification}
@@ -86,7 +86,7 @@ export default function Users(props: { title: string }) {
             }}
             title={t("users.confirmation.title")}
             message={t("users.confirmation.message", {username: username})}/>
-        <Table className="my-4 text-sm">
+        <Table className="my-4 text-sm" data-testid="users-table">
             <Table.Head>
                 <Table.Head.Tr className={"uppercase"}>
                     <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>
@@ -100,6 +100,7 @@ export default function Users(props: { title: string }) {
             </Table.ConditionalBody>
             <Table.ConditionalFoot show={!isLoading && usersModel.users?.length > 0}>
                 <Table.Foot.Pagination
+                    data-testid="users-footer"
                     className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
                     currentPage={usersModel.pagination.current ?? 1}
                     pageCount={usersModel.pagination.pageCount ?? 1}
@@ -120,6 +121,7 @@ function createUsersRow(user: User, casUser: CasUser, onDelete: (_: string) => v
             <Table.Body.Td className="flex justify-center">
                 <EditLink to={`/users/${user?.username ?? ""}/edit?${backUrlParams}`} id={`${user?.username}-edit-link`} />
                 <DeleteButton
+                    id={`${user?.username}-delete-button`}
                     disabled={user.username === casUser.principal}
                     title={t("users.table.actions.delete")}
                     onClick={() => onDelete(user.username)}/>

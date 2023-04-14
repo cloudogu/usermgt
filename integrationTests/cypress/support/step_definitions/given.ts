@@ -8,6 +8,25 @@ Given("the user {string} exists", (username: string) => {
     });
 })
 
+Given("{string} test-users exist", (users: string) => {
+    const userCount = parseInt(users);
+    cy.withUser("testuser").then(userData => {
+        for(let i = 1; i <= userCount; i++){
+            const testUser = {...userData};
+            testUser.username += `_${i}`;
+            testUser.givenname += `_${i}`;
+            testUser.surname += `_${i}`;
+            testUser.displayName += ` ${i}`;
+            const mailParts = testUser.mail.split("@");
+            testUser.mail = `${mailParts[0]}${i}@${mailParts[1]}`;
+
+            cy.log(testUser);
+            cy.usermgtTryDeleteUser(testUser.username);
+            cy.usermgtCreateUser(testUser.username, testUser.givenname, testUser.surname, testUser.displayName, testUser.mail, testUser.password, testUser.pwdReset, testUser.groups)
+        }
+    });
+})
+
 Given("the user {string} is member of the group {string}", function (username, group) {
     cy.api({
         method: "POST",

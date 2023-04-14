@@ -1,3 +1,4 @@
+import '@bahmutov/cy-api'
 import { Then } from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/environment_variables";
 
@@ -89,12 +90,6 @@ Then("the import finished with status code {int}", (statusCode) => {
     });
 })
 
-Then("the access to the endpoint is denied", function () {
-    then((response) => {
-        expect(response.status).to.eq(400)
-    })
-})
-
 Then("the user {string} was created",function (username) {
     cy.api({
         method: "GET",
@@ -123,4 +118,33 @@ Then("the user {string} does not exists",function (username) {
     })
 })
 
+Then("the users-page is shown", function () {
+    cy.get('h1').contains("Users")
+    cy.get('table[data-testid="users-table"]').should('be.visible')
+    cy.get('button[data-testid="user-create"]').contains('Create user')
+    cy.get('form[data-testid="users-filter"]').should('be.visible')
+});
 
+Then("the users-page contains the user {string}", function (username:string) {
+    cy.withUser(username).then(userData => {
+        cy.get('table[data-testid="users-table"]')
+            .find('tr').filter(`:contains("${username}")`).as('row');
+        cy.get('@row').should('be.visible');
+        cy.get('@row').find("td").should('have.length', 4);
+        cy.get('@row').find("td:nth-of-type(1)").contains(userData.username);
+        cy.get('@row').find("td:nth-of-type(2)").contains(userData.displayName);
+        cy.get('@row').find("td:nth-of-type(3)").contains(userData.mail);
+        cy.get('@row').find("td:nth-of-type(4)").find(`a[id="${username}-edit-link"]`).should('be.visible');
+        cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${username}-delete-button"]`).should('be.visible');
+    });
+});
+
+Then("the users-page contains at least {string} users", function (userCountNum: string) {
+    const userCount = parseInt(userCountNum);
+    cy.get('table[data-testid="users-table"] tbody tr').should('have.length.gte', userCount);
+});
+
+Then("the users-page contains exactly {string} users", function (userCountNum: string) {
+    const userCount = parseInt(userCountNum);
+    cy.get('table[data-testid="users-table"] tbody tr').should('have.length', userCount);
+});

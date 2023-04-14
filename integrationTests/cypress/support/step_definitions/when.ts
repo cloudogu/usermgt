@@ -12,6 +12,20 @@ When("the user opens the users page", function () {
     cy.clickWarpMenuCheckboxIfPossible()
 })
 
+When("the user selects the {string} users-page", function (pageNum: string) {
+    const page = parseInt(pageNum);
+    cy.get(`button[data-testid="users-footer-pagination-li-${page}-btn"]`).click();
+})
+When("the user sets the filter to {string}", function (filter: string) {
+    cy.get(`input[data-testid="users-filter-input"]`).type(filter);
+    cy.get(`button[data-testid="users-filter-button"]`).click();
+})
+
+When("the user clears the filter", function () {
+    cy.get(`input[data-testid="users-filter-input"]`).clear();
+    cy.get(`button[data-testid="users-filter-button"]`).click();
+})
+
 When("the user clicks on the create button", function () {
     cy.get('button[data-testid="user-create"]').click()
 })
