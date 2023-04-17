@@ -59,10 +59,10 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
             message={t("groups.labels.removeMemberConfirmationMessage", {username: username})}/>
         <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
         <Form handler={handler}>
-            <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup} data-testid="name">
+            <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup} data-testid="name" placeholder={t("groups.placeholder.name")}>
                 {t("groups.labels.name")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextArea name={"description"} data-testid="description">
+            <Form.ValidatedTextArea name={"description"} data-testid="description" placeholder={t("groups.placeholder.description")}>
                 {t("groups.labels.description")}
             </Form.ValidatedTextArea>
             <H2>{`${t("groups.labels.members")} (${handler.values.members.length})`}</H2>
