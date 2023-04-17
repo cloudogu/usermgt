@@ -72,6 +72,7 @@ export default function Groups(props: { title: string }) {
         </div>
         {notification}
         <ConfirmationDialog open={open ?? false}
+            data-testid="group-delete-dialog"
             onClose={() => toggleModal(false)}
             onConfirm={async () => {
                 await onDelete(group ?? "");

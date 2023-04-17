@@ -159,6 +159,10 @@ When("the user clicks on the edit-group button for the group {string}", function
     cy.get(`button[id="${name}-edit-button"]`).click();
 })
 
+When("the user clicks on the delete-group button for the group {string}", function (name) {
+    cy.get(`button[id="${name}-delete-button"]`).click();
+})
+
 When("the user fills the group-form for a group with the name {string}", function (name: string) {
     cy.get('input[data-testid="name-input"]').type(name);
     cy.get('textarea[data-testid="description-area"]').type(`Description for group ${name}`);
@@ -179,11 +183,18 @@ When("the user adds the member {string} to the group", function (username: strin
 })
 
 When("the user removes the member {string} from the group", function (username: string) {
-    cy.get('table[data-testid="members-table"] tbody tr td:nth-of-type(2) button').click();
+    cy.get('table[data-testid="members-table"] tbody tr').filter(`:contains("${username}")`)
+        .find('td:nth-of-type(2) button').click();
 
     cy.get('dialog[data-testid="remove-member-dialog"]').as('dialog');
     cy.get('@dialog').should('be.visible');
     cy.get('@dialog').find('h3').contains('Remove member');
     cy.get('@dialog').find('button:nth-of-type(1)').click();
+})
 
+When("the user confirms the delete-group-confirmation-dialog", function () {
+    cy.get('dialog[data-testid="group-delete-dialog"]').as('dialog');
+    cy.get('@dialog').should('be.visible');
+    cy.get('@dialog').find('h3').contains('Delete group');
+    cy.get('@dialog').find('button:nth-of-type(1)').click();
 })
