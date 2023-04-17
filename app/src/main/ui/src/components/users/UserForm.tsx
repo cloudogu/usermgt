@@ -123,7 +123,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             }
 
             <div className={"my-4"}>
-                <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>
+                <Button variant={"primary"} type={"submit"} disabled={!handler.dirty} data-testid="save-button">
                     {t("editUser.buttons.save")}
                 </Button>
                 {props.additionalButtons as JSX.Element}

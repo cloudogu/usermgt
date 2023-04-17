@@ -52,7 +52,7 @@ export default function NewUser(props: { title: string }) {
                     });
             }}
             additionalButtons={
-                <Button variant={"secondary"} type={"button"} className={"ml-4"}
+                <Button variant={"secondary"} type={"button"} className={"ml-4"} data-testid="back-button"
                     onClick={() => navigate("/users")}>
                     {t("editGroup.buttons.back")}
                 </Button>

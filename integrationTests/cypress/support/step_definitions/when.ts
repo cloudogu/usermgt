@@ -26,7 +26,7 @@ When("the user clears the users-filter", function () {
     cy.get(`button[data-testid="users-filter-button"]`).click();
 })
 
-When("the user clicks on the create button", function () {
+When("the user clicks on the create-user button", function () {
     cy.get('button[data-testid="user-create"]').click()
 })
 
@@ -44,16 +44,16 @@ When("the user clicks the edit function in his own user entry", function () {
 
 })
 
-When("the user fills the form to create a new user", function () {
+When("the user fills the user-form for a user with the name {string}", function (username: string) {
     cy.fixture("newuser_data").then(function (newUser) {
-        cy.get('#username').type(newUser.username)
-        cy.get('#givenname').type(newUser.givenname)
-        cy.get('#surname').type(newUser.surname)
-        cy.get('#displayName').type(newUser.displayName)
-        cy.get('#mail').type(newUser.mail)
-        cy.get('#password').type(newUser.password)
-        cy.get('#confirmPassword').type(newUser.password)
-    })
+        cy.get('input[data-testid="username-input"]').type(username);
+        cy.get('input[data-testid="givenname-input"]').type(newUser.givenname);
+        cy.get('input[data-testid="surname-input"]').type(newUser.surname)
+        cy.get('input[data-testid="displayName-input"]').type(newUser.displayName)
+        cy.get('input[data-testid="mail-input"]').type(newUser.mail)
+        cy.get('input[data-testid="password-input"]').type(newUser.password)
+        cy.get('input[data-testid="confirmPassword-input"]').type(newUser.password)
+    });
 })
 
 When("the user enables the password reset flag", function () {
@@ -128,6 +128,20 @@ When(`the user {string} sends the upload request, but is not allowed to`, functi
             expect(response.status).to.eq(401)
         })
     })
+})
+
+When("the user adds the group {string} to the user", function (group: string) {
+    cy.get('input[data-testid="groups-searchbar-input"]').type(group);
+    cy.get('li[data-testid="groups-searchbar-li-0"] button').click();
+    cy.get('table[data-testid="groups-table"] tbody tr').contains(group);
+})
+
+When("the user clicks on the edit-user button for the user {string}", function (name) {
+    cy.get(`a[id="${name}-edit-link"]`).click();
+})
+
+When("the user clicks on the delete-user button for the user {string}", function (name) {
+    cy.get(`button[id="${name}-delete-button"]`).click();
 })
 
 /* GROUPS */

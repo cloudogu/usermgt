@@ -126,17 +126,13 @@ Then("the users-page is shown", function () {
 });
 
 Then("the users-page contains the user {string}", function (username:string) {
-    cy.withUser(username).then(userData => {
-        cy.get('table[data-testid="users-table"]')
-            .find('tr').filter(`:contains("${username}")`).as('row');
-        cy.get('@row').should('be.visible');
-        cy.get('@row').find("td").should('have.length', 4);
-        cy.get('@row').find("td:nth-of-type(1)").contains(userData.username);
-        cy.get('@row').find("td:nth-of-type(2)").contains(userData.displayName);
-        cy.get('@row').find("td:nth-of-type(3)").contains(userData.mail);
-        cy.get('@row').find("td:nth-of-type(4)").find(`a[id="${username}-edit-link"]`).should('be.visible');
-        cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${username}-delete-button"]`).should('be.visible');
-    });
+    cy.get('table[data-testid="users-table"]')
+        .find('tr').filter(`:contains("${username}")`).as('row');
+    cy.get('@row').should('be.visible');
+    cy.get('@row').find("td").should('have.length', 4);
+    cy.get('@row').find("td:nth-of-type(1)").contains(username);
+    cy.get('@row').find("td:nth-of-type(4)").find(`a[id="${username}-edit-link"]`).should('be.visible');
+    cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${username}-delete-button"]`).should('be.visible');
 });
 
 Then("the users-page contains at least {string} users", function (userCountNum: string) {
@@ -148,6 +144,41 @@ Then("the users-page contains exactly {string} users", function (userCountNum: s
     const userCount = parseInt(userCountNum);
     cy.get('table[data-testid="users-table"] tbody tr').should('have.length', userCount);
 });
+
+Then("the new-user-page is shown", function () {
+    cy.get('h1').contains("New user")
+    cy.get('input[data-testid="username-input"]').should('be.visible')
+    cy.get('input[data-testid="givenname-input"]').should('be.visible')
+    cy.get('input[data-testid="surname-input"]').should('be.visible')
+    cy.get('input[data-testid="displayName-input"]').should('be.visible')
+    cy.get('input[data-testid="mail-input"]').should('be.visible')
+    cy.get('input[data-testid="password-input"]').should('be.visible')
+    cy.get('input[data-testid="confirmPassword-input"]').should('be.visible')
+    cy.get('div[data-testid="groups"]').should('be.visible')
+    cy.get('button[data-testid="save-button"]').should('be.visible')
+    cy.get('button[data-testid="back-button"]').should('be.visible')
+});
+
+Then("the username-field is marked as invalid", function () {
+    // Since the validation is only carried out when the text field loses its focus,
+    // the change of focus is effected by clicking on another position.
+    cy.get('h1').click()
+    cy.get('input[data-testid="username-input"]').should('have.class', 'border-textfield-danger-border')
+    cy.get('div[data-testid="username-input-error-errors"]').should('be.visible')
+    cy.get('div[data-testid="username-input-error-errors"]').contains('Must contain at least 2 characters')
+});
+
+Then("an user-exists-error is shown an the fields are marked invalid", function () {
+    cy.get('div[data-testid="notification"]').should('be.visible');
+    cy.get('div[data-testid="notification"]').contains(/A user with the username .* already exists./);
+    cy.get('div[data-testid="notification"]').contains(/A user with the E-Mail .* already exists./);
+    cy.get('input[data-testid="username-input"]').should('have.class', 'border-textfield-danger-border')
+    cy.get('input[data-testid="mail-input"]').should('have.class', 'border-textfield-danger-border')
+});
+
+Then("a group named {string} is assigned to the user", function (group: string) {
+    cy.get('table[data-testid="groups-table"] tbody tr').contains(group);
+})
 
 /* GROUPS */
 
