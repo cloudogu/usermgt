@@ -135,6 +135,15 @@ Then("the users-page contains the user {string}", function (username:string) {
     cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${username}-delete-button"]`).should('be.visible');
 });
 
+Then("the users-page contains the displayName {string}", function (displayName:string) {
+    cy.get('table[data-testid="users-table"]')
+        .find('tr td:nth-of-type(2)').filter(`:contains("${displayName}")`).parent().as('row');
+    cy.get('@row').should('be.visible');
+    cy.get('@row').find("td").should('have.length', 4);
+    cy.get('@row').find("td:nth-of-type(2)").contains(displayName);
+});
+
+
 Then("the users-page contains at least {string} users", function (userCountNum: string) {
     const userCount = parseInt(userCountNum);
     cy.get('table[data-testid="users-table"] tbody tr').should('have.length.gte', userCount);
@@ -178,6 +187,25 @@ Then("an user-exists-error is shown an the fields are marked invalid", function 
 
 Then("a group named {string} is assigned to the user", function (group: string) {
     cy.get('table[data-testid="groups-table"] tbody tr').contains(group);
+})
+
+Then("the edit-user-page for user {string} is shown", function (name: string) {
+    cy.get('h1').contains("Edit user")
+    cy.get('input[data-testid="username-input"]').should('have.value', name)
+    cy.get('input[data-testid="username-input"]').should('be.disabled')
+    cy.get('input[data-testid="givenname-input"]').should('be.visible')
+    cy.get('input[data-testid="surname-input"]').should('be.visible')
+    cy.get('input[data-testid="displayName-input"]').should('be.visible')
+    cy.get('input[data-testid="mail-input"]').should('be.visible')
+    cy.get('input[data-testid="password-input"]').should('be.visible')
+    cy.get('input[data-testid="confirmPassword-input"]').should('be.visible')
+    cy.get('div[data-testid="groups"]').should('be.visible')
+    cy.get('button[data-testid="save-button"]').should('be.visible')
+    cy.get('button[data-testid="back-button"]').should('be.visible')
+});
+
+Then("the user has no groups", function () {
+    cy.get('table[data-testid="groups-table"] tbody tr').contains("No groups assigned");
 })
 
 /* GROUPS */

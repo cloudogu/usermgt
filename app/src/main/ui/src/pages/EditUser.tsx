@@ -45,6 +45,7 @@ export default function EditUser(props: { title: string }) {
                         })}
                 additionalButtons={
                     <Button variant={"secondary"} type={"button"} className={"ml-4"}
+                        data-testid="back-button"
                         onClick={() => navigate(backURL ?? "/users")}>
                         {t("editGroup.buttons.back")}
                     </Button>

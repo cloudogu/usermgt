@@ -67,6 +67,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     return <>
         <ConfirmationDialog
             open={open ?? false}
+            data-testid="remove-group-dialog"
             onClose={() => toggleModal(false)}
             onConfirm={async () => {
                 await removeGroup(groupName ?? "");

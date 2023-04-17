@@ -17,7 +17,7 @@ When("the user selects the {string} users-page", function (pageNum: string) {
     cy.get(`button[data-testid="users-footer-pagination-li-${page}-btn"]`).click();
 })
 When("the user sets the users-filter to {string}", function (filter: string) {
-    cy.get(`input[data-testid="users-filter-input"]`).type(filter);
+    cy.get(`input[data-testid="users-filter-input"]`).clear().type(filter);
     cy.get(`button[data-testid="users-filter-button"]`).click();
 })
 
@@ -142,6 +142,20 @@ When("the user clicks on the edit-user button for the user {string}", function (
 
 When("the user clicks on the delete-user button for the user {string}", function (name) {
     cy.get(`button[id="${name}-delete-button"]`).click();
+})
+
+When("the user edits the user-displayName to {string}", function (displayName: string) {
+    cy.get('input[data-testid="displayName-input"]').clear().type(displayName);
+})
+
+When("the user removes the group {string} from the user", function (group: string) {
+    cy.get('table[data-testid="groups-table"] tbody tr').filter(`:contains("${group}")`)
+        .find('td:nth-of-type(2) button').click();
+
+    cy.get('dialog[data-testid="remove-group-dialog"]').as('dialog');
+    cy.get('@dialog').should('be.visible');
+    cy.get('@dialog').find('h3').contains('Remove group assigment');
+    cy.get('@dialog').find('button:nth-of-type(1)').click();
 })
 
 /* GROUPS */
