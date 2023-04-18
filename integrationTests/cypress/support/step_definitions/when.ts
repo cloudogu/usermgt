@@ -1,6 +1,6 @@
 import '@bahmutov/cy-api'
 import { When } from "@badeball/cypress-cucumber-preprocessor";
-import env from "@cloudogu/dogu-integration-test-library/environment_variables";
+import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 
 //Implement all necessary steps fore dogu integration test library
 When("the user clicks the dogu logout button", function () {
