@@ -80,6 +80,7 @@ export default function Users(props: { title: string }) {
         </div>
         {notification}
         <ConfirmationDialog open={open ?? false}
+            data-testid="user-delete-dialog"
             onClose={() => toggleModal(false)}
             onConfirm={async () => {
                 await onDelete(username ?? "");

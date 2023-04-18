@@ -158,6 +158,13 @@ When("the user removes the group {string} from the user", function (group: strin
     cy.get('@dialog').find('button:nth-of-type(1)').click();
 })
 
+When("the user confirms the delete-user-confirmation-dialog", function () {
+    cy.get('dialog[data-testid="user-delete-dialog"]').as('dialog');
+    cy.get('@dialog').should('be.visible');
+    cy.get('@dialog').find('h3').contains('Delete user');
+    cy.get('@dialog').find('button:nth-of-type(1)').click();
+})
+
 /* GROUPS */
 
 When("the user opens the groups page", function () {
