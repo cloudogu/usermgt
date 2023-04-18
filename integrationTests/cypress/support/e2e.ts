@@ -112,15 +112,25 @@ const createUser = (username, givenName, surname, displayName, mail, password, p
             'memberOf': [],
         }
     }).then((response) => {
-        expect(response.status).to.eq(201)
-        if (groups) {
-            for (const groupsKey in groups) {
-                let group = groups[groupsKey]
-                cy.usermgtTryDeleteGroup(group)
-                cy.usermgtCreateGroup(group, "")
-                cy.usermgtAddMemberToGroup(group, username)
-            }
+        cy.log(`created user "${username}" : ${response.status} ${response.statusText}`);
+
+        const headers = [];
+        for (const header in response.headers) {
+            headers.push(`${header} -> ${response.headers[header]}`)
         }
+
+        cy.log(`redirect to ${response.redirectedToUrl} headers: ${headers.join('; ')}`).then(() => {
+            expect(response.status).to.eq(201)
+            if (groups) {
+                for (const groupsKey in groups) {
+                    let group = groups[groupsKey]
+                    cy.usermgtTryDeleteGroup(group)
+                    cy.usermgtCreateGroup(group, "")
+                    cy.usermgtAddMemberToGroup(group, username)
+                }
+            }
+        });
+
     })
 }
 
