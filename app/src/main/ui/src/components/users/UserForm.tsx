@@ -63,6 +63,22 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         return groupsData.groups.map(x => x.name);
     };
 
+    const renderGroupsList = (readonly = false, pageSize = 5) => (
+        <ListWithSearchbar
+            data-testid="groups"
+            readonly={readonly}
+            items={handler.values.memberOf}
+            addItem={addGroup}
+            removeItem={openConfirmationRemoveGroupDialog}
+            queryItems={queryGroups}
+            tableTitle={t("groups.table.name")}
+            addLable={t("users.labels.addGroup")}
+            removeLable={t("users.labels.removeGroup")}
+            emptyItemsLable={t("users.labels.emptyGroups")}
+            removeIcon={<TrashIcon className={"w-6 h-6"}/>}
+            pageSize={pageSize}
+        />);
+
     return <>
         <ConfirmationDialog
             open={open ?? false}
@@ -106,18 +122,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             {props.groupsReadonly ? <></> :
                 <>
                     <H2>{t("users.labels.groups")} ({handler.values.memberOf.length})</H2>
-                    <ListWithSearchbar
-                        data-testid="groups"
-                        items={handler.values.memberOf}
-                        addItem={addGroup}
-                        removeItem={openConfirmationRemoveGroupDialog}
-                        queryItems={queryGroups}
-                        tableTitle={t("groups.table.name")}
-                        addLable={t("users.labels.addGroup")}
-                        removeLable={t("users.labels.removeGroup")}
-                        emptyItemsLable={t("users.labels.emptyGroups")}
-                        removeIcon={<TrashIcon className={"w-6 h-6"}/>}
-                    />
+                    {renderGroupsList()}
                 </>
             }
 
@@ -132,20 +137,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         {props.groupsReadonly ?
             <>
                 <H2>{t("users.labels.myGroups")} ({handler.values.memberOf.length})</H2>
-                <ListWithSearchbar
-                    data-testid="groups"
-                    readonly={true}
-                    items={handler.values.memberOf}
-                    addItem={addGroup}
-                    removeItem={openConfirmationRemoveGroupDialog}
-                    queryItems={queryGroups}
-                    tableTitle={t("groups.table.name")}
-                    addLable={t("users.labels.addGroup")}
-                    removeLable={t("users.labels.removeGroup")}
-                    emptyItemsLable={t("users.labels.emptyGroups")}
-                    removeIcon={<TrashIcon className={"w-6 h-6"}/>}
-                    pageSize={10}
-                />
+                {renderGroupsList(true, 10)}
             </>
             : <></>
         }
