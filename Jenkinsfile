@@ -145,11 +145,11 @@ node('docker') {
 
       stage('Integration Tests') {
          echo "run integration tests."
-//          ecoSystem.runCypressIntegrationTests([
-//                  cypressImage: "cypress/included:8.6.0",
-//                  enableVideo: params.EnableVideoRecording,
-//                  enableScreenshots    : params.EnableScreenshotRecording,
-//           ])
+          ecoSystem.runCypressIntegrationTests([
+                  cypressImage: "cypress/included:12.9.0",
+                  enableVideo: params.EnableVideoRecording,
+                  enableScreenshots    : params.EnableScreenshotRecording,
+           ])
       }
 
       if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
