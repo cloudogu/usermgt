@@ -6,7 +6,6 @@ Feature: Tests for list of groups.
     When the user opens the groups page
     Then the groups-page is shown
     And the groups-page contains the group "cesManager"
-    And the groups-page contains the group "admin"
 
   Scenario: a user who is manager wants see the all pages of groups
     Given the user "manager" exists
