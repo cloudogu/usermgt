@@ -31,9 +31,9 @@ export default defineConfig({
         env: {
             'DoguName': 'usermgt',
             'MaxLoginRetries': 3,
-            'AdminUsername':  'admin',
-            'AdminPassword':  'admin',
-            'AdminGroup':  'admin'
+            'AdminUsername':  'ces-admin',
+            'AdminPassword':  'ecosystem2016',
+            'AdminGroup':  'CesAdministrators'
         },
         videoCompression: false,
         specPattern: ["cypress/e2e/**/*.feature"],
