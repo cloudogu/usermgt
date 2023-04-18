@@ -92,8 +92,12 @@
   dependencies:
     debug "4.3.4"
 
-"@cloudogu/dogu-integration-test-library@file:../../../../dogu-integration-test-library/lib":
-  version "0.0.0"
+"@cloudogu/dogu-integration-test-library@cloudogu/dogu-integration-test-library#feature/26-cypress-v12":
+  version "6.0.0"
+  resolved "https://codeload.github.com/cloudogu/dogu-integration-test-library/tar.gz/56f47842cf9756634b169620e314e7fed8495e46"
+  dependencies:
+    "@badeball/cypress-cucumber-preprocessor" "^16.0.0"
+    cypress "^12.9.0"
 
 "@colors/colors@1.5.0":
   version "1.5.0"
