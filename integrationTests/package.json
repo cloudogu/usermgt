@@ -2,11 +2,12 @@
   "dependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^16.0.0",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
+    "@bahmutov/cy-api": "^2.2.4",
     "@cloudogu/dogu-integration-test-library": "cloudogu/dogu-integration-test-library#feature/26-cypress-v12",
     "cypress": "^12.9.0",
-    "typescript": "^5.0.2"
-  },
-  "devDependencies": {
-    "@bahmutov/cy-api": "^2.2.4"
+    "typescript": "^5.0.2",
+    "esbuild": "^0.17.17",
+    "mocha-junit-reporter": "^2.2.0",
+    "mocha": "^10.2.0"
   }
 }
