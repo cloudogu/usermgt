@@ -15,11 +15,11 @@
       "save": "Speichern"
     },
     "errors": {
-      "confirmPassword": "Password stimmt nicht überein.",
+      "confirmPassword": "Passwort stimmt nicht überein.",
       "displayName": "Anzeigename muss ausgefüllt sein.",
       "email": {
-        "invalid": "E-Mail ist ungültig.",
-        "required": "E-Mail Addresse muss ausgefüllt sein."
+        "invalid": "E-Mail-Adresse ist ungültig.",
+        "required": "E-Mail-Adresse muss ausgefüllt sein."
       },
       "password": {
         "capital": "Das Passwort muss mindestens ein Großbuchstaben enthalten.",
