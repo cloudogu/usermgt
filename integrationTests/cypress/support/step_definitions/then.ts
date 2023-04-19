@@ -178,9 +178,9 @@ Then("the username-field is marked as invalid", function () {
 });
 
 Then("an user-exists-error is shown an the fields are marked invalid", function () {
-    cy.get('div[data-testid="notification"]').should('be.visible');
-    cy.get('div[data-testid="notification"]').contains(/A user with the username .* already exists./);
-    cy.get('div[data-testid="notification"]').contains(/A user with the E-Mail .* already exists./);
+    cy.get('.border-alert-danger-inverse-border').should('be.visible').as("notification");
+    cy.get('@notification').contains(/A user with the username .* already exists./);
+    cy.get('@notification').contains(/A user with the E-Mail .* already exists./);
     cy.get('input[data-testid="username-input"]').should('have.class', 'border-textfield-danger-border')
     cy.get('input[data-testid="mail-input"]').should('have.class', 'border-textfield-danger-border')
 });
