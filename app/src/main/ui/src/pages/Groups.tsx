@@ -58,9 +58,9 @@ export default function Groups(props: { title: string }) {
         navigate({pathname: `/groups/${groupName}/edit`, search: params.toString()});
     };
     return <>
-        <div className="flex justify-between">
+        <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.groups")}</H1>
-            <div className="flex justify-between py-1">
+            <div className="flex flex-wrap justify-between py-1">
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                     data-testid="group-create"
                     disabled={isLoading} onClick={() => navigate("/groups/new")}>

@@ -25,9 +25,9 @@
         "capital": "The password must contain at least one capital letter.",
         "length": "The password must contain at least {{length}} characters.",
         "lowercase": "The password must contain at least one lower case letter.",
+        "nonWhitespace": "The password must not contain only spaces.",
         "numeric": "The password must contain at least 1 number.",
-        "special": "The password must contain at least 1 special character.",
-        "nonWhitespace": "The password must not contain only spaces."
+        "special": "The password must contain at least 1 special character."
       },
       "surname": "Surname is required.",
       "username": {
@@ -53,13 +53,13 @@
     }
   },
   "generic": {
+    "errors": {
+      "general": "An error occurred while loading the page.",
+      "notFound": "The page could not be found.",
+      "title": "Oops!"
+    },
     "notification": {
       "form.prompt": "The form contains unsaved changes. Do you really want to leave the page?"
-    },
-    "errors":{
-      "title": "Oops!",
-      "general": "An error occurred while loading the page.",
-      "notFound": "The page could not be found."
     }
   },
   "groups": {
@@ -70,9 +70,22 @@
       "message": "Delete group {{groupName}}?",
       "title": "Delete group"
     },
+    "labels": {
+      "addMember": "Add member",
+      "description": "Description",
+      "emptyMembers": "No members assigned",
+      "members": "Members",
+      "name": "Name",
+      "removeMember": "Remove member",
+      "removeMemberConfirmationMessage": "Should the member {{username}} be removed?"
+    },
     "notification": {
       "error": "The group '{{groupName}}' could not be deleted.",
       "success": "The group '{{groupName}}' was deleted successfully."
+    },
+    "placeholder": {
+      "description": "Enter description",
+      "name": "Enter name"
     },
     "table": {
       "actions": {
@@ -85,15 +98,6 @@
       "name": "Name",
       "systemGroup": "This is a system group and cannot be deleted.",
       "users": "Members"
-    },
-    "labels": {
-      "addMember": "Add member",
-      "description": "Description",
-      "members": "Members",
-      "name": "Name",
-      "removeMember": "Remove member",
-      "removeMemberConfirmationMessage": "Should the member {{username}} be removed?",
-      "emptyMembers": "No members assigned"
     }
   },
   "modal": {
@@ -124,8 +128,8 @@
   "newUser": {
     "notification": {
       "error": "Could not save user '{{username}}'.",
-      "errorDuplicateUsername": "A user with the username '{{username}}' already exists.",
       "errorDuplicateMail": "A user with the E-Mail '{{mail}}' already exists.",
+      "errorDuplicateUsername": "A user with the username '{{username}}' already exists.",
       "success": "User '{{username}}' was saved successfully."
     }
   },
@@ -145,16 +149,25 @@
     },
     "create": "Create user",
     "labels": {
+      "addGroup": "Add group",
+      "emptyGroups": "No groups assigned",
       "groups": "Groups",
       "myGroups": "My Groups",
-      "addGroup": "Add group",
       "removeGroup": "Remove group assigment",
-      "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?",
-      "emptyGroups": "No groups assigned"
+      "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?"
     },
     "notification": {
       "error": "The user '{{username}}' could not be deleted.",
       "success": "The user '{{username}}' was deleted successfully."
+    },
+    "placeholder": {
+      "confirmPassword": "Enter corfirmation password",
+      "displayName": "Enter display name",
+      "givenname": "Enter given name",
+      "mail": "Enter E-Mail Address",
+      "password": "Enter password",
+      "surname": "Enter surname",
+      "username": "Enter username"
     },
     "table": {
       "actions": {

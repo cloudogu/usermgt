@@ -25,9 +25,9 @@
         "capital": "Das Passwort muss mindestens ein Großbuchstaben enthalten.",
         "length": "Das Passwort muss mindestens {{length}} Zeichen lang sein.",
         "lowercase": "Das Passwort muss mindestens ein Kleinbuchstaben enthalten.",
+        "nonWhitespace": "Das Passwort darf nicht ausschließlich Leerzeichen enthalten.",
         "numeric": "Das Passwort muss mindestens eine Zahl enthalten.",
-        "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten.",
-        "nonWhitespace": "Das Passwort darf nicht ausschließlich Leerzeichen enthalten."
+        "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten."
       },
       "surname": "Nachname muss ausgefüllt sein.",
       "username": {
@@ -53,13 +53,13 @@
     }
   },
   "generic": {
+    "errors": {
+      "general": "Beim Laden der Seite ist ein Fehler aufgetreten.",
+      "notFound": "Die Seite konnte nicht gefunden werden.",
+      "title": "Oops!"
+    },
     "notification": {
       "form.prompt": "Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"
-    },
-    "errors":{
-      "title": "Oops!",
-      "general": "Beim Laden der Seite ist ein Fehler aufgetreten.",
-      "notFound": "Die Seite konnte nicht gefunden werden."
     }
   },
   "groups": {
@@ -70,9 +70,22 @@
       "message": "Soll die Gruppe {{groupName}} gelöscht werden?",
       "title": "Gruppe löschen"
     },
+    "labels": {
+      "addMember": "Mitglied hinzufügen",
+      "description": "Beschreibung",
+      "emptyMembers": "Keine Mitglieder zugeordnet",
+      "members": "Mitglieder",
+      "name": "Name",
+      "removeMember": "Mitglied entfernen",
+      "removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?"
+    },
     "notification": {
       "error": "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden.",
       "success": "Die Gruppe '{{groupName}}' wurde erfolgreich gelöscht."
+    },
+    "placeholder": {
+      "description": "Beschreibung eingeben",
+      "name": "Namen eingeben"
     },
     "table": {
       "actions": {
@@ -85,15 +98,6 @@
       "name": "Name",
       "systemGroup": "Dies ist eine Systemgruppe und darf nicht gelöscht werden.",
       "users": "Mitglieder"
-    },
-    "labels": {
-      "addMember": "Mitglied hinzufügen",
-      "description": "Beschreibung",
-      "members": "Mitglieder",
-      "name": "Name",
-      "removeMember": "Mitglied entfernen",
-      "removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?",
-      "emptyMembers": "Keine Mitglieder zugeordnet"
     }
   },
   "modal": {
@@ -124,8 +128,8 @@
   "newUser": {
     "notification": {
       "error": "Der Nutzer '{{username}}' konnte nicht gespeichert werden.",
-      "errorDuplicateUsername": "Ein Nutzer mit dem Nutzernamen '{{username}}' existiert bereits.",
       "errorDuplicateMail": "Ein Nutzer mit der E-Mail '{{mail}}' existiert bereits.",
+      "errorDuplicateUsername": "Ein Nutzer mit dem Nutzernamen '{{username}}' existiert bereits.",
       "success": "Nutzer '{{username}}' erfolgreich gespeichert."
     }
   },
@@ -145,16 +149,25 @@
     },
     "create": "Nutzer anlegen",
     "labels": {
+      "addGroup": "Gruppe hinzufügen",
+      "emptyGroups": "Keine Gruppen zugeordnet",
       "groups": "Gruppen",
       "myGroups": "Meine Gruppen",
-      "addGroup": "Gruppe hinzufügen",
       "removeGroup": "Gruppenzuordnung entfernen",
-      "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?",
-      "emptyGroups": "Keine Gruppen zugeordnet"
+      "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?"
     },
     "notification": {
       "error": "Der Nutzer '{{username}}' konnte nicht gelöscht werden.",
       "success": "Der Nutzer '{{username}}' wurde erfolgreich gelöscht."
+    },
+    "placeholder": {
+      "confirmPassword": "Passwortbestätigung eingeben ",
+      "displayName": "Anzeigenamen eingeben",
+      "givenname": "Vornamen eingeben",
+      "mail": "E-Mail Adresse eingeben",
+      "password": "Passwort eingeben",
+      "surname": "Nachnamen eingeben",
+      "username": "Benutzernamen eingeben"
     },
     "table": {
       "actions": {

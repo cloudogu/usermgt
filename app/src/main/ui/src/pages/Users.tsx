@@ -64,9 +64,9 @@ export default function Users(props: { title: string }) {
     };
 
     return <>
-        <div className="flex justify-between">
+        <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.users")}</H1>
-            <div className="flex justify-between py-1">
+            <div className="flex flex-wrap justify-between py-1">
                 <Link to={"/users/new"}>
                     <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                         data-testid="user-create"
