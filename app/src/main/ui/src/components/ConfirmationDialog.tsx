@@ -9,25 +9,27 @@ export type ConfirmationDialogProps = {
     onClose: () => void
     onConfirm: () => void
     className?: string;
+    "data-testid"?: string;
 }
 
 export function ConfirmationDialog({
-                                       open, title, message,
-                                       onClose, onConfirm, ...props
-                                   }: ConfirmationDialogProps) {
-    const [disable, setDisable] = useState(false)
+    open, title, message,
+    onClose, onConfirm, ...props
+}: ConfirmationDialogProps) {
+    const [disable, setDisable] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const onClick = async () => {
         setDisable(true);
         await onConfirm();
         setDisable(false);
-    }
+    };
 
     useEffect(() => {
         if(open) {
             buttonRef.current?.focus();
         }
-    }, [open])
+    }, [open]);
+
     return <>
         <Modal {...props} open={open}>
             <Modal.Header>
@@ -38,10 +40,10 @@ export function ConfirmationDialog({
             </Modal.Body>
             <Modal.Footer>
                 <Button variant={"danger"} onClick={onClick} disabled={disable}
-                        className={"uppercase"}>{t("modal.confirm")}</Button>
-                <Button variant={"secondary"} onClick={onClose} disabled={disable}
-                        className={"ml-5"}>{t("modal.cancel")}</Button>
+                    className={"uppercase"}>{t("modal.confirm")}</Button>
+                <Button variant={"secondary"} onClick={onClose} disabled={disable} ref={buttonRef}
+                    className={"ml-5"}>{t("modal.cancel")}</Button>
             </Modal.Footer>
         </Modal>
-    </>
+    </>;
 }

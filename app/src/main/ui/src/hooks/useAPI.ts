@@ -1,30 +1,35 @@
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 
-export type QueryOptions = {start: number; limit: number; query: string;}
+export type QueryOptions = {start: number; limit: number; query: string; exclude?: string[];}
 
-export type StateSetter<T> = Dispatch<SetStateAction<T | undefined>>;
-export type AbortableCallbackWithOptions<T> = (signal?: AbortSignal, opts?: QueryOptions) => Promise<T>
+export type AbortableCallbackWithArgs<T, Y> = (_signal?: AbortSignal, _args?: Y) => Promise<T>
+export type AbortableCallback<T> = (_signal?: AbortSignal) => Promise<T>
 
-export function useAPI<T>(callBack: AbortableCallbackWithOptions<T>, opts?: QueryOptions): [T | undefined , boolean, StateSetter<T>] {
+export function useAPI<T, Y>(_callBack: AbortableCallbackWithArgs<T, Y>, _args?: Y): any;
+export function useAPI<T>(_callBack: AbortableCallback<T>): any;
+
+export function useAPI<T,Y>(callBack: AbortableCallbackWithArgs<T, Y> | AbortableCallback<T>, args?: Y) {
     const [data, setData] = useState<T>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<Error>();
     useEffect(() => {
         const abortController = new AbortController();
         setIsLoading(true);
-        callBack(abortController?.signal, opts)
+        callBack(abortController?.signal, args)
             .then(data => {
                 setData(data);
                 setIsLoading(false);
             })
             .catch(err => {
                 if(!abortController.signal.aborted) {
+                    setError(err);
                     console.error(err);
                 }
-                });
+            });
         return () => {
             abortController.abort();
-        }
-    }, [opts]);
+        };
+    }, [args]);
 
-    return [data, isLoading, setData];
+    return {data, setData, isLoading, error};
 }

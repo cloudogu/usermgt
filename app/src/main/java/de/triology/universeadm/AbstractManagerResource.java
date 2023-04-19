@@ -28,23 +28,12 @@
 package de.triology.universeadm;
 
 import com.google.common.base.Strings;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import java.util.Arrays;
 
 /**
  * @param <T>
@@ -52,183 +41,183 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractManagerResource<T> {
 
-  private static final int PAGING_DEFAULT_START = 0;
+    public static final int PAGING_DEFAULT_START = 0;
 
-  private static final int PAGING_DEFAULT_LIMIT = 20;
+    public static final int PAGING_DEFAULT_LIMIT = 20;
 
-  private static final int PAGING_MAXIMUM = 100000;
+    public static final int PAGING_MAXIMUM = 100000;
 
-  /**
-   * the logger for UserResource
-   */
-  private static final Logger logger
-    = LoggerFactory.getLogger(AbstractManagerResource.class);
+    /**
+     * the logger for UserResource
+     */
+    private static final Logger logger
+            = LoggerFactory.getLogger(AbstractManagerResource.class);
 
-  //~--- constructors ---------------------------------------------------------
+    //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   * @param manager
-   */
-  public AbstractManagerResource(Manager<T> manager) {
-    this.manager = manager;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param uriInfo
-   * @param object)
-   * @return
-   */
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response create(@Context UriInfo uriInfo, T object) {
-    Response.ResponseBuilder builder;
-
-    String id = getId(object);
-    try {
-      manager.create(object);
-
-      UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
-
-      uriBuilder.path(id);
-      builder = Response.created(uriBuilder.build());
-    } catch (ConstraintViolationException e) {
-      logger.warn("entity {} violates constraints", id);
-      builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
+    /**
+     * Constructs ...
+     *
+     * @param manager
+     */
+    public AbstractManagerResource(Manager<T> manager) {
+        this.manager = manager;
     }
 
-    return builder.build();
-  }
+    //~--- methods --------------------------------------------------------------
 
-  protected abstract String getId(T object);
+    /**
+     * Method description
+     *
+     * @param uriInfo
+     * @param object)
+     * @return
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response create(@Context UriInfo uriInfo, T object) {
+        Response.ResponseBuilder builder;
 
-  /**
-   * Method description
-   *
-   * @param id
-   * @param object
-   * @return
-   */
-  @PUT
-  @Path("{id}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  public Response modify(@PathParam("id") String id, T object) {
-    Response.ResponseBuilder builder;
-    try {
-      prepareForModify(id, object);
-      manager.modify(object);
-      builder = Response.noContent();
-    }
-    catch (ConstraintViolationException e){
-      builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
-    }
-    catch (EntityNotFoundException ex) {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
+        String id = getId(object);
+        try {
+            manager.create(object);
 
-    return builder.build();
-  }
+            UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
 
-  protected abstract void prepareForModify(String id, T object);
+            uriBuilder.path(id);
+            builder = Response.created(uriBuilder.build());
+        } catch (ConstraintViolationException e) {
+            logger.warn("entity {} violates constraints", id);
+            builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
+        }
 
-  /**
-   * Method description
-   *
-   * @param id
-   * @return
-   */
-  @DELETE
-  @Path("{id}")
-  public Response remove(@PathParam("id") String id) {
-    Response.ResponseBuilder builder;
-    T object = manager.get(id);
-
-    if (object == null) {
-      builder = Response.status(Response.Status.NOT_FOUND);
-      return builder.build();
-    }
-    try{
-      manager.remove(object);
-      builder = Response.noContent();
-    } catch (CannotRemoveException e) {
-      builder = Response.status(Response.Status.CONFLICT);
+        return builder.build();
     }
 
-   return builder.build();
+    protected abstract String getId(T object);
 
+    /**
+     * Method description
+     *
+     * @param id
+     * @param object
+     * @return
+     */
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response modify(@PathParam("id") String id, T object) {
+        Response.ResponseBuilder builder;
+        try {
+            prepareForModify(id, object);
+            manager.modify(object);
+            builder = Response.noContent();
+        } catch (ConstraintViolationException e) {
+            builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
+        } catch (EntityNotFoundException ex) {
+            builder = Response.status(Response.Status.NOT_FOUND);
+        }
 
-
-  }
-
-  //~--- get methods ----------------------------------------------------------
-  /**
-   * Method description
-   *
-   * @param id
-   * @return
-   */
-  @GET
-  @Path("{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response get(@PathParam("id") String id) {
-    T object = manager.get(id);
-    Response.ResponseBuilder builder;
-    if (object != null) {
-      builder = Response.ok(object);
-    } else {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    }
-    return builder.build();
-  }
-
-  /**
-   * Method description
-   *
-   * @param s
-   * @param l
-   * @param query
-   * @return
-   */
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAll(@QueryParam("start") int s, @QueryParam("limit") int l, @QueryParam("query") String query) {
-    int start = s;
-    int limit = l;
-    if (start < 0) {
-      start = PAGING_DEFAULT_START;
+        return builder.build();
     }
 
-    if (limit <= 0 || limit > PAGING_MAXIMUM) {
-      limit = PAGING_DEFAULT_LIMIT;
+    protected abstract void prepareForModify(String id, T object);
+
+    /**
+     * Method description
+     *
+     * @param id
+     * @return
+     */
+    @DELETE
+    @Path("{id}")
+    public Response remove(@PathParam("id") String id) {
+        Response.ResponseBuilder builder;
+        T object = manager.get(id);
+
+        if (object == null) {
+            builder = Response.status(Response.Status.NOT_FOUND);
+            return builder.build();
+        }
+        try {
+            manager.remove(object);
+            builder = Response.noContent();
+        } catch (CannotRemoveException e) {
+            builder = Response.status(Response.Status.CONFLICT);
+        }
+
+        return builder.build();
+
+
     }
 
-    PagedResultList<T> result;
-    if (Strings.isNullOrEmpty(query)) {
-      result = manager.getAll(start, limit);
-    } else {
-      result = manager.search(query, start, limit);
+    //~--- get methods ----------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     * @param id
+     * @return
+     */
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@PathParam("id") String id) {
+        T object = manager.get(id);
+        Response.ResponseBuilder builder;
+        if (object != null) {
+            builder = Response.ok(object);
+        } else {
+            builder = Response.status(Response.Status.NOT_FOUND);
+        }
+        return builder.build();
     }
 
-    Response.ResponseBuilder builder;
-    if (result != null) {
-      builder = Response.ok(result);
-    } else if (Strings.isNullOrEmpty(query)) {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    } else {
-      builder = Response.noContent();
-    }
-    return builder.build();
-  }
+    /**
+     * Method description
+     *
+     * @param s
+     * @param l
+     * @param query
+     * @return
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAll(@QueryParam("start") int s, @QueryParam("limit") int l, @QueryParam("query") String query, @QueryParam("exclude") final String exclude) {
+        int start = s;
+        int limit = l;
+        if (start < 0) {
+            start = PAGING_DEFAULT_START;
+        }
 
-  //~--- fields ---------------------------------------------------------------
-  /**
-   * Field description
-   */
-  private final Manager<T> manager;
+        if (limit <= 0 || limit > PAGING_MAXIMUM) {
+            limit = PAGING_DEFAULT_LIMIT;
+        }
+
+        PagedResultList<T> result;
+        if (Strings.isNullOrEmpty(query)) {
+            result = manager.getAll(start, limit);
+        } else if (!Strings.isNullOrEmpty(exclude)){
+            result = manager.search(query, start, limit, Arrays.asList(exclude.split(",")));
+        } else {
+            result = manager.search(query, start, limit);
+        }
+
+        Response.ResponseBuilder builder;
+        if (result != null) {
+            builder = Response.ok(result);
+        } else if (Strings.isNullOrEmpty(query)) {
+            builder = Response.status(Response.Status.NOT_FOUND);
+        } else {
+            builder = Response.noContent();
+        }
+        return builder.build();
+    }
+
+    //~--- fields ---------------------------------------------------------------
+    /**
+     * Field description
+     */
+    private final Manager<T> manager;
 }

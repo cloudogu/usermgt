@@ -457,12 +457,38 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.17</version>
+        <version>3.0.0</version>
         <configuration>
           <classpathDependencyExcludes>
             <classpathDependencyExcludes>ch.qos.logback:logback-classic</classpathDependencyExcludes>
           </classpathDependencyExcludes>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <!--
@@ -537,6 +563,12 @@
               </configuration>
             </plugin>
 
+            <plugin>
+              <groupId>org.jacoco</groupId>
+              <artifactId>jacoco-maven-plugin</artifactId>
+              <version>${jacoco.version}</version>
+            </plugin>
+
           </reportPlugins>
         </configuration>
       </plugin>
@@ -608,6 +640,18 @@
   </distributionManagement>
 
   <profiles>
+
+    <profile>
+      <id>test</id>
+      <properties>
+        <env>test</env>
+        <gebEnv>test</gebEnv>
+        <jacoco.skip>false</jacoco.skip>
+        <maven.test.skip>false</maven.test.skip>
+        <skip.unit.tests>false</skip.unit.tests>
+      </properties>
+    </profile>
+
     <profile>
       <id>webcomponents</id>
       <activation>
@@ -723,6 +767,7 @@
     <frontend-src-dir>${project.basedir}/src/main/ui</frontend-src-dir>
     <node.version>v18.7.0</node.version>
     <yarn.version>v1.22.19</yarn.version>
+    <jacoco.version>0.8.0</jacoco.version>
     <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
   </properties>
 
