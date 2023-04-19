@@ -1,6 +1,4 @@
-const {
-    After,
-} = require("cypress-cucumber-preprocessor/steps");
+import { After } from "@badeball/cypress-cucumber-preprocessor";
 
 After({tags: "@requires_new_user"}, () => {
     cy.logout();
@@ -15,7 +13,8 @@ After({tags: "@requires_new_user"}, () => {
 });
 
 After(() => {
-    cy.usermgtCleanupTestUsers()
+    cy.usermgtCleanupTestUsers();
+    cy.usermgtCleanupTestGroups();
 })
 
 

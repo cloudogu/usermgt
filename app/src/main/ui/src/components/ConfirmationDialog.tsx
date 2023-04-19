@@ -9,6 +9,7 @@ export type ConfirmationDialogProps = {
     onClose: () => void
     onConfirm: () => void
     className?: string;
+    "data-testid"?: string;
 }
 
 export function ConfirmationDialog({

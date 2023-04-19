@@ -1,17 +1,41 @@
 // Loads all commands from the dogu integration library into this project
-const doguTestLibrary = require('@cloudogu/dogu-integration-test-library')
-const env = require('@cloudogu/dogu-integration-test-library/lib/environment_variables')
+import '@bahmutov/cy-api'
+import doguTestLibrary from "@cloudogu/dogu-integration-test-library";
+import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 
-doguTestLibrary.registerCommands()
+doguTestLibrary.registerCommands();
 
-import "./commands/required_commands_for_dogu_lib"
+declare global {
+    namespace Cypress {
+        interface Chainable {
+            clickWarpMenuCheckboxIfPossible(): void
+            login(username: string, password: string, retryCount: number|undefined): void
+            usermgtCreateGroup(groupname: string, description: string): void
+            usermgtTryDeleteGroup(groupname: string): void
+            usermgtAddMemberToGroup(groupname: string, username: string): void
+            usermgtRemoveMemberFromGroup(groupname: string, username: string): void
+            usermgtCreateUser(username: string, givenname: string, suname: string, displayname: string, mail: string, password: string, pwdReset: boolean|undefined, groups: any|undefined): void
+            usermgtDeleteUser(username: string): void
+            usermgtTryDeleteUser(username: string): void
+            usermgtCleanupTestUsers(): void
+            usermgtGetGroup(groupname: string): void
+            usermgtDeleteGroup(groupname: string): void
+            usermgtCleanupTestGroups(): void
+            withUser(username: string): any
+            withImportData(userCount: number): any
+            logout(): void
+            deleteUserFromDoguViaAPI(usernamen: string, exitOnFail: boolean)
+        }
+    }
+}
+
 
 /**
  * Overwrite logut and login behavior as the session cookie for the usermgt api-requests are not
- * deleted correctly. As such we need to delete them manually as otherwise the user is falsy logged 
+ * deleted correctly. As such we need to delete them manually as otherwise the user is falsy logged
  * in and not redirected to `/cas/login`.
  */
-const logout = () => {
+const logout = (): void => {
     cy.api({
         method: "GET",
         url: Cypress.config().baseUrl + "/usermgt/api/logout",
@@ -88,7 +112,7 @@ const createUser = (username, givenName, surname, displayName, mail, password, p
             'memberOf': [],
         }
     }).then((response) => {
-        expect(response.status).to.eq(201)
+         expect(response.status).to.eq(201)
         if (groups) {
             for (const groupsKey in groups) {
                 let group = groups[groupsKey]
@@ -134,12 +158,33 @@ const cleanupTestUsers = () => {
             'user': env.GetAdminUsername(),
             'pass': env.GetAdminPassword()
         }
-    }).then(response => {
+    }).then((response) => {
         expect(response.status).to.eq(200);
-        return response.body.entries.filter(el => el.displayName.startsWith("Tester"));
+        // @ts-ignore
+        return response.body.entries.filter(el => el.displayName.startsWith("Tester") || el.username.startsWith("testUser"));
     }).then(testUsers => {
         testUsers.filter(testUser => {
             cy.usermgtDeleteUser(testUser.username);
+        })
+    });
+};
+
+const cleanupTestGroups = () => {
+    cy.api({
+        method: "GET",
+        url: Cypress.config().baseUrl + "/usermgt/api/groups?limit=100000",
+        failOnStatusCode: false,
+        auth: {
+            'user': env.GetAdminUsername(),
+            'pass': env.GetAdminPassword()
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200);
+        // @ts-ignore
+        return response.body.entries.filter(el => el.name.startsWith("testGroup"));
+    }).then(testGroups => {
+        testGroups.filter(testGroup => {
+            cy.usermgtDeleteGroup(testGroup.name);
         })
     });
 };
@@ -241,11 +286,21 @@ const withClearCookies = (func) => {
     }
 }
 
+/**
+ * Deletes a user from the dogu via an API call.
+ * @param {String} username - The username of the user.
+ * @param {boolean} exitOnFail - Determines whether the test should fail when the request did not succeed. Default: false
+ */
+const deleteUserFromDoguViaAPI = (username, exitOnFail = false) => {
+    // do nothing
+}
+
 // common
 Cypress.Commands.add("logout", logout)
 Cypress.Commands.add("login", login)
 Cypress.Commands.add("withUser", withUser)
 Cypress.Commands.add("withImportData", withImportData)
+Cypress.Commands.add("deleteUserFromDoguViaAPI", deleteUserFromDoguViaAPI)
 
 // users
 Cypress.Commands.add("usermgtCreateUser", withClearCookies(createUser))
@@ -260,3 +315,4 @@ Cypress.Commands.add("usermgtDeleteGroup", withClearCookies(deleteGroup))
 Cypress.Commands.add("usermgtTryDeleteGroup", withClearCookies(tryDeleteGroup))
 Cypress.Commands.add("usermgtAddMemberToGroup", addMemberToGroup)
 Cypress.Commands.add("usermgtRemoveMemberFromGroup", withClearCookies(removeMemberFromGroup))
+Cypress.Commands.add("usermgtCleanupTestGroups", withClearCookies(cleanupTestGroups))

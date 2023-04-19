@@ -145,11 +145,11 @@ node('docker') {
 
       stage('Integration Tests') {
          echo "run integration tests."
-//          ecoSystem.runCypressIntegrationTests([
-//                  cypressImage: "cypress/included:8.6.0",
-//                  enableVideo: params.EnableVideoRecording,
-//                  enableScreenshots    : params.EnableScreenshotRecording,
-//           ])
+          ecoSystem.runCypressIntegrationTests([
+                  cypressImage: "cypress/included:12.9.0",
+                  enableVideo: params.EnableVideoRecording,
+                  enableScreenshots    : params.EnableScreenshotRecording,
+           ])
       }
 
       if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
@@ -245,7 +245,7 @@ void createNpmrcFile(credentialsId) {
                     script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
             )}""".trim()
             writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
-    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
+    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
     email=jenkins@cloudogu.com
     always-auth=true
     _auth=${NPM_TOKEN}

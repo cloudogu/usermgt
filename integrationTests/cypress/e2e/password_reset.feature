@@ -5,8 +5,8 @@ Feature: Tests for the functionality to prompt a user for a password change at t
     Given the user "testuser" exists
     And the user is member of the admin user group
     When the user opens the users page
-    And the user clicks on the create button
-    And the user fills the form to create a new user
+    And the user clicks on the create-user button
+    And the user fills the user-form for a user with the name "newuser"
     And the user enables the password reset flag
     And the user clicks save
     And the user logs out by visiting the cas logout page
@@ -29,5 +29,5 @@ Feature: Tests for the functionality to prompt a user for a password change at t
     Given the user "testuser" exists
     And the user is member of the admin user group
     When the user opens the users page
-    And the user clicks on the create button
+    And the user clicks on the create-user button
     Then the password reset flag is unchecked

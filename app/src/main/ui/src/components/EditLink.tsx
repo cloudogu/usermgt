@@ -1,6 +1,6 @@
+import {PencilIcon} from "@heroicons/react/24/outline";
 import React, {ComponentPropsWithoutRef} from "react";
 import {Link} from "react-router-dom";
-import {PencilIcon} from "@heroicons/react/24/outline";
 
 export default function EditLink(props: ComponentPropsWithoutRef<typeof Link>){
     return (

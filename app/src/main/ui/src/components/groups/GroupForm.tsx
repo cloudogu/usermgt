@@ -51,6 +51,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
 
     return <>
         <ConfirmationDialog open={open ?? false}
+            data-testid="remove-member-dialog"
             onClose={() => toggleModal(false)}
             onConfirm={async () => {
                 await onConfirmDeleteMember(username ?? "");
@@ -58,7 +59,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
             title={t("groups.labels.removeMember")}
             message={t("groups.labels.removeMemberConfirmationMessage", {username: username})}/>
         <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
-        <Form handler={handler}>
+        <Form handler={handler} data-testid="group-from">
             <Form.ValidatedTextInput type={"text"} name={"name"} disabled={!isNewGroup} data-testid="name" placeholder={t("groups.placeholder.name")}>
                 {t("groups.labels.name")}
             </Form.ValidatedTextInput>
@@ -67,7 +68,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
             </Form.ValidatedTextArea>
             <H2>{`${t("groups.labels.members")} (${handler.values.members.length})`}</H2>
             <ListWithSearchbar
-                data-testid="groups"
+                data-testid="members"
                 items={handler.values.members}
                 addItem={addMember}
                 removeItem={openConfirmationDialog}
@@ -79,11 +80,11 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
                 removeIcon={<TrashIcon className={"w-6 h-6"}/>}
             />
             <div className={"my-4"}>
-                <Button variant={"primary"} type={"submit"} disabled={!handler.dirty}>
+                <Button variant={"primary"} type={"submit"} disabled={!handler.dirty} data-testid="save-button">
                     {t("editGroup.buttons.save")}
                 </Button>
                 <Button variant={"secondary"} type={"button"} className={"ml-4"}
-                    onClick={() => navigate(backURL ?? "/groups")}>
+                    onClick={() => navigate(backURL ?? "/groups")}  data-testid="back-button">
                     {t("editGroup.buttons.back")}
                 </Button>
             </div>

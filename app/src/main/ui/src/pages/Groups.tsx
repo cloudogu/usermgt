@@ -62,15 +62,17 @@ export default function Groups(props: { title: string }) {
             <H1 className="uppercase">{t("pages.groups")}</H1>
             <div className="flex flex-wrap justify-between py-1">
                 <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
+                    data-testid="group-create"
                     disabled={isLoading} onClick={() => navigate("/groups/new")}>
                     {t("groups.buttons.create")}</Button>
                 <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
                     onClear={() => setQuery("")} startValueSearch={opts.query}
-                    className="mt-5 mb-2.5" disabled={isLoading}/>
+                    data-testid="groups-filter" className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
         {notification}
         <ConfirmationDialog open={open ?? false}
+            data-testid="group-delete-dialog"
             onClose={() => toggleModal(false)}
             onConfirm={async () => {
                 await onDelete(group ?? "");
@@ -78,7 +80,7 @@ export default function Groups(props: { title: string }) {
             title={t("groups.confirmation.title")}
             message={t("groups.confirmation.message", {groupName: group})}/>
 
-        <Table className="my-4">
+        <Table className="my-4" data-testid="groups-table">
             <Table.Head key={"table-head"}>
                 <Table.Head.Tr className={"uppercase"}>
                     <Table.Head.Th>{t("groups.table.name")}</Table.Head.Th>
@@ -92,6 +94,7 @@ export default function Groups(props: { title: string }) {
             </Table.ConditionalBody>
             <Table.ConditionalFoot show={!isLoading}>
                 <Table.Foot.Pagination
+                    data-testid="groups-footer"
                     className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
                     currentPage={model?.pagination.current ?? 1}
                     pageCount={model?.pagination.pageCount ?? 1}
@@ -119,9 +122,11 @@ function createGroupRow(group: Group, onDelete: (_: string) => void, onEdit: (_:
         <Table.Body.Td className="flex justify-center">
             <EditButton aria-label={t("groups.table.actions.editAria")}
                 onClick={() => onEdit(group.name)}
+                id={`${group?.name}-edit-button`}
                 title={t("groups.table.actions.edit")}/>
             <DeleteButton aria-label={t("groups.table.actions.deleteAria")} disabled={group.isSystemGroup}
                 title={t("groups.table.actions.delete")}
+                id={`${group?.name}-delete-button`}
                 onClick={() => onDelete(group.name)}/>
         </Table.Body.Td>
     </Table.Body.Tr>;
