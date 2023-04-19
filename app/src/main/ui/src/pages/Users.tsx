@@ -114,7 +114,7 @@ export default function Users(props: { title: string }) {
 function createUsersRow(user: User, casUser: CasUser, onDelete: (_: string) => void, backUrlParams: string) {
     return (
         <Table.Body.Tr key={user.username}>
-            <Table.Body.Td className="font-bold">{user.username}</Table.Body.Td>
+            <Table.Body.Td className="font-bold break-all">{user.username}</Table.Body.Td>
             <Table.Body.Td className={"break-all"}>{user.displayName}</Table.Body.Td>
             <Table.Body.Td>
                 <MailHref mail={user.mail}/>
