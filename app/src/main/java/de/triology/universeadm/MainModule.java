@@ -109,8 +109,8 @@ public class MainModule extends ServletModule {
         serve("/components/*", "/scripts/*",
                 "/style/*").with(ResourceServlet.class);
 
-        // serve index pages
-        serve("/", "/index.html", "/index-debug.html").with(TemplateServlet.class);
+        // serve index page for everything but "/api" or "/assets"
+        serveRegex("^/(?!api|assets).+").with(TemplateServlet.class);
     }
 
     //~--- fields ---------------------------------------------------------------

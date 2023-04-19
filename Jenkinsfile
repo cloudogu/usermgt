@@ -30,13 +30,11 @@ node('docker') {
     GitHub github = new GitHub(this, git)
     Changelog changelog = new Changelog(this)
 
-    // Workaround SUREFIRE-1588 on Debian/Ubuntu. Should be fixed in Surefire 3.0.0
-    mvn.additionalArgs = '-DargLine="-Djdk.net.URLClassPath.disableClassPathURLCheck=true"'
-
     stage('Checkout') {
         checkout scm
         //  Don't remove folders starting in "." like * .m2 (maven), .npm, .cache, .local (bower)
         git.clean('".*/"')
+        createNpmrcFile("jenkins")
     }
 
     stage('Lint') {
@@ -51,7 +49,7 @@ node('docker') {
 
     // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
     // builds run concurrently (e.g. feature branch, PR and develop)
-    new Docker(this).image('openjdk:8-jdk')
+    new Docker(this).image('timbru31/java-node:8-jdk-18')
             .mountJenkinsUser()
             .inside {
 
@@ -62,7 +60,7 @@ node('docker') {
             }
 
             stage('Unit Test') {
-                mvn 'test'
+                mvn 'test jacoco:report'
             }
         }
     }
@@ -147,11 +145,11 @@ node('docker') {
 
       stage('Integration Tests') {
          echo "run integration tests."
-         ecoSystem.runCypressIntegrationTests([
-                 cypressImage: "cypress/included:8.6.0",
-                 enableVideo: params.EnableVideoRecording,
-                 enableScreenshots    : params.EnableScreenshotRecording,
-          ])
+          ecoSystem.runCypressIntegrationTests([
+                  cypressImage: "cypress/included:12.9.0",
+                  enableVideo: params.EnableVideoRecording,
+                  enableScreenshots    : params.EnableScreenshotRecording,
+           ])
       }
 
       if (params.TestDoguUpgrade != null && params.TestDoguUpgrade){
@@ -203,6 +201,7 @@ node('docker') {
     } finally {
       stage('Clean') {
         ecoSystem.destroy()
+        sh "rm -f ${WORKSPACE}/app/src/main/ui/.npmrc"
       }
     }
 
@@ -235,5 +234,39 @@ def executeShellTests() {
         }
     } finally {
         junit allowEmptyResults: true, testResults: 'target/shell_test_reports/*.xml'
+    }
+}
+
+void createNpmrcFile(credentialsId) {
+    withCredentials([usernamePassword(credentialsId: "${credentialsId}", usernameVariable: 'TARGET_USER', passwordVariable: 'TARGET_PSW')]) {
+        withEnv(["HOME=${env.WORKSPACE}"]) {
+            String NPM_TOKEN = """${sh(
+                    returnStdout: true,
+                    script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
+            )}""".trim()
+            writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
+    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+    email=jenkins@cloudogu.com
+    always-auth=true
+    _auth=${NPM_TOKEN}
+        """.trim()
+        }
+    }
+}
+
+/**
+ * Wrapper around dogu build calls to apply credentials to authenticate against private github repositories.
+ * @param user name
+ * @param password or user token
+ * @param closure
+ */
+void useConfig(String userName, String token, Closure closure) {
+    try {
+        createNpmrcFile("jenkins")
+        closure.call()
+    } catch (err) {
+        throw err
+    } finally {
+        sh "rm -f ${WORKSPACE}/app/src/main/ui/.npmrc"
     }
 }

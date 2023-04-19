@@ -27,3 +27,4 @@ app/.project
 *.iml
 **/target/**
 **/build/tmp/**
+.npmrc

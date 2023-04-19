@@ -1,0 +1,49 @@
+{
+  "name": "usermgt",
+  "license": "MIT",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "backend": "cd api-mock && json-server --watch db.json --p 8080 --routes routes.json"
+  },
+  "dependencies": {
+    "axios": "^1.3.3",
+    "dynamic-class-list": "^2.0.2",
+    "formik": "^2.2.9",
+    "heroicons": "^2.0.13",
+    "hoist-non-react-statics": "^3.3.2",
+    "i18next": "^22.4.9",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "react-i18next": "^12.1.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-query": "^3.39.2",
+    "react-router-dom": "^6.8.2",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@cloudogu/ces-theme-tailwind": "^0.1.1",
+    "@mertasan/tailwindcss-variables": "^2.5.1",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@types/react-router-dom": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "@vitejs/plugin-react": "^3.0.0",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.35.0",
+    "eslint-plugin-autofix": "^1.1.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "json-server": "^0.17.2",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.4",
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
+  }
+}

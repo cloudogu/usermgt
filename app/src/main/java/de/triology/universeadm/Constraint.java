@@ -14,7 +14,8 @@ public abstract class Constraint<T> {
    */
   public enum ID {
     UNIQUE_USERNAME,
-    UNIQUE_EMAIL
+    UNIQUE_EMAIL,
+    UNIQUE_GROUP_NAME
   }
 
   /**

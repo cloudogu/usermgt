@@ -398,4 +398,9 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
    * Field description
    */
   private final MappingHandler<User> mapping;
+
+  @Override
+  protected String typeToString(User e) {
+    return e.getUsername();
+  }
 }

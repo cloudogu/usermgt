@@ -39,6 +39,9 @@ import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,14 +66,36 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
         Mapper<Group> mapper = mapperFactory.createMapper(Group.class, configuration.getGroupBaseDN());
         this.mapping = new MappingHandler<>(strategy, mapper, validator);
         this.eventBus = eventBus;
+        this.constraints.add(new UniqueGroupNameConstraint(this.mapping));
     }
 
     @Override
     public void create(Group group) {
         logger.debug("create group {}", group.getName());
         SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
+        checkConstraints(group, Constraint.Category.CREATE);
+
         mapping.create(group);
         eventBus.post(new GroupEvent(group, EventType.CREATE));
+    }
+
+    /**
+     * Checks if any constraints are violated.
+     * If so, throws ConstraintViolationException containing all violations.
+     * @param group
+     * @param category
+     * @throws ConstraintViolationException
+     */
+    private void checkConstraints(final Group group, final Constraint.Category category) {
+        final List<Constraint.ID> violatedConstraints = new ArrayList<>();
+        for (Constraint<Group> constraint : this.constraints) {
+            if (constraint.violatedBy(group, category)) {
+                violatedConstraints.add(constraint.getUniqueID());
+            }
+        }
+        if (!violatedConstraints.isEmpty()) {
+            throw new ConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[2]));
+        }
     }
 
     @Override
@@ -119,4 +144,8 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
         return mapping.search(query);
     }
 
+    @Override
+    protected String typeToString(Group e) {
+        return e.getName();
+    }
 }

@@ -29,6 +29,7 @@ package de.triology.universeadm.group;
 
 import com.github.legman.EventBus;
 import com.github.sdorra.ldap.LDAP;
+import de.triology.universeadm.*;
 import org.junit.Test;
 import org.junit.Rule;
 import com.github.sdorra.ldap.LDAPRule;
@@ -37,9 +38,6 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
-import de.triology.universeadm.EventType;
-import de.triology.universeadm.LDAPConfiguration;
-import de.triology.universeadm.LDAPConnectionStrategy;
 import de.triology.universeadm.mapping.DefaultMapper;
 import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.mapping.Mapper;
@@ -105,6 +103,15 @@ public class LDAPGroupManagerTest
   {
     createGroupManager().create(Groups.createHeartOfGold());
   }
+
+  @Test(expected = ConstraintViolationException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_001)
+  public void createTestWithConstraintViolation() throws LDAPException
+  {
+    LDAPGroupManager groupManager = createGroupManager();
+    groupManager.create(Groups.createHeartOfGold());
+    groupManager.create(Groups.createHeartOfGold());
+  }
   
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_002)
@@ -164,6 +171,19 @@ public class LDAPGroupManagerTest
   {
     createGroupManager().remove(Groups.createHeartOfGold());
   }
+
+  @Test(expected = CannotRemoveException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void removeTestUndeletableGroup() throws LDAPException
+  {
+    LDAPGroupManager groupManager = createGroupManager();
+
+    final Group group = Groups.createBrockianUltraCricket();
+    groupManager.remove(group);
+
+    assertNotNull(ldap.getConnection().getEntry("cn=Heart Of Gold,ou=Groups,dc=hitchhiker,dc=com"));
+  }
+
 
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
@@ -234,6 +254,7 @@ public class LDAPGroupManagerTest
     MapperFactory mapperFactory = mock(MapperFactory.class);
     when(mapperFactory.createMapper(Group.class, groupsdn)).thenReturn(mapper);
     UndeletableGroupManager undeletableGroupManager = mock(UndeletableGroupManager.class);
+    when(undeletableGroupManager.isGroupUndeletable("Brockian Ultra-Cricket")).thenReturn(true);
     return new LDAPGroupManager(strategy, config, undeletableGroupManager, mapperFactory, validator, eventBus);
   }
   
