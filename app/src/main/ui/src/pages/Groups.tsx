@@ -107,7 +107,7 @@ export default function Groups(props: { title: string }) {
 function createGroupRow(group: Group, onDelete: (_: string) => void, onEdit: (_: string) => void) {
     return <Table.Body.Tr key={group.name}>
         <Table.Body.Td>
-            <span className="font-bold">{group.name}</span>
+            <span className="font-bold break-all">{group.name}</span>
         </Table.Body.Td>
         <Table.Body.Td>
             <p>{group.description}</p>

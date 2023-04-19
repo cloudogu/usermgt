@@ -36,7 +36,7 @@ export function ConfirmationDialog({
                 <H3 className="uppercase">{title}</H3>
             </Modal.Header>
             <Modal.Body>
-                <p className="break-words">{message}</p>
+                <p className="break-all">{message}</p>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant={"danger"} onClick={onClick} disabled={disable}
