@@ -9,7 +9,7 @@ export type ConfirmationDialogProps = {
     onClose: () => void
     onConfirm: () => void
     className?: string;
-    "data-testid"?: string;
+    "data-testid"?: string
 }
 
 export function ConfirmationDialog({
@@ -31,7 +31,7 @@ export function ConfirmationDialog({
     }, [open]);
 
     return <>
-        <Modal {...props} open={open}>
+        <Modal {...props} open={open} onClose={onClose}>
             <Modal.Header>
                 <H3 className="uppercase">{title}</H3>
             </Modal.Header>
