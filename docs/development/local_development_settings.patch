@@ -1,0 +1,106 @@
+Subject: [PATCH] local development settings
+---
+Index: app/src/main/java/de/triology/universeadm/DisableCacheResponseFilter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/de/triology/universeadm/DisableCacheResponseFilter.java b/app/src/main/java/de/triology/universeadm/DisableCacheResponseFilter.java
+--- a/app/src/main/java/de/triology/universeadm/DisableCacheResponseFilter.java	(revision 07df04aec92ef32e3b5d95f1fc27d1e37ab013b3)
++++ b/app/src/main/java/de/triology/universeadm/DisableCacheResponseFilter.java	(date 1677242851122)
+@@ -64,6 +64,6 @@
+       "no-cache, no-store, must-revalidate");
+     responseContext.getHeaders().putSingle("Pragma", "no-cache");
+     responseContext.getHeaders().putSingle("Expires", 0);
+-    
++    requestContext.getHeaders().putSingle("Access-Control-Allow-Origin", "*");
+   }
+ }
+Index: app/src/main/ui/vite.config.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/ui/vite.config.ts b/app/src/main/ui/vite.config.ts
+--- a/app/src/main/ui/vite.config.ts	(revision 07df04aec92ef32e3b5d95f1fc27d1e37ab013b3)
++++ b/app/src/main/ui/vite.config.ts	(date 1678357586561)
+@@ -1,28 +1,28 @@
+-import { defineConfig } from 'vite'
+-import react from '@vitejs/plugin-react'
++import react from "@vitejs/plugin-react";
++import { defineConfig } from "vite";
+ 
+ export default defineConfig({
+-  plugins: [react()],
+-  assetsInclude: ['**/*.svg'],
+-  define: {
+-    'process.env': process.env
+-  },
+-  base: "/usermgt/",
+-  server: {
+-    proxy: {
+-      "/usermgt/api": {
+-        target: "http://localhost:8080",
+-        changeOrigin: true,
+-        secure: false,
+-      },
+-      "/usermgt/downloads": {
+-        target: "http://localhost:8080",
+-        changeOrigin: true,
+-        secure: false,
+-      }
+-    },
+-  },
+-  build: {
+-    chunkSizeWarningLimit: 2048
+-  }
+-})
+\ No newline at end of file
++    plugins: [react()],
++    assetsInclude: ["**/*.svg"],
++    define: {
++        "process.env": process.env
++    },
++    base: "/usermgt",
++    server: {
++        proxy: {
++            "/usermgt/api": {
++                target: "https://192.168.56.2",
++                changeOrigin: true,
++                secure: false,
++            },
++            "/usermgt/downloads": {
++                target: "http://192.168.56.2",
++                changeOrigin: true,
++                secure: false,
++            }
++        },
++    },
++    build: {
++        chunkSizeWarningLimit: 2048
++    }
++});
+\ No newline at end of file
+Index: app/src/main/ui/src/api/axios.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/ui/src/api/axios.ts b/app/src/main/ui/src/api/axios.ts
+--- a/app/src/main/ui/src/api/axios.ts	(revision 07df04aec92ef32e3b5d95f1fc27d1e37ab013b3)
++++ b/app/src/main/ui/src/api/axios.ts	(date 1677872484959)
+@@ -2,6 +2,12 @@
+ 
+ const contextPath = process.env.PUBLIC_URL || "/usermgt";
+ 
+-export const Axios = axios.create({
++export const Axios = process.env.NODE_ENV === "development" ? axios.create({
++    baseURL: `${contextPath}/api`,
++    auth: {
++        username: 'gary',
++        password: 'admin'
++    }
++}) : axios.create({
+     baseURL: `${contextPath}/api`,
+-});
++})
