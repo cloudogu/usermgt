@@ -8,5 +8,6 @@ Feature: Tests for deleting users.
     And the user sets the users-filter to "testuser_1"
     And the user clicks on the delete-user button for the user "testuser_1"
     And the user confirms the delete-user-confirmation-dialog
-    And the user sets the users-filter to "testuser_1"
+    Then a success alert will be shown containing the text "testuser_1"
+    When the user sets the users-filter to "testuser_1"
     Then the users-page contains exactly "0" users

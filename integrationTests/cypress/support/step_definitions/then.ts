@@ -285,3 +285,8 @@ Then("the edit-group-page for group {string} is shown", function (name: string) 
     cy.get('button[data-testid="save-button"]').should('be.visible')
     cy.get('button[data-testid="back-button"]').should('be.visible')
 });
+
+Then("a success alert will be shown containing the text {string}", function (name: string) {
+    cy.get('.border-alert-primary-inverse-border').should('be.visible');
+    cy.get('.border-alert-primary-inverse-border').contains(name);
+});

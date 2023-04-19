@@ -10,7 +10,8 @@ Feature: Tests for editing new groups.
     Then the edit-group-page for group "testGroup_1" is shown
     When the user edits the group-description to "Better description"
     And the user submits the group-form
-    And the user sets the groups-filter to "testGroup_1"
+    Then a success alert will be shown containing the text "The group was saved successfully."
+    When the user sets the groups-filter to "testGroup_1"
     Then the groups-page contains the group "testGroup_1"
     Then the groups-page contains the group-description "Better description"
 
@@ -25,7 +26,8 @@ Feature: Tests for editing new groups.
     Then the edit-group-page for group "testGroup_1" is shown
     When the user adds the member "testuser" to the group
     And the user submits the group-form
-    And the user sets the groups-filter to "testGroup_1"
+    Then a success alert will be shown containing the text "The group was saved successfully."
+    When the user sets the groups-filter to "testGroup_1"
     Then the groups-page contains the group "testGroup_1"
     When the user clicks on the edit-group button for the group "testGroup_1"
     Then a user named "testuser" is member of the group
@@ -41,13 +43,14 @@ Feature: Tests for editing new groups.
     Then the edit-group-page for group "testGroup_1" is shown
     When the user adds the member "testuser" to the group
     And the user submits the group-form
-    And the user sets the groups-filter to "testGroup_1"
-    Then the groups-page contains the group "testGroup_1"
+    Then a success alert will be shown containing the text "The group was saved successfully."
+    When the user sets the groups-filter to "testGroup_1"
     When the user clicks on the edit-group button for the group "testGroup_1"
     Then a user named "testuser" is member of the group
     When the user removes the member "testuser" from the group
     And the user submits the group-form
-    And the user sets the groups-filter to "testGroup_1"
+    Then a success alert will be shown containing the text "The group was saved successfully."
+    When the user sets the groups-filter to "testGroup_1"
     Then the groups-page contains the group "testGroup_1"
     When the user clicks on the edit-group button for the group "testGroup_1"
     Then the group has no members

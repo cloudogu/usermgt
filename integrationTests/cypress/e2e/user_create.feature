@@ -8,7 +8,8 @@ Feature: Tests for creating new users.
     Then the new-user-page is shown
     When the user fills the user-form for a user with the name "testUser_new"
     And the user clicks save
-    And the user sets the users-filter to "testUser_new"
+    Then a success alert will be shown containing the text "testUser_new"
+    When the user sets the users-filter to "testUser_new"
     Then the users-page contains the user "testUser_new"
 
   Scenario: a user who is manager cannot to create a new user without a valid name
@@ -28,7 +29,8 @@ Feature: Tests for creating new users.
     Then the new-user-page is shown
     When the user fills the user-form for a user with the name "testUser_new"
     And the user clicks save
-    And the user sets the users-filter to "testUser_new"
+    Then a success alert will be shown containing the text "testUser_new"
+    When the user sets the users-filter to "testUser_new"
     Then the users-page contains the user "testUser_new"
     And the user clicks on the create-user button
     Then the new-user-page is shown
@@ -46,7 +48,8 @@ Feature: Tests for creating new users.
     When the user fills the user-form for a user with the name "testUser_new"
     And the user adds the group "testGroup_1" to the user
     And the user clicks save
-    And the user sets the users-filter to "testUser_new"
+    Then a success alert will be shown containing the text "testUser_new"
+    When the user sets the users-filter to "testUser_new"
     Then the users-page contains the user "testUser_new"
     When the user clicks on the edit-user button for the user "testUser_new"
     Then a group named "testGroup_1" is assigned to the user

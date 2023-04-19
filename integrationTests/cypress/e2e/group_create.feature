@@ -8,7 +8,8 @@ Feature: Tests for creating new groups.
     Then the new-group-page is shown
     When the user fills the group-form for a group with the name "testGroup_new"
     And the user submits the group-form
-    And the user sets the groups-filter to "testGroup_new"
+    Then a success alert will be shown containing the text "testGroup_new"
+    When the user sets the groups-filter to "testGroup_new"
     Then the groups-page contains the group "testGroup_new"
 
   Scenario: a user who is manager cannot to create a new group without a valid name
@@ -30,7 +31,8 @@ Feature: Tests for creating new groups.
     When the user fills the group-form for a group with the name "testGroup_new"
     And the user adds the member "testuser" to the group
     And the user submits the group-form
-    And the user sets the groups-filter to "testGroup_new"
+    Then a success alert will be shown containing the text "testGroup_new"
+    When the user sets the groups-filter to "testGroup_new"
     Then the groups-page contains the group "testGroup_new"
     When the user clicks on the edit-group button for the group "testGroup_new"
     Then a user named "testuser" is member of the group

@@ -9,5 +9,6 @@ Feature: Tests for deleting groups.
     And the user sets the groups-filter to "testGroup_1"
     And the user clicks on the delete-group button for the group "testGroup_1"
     And the user confirms the delete-group-confirmation-dialog
-    And the user sets the groups-filter to "testGroup_1"
+    Then a success alert will be shown containing the text "testGroup_1"
+    When the user sets the groups-filter to "testGroup_1"
     Then the groups-page contains exactly "0" groups
