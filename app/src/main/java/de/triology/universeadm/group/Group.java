@@ -109,7 +109,7 @@ public class Group implements Comparable<Group>
   @Override
   public int compareTo(Group o)
   {
-    return Strings.nullToEmpty(name).compareTo(Strings.nullToEmpty(o.name));
+    return Strings.nullToEmpty(name).toLowerCase().compareTo(Strings.nullToEmpty(o.name).toLowerCase());
   }
 
   /**

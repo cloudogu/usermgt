@@ -1,0 +1,200 @@
+{
+  "subject": {
+    "principal": "localtestadmin"
+  },
+  "passwordpolicy": {
+    "Rules": [
+      {
+        "Description": "The password must contain at least 8 characters",
+        "Rule": ".{8,}",
+        "Type": "regex",
+        "Name": "length",
+        "Variables": [
+          {
+            "Name": "length",
+            "Value": "8"
+          }
+        ]
+      },
+      {
+        "Description": "The password must contain at least 1 characters",
+        "Rule": "[A-ZÄÖÜ]",
+        "Type": "regex",
+        "Name": "capital",
+        "Variables": []
+      },
+      {
+        "Description": "The password must contain at least 1 lower case letter",
+        "Rule": "[a-zäöüß]",
+        "Type": "regex",
+        "Name": "lowercase",
+        "Variables": []
+      },
+      {
+        "Description": "The password must contain at least 1 number",
+        "Rule": "[0-9]",
+        "Type": "regex",
+        "Name": "numeric",
+        "Variables": []
+      },
+      {
+        "Description": "The password must contain at least 1 special character.",
+        "Rule": "[^a-zäöüßA-ZÄÖÜ0-9]",
+        "Type": "regex",
+        "Name": "special",
+        "Variables": []
+      }
+    ]
+  },
+  "account": {
+    "displayName": "Admin User",
+    "password": "__dummypassword",
+    "username": "admin",
+    "surname": "Usera",
+    "mail": "admin@admin.test",
+    "givenname": "Admin",
+    "memberOf": [
+      "cesManager",
+      "ecosystemAdmins"
+    ],
+    "pwdReset": false
+  },
+  "groups": {
+    "entries": [
+      {
+        "name": "cesAdmin",
+        "description": "This group grants administrative rights to all development applications of cloudogu",
+        "members": [
+          "gary"
+        ]
+      },
+      {
+        "name": "cesManager",
+        "description": "Members of the cesManager group have full access to the cloudogu administration applications",
+        "members": [
+          "gary"
+        ]
+      },
+      {
+        "name": "testGrou01",
+        "description": "test 123"
+      },
+      {
+        "name": "testGroup02",
+        "description": "test 123"
+      },
+      {
+        "name": "testGroup03",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup04",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup05",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup06",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup07",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup08",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup09",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup10",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup11",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup12",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup13",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup14",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup15",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup16",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup17",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup18",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup19",
+        "description": "test 345"
+      },
+      {
+        "name": "testGroup20",
+        "description": "test 345"
+      }
+    ],
+    "start": 0,
+    "limit": 20,
+    "totalEntries": 22
+  },
+  "users": {
+    "entries": [
+      {
+        "displayName": "localtestadmin",
+        "givenname": "localtestadmin",
+        "mail": "localtestadmin@cloudogu.com",
+        "memberOf": [
+          "cesAdmin",
+          "cesManager"
+        ],
+        "password": "__dummypassword",
+        "pwdReset": false,
+        "surname": "localtestadmin",
+        "username": "localtestadmin"
+      },
+      {
+        "displayName": "User2",
+        "givenname": "User2",
+        "mail": "user2@cloudogu.com",
+        "memberOf": [
+          "cesAdmin",
+          "cesManager"
+        ],
+        "password": "__dummypassword",
+        "pwdReset": false,
+        "surname": "User2",
+        "username": "User2"
+      }
+    ],
+    "start": 0,
+    "limit": 20,
+    "totalEntries": 2
+  },
+  "groups_undeletable": [
+    "cesAdmin",
+    "cesManager"
+  ]
+}

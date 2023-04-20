@@ -108,6 +108,7 @@ public interface Manager<T>
    * @return
    */
   public PagedResultList<T> search(String query, int start, int limit);
+  public PagedResultList<T> search(String query, int start, int limit, final List<String> exclude);
 
   /**
    * Method description

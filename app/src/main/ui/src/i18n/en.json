@@ -1,0 +1,184 @@
+{
+  "editGroup": {
+    "buttons": {
+      "back": "Back",
+      "remove": "Delete",
+      "save": "Save"
+    },
+    "notification": {
+      "error": "The group could not be saved. Please try again later.",
+      "success": "The group was saved successfully."
+    }
+  },
+  "editUser": {
+    "buttons": {
+      "save": "Save"
+    },
+    "errors": {
+      "confirmPassword": "Passwords must match.",
+      "displayName": "Display name is required.",
+      "email": {
+        "invalid": "E-mail address is invalid.",
+        "required": "'E-mail address is required.'"
+      },
+      "password": {
+        "capital": "The password must contain at least one capital letter.",
+        "length": "The password must contain at least {{length}} characters.",
+        "lowercase": "The password must contain at least one lower case letter.",
+        "nonWhitespace": "The password must not contain only spaces.",
+        "numeric": "The password must contain at least 1 number.",
+        "special": "The password must contain at least 1 special character."
+      },
+      "surname": "Surname is required.",
+      "username": {
+        "invalid": "The username may only contain letters, numbers, hyphens, underscores, periods and @.",
+        "maxlength": "May contain a maximum of 128 characters",
+        "minlength": "Must contain at least 2 characters",
+        "required": "Username is required."
+      }
+    },
+    "labels": {
+      "confirmPassword": "Confirm Password",
+      "displayName": "Display Name",
+      "email": "E-Mail",
+      "givenName": "Given Name",
+      "mustChangePassword": "The user must change the password at the next login",
+      "password": "Password",
+      "surname": "Surname",
+      "username": "Username"
+    },
+    "notification": {
+      "error": "Account information could not be saved. Please try again later.",
+      "success": "Account information saved successfully."
+    }
+  },
+  "generic": {
+    "errors": {
+      "general": "An error occurred while loading the page.",
+      "notFound": "The page could not be found.",
+      "title": "Oops!"
+    },
+    "notification": {
+      "form.prompt": "The form contains unsaved changes. Do you really want to leave the page?"
+    }
+  },
+  "groups": {
+    "buttons": {
+      "create": "Create Group"
+    },
+    "confirmation": {
+      "message": "Delete group {{groupName}}?",
+      "title": "Delete group"
+    },
+    "labels": {
+      "addMember": "Add member",
+      "description": "Description",
+      "emptyMembers": "No members assigned",
+      "members": "Members",
+      "name": "Name",
+      "removeMember": "Remove member",
+      "removeMemberConfirmationMessage": "Should the member {{username}} be removed?"
+    },
+    "notification": {
+      "error": "The group '{{groupName}}' could not be deleted.",
+      "success": "The group '{{groupName}}' was deleted successfully."
+    },
+    "placeholder": {
+      "description": "Enter description",
+      "name": "Enter name"
+    },
+    "table": {
+      "actions": {
+        "delete": "Delete group",
+        "deleteAria": "delete",
+        "edit": "Edit group",
+        "editAria": "edit"
+      },
+      "description": "Description",
+      "name": "Name",
+      "systemGroup": "This is a system group and cannot be deleted.",
+      "users": "Members"
+    }
+  },
+  "modal": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "navbar": {
+    "logoAltText": "User Management icon: magnifying glass directed to a user icon.",
+    "logout": "Logout"
+  },
+  "newGroup": {
+    "buttons": {
+      "back": "Back",
+      "save": "Save"
+    },
+    "errors": {
+      "name": "Value is required",
+      "nameFormat": "Value contains illegal characters",
+      "nameMaxLength": "Maximum length is 128 characters",
+      "nameMinLength": "Minimum length is 2 characters"
+    },
+    "notification": {
+      "error": "The group could not be created. Please try again later.",
+      "errorDuplicate": "The group could not be created. The name is already in use.",
+      "success": "The group {{groupName}} was created successfully."
+    }
+  },
+  "newUser": {
+    "notification": {
+      "error": "Could not save user '{{username}}'.",
+      "errorDuplicateMail": "A user with the E-Mail '{{mail}}' already exists.",
+      "errorDuplicateUsername": "A user with the username '{{username}}' already exists.",
+      "success": "User '{{username}}' was saved successfully."
+    }
+  },
+  "pages": {
+    "account": "Account",
+    "groups": "Groups",
+    "groupsEdit": "Edit group",
+    "groupsNew": "New Group",
+    "users": "Users",
+    "usersEdit": "Edit user",
+    "usersNew": "New user"
+  },
+  "users": {
+    "confirmation": {
+      "message": "Delete user {{username}}?",
+      "title": "Delete user"
+    },
+    "create": "Create user",
+    "labels": {
+      "addGroup": "Add group",
+      "emptyGroups": "No groups assigned",
+      "groups": "Groups",
+      "myGroups": "My Groups",
+      "removeGroup": "Remove group assigment",
+      "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?"
+    },
+    "notification": {
+      "error": "The user '{{username}}' could not be deleted.",
+      "success": "The user '{{username}}' was deleted successfully."
+    },
+    "placeholder": {
+      "confirmPassword": "Enter corfirmation password",
+      "displayName": "Enter display name",
+      "givenname": "Enter given name",
+      "mail": "Enter E-Mail Address",
+      "password": "Enter password",
+      "surname": "Enter surname",
+      "username": "Enter username"
+    },
+    "table": {
+      "actions": {
+        "delete": "Delete user",
+        "deleteAria": "delete",
+        "edit": "Edit user",
+        "editAria": "edit"
+      },
+      "displayName": "Displayname",
+      "email": "E-Mail",
+      "username": "Username"
+    }
+  }
+}

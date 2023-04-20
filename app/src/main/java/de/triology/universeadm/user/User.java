@@ -109,8 +109,8 @@ public class User implements Comparable<User>
   @Override
   public int compareTo(User o)
   {
-    return Strings.nullToEmpty(username).compareTo(
-      Strings.nullToEmpty(o.username));
+    return Strings.nullToEmpty(username).toLowerCase().compareTo(
+      Strings.nullToEmpty(o.username).toLowerCase());
   }
 
   /**
