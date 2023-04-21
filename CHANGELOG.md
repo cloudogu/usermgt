@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.10.0-2] - 2023-04-21
+### Changed
+- Update Java-Base-Image (#85)
+
 ## [v1.10.0-1] - 2023-04-20
 ### Changed
 - Rewrite frontend with React (#77)

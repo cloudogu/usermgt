@@ -1,3 +1,7 @@
+ARG TOMCAT_MAJOR_VERSION=8
+ARG TOMCAT_VERSION=8.5.73
+ARG TOMCAT_TARGZ_SHA256=f8965400c9f21361ff81ff04478dbb4ce365276d14b0b99b85912c9de949f6a0
+
 FROM timbru31/java-node:8-jdk-18 as builder
 COPY app/pom.xml /usermgt/pom.xml
 COPY app/mvnw /usermgt/mvnw
@@ -11,18 +15,36 @@ RUN set -x \
      && cd /usermgt \
      && ./mvnw package
 
-FROM registry.cloudogu.com/official/java:8u302-3
+FROM registry.cloudogu.com/official/base:3.17.3-2 as tomcat
+
+ARG TOMCAT_MAJOR_VERSION
+ARG TOMCAT_VERSION
+ARG TOMCAT_TARGZ_SHA256
+
+ENV TOMCAT_MAJOR_VERSION=${TOMCAT_MAJOR_VERSION} \
+    TOMCAT_VERSION=${TOMCAT_VERSION} \
+    TOMCAT_TARGZ_SHA256=${TOMCAT_TARGZ_SHA256}
+
+RUN apk update && apk add wget && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+  "http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+  && echo "${TOMCAT_TARGZ_SHA256} *apache-tomcat-${TOMCAT_VERSION}.tar.gz" | sha256sum -c - \
+  && gunzip "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+  && tar xf "apache-tomcat-${TOMCAT_VERSION}.tar" -C /opt \
+  && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
+
+
+FROM registry.cloudogu.com/official/java:8u362-1
+
+ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.10.0-1" \
+   VERSION="1.10.0-2" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
 ENV SERVICE_TAGS=webapp \
     # tomcat version
-    TOMCAT_MAJOR_VERSION=8 \
-    TOMCAT_VERSION=8.5.73 \
-    TOMCAT_TARGZ_SHA256=f8965400c9f21361ff81ff04478dbb4ce365276d14b0b99b85912c9de949f6a0 \
+    TOMCAT_VERSION=${TOMCAT_VERSION} \
     # home directory
     UNIVERSEADM_HOME=/var/lib/usermgt/conf
 
@@ -33,17 +55,12 @@ RUN set -o errexit \
     && apk update \
     && apk upgrade \
     && addgroup -S -g 1000 tomcat \
-    && adduser -S -h /opt/apache-tomcat -s /bin/bash -G tomcat -u 1000 tomcat \
-    # install tomcat
-    && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-    "http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-    && echo "${TOMCAT_TARGZ_SHA256} *apache-tomcat-${TOMCAT_VERSION}.tar.gz" | sha256sum -c - \
-    && gunzip "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-    && tar xf "apache-tomcat-${TOMCAT_VERSION}.tar" -C /opt \
-    && rm "apache-tomcat-${TOMCAT_VERSION}.tar" \
-    && mv "/opt/apache-tomcat-${TOMCAT_VERSION}/"* /opt/apache-tomcat \
-    && rmdir  "/opt/apache-tomcat-${TOMCAT_VERSION}" \
-    && chown -R tomcat:tomcat /opt/apache-tomcat \
+    && adduser -S -h /opt/apache-tomcat -s /bin/bash -G tomcat -u 1000 tomcat
+
+#install tomcat
+COPY --from=tomcat /opt/apache-tomcat-${TOMCAT_VERSION} /opt/apache-tomcat
+
+RUN chown -R tomcat:tomcat /opt/apache-tomcat \
     && rm -rf /opt/apache-tomcat/logs \
     && mkdir /var/lib/usermgt \
     && ln -s /var/lib/usermgt/logs /opt/apache-tomcat/logs \
