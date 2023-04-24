@@ -1,6 +1,6 @@
 ARG TOMCAT_MAJOR_VERSION=8
-ARG TOMCAT_VERSION=8.5.73
-ARG TOMCAT_TARGZ_SHA256=f8965400c9f21361ff81ff04478dbb4ce365276d14b0b99b85912c9de949f6a0
+ARG TOMCAT_VERSION=8.5.88
+ARG TOMCAT_TARGZ_SHA512=c31c794092b160c5b0099f4dfb5cf17d711d93ae68a60e414691dba65ad80c78a5fb602c7010d1226dae424b83921e440bd858b3eb0ef90b7932316d3ab44c1f
 
 FROM timbru31/java-node:8-jdk-18 as builder
 COPY app/pom.xml /usermgt/pom.xml
@@ -19,15 +19,15 @@ FROM registry.cloudogu.com/official/base:3.17.3-2 as tomcat
 
 ARG TOMCAT_MAJOR_VERSION
 ARG TOMCAT_VERSION
-ARG TOMCAT_TARGZ_SHA256
+ARG TOMCAT_TARGZ_SHA512
 
 ENV TOMCAT_MAJOR_VERSION=${TOMCAT_MAJOR_VERSION} \
     TOMCAT_VERSION=${TOMCAT_VERSION} \
-    TOMCAT_TARGZ_SHA256=${TOMCAT_TARGZ_SHA256}
+    TOMCAT_TARGZ_SHA512=${TOMCAT_TARGZ_SHA512}
 
 RUN apk update && apk add wget && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
   "http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-  && echo "${TOMCAT_TARGZ_SHA256} *apache-tomcat-${TOMCAT_VERSION}.tar.gz" | sha256sum -c - \
+  && echo "${TOMCAT_TARGZ_SHA512} *apache-tomcat-${TOMCAT_VERSION}.tar.gz" | sha512sum -c - \
   && gunzip "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
   && tar xf "apache-tomcat-${TOMCAT_VERSION}.tar" -C /opt \
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
