@@ -29,11 +29,11 @@ export default defineConfig({
     e2e: {
         baseUrl: 'https://192.168.56.2',
         env: {
-            'DoguName': 'usermgt',
-            'MaxLoginRetries': 3,
-            'AdminUsername':  'ces-admin',
-            'AdminPassword':  'ecosystem2016',
-            'AdminGroup':  'CesAdministrators'
+            "DoguName": "usermgt",
+            "MaxLoginRetries": 3,
+            "AdminUsername":  "ces-admin",
+            "AdminPassword":  "ecosystem2016",
+            "AdminGroup":  "CesAdministrators"
         },
         videoCompression: false,
         specPattern: ["cypress/e2e/**/*.feature"],
