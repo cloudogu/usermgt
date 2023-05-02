@@ -27,7 +27,6 @@
 
 package de.triology.universeadm.user;
 
-import ch.qos.logback.core.joran.util.StringToObjectConverter;
 import com.github.legman.EventBus;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
