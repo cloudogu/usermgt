@@ -84,7 +84,7 @@ public class User implements Comparable<User>
    * @param memberOf
    */
   public User(String username, String displayName, String givenname,
-    String surname, String mail, String password, boolean pwdReset, List<String> memberOf)
+    String surname, String mail, String password, boolean pwdReset, boolean external, List<String> memberOf)
   {
     this.username = username;
     this.displayName = displayName;
@@ -93,6 +93,7 @@ public class User implements Comparable<User>
     this.mail = mail;
     this.password = password;
     this.pwdReset = pwdReset;
+    this.external = external;
     this.memberOf = memberOf;
   }
 
@@ -333,6 +334,12 @@ public class User implements Comparable<User>
   public void setPwdReset(boolean pwdReset) {
     this.pwdReset = pwdReset;
   }
+  public void setExternal(boolean external) {
+    this.external = external;
+  }
+  public boolean getExternal() {
+    return this.external;
+  }
 
   /**
    * Method description
@@ -390,6 +397,11 @@ public class User implements Comparable<User>
    * Field description
    */
   private boolean pwdReset;
+
+  /**
+   * Field description
+   */
+  private boolean external;
 
   /**
    * Field description
