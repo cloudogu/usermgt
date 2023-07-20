@@ -101,7 +101,7 @@ public class User implements Comparable<User>
   public User(String username, String displayName, String givenname,
               String surname, String mail, String password, boolean pwdReset, List<String> memberOf, boolean external) {
 
-    this(username, displayName, givenname, surname, mail, password, pwdReset, memberOf);
+    this(username, displayName, givenname, surname, mail, password, pwdReset, external, memberOf);
     this.external = external;
   }
 
@@ -362,10 +362,6 @@ public class User implements Comparable<User>
 
   public void setExternal(boolean external) {
     this.external = external;
-  }
-
-  public boolean getExternal() {
-    return this.external;
   }
 
   /**
