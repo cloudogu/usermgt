@@ -8,12 +8,12 @@ COPY app/mvnw /usermgt/mvnw
 COPY app/.mvn /usermgt/.mvn
 RUN set -x \
     && cd /usermgt \
-    && ./mvnw dependency:resolve-plugins dependency:resolve -DskipTests
+    && ./mvnw dependency:resolve-plugins dependency:resolve
 
 COPY app/ /usermgt
 RUN set -x \
      && cd /usermgt \
-     && ./mvnw package -DskipTests
+     && ./mvnw package
 
 FROM registry.cloudogu.com/official/base:3.17.3-2 as tomcat
 

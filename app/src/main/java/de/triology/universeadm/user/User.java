@@ -359,9 +359,11 @@ public class User implements Comparable<User>
   public void setPwdReset(boolean pwdReset) {
     this.pwdReset = pwdReset;
   }
+
   public void setExternal(boolean external) {
     this.external = external;
   }
+
   public boolean getExternal() {
     return this.external;
   }
@@ -386,16 +388,6 @@ public class User implements Comparable<User>
   public void setUsername(String username)
   {
     this.username = username;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param external
-   */
-  public void setExternal(boolean external) {
-    this.external = external;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -450,9 +442,4 @@ public class User implements Comparable<User>
    */
   @RDN
   private String username;
-
-  /**
-   * Field description
-   */
-  private boolean external;
 }
