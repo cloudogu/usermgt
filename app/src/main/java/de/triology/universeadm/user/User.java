@@ -94,6 +94,14 @@ public class User implements Comparable<User>
     this.password = password;
     this.pwdReset = pwdReset;
     this.memberOf = memberOf;
+    this.external = false;
+  }
+
+  public User(String username, String displayName, String givenname,
+              String surname, String mail, String password, boolean pwdReset, List<String> memberOf, boolean external) {
+
+    this(username, displayName, givenname, surname, mail, password, pwdReset, memberOf);
+    this.external = external;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -142,7 +150,8 @@ public class User implements Comparable<User>
       && Objects.equal(surname, other.surname)
       && Objects.equal(mail, other.mail)
       && Objects.equal(memberOf, other.memberOf)
-      && Objects.equal(pwdReset, other.pwdReset);
+      && Objects.equal(pwdReset, other.pwdReset)
+      && Objects.equal(external, other.external);
   }
 
   /**
@@ -155,7 +164,7 @@ public class User implements Comparable<User>
   public int hashCode()
   {
     return Objects.hashCode(username, displayName, givenname, surname, mail,
-      memberOf, pwdReset);
+      memberOf, pwdReset, external);
   }
 
   /**
@@ -167,10 +176,16 @@ public class User implements Comparable<User>
   @Override
   public String toString()
   {
-    return MoreObjects.toStringHelper(this).add("username",
-      username).add("displayName", displayName).add("givenname",
-        givenname).add("surname", surname).add("mail", mail).add("memberOf",
-          memberOf).add("pwdReset", pwdReset).toString();
+    return MoreObjects.toStringHelper(this)
+            .add("username", username)
+            .add("displayName", displayName)
+            .add("givenname", givenname)
+            .add("surname", surname)
+            .add("mail", mail)
+            .add("memberOf", memberOf)
+            .add("pwdReset", pwdReset)
+            .add("external", external)
+            .toString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -267,6 +282,16 @@ public class User implements Comparable<User>
     return username;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isExternal() {
+    return external;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -356,6 +381,16 @@ public class User implements Comparable<User>
     this.username = username;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param external
+   */
+  public void setExternal(boolean external) {
+    this.external = external;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /**
@@ -403,4 +438,9 @@ public class User implements Comparable<User>
    */
   @RDN
   private String username;
+
+  /**
+   * Field description
+   */
+  private boolean external;
 }
