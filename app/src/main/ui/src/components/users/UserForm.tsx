@@ -131,7 +131,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
                         {t("editUser.labels.mustChangePassword")}
                     </Form.ValidatedCheckboxLabelRight>
-                    <Form.ValidatedCheckboxLabelRight name={"external"} data-testid="external">
+                    <Form.ValidatedCheckboxLabelRight name={"external"} data-testid="external" className={"invisible"}>
                         {t("editUser.labels.external")}
                     </Form.ValidatedCheckboxLabelRight>
                 </>
