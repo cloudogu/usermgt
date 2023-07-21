@@ -15,21 +15,39 @@ objectClass: organizationalPerson
 objectClass: inetOrgPerson
 objectClass: person
 objectClass: top
+objectClass: cesperson
 uid: dent
 givenName: Arthur
 sn: Dent
 cn: Arthur Dent
 mail: arthur.dent@hitchhiker.com
 pwdReset: TRUE
+external: FALSE
 
 dn: uid=tricia,ou=People,dc=hitchhiker,dc=com
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
 objectClass: person
 objectClass: top
+objectClass: cesperson
 uid: tricia
 givenName: Tricia
 sn: McMillan
 cn: Tricia McMillan
 mail: tricia.mcmillan@hitchhiker.com
 pwdReset: TRUE
+external: FALSE
+
+dn: uid=trillexterno,ou=People,dc=hitchhiker,dc=com
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: top
+objectClass: cesperson
+uid: trillexterno
+givenName: Triton
+sn: Trillexterno
+cn: Triton Trillexterno
+mail: tri.xterno@hitchhiker.com
+pwdReset: TRUE
+external: TRUE

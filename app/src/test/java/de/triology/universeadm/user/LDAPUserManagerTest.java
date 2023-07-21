@@ -230,7 +230,7 @@ public class LDAPUserManagerTest
     LDAPUserManager manager = createUserManager();
     List<User> users = manager.getAll();
     assertNotNull(users);
-    assertEquals(2, users.size());
+    assertEquals(3, users.size());
     assertUser(users.get(0));
     assertEquals("tricia", users.get(1).getUsername());
   }
@@ -243,7 +243,7 @@ public class LDAPUserManagerTest
     assertNotNull(users);
     assertEquals(0, users.getStart());
     assertEquals(1, users.getLimit());
-    assertEquals(2, users.getTotalEntries());
+    assertEquals(3, users.getTotalEntries());
     List<User> entries = users.getEntries();
     assertEquals(1, entries.size());
     assertUser(entries.get(0));
@@ -251,7 +251,7 @@ public class LDAPUserManagerTest
     users = manager.getAll(1, 1);
     assertEquals(1, users.getStart());
     assertEquals(1, users.getLimit());
-    assertEquals(2, users.getTotalEntries());
+    assertEquals(3, users.getTotalEntries());
     entries = users.getEntries();
     assertEquals(1, entries.size());
     assertEquals("tricia", entries.get(0).getUsername());
@@ -288,6 +288,24 @@ public class LDAPUserManagerTest
     entry = ldap.getConnection().getEntry("uid=tricia,ou=People,dc=hitchhiker,dc=com");
     assertEquals(pwd, entry.getAttributeValue("userPassword"));
   }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void testFindExternal() throws LDAPException {
+    Entry entry = ldap.getConnection().getEntry("uid=trillexterno,ou=People,dc=hitchhiker,dc=com");
+    assertEquals("TRUE", entry.getAttributeValue("external"));
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void testSearchExternal() throws LDAPException {
+    LDAPUserManager manager = createUserManager();
+    List<User> users = manager.search("trillexterno");
+    assertNotNull(users);
+    assertEquals(1, users.size());
+    assertEquals(true, users.get(0).isExternal());
+  }
+
 
   private void assertUser(User user){
     assertNotNull(user);

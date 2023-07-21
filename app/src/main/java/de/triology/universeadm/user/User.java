@@ -95,7 +95,6 @@ public class User implements Comparable<User>
     this.pwdReset = pwdReset;
     this.external = external;
     this.memberOf = memberOf;
-    this.external = false;
   }
 
   public User(String username, String displayName, String givenname,
@@ -283,16 +282,6 @@ public class User implements Comparable<User>
     return username;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isExternal() {
-    return external;
-  }
-
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -420,6 +409,10 @@ public class User implements Comparable<User>
    * Field description
    */
   private boolean pwdReset;
+
+  public boolean isExternal() {
+    return external;
+  }
 
   /**
    * Field description
