@@ -126,16 +126,18 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             </Form.ValidatedTextInput>
 
             <>
-            {props.passwordReset &&
-                <>
-                    <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
-                        {t("editUser.labels.mustChangePassword")}
-                    </Form.ValidatedCheckboxLabelRight>
-                    <Form.ValidatedCheckboxLabelRight name={"external"} data-testid="external" className={"invisible"}>
-                        {t("editUser.labels.external")}
-                    </Form.ValidatedCheckboxLabelRight>
-                </>
-            }
+                {props.passwordReset &&
+                    <>
+                        <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
+                            {t("editUser.labels.mustChangePassword")}
+                        </Form.ValidatedCheckboxLabelRight>
+                        <div className={"invisible"}>
+                            <Form.ValidatedCheckboxLabelRight name={"external"} data-testid="external">
+                                {t("editUser.labels.external")}
+                            </Form.ValidatedCheckboxLabelRight>
+                        </div>
+                    </>
+                }
             </>
 
             {props.groupsReadonly ? <></> :
