@@ -185,7 +185,7 @@ public class UserResourceTest {
 
         URI location = (URI) response.getOutputHeaders().getFirst("Location");
 
-        assertTrue(location.getPath().endsWith("users/trillian"));
+        assertTrue(location.getPath().endsWith("users/tricia"));
         verify(userManager).create(trillian);
     }
 
@@ -205,7 +205,7 @@ public class UserResourceTest {
 
         doThrow(EntityNotFoundException.class).when(userManager).modify(trillian);
 
-        MockHttpRequest request = MockHttpRequest.put("/users/trillian");
+        MockHttpRequest request = MockHttpRequest.put("/users/tricia");
         MockHttpResponse response = Resources.dispatch(resource, request, trillian);
 
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
