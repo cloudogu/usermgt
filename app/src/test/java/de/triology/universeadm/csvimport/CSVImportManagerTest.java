@@ -97,7 +97,6 @@ public class CSVImportManagerTest {
                 "test1@test.com",
                 "temp",
                 true,
-                false,
                 new ArrayList<>());
 
         user2 = new User(
@@ -108,7 +107,6 @@ public class CSVImportManagerTest {
                 "test2@test.com",
                 "temp",
                 true,
-                false,
                 new ArrayList<>()
         );
     }

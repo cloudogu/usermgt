@@ -38,7 +38,6 @@ public class MailSenderTest {
             "test@test.com",
             "temp",
             true,
-            false,
             new ArrayList<String>());
 
     @Before

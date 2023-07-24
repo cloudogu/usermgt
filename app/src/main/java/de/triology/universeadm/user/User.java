@@ -84,7 +84,7 @@ public class User implements Comparable<User>
    * @param memberOf
    */
   public User(String username, String displayName, String givenname,
-    String surname, String mail, String password, boolean pwdReset, boolean external, List<String> memberOf)
+    String surname, String mail, String password, boolean pwdReset, List<String> memberOf)
   {
     this.username = username;
     this.displayName = displayName;
@@ -93,14 +93,14 @@ public class User implements Comparable<User>
     this.mail = mail;
     this.password = password;
     this.pwdReset = pwdReset;
-    this.external = external;
+    this.external = false;
     this.memberOf = memberOf;
   }
 
   public User(String username, String displayName, String givenname,
               String surname, String mail, String password, boolean pwdReset, List<String> memberOf, boolean external) {
 
-    this(username, displayName, givenname, surname, mail, password, pwdReset, external, memberOf);
+    this(username, displayName, givenname, surname, mail, password, pwdReset, memberOf);
     this.external = external;
   }
 
