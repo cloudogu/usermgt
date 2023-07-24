@@ -21,6 +21,7 @@ givenName: Arthur
 sn: Dent
 cn: Arthur Dent
 mail: arthur.dent@hitchhiker.com
+userPassword: hitchhiker123
 pwdReset: TRUE
 external: FALSE
 
@@ -35,6 +36,7 @@ givenName: Tricia
 sn: McMillan
 cn: Tricia McMillan
 mail: tricia.mcmillan@hitchhiker.com
+userPassword: hitchhiker123
 pwdReset: TRUE
 external: FALSE
 
@@ -49,5 +51,6 @@ givenName: Triton
 sn: Trillexterno
 cn: Triton Trillexterno
 mail: tri.xterno@hitchhiker.com
+userPassword: hitchhiker123
 pwdReset: TRUE
 external: TRUE

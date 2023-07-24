@@ -54,9 +54,22 @@ public final class Users {
 
     public static User createTrillian() {
         return new User(
-                "trillian", "Tricia McMillan", "Tricia", "McMillan",
-                "tricia.mcmillan@hitchhiker.com", "hitchhiker123", false,
+                "tricia", "Tricia McMillan", "Tricia", "McMillan",
+                "tricia.mcmillan@hitchhiker.com", "hitchhiker123", true,
                 Lists.newArrayList("Hitchhiker")
         );
+    }
+
+    public static User createTrillexterno(){
+        return new User(
+                "trillexterno", "Triton Trillexterno", "Triton", "Trillexterno",
+                "tri.xterno@hitchhiker.com", "hitchhiker123", true,
+                Lists.newArrayList("Hitchhiker"), true
+        );
+    }
+
+    public static User copy(User user) {
+        return new User(user.getUsername(), user.getDisplayName(), user.getGivenname(), user.getSurname(),
+                user.getMail(), user.getPassword(), user.isPwdReset(), user.getMemberOf(), user.isExternal());
     }
 }
