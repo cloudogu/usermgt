@@ -82,13 +82,13 @@ Sofern Sie noch weitere Änderungen vornehmen möchten, klicken Sie in der letzt
 
 #### Eindeutige Attribute
 
-Die E-Mail-Addresse und der Nutzername einer Nutzerin oder eines Nutzers dürfen nur einmal vorkommen.
+Die E-Mail-Adresse und der Nutzername einer Nutzerin oder eines Nutzers dürfen nur einmal vorkommen.
 
 Wird versucht, eine Nutzerin oder einen Nutzer mit einem Nutzernamen anzulegen, der bereits existiert, wird die folgende Fehlermeldung ausgegeben:
 
 ![Nutzerin oder Nutzer neu angelegt: Fehlermeldung Benutzername](figures/usermanagement/CESUsermanagement_UsernameUnique_de.png)
 
-Wird versucht, eine Nutzerin oder einen Nutzer mit einer E-Mail-Addresse anzulegen, die bereits existiert wird die folgende Fehlermeldung ausgegeben:
+Wird versucht, eine Nutzerin oder einen Nutzer mit einer E-Mail-Adresse anzulegen, die bereits existiert wird die folgende Fehlermeldung ausgegeben:
 
 ![Nutzerin oder Nutzer neu angelegt_Unique_Email: Fehlermeldung E-mail](figures/usermanagement/CESUsermanagement_EmailUnique_de.png)
 
@@ -103,7 +103,7 @@ Durch das Anlegen von sinnvollen Passwort-Richtlinien kann die Sicherheit der Pa
 
 ![Eine Regel erfüllt](figures/usermanagement/CESUsermanagement_Password_Policy_No_Rule_Satisfied_de.png)
 
-2. Sobald eine Passwort-Richtline erfüllt wurde, wird diese nicht mehr als unerfüllt dargestellt.
+2. Sobald eine Passwort-Richtlinie erfüllt wurde, wird diese nicht mehr als unerfüllt dargestellt.
 
 ![Nicht alle Regeln erfüllt](figures/usermanagement/CESUsermanagement_Password_Policy_Not_All_Rules_Statisfied_de.png)
 

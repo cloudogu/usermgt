@@ -122,7 +122,7 @@ To avoid having to assign permissions to each user individually, groups can be c
 
 ![group overview header part](figures/usermanagement/CESUsermanagement_GroupsOverviewHeader_en.png)
 
-3. Fill the fields and submit the formular by clicking the “Save” button
+3. Fill the fields and submit the form by clicking the “Save” button
 
 ![Create groups](figures/usermanagement/CESUsermanagement_NewGroup_en.png)
 
