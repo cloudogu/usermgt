@@ -6,8 +6,6 @@ Das **User Management** erreichen Sie über das Warp Menü im Bereich „Adminis
 
 ![Warp Menü mit User Management](figures/usermanagement/CESUsermanagement_Warp_de.png)
 
-Neben der Nutzung des von uns zu Verfügung gestellten **User Managements** haben Sie die Möglichkeit, einen **externen Verzeichnisdienst** für das Cloudogu EcoSystem zu verwenden. In diesem Fall würde die Benutzerverwaltung **nicht** über das hier vorgestellte Dogu **User Management** erfolgen, sondern über den von Ihnen angebundenen externen Verzeichnisdienst (wie ein externes *LDAP* oder *Active Directory*). Das **User Management** nutzt ein internes *LDAP* als Verzeichnisdienst. 
-
 ## Persönliche Daten
 
 Als Nutzerin oder Nutzer des Cloudogu EcoSystem können Sie **Ihre persönlichen Daten** im Account-Bereich ändern.
@@ -203,11 +201,38 @@ Systemgruppen (*admin* und *cesManager*) können nicht gelöscht werden.
 
 ## Rechtekonzept im Cloudogu EcoSystem
 
+Das Rechtekonzept des Cloudogu EcoSystems basiert auf einer **zentralen Benutzerverwaltung** und einer **dezentralen Rechtekonfiguration**: Nutzer:innen und Gruppen können im **User Management** hinterlegt werden. Diese werden den anderen Dogus des Cloudogu EcoSystems bekannt gemacht, wodurch Sie in jedem Dogu die Rechtezuordnung dezentral für Gruppen oder einzelne Nutzer:innen vornehmen können.
 
+### Benutzerverwaltung
 
-### CAS Übertragung von Rechten
+Das **User Management** dient der Verwaltung von Accounts und Gruppen. Dabei nutzt das **User Management** ein internes *LDAP* als Verzeichnisdienst.
+
+Neben der Nutzung des von uns zu Verfügung gestellten **User Managements** haben Sie die Möglichkeit, einen **externen Verzeichnisdienst** für das Cloudogu EcoSystem zu verwenden. In diesem Fall würde die Benutzerverwaltung **nicht** über das hier vorgestellte Dogu **User Management** erfolgen, sondern über den von Ihnen angebundenen externen Verzeichnisdienst (wie ein externes *LDAP* oder *Active Directory*).
+
+### Rechtekonzepte in den Dogus
+
+Die Accounts für Nutzer:innen des Cloudogu EcoSystems können Sie zentral im **User Management** anlegen. Dabei können Sie zur Vereinfachung der Rechtekonfiguration für unterschiedliche Benutzergruppen Gruppen anlegen. Ein Nutzer / eine Nutzerin kann dabei mehr als einer Gruppe zugehörig sein. In einer Gruppe kann mehr als ein Mitglied sein.
+
+Accounts und Gruppen werden mit den Dogus synchronisiert, so dass Sie in jedem Dogu die im **User Management** angelegten Accounts und Gruppen vorfinden. 
+
+ Da es sich bei Dogus um Systeme handeln kann, die außerhalb des Cloudogu EcoSystems entwickelt werden, können sich die Rechtekonzepte der Dogus unterscheiden - wie Sie im folgenden Schaubild erkennen können.
+
+ ![Rechtekonzept in den Dogus](figures/usermanagement/RoleConceptCloudoguEcoSystem_de.png)
+
+ Weitere Informationen zum Rechtekonzept einzelner Dogus finden Sie in der Dokumentation des jeweiligen Dogus.
+
+ Sie können auch direkt in den Dogus Accounts und Gruppen anlegen. Beachten Sie dabei, dass diese dann anderen Dogus nicht bekannt sind und auch nicht im **User Management** verwaltet werden können. Die Anlage von Accounts oder Gruppen außerhalb des **User Managements** ist daher **nicht** empfohlen.
+
+### Synchronisation von Accounts und Gruppen
 
 Die Gruppenzuordnungen der Nutzer:innen werden bei jeder Anmeldung an ein Dogu über den CAS (Central Authentication Service) 
 neu abgefragt. Der CAS bildet das zentrale Single Sign-on Authentifizierungssystem im Cloudogu EcoSystem. Geänderte 
 Gruppenzuordnungen im User Management oder einem externen Verzeichnisdienst werden somit bei der nächsten Anmeldung 
 einer Nutzerin oder eines Nutzers in die jeweiligen Dogus wirksam.
+
+ ![Synchronisation von Accounts und Gruppen](figures/usermanagement/CES_UserManagement_Synchronisation_Groups_DE.png)
+
+
+### Mögliches Vorgehen bei der Rechtekonfiguration
+
+ ![Vorgehen bei Rechtekonfiguration](figures/usermanagement/CES_UserManagement_example_de.png)
