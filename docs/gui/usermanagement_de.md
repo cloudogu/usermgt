@@ -1,21 +1,21 @@
 # User Management
 
-Das **User Management** ist ein Dogu zum Organisieren der Nutzer:innen eines EcoSystems. Neben den eigenen persönlichen Daten können Sie hier, wenn Sie die benötigten Rechte haben, Nutzer:innen sowie Gruppen anlegen, bearbeiten und löschen.
+Das **User Management** ist ein Dogu zum **Verwalten der Nutzer:innen und Gruppen eines EcoSystems**. Neben den eigenen persönlichen Daten können Sie hier, wenn Sie die benötigten Rechte haben, Nutzer:innen sowie Gruppen anlegen, bearbeiten und löschen.
 
 Das **User Management** erreichen Sie über das Warp Menü im Bereich „Administration“ aufgerufen werden.
 
 ![Warp Menü mit User Management](figures/usermanagement/CESUsermanagement_Warp_de.png)
 
-Neben der Nutzung des von uns zu Verfügung gestellten **User Managements** haben Sie die Möglichkeit, einen externen Verzeichnisdienst für das Cloudogu EcoSystem zu verwenden. In diesem Fall würde die Benutzerverwaltung **nicht** über das hier vorgestellte Dogu **User Management** erfolgen, sondern über den von Ihnen angebundenen externen Verzeichnisdienst (wie ein externes *LDAP* oder *Active Directory*). Das **User Management** nutzt ein internes *LDAP* als Verzeichnisdienst. 
+Neben der Nutzung des von uns zu Verfügung gestellten **User Managements** haben Sie die Möglichkeit, einen **externen Verzeichnisdienst** für das Cloudogu EcoSystem zu verwenden. In diesem Fall würde die Benutzerverwaltung **nicht** über das hier vorgestellte Dogu **User Management** erfolgen, sondern über den von Ihnen angebundenen externen Verzeichnisdienst (wie ein externes *LDAP* oder *Active Directory*). Das **User Management** nutzt ein internes *LDAP* als Verzeichnisdienst. 
 
 ## Persönliche Daten
 
-Als Nutzerin oder Nutzer des Cloudogu EcoSystem können Sie Ihre persönlichen Daten im Account-Bereich ändern.
+Als Nutzerin oder Nutzer des Cloudogu EcoSystem können Sie **Ihre persönlichen Daten** im Account-Bereich ändern.
 
 ![Bild von Seitenkopf mit Fokus auf Navbar mit eingeloggtem Benutzer](figures/usermanagement/CESUsermanagement_UserAccount_de.png)
 
 Der eigene Account-Bereich wird Ihnen beim Öffnen des **User Managements** direkt angezeigt. Über das 
-Formular können Sie ihre persönlichen Daten wie Ihre E-Mail-Adresse oder Ihr Passwort direkt anpassen. Die Anpassungen, die Sie vornehmen, werden erst mit einem Klick auf den Speichern-Button aktualisiert. Der Nutzername kann nicht geändert werden.
+Formular können Sie Ihre persönlichen Daten wie Ihre E-Mail-Adresse oder Ihr Passwort direkt anpassen. Die Anpassungen, die Sie vornehmen, werden erst **mit einem Klick auf den Speichern-Button aktualisiert**. Der Nutzername kann nicht geändert werden.
 
 Im unteren Teil des Account-Bereichs können Sie Ihre eigenen Gruppen sehen.
 
@@ -23,11 +23,11 @@ Im unteren Teil des Account-Bereichs können Sie Ihre eigenen Gruppen sehen.
 
 ## Verwaltung von Accounts
 
-Als Administrator:in haben Sie im **User Management** die Möglichkeit, Nutzer:innen anzulegen, zu löschen und zu bearbeiten.
+Als Administrator:in haben Sie im **User Management** die Möglichkeit, **Nutzer:innen anzulegen, zu löschen und zu bearbeiten**.
 
 ### Suche nach Accounts
 
-Sofern Sie eine Vielzahl an Nutzerinnen und Nutzern administrieren, hilft Ihnen die Suchfunktion, einen gewünschten Account zu finden.
+Sofern Sie eine Vielzahl an Nutzerinnen und Nutzern administrieren, hilft Ihnen die **Suchfunktion**, einen gewünschten Account zu finden.
 
 1. Wählen Sie den Reiter „Nutzer“ aus.
 
@@ -48,7 +48,7 @@ Um die Daten eines Accounts zu ändern, klicken Sie zunächst im Reiter „Nutze
 Danach können Sie Änderungen vornehmen und diese durch einen Klick auf den „Speichern“-Button sichern. 
 Neben den Account-Informationen wie E-Mail-Adresse oder Anzeigename, können Sie auch das Passwort anpassen. Zusätzlich dazu bietet das **User Management** die Möglichkeit, dass die Nutzerin oder der Nutzer beim nächsten Login das Passwort  ändern muss. 
 
-Beachten Sie, dass Sie den Nutzernamen nicht ändern können.
+Beachten Sie, dass Sie den Nutzernamen **nicht** ändern können.
 
 ### Löschen von Accounts
 
@@ -72,9 +72,9 @@ Ein Formular öffnet sich, in dem Sie folgende Eigenschaften des neuen Accounts 
 * Passwort (für die Anmeldung am Cloudogu EcoSystem)
 * „Nutzer muss sein Passwort beim nächsten Login ändern“ (Wird diese Option aktiviert, muss der Nutzer bei der nächsten Anmeldung sein Passwort ändern)
 
-> Beachten Sie, dass der Nutzername nach der Anlage der Nutzerin oder des Nutzers unveränderlich ist.
-
 \* E-Mail-Adresse und Nutzername eines Nutzers / einer Nutzerin sind **eindeutige Eigenschaften** und dürfen daher nur für einen Account verwendet werden. Beim Anlegen eines Accounts wird überprüft, ob E-Mail-Adresse und Nutzername eindeutig sind. Sollte das nicht der Fall sein, bekommen Sie eine aussagekräftige Fehlermeldung angezeigt und können die Angaben des Accounts überarbeiten.
+
+> Beachten Sie, dass der Nutzername nach der Anlage der Nutzerin oder des Nutzers **unveränderlich** ist.
 
 ![Nutzerin und Nutzer neu anlegen](figures/usermanagement/CESUsermanagement_NewUser_de.png)
 
@@ -87,7 +87,7 @@ Sofern Sie noch weitere Änderungen vornehmen möchten, klicken Sie in der letzt
 
 ### Passwort-Richtlinien
 
-In der Konfiguration des Cloudogu EcoSystem können Passwort-Richtlinien konfiguriert werden, die bei Eingabe der Passwörter validiert werden. 
+In der Konfiguration des Cloudogu EcoSystem können **Passwort-Richtlinien** konfiguriert werden, die bei Eingabe der Passwörter validiert werden. 
 Durch das Anlegen von sinnvollen Passwort-Richtlinien kann die Sicherheit der Passwörter global kontrolliert werden.
 
 Wenn Sie ein Passwort anlegen, bekommen Sie immer die Passwort-Richtlinien angezeigt, die noch nicht erfüllt worden sind. Sobald eine Passwort-Richtlinie erfüllt ist, wird diese nicht mehr angezeigt.
@@ -102,7 +102,7 @@ Sind alle Passwort-Richtlinien erfüllt, wird das Feld grün markiert und das ne
 
 ## Verwaltung von Gruppen
 
-Als Administrator:in haben Sie im **User Management** die Möglichkeit, Gruppen anzulegen, zu bearbeiten oder zu löschen sowie die Mitglieder von Gruppen zu verwalten.
+Als Administrator:in haben Sie im **User Management** die Möglichkeit, **Gruppen anzulegen, zu bearbeiten oder zu löschen sowie die Mitglieder von Gruppen zu verwalten**.
 
 Gruppen können zur Verwaltung von unterschiedlichen Rechtekonfigurationen für unterschiedliche Nutzergruppen verwendet werden. Mehr Informationen dazu finden Sie im Abschnitt [Rechtekonzept im Cloudogu EcoSystem](#rechtekonzept-im-cloudogu-ecosystem).
 
@@ -112,7 +112,7 @@ Im **User Management** finden Sie unter „Gruppen“ bereits zwei vordefinierte
 
 **Manager-Gruppe**
 
-Mitglieder dieser Gruppe haben vollen Zugriff auf das **User Management** des Cloudogu EcoSystems.
+Mitglieder der **Manager-Gruppe** haben **vollen Zugriff auf das User Management** des Cloudogu EcoSystems.
 Damit erhalten Nutzer:innen die Berechtigung, weitere Nutzer:innen und Gruppen anzulegen und zu verwalten.
 Darüber hinaus sind keine weiteren Berechtigungen mit der *Manager-Gruppe* verbunden.
 
