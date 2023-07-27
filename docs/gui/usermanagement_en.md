@@ -82,13 +82,10 @@ If you want to make further changes, click on the pencil icon in the last column
 
 The e-mail address and the username of a user may only appear once.
 
-If an attempt is made to create a user with a username that already exists, the following error message is displayed:
+If an attempt is made to create a user with a username that already exists, the following error message is displayed.
 
-![user newly created: error message username](figures/usermanagement/CESUsermanagement_UsernameUnique_en.png)
+If you try to create a user with an email address that already exists the following error message will be displayed.
 
-If you try to create a user with an email address that already exists the following error message will be displayed:
-
-![User newly created_Unique_Email: Error message E-mail](figures/usermanagement/CESUsermanagement_EmailUnique_en.png)
 
 ### Password policies
 
@@ -99,7 +96,6 @@ By creating meaningful password policies, the security of passwords can be contr
 
 1. All password policies that are not fulfilled are displayed in red.
 
-![One rule satisfied](figures/usermanagement/CESUsermanagement_Password_Policy_No_Rule_Satisfied_en.png)
 
 2. As soon as a password policy is satisfied, it is no longer shown as unfulfilled.
 
@@ -112,6 +108,9 @@ By creating meaningful password policies, the security of passwords can be contr
 ### Delete user
 
 To do this, click on the trash can icon on the “Users” page, which is shown in the last column and in the row of the user to be deleted. Then confirm the security prompt.
+
+![Delete account](figures/usermanagement/CESUsermanagement_DeleteUser_en.png)
+
 
 ### Create new group
 
