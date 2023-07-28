@@ -234,7 +234,7 @@ Wie in folgendem Schaubild erkennbar, übergibt der CAS nach erfolgreicher Authe
 
 In Dogus, die keine Gruppen oder Accounts verwalten, werden auch keine Gruppen oder Accounts hinterlegt. Für andere Dogus übernimmt das Anlegen von Accounts und Gruppen oft ein CAS-Plugin, welches für diesen Zweck konzipiert worden ist. In Ausnahmefällen kann es vorkommen, dass ein automatisiertes Anlegen von Gruppen in einem Dogu nicht möglich ist.
 
- ![Synchronisation von Accounts und Gruppen](figures/usermanagement/CES_UserManagement_Synchronisation_Groups_DE.png)
+ ![Synchronisation von Accounts und Gruppen](figures/usermanagement/CES_UserManagement_Synchronization_Groups_de.png)
 
 Ist der Account eines Nutzers / einer Nutzerin schon intern im Dogu angelegt worden, wird der interne Account mit dem externen CAS-Account verknüpft, wenn der interne Nutzername mit dem externen Nutzernamen übereinstimmt. Dabei werden *im Regelfall* die internen Daten im Dogu mit den Daten aus dem **User Management** überschrieben und der Account wird als externer Account gekennzeichnet.
 

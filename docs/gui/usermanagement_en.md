@@ -200,7 +200,7 @@ Note that groups deleted in the **User Management** are not automatically delete
 
 ## Permission concept in the Cloudogu EcoSystem
 
-The permission concept of the Cloudogu EcoSystem is based on a **central user management** and a **decentral permission configuration**: Users and groups can be stored in the **User Management**. These are propagated to the other Dogus of the Cloudogu EcoSystem, allowing you to assign permissions decentrally for groups or individual users in each Dogu.
+The permission concept of the Cloudogu EcoSystem is based on a **central user management** and a **decentralized permission configuration**: Users and groups can be stored in the **User Management**. These are propagated to the other Dogus of the Cloudogu EcoSystem, allowing you to assign permissions for groups or individual users decentralized in each Dogu.
 
 ### User Management
 
@@ -216,11 +216,11 @@ Accounts and groups are **synchronized** with the Dogus, meaning in each Dogu yo
 
 Since Dogus may be systems developed outside the Cloudogu EcoSystem, the **permission concept in the Dogus may differ** - as you can see in the following diagram.
 
-![Rights concept in the Dogus](figures/usermanagement/RoleConceptCloudoguEcoSystem_en.png) TODO
+![Rights concept in the Dogus](figures/usermanagement/RoleConceptCloudoguEcoSystem_en.png)
 
 For more information about the permission concept of individual Dogus, please refer to the documentation of the respective Dogu.
 
-You can also create accounts and groups directly in the Dogus. Please note that these are then not known to other Dgus and cannot be managed in the **User Management**. Creating accounts or groups outside of the **User Management** is therefore **not** recommended.
+You can also create accounts and groups directly in the Dogus. Please note that these are then not known to other Dogus and cannot be managed in the **User Management**. Creating accounts or groups outside of the **User Management** is therefore **not** recommended.
 
 ### Synchronization of accounts and groups
 
@@ -230,7 +230,7 @@ As can be seen in the following diagram, the CAS passes the required user inform
 
 In Dogus that do not manage groups or accounts, no groups or accounts will be created. For other Dogus, the creation of accounts and groups is often done by a CAS plugin that has been designed for this purpose. In exceptional cases it can happen that an automated creation of groups is not possible in a Dogu.
 
- ![Synchronization of accounts and groups](figures/usermanagement/CES_UserManagement_Synchronization_Groups_EN.png) TODO
+ ![Synchronization of accounts and groups](figures/usermanagement/CES_UserManagement_Synchronization_Groups_en.png)
 
  If a user's account has already been created internally in a Dogu, the internal account will be linked to the external CAS account if the internal user name matches the external user name. This *usually* overwrites the internal data in the Dogu with the data from the **User Management** and the account is marked as an external account.
 
@@ -240,6 +240,6 @@ When creating accounts and groups in the **User Management**, please note that m
 
 If you as administrator want to create a new group and configure it directly in different Dogus, the procedure shown in the following diagram can be recommended.
 
- ![Procedure for rights configuration](figures/usermanagement/CES_UserManagement_example_en.png) TODO
+ ![Procedure for rights configuration](figures/usermanagement/CES_UserManagement_example_en.png)
 
 With the help of a test account you can log into the Dogus where you want to configure the newly created group. After you have configured the group with your account in the Dogu, you can additionally use the test account to test the configuration.
