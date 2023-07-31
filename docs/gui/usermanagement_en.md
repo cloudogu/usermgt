@@ -74,7 +74,7 @@ A form will open where you can enter the following attributes of the new account
 
 \* A user's email address and username are **unique properties** and may therefore only be used for one account. When creating an account, the system checks whether the email address and username are unique. If this is not the case, you will receive a meaningful error message and you will be able to edit the account details.
 
-> Note that the username is **unchangeable** after the user has been created.
+> Note that the username is **unchangeable** after the account has been created.
 
 ![Create new user](figures/usermanagement/CESUsermanagement_NewUser_en.png)
 
@@ -144,17 +144,17 @@ All Dogus must then be restarted for the change to take effect.
 
 ### Creating a new group
 
-To avoid having to assign individual permissions for all users in the Dogus, you can create groups as described below:
+To avoid having to assign individual permissions for all accounts in the Dogus, you can create groups as described below:
 
-1. Select the "Groups" tab in **User Management**.
+Select the "Groups" tab in **User Management**.
 
 ![Header of the group overview](figures/usermanagement/CESUsermanagement_GroupsOverviewHeader_en.png)
 
-2. Click on the "Create group" button.
+Click on the "Create group" button.
 
 ![Empty group form](figures/usermanagement/CESUsermanagement_NewGroup_en.png)
 
-3. Define the properties of the new group:
+Then define the properties of the new group:
   * Name*
   * Description
 
@@ -162,7 +162,7 @@ To avoid having to assign individual permissions for all users in the Dogus, you
 
 > Note that the group name is unchangeable after the group has been created. 
 
-4. Create the group by clicking on the "Save" button.
+Create the group by clicking on the "Save" button.
 
 ### Group assignment
 
@@ -200,7 +200,7 @@ Note that groups deleted in the **User Management** are not automatically delete
 
 ## Permission concept in the Cloudogu EcoSystem
 
-The permission concept of the Cloudogu EcoSystem is based on a **central user management** and a **decentralized permission configuration**: Users and groups can be stored in the **User Management**. These are propagated to the other Dogus of the Cloudogu EcoSystem, allowing you to assign permissions for groups or individual users decentralized in each Dogu.
+The permission concept of the Cloudogu EcoSystem is based on a **central user management** and a **decentralized permission configuration**: Accounts and groups can be stored in the **User Management**. These are propagated to the other Dogus of the Cloudogu EcoSystem, allowing you to assign permissions for groups or individual users decentralized in each Dogu.
 
 ### User Management
 
@@ -214,7 +214,7 @@ You can create the accounts for users of the Cloudogu EcoSystem centrally in the
 
 Accounts and groups are **synchronized** with the Dogus, meaning in each Dogu you will find the accounts and groups created in the **User Management**. 
 
-Since Dogus may be systems developed outside the Cloudogu EcoSystem, the **permission concept in the Dogus may differ** - as you can see in the following diagram.
+Since Dogus may be systems developed outside the Cloudogu EcoSystem, the **permission concept in the Dogus may differ** - as you can see in the following diagram exemplary.
 
 ![Rights concept in the Dogus](figures/usermanagement/RoleConceptCloudoguEcoSystem_en.png)
 
@@ -228,11 +228,11 @@ User accounts and groups are passed on to a Dogu **as soon as the user with the 
 
 As can be seen in the following diagram, the CAS passes the required user information to the Dogu after successful authentication. The Dogu then checks whether the user's account and groups are already known. If this is not the case, the account and groups are created and linked if the Dogu supports this procedure.
 
-In Dogus that do not manage groups or accounts, no groups or accounts will be created. For other Dogus, the creation of accounts and groups is often done by a CAS plugin that has been designed for this purpose. In exceptional cases it can happen that an automated creation of groups is not possible in a Dogu.
+In Dogus that do not manage groups or accounts, no groups or accounts will be created. For other Dogus, the creation of accounts and groups is often done by a CAS plugin that has been designed for this purpose.
 
  ![Synchronization of accounts and groups](figures/usermanagement/CES_UserManagement_Synchronization_Groups_en.png)
 
- If a user's account has already been created internally in a Dogu, the internal account will be linked to the external CAS account if the internal user name matches the external user name. This *usually* overwrites the internal data in the Dogu with the data from the **User Management** and the account is marked as an external account.
+ If a user's account has already been created internally in a Dogu, the internal account will be linked to the external CAS account if the internal user name matches the external user name. This *usually* overwrites the internal data in the Dogu with the data from the **User Management** and the account is marked as an external account in the Dogu, if possible.
 
 When creating accounts and groups in the **User Management**, please note that modified or newly created accounts, groups and group assignments are **not directly** known in other dogus, but **will be made known the next time the user logs in to the respective Dogu**.
 
