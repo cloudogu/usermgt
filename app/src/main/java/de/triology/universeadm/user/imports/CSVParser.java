@@ -32,7 +32,7 @@ public class CSVParser {
             return Stream.empty();
         }
 
-        CsvToBean<CSVUserDTO> beans = new CsvToBeanBuilder<CSVUserDTO>(reader)
+        CsvToBean<CSVUserDTO> beans = new CsvToBeanBuilder<CSVUserDTO>(new CsvLineNumberReader(reader))
                 .withType(CSVUserDTO.class)
                 .withIgnoreEmptyLine(true)
                 .withExceptionHandler(this::handleException)
