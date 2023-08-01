@@ -4,7 +4,7 @@ import com.opencsv.bean.CsvBindByName;
 
 import java.util.Objects;
 
-public class CSVUserDTO {
+public class CSVUserDTO extends CSVRecord {
     @CsvBindByName(required = true)
     private String username;
 
