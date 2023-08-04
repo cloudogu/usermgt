@@ -18,6 +18,7 @@ export const emptyUser: User = {
     username: "",
     password: "",
     pwdReset: false,
+    external: false,
     memberOf: []
 };
 

@@ -28,6 +28,7 @@
 package de.triology.universeadm.user;
 
 import com.github.legman.EventBus;
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
@@ -91,10 +92,28 @@ public class LDAPUserManagerTest
   {
     LDAPUserManager manager = createUserManager();
     User user = Users.createDent();
+    User copy = Users.copy(user);
     manager.create(user);
 
     Entry entry = ldap.getConnection().getEntry("uid=dent,ou=People,dc=hitchhiker,dc=com");
-    assertEntry(entry);
+    assertEntry(copy, entry);
+
+    UserEvent event = new UserEvent(user, EventType.CREATE);
+    verify(eventBus, times(1)).post(event);
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_001)
+  public void testCreateExternal() throws LDAPException
+  {
+    LDAPUserManager manager = createUserManager();
+    User user = Users.createTrillexterno();
+    User copy = Users.copy(user);
+    manager.create(user);
+
+    Entry entry = ldap.getConnection().getEntry("uid=trillexterno,ou=People,dc=hitchhiker,dc=com");
+    assertEntry(copy, entry);
+
     UserEvent event = new UserEvent(user, EventType.CREATE);
     verify(eventBus, times(1)).post(event);
   }
@@ -133,8 +152,9 @@ public class LDAPUserManagerTest
   @LDAP(baseDN = BASEDN, ldif = LDIF_002)
   public void testGet() throws LDAPException{
     LDAPUserManager manager = createUserManager();
-    User user = manager.get("dent");
-    assertUser(user);
+    User expUser = Users.createDent();
+    User user = manager.get(expUser.getUsername());
+    assertUser(expUser, user);
   }
   
   @Test
@@ -169,6 +189,7 @@ public class LDAPUserManagerTest
   }
 
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = AuthorizationException.class)
   @SubjectAware(username = "dent", password = "secret")
   public void testSelfModify() throws LDAPException
   {
@@ -228,11 +249,22 @@ public class LDAPUserManagerTest
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
   public void testGetAll() throws LDAPException {
     LDAPUserManager manager = createUserManager();
+
     List<User> users = manager.getAll();
     assertNotNull(users);
-    assertEquals(2, users.size());
-    assertUser(users.get(0));
-    assertEquals("tricia", users.get(1).getUsername());
+
+    List<User> expUsers = Lists.newArrayList(
+            Users.createDent(),
+            Users.createTrillian(),
+            Users.createTrillexterno()
+    );
+
+
+    assertEquals(expUsers.size(), users.size());
+
+    for (int i = 0; i < users.size(); i++) {
+      assertUser(expUsers.get(i), users.get(i));
+    }
   }
   
   @Test
@@ -243,28 +275,37 @@ public class LDAPUserManagerTest
     assertNotNull(users);
     assertEquals(0, users.getStart());
     assertEquals(1, users.getLimit());
-    assertEquals(2, users.getTotalEntries());
+    assertEquals(3, users.getTotalEntries());
+
     List<User> entries = users.getEntries();
     assertEquals(1, entries.size());
-    assertUser(entries.get(0));
+
+    User expUserDent = Users.createDent();
+    assertUser(expUserDent, entries.get(0));
     
     users = manager.getAll(1, 1);
     assertEquals(1, users.getStart());
     assertEquals(1, users.getLimit());
-    assertEquals(2, users.getTotalEntries());
+    assertEquals(3, users.getTotalEntries());
+
     entries = users.getEntries();
     assertEquals(1, entries.size());
-    assertEquals("tricia", entries.get(0).getUsername());
+
+    User expUserTricia = Users.createTrillian();
+    assertUser(expUserTricia, entries.get(0));
   }
   
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
   public void testSearch() throws LDAPException {
     LDAPUserManager manager = createUserManager();
-    List<User> users = manager.search("tricia");
+    User expUser = Users.createTrillian();
+
+    List<User> users = manager.search(expUser.getUsername());
     assertNotNull(users);
     assertEquals(1, users.size());
-    assertEquals("tricia", users.get(0).getUsername());
+
+    assertUser(expUser, users.get(0));
   }
   
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
@@ -289,24 +330,46 @@ public class LDAPUserManagerTest
     assertEquals(pwd, entry.getAttributeValue("userPassword"));
   }
 
-  private void assertUser(User user){
-    assertNotNull(user);
-    assertEquals("dent", user.getUsername());
-    assertEquals("Arthur Dent", user.getDisplayName());
-    assertEquals("Arthur", user.getGivenname());
-    assertEquals("Dent", user.getSurname());
-    assertEquals("arthur.dent@hitchhiker.com", user.getMail());
-    assertTrue(user.isPwdReset());
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void testFindExternal() throws LDAPException {
+    Entry entry = ldap.getConnection().getEntry("uid=trillexterno,ou=People,dc=hitchhiker,dc=com");
+    assertEquals("TRUE", entry.getAttributeValue("external"));
   }
-  
-  private void assertEntry(Entry entry){
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void testSearchExternal() throws LDAPException {
+    LDAPUserManager manager = createUserManager();
+    User expUser = Users.createTrillexterno();
+
+    List<User> users = manager.search(expUser.getUsername());
+    assertNotNull(users);
+    assertEquals(1, users.size());
+    assertUser(expUser, users.get(0));
+  }
+
+  private void assertUser(User expUser, User actUser){
+    assertNotNull(expUser);
+    assertNotNull(actUser);
+    assertEquals(expUser.getUsername(), actUser.getUsername());
+    assertEquals(expUser.getDisplayName(), actUser.getDisplayName());
+    assertEquals(expUser.getGivenname(), actUser.getGivenname());
+    assertEquals(expUser.getSurname(), actUser.getSurname());
+    assertEquals(expUser.getMail(), actUser.getMail());
+    assertEquals(expUser.isPwdReset() ,actUser.isPwdReset());
+    assertEquals(expUser.isExternal(), actUser.isExternal());
+  }
+
+  private void assertEntry(User user, Entry entry){
     assertNotNull(entry);
-    assertEquals("dent", entry.getAttributeValue("uid"));
-    assertEquals("Arthur Dent", entry.getAttributeValue("cn"));
-    assertEquals("Arthur", entry.getAttributeValue("givenName"));
-    assertEquals("Dent", entry.getAttributeValue("sn"));
-    assertEquals("arthur.dent@hitchhiker.com", entry.getAttributeValue("mail"));
-    assertEquals("hitchhiker123", entry.getAttributeValue("userPassword"));
+    assertEquals(user.getUsername(), entry.getAttributeValue("uid"));
+    assertEquals(user.getDisplayName(), entry.getAttributeValue("cn"));
+    assertEquals(user.getGivenname(), entry.getAttributeValue("givenName"));
+    assertEquals(user.getSurname(), entry.getAttributeValue("sn"));
+    assertEquals(user.getMail(), entry.getAttributeValue("mail"));
+    assertEquals(user.getPassword(), entry.getAttributeValue("userPassword"));
+    assertEquals(user.isExternal()? "TRUE" : "FALSE", entry.getAttributeValue("external"));
   }
   
   private LDAPUserManager createUserManager() throws LDAPException
