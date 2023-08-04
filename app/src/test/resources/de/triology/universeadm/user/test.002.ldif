@@ -15,6 +15,7 @@ objectClass: organizationalPerson
 objectClass: inetOrgPerson
 objectClass: person
 objectClass: top
+objectClass: cesperson
 uid: dent
 givenName: Arthur
 sn: Dent
@@ -22,3 +23,4 @@ cn: Arthur Dent
 mail: arthur.dent@hitchhiker.com
 userPassword: hitchhiker123
 pwdReset: TRUE
+external: FALSE

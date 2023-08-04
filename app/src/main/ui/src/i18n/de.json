@@ -41,6 +41,7 @@
       "confirmPassword": "Passwort bestätigen",
       "displayName": "Anzeigename",
       "email": "E-Mail",
+      "external": "Externer Account",
       "givenName": "Vorname",
       "mustChangePassword": "Nutzer muss sein Passwort beim nächsten Login ändern",
       "password": "Passwort",

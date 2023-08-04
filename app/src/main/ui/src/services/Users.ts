@@ -22,6 +22,7 @@ export type User = {
     username: string,
     password: string,
     pwdReset: boolean,
+    external: boolean,
     memberOf: string[];
 };
 
