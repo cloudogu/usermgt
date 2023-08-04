@@ -187,7 +187,11 @@ public class CSVParserTest {
 
 
     private InputStreamReader readTestFile(String filename) {
-        ClassLoader classLoader = getClass().getClassLoader();
+        return new InputStreamReader(readTestFileInputStream(filename));
+    }
+
+    static InputStream readTestFileInputStream(String filename) {
+        ClassLoader classLoader = CSVParserTest.class.getClassLoader();
 
         File file = Optional
                 .ofNullable(classLoader.getResource("csvimports/" + filename))
@@ -198,8 +202,7 @@ public class CSVParserTest {
         assertNotNull(file);
 
         try {
-            InputStream inputStream = Files.newInputStream(file.toPath());
-            return new InputStreamReader(inputStream);
+            return Files.newInputStream(file.toPath());
         } catch (IOException e) {
             fail("Unable to read test file: " + e.getMessage());
 
