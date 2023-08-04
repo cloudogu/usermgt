@@ -32,7 +32,7 @@ public final class CSVUsers {
         csvUserDTO.setSurname("McMillan");
         csvUserDTO.setMail("tricia.mcmillan@hitchhiker.com");
         csvUserDTO.setPwdReset(false);
-        csvUserDTO.setExternal(false);
+        csvUserDTO.setExternal(true);
 
         return csvUserDTO;
     }

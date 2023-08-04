@@ -1,6 +1,6 @@
 username,displayname,givenname,surname,mail,pwdReset,external
 dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,true,false
-trillian,Tricia McMillan,McMillan,tricia.mcmillan@hitchhiker.com,false,false
+trillian,Tricia McMillan,McMillan,tricia.mcmillan@hitchhiker.com,false,true
 dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,true,false
-trillian,Tricia McMillan,McMillan,tricia.mcmillan@hitchhiker.com,false,false
+trillian,Tricia McMillan,McMillan,tricia.mcmillan@hitchhiker.com,false,true
 dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,true,false
