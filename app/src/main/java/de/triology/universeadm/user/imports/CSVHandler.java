@@ -159,7 +159,7 @@ public class CSVHandler {
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
 
             return inputReader;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new BadArgumentException(
                     "unable to parse file",
                     "could not convert multipart file to InputStream",
