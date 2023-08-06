@@ -92,7 +92,13 @@ public class CSVHandler {
                         this::combineAccumulators
                 );
 
-        Result result = new Result(summary, errors);
+        Map<ResultType, Long> finalSummary = createMap(
+                summary.get(ResultType.CREATED),
+                summary.get(ResultType.UPDATED),
+                (long) errors.size()
+        );
+
+        Result result = new Result(finalSummary, errors);
         logger.debug("Generated CSV import result: {}", result);
 
         return result;
