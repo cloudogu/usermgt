@@ -1,6 +1,6 @@
 # User Management
 
-The **User Management** is a Dogu for **managing the users and groups of an EcoSystem**. In addition to your own personal data, you can create, edit and delete users and groups here, depending on the rights you have.
+The **User Management** is a Dogu for **managing the users and groups of the Cloudogu EcoSystem**. In addition to your own personal data, you can create, edit and delete users and groups, depending on the rights you have.
 
 The **User Management** can be accessed via the Warp Menu in the "Administration" area.
 
@@ -15,7 +15,7 @@ As a user of the Cloudogu EcoSystem you can change **your personal data** in the
 The personal account area is displayed directly when you open the **User Management**. Via the 
 form you can adjust your personal data like your e-mail address or your password. The adjustments you make will only be **updated** by clicking on the save button. The username cannot be changed.
 
-In the lower part of the account area you can see your own groups.
+In the lower part of the account area you can see your assigned groups.
 
 ![Image of assigned groups](figures/usermanagement/CESUsermanagement_AssignedGroups_en.png)
 
@@ -31,7 +31,7 @@ If you manage a large number of users, the **search function** will help you fin
 
 ![User overview with two users](figures/usermanagement/CESUsermanagement_Users_en.png)
 
-2. In the filter section, enter the username, display name or e-mail address of the account you want to find and press *Enter*. The table will then show you only the accounts whose username, display name or email address matches your search entry.
+2. In the filter section, enter the username, display name or e-mail address of the account you want to find and press *Enter*. The table will show you the accounts matching your search criterion.
 
 ![User overview filtered by user testuser](figures/usermanagement/CESUsermanagement_UsersSearchResult_en.png)
 
@@ -43,8 +43,8 @@ To change the data of an account, first click on the pencil icon in the row of t
 
 ![Change user data](figures/usermanagement/CESUsermanagement_EditUser_en.png)
 
-After that you can make changes and save them by clicking the "Save" button. 
-Besides the account information like email address or display name, you can also change the password. In addition to that, the **User Management** offers the possibility that the user has to change the password at the next login. 
+Afterwards, you can make changes and save them by clicking the "Save" button. 
+Besides the account information like email address or display name, you can also change the password. In addition to that, the **User Management** offers the possibility to force the user to change the password at the next login.
 
 Note that you **cannot** change the username.
 
@@ -68,11 +68,11 @@ A form will open where you can enter the following attributes of the new account
 * First name
 * Last name
 * Display name (displayed name of the user in the individual Dogus)
-* Email* (user will be notified by this email)
+* Email* (user will be notified via this email)
 * Password (for logging into the Cloudogu EcoSystem)
-* "User must change password at next login" (If this option is enabled, the user must change his/her password at the next login).
+* "User must change password at next login" (If this option is enabled, the user must change the password at the next login).
 
-\* A user's email address and username are **unique properties** and may therefore only be used for one account. When creating an account, the system checks whether the email address and username are unique. If this is not the case, you will receive a meaningful error message and you will be able to edit the account details.
+\* A user's email address and username are **unique properties** and may therefore only be used for one account. When creating an account, the system validates whether email address and username are unique. If this is not the case, you will receive a meaningful error message and you will be able to edit the account details.
 
 > Note that the username is **unchangeable** after the account has been created.
 
@@ -90,13 +90,13 @@ If you want to make further changes, click on the pencil icon in the last column
 In the Cloudogu EcoSystem configuration, **password policies** can be configured to be validated when passwords are entered. 
 By creating reasonable password policies, the security of passwords can be controlled globally.
 
-When you create a password, you will always see the password policies that have not yet been satisfied. As soon as a password policy is fulfilled, it is no longer displayed.
+When you create a password, you will always see the password policies that are not satisfied. Once a password policy is satisfied, it will disappear.
 
 ![Not all rules satisfied](figures/usermanagement/CESUsermanagement_Password_Policy_Not_All_Rules_Statisfied_en.png)
 
-You can't save the password until all password policies have been satisfied.
+You can't save the password until all password policies are satisfied.
 
-If all password policies are fulfilled, the field will be marked green and the new password can be saved.
+If all password policies are fulfilled, the input field will be marked green and the new password can be saved.
 
 ![All rules satisfied](figures/usermanagement/CESUsermanagement_Password_Policy_All_Rules_Satisfied_en.png)
 
@@ -104,7 +104,7 @@ If all password policies are fulfilled, the field will be marked green and the n
 
 As an administrator, the **User Management** gives you the ability to **create, edit, or delete groups, as well as manage the members of groups**.
 
-Groups can be used to manage different permission configurations for different user groups. More information about this can be found in the section [Permission concept in the Cloudogu EcoSystem](#permission-concept-in-the-cloudogu-ecosystem).
+Groups can be used to manage different permission configurations for different permission configuration. More information about this can be found in the section [Permission concept in the Cloudogu EcoSystem](#permission-concept-in-the-cloudogu-ecosystem).
 
 ### System groups
 
@@ -116,35 +116,34 @@ Members of the **Manager Group** have **full access to the User Management** of 
 This gives users the authorization to create and manage additional users and groups.
 Beyond that, no other permissions are associated with the *Manager Group**.
 
-You can change the *Manager group* to be used by entering the following in the configuration of the Cloudogu EcoSystem in the entry 
-`/config/_global/manager_group` to set the desired group:
+You can change the *Manager group* to be used by changing the entry `/config/_global/manager_group` in the configuration of the Cloudogu EcoSystem to the desired group:
 
 ```shell
 etcdctl set /config/_global/manager_group newManagerGroup
 ```
 
-The **User Management** Dogu must then be restarted for the change to take effect.
+The **User Management** Dogu needs to be restarted to take the change into account.
 
 **Admin Group**
 
 Members of this group have administrative rights in **all** Dogus of the Cloudogu EcoSystem. 
 These users can use the administrative functions in the individual Dogus and thus, for example, install plug-ins or make application settings.
 
-The **Backup & Restore** Dogu contains only administrative functions and does not use a separate role concept.
+The usage of the **Backup & Restore** Dogu is restricted to the administrators.
 Consequently, only users who are members of the **Admin group** have access to the **Backup & Restore** Dogu.
 
-You can change the **Admin group** to be used by going to the configuration of the Cloudogu EcoSystem in the entry
-`/config/_global/admin_group` to set the desired group:
+You can change the **Admin group** to be used by changing the entry
+`/config/_global/admin_group` in the configuration of the Cloudogu EcoSystem to the desired group:
 
 ```shell
 etcdctl set /config/_global/admin_group newAdminGroup
 ```
 
-All Dogus must then be restarted for the change to take effect.
+All Dogus needs to be restarted for the change to take effect.
 
 ### Creating a new group
 
-To avoid having to assign individual permissions for all accounts in the Dogus, you can create groups as described below:
+To avoid assigning individual permissions for all accounts in the Dogus, you can create groups as described below:
 
 Select the "Groups" tab in **User Management**.
 
@@ -174,7 +173,7 @@ There are two ways to assign an account to a group:
 
 1. In the "Users" tab, select the pencil icon for the corresponding account.
 2. Then enter the group name in the "Groups" area under *Add group*. A list of suggestions will automatically appear according to the input you have made.
-3. Click on the desired group to assign the group to the account.
+3. Click on the desired group to assign the account to the group.
 
 ![](figures/usermanagement/CESUsermanagement_AssignGroups_en.png)
 
@@ -196,7 +195,7 @@ To delete a group, click on the trash can icon of the respective group in the "G
 
 System groups **cannot** be deleted.
 
-Note that groups deleted in the **User Management** are not automatically deleted in the Dogus as well. However, the assignment of accounts to groups is synchronized.
+Note that groups deleted in the **User Management** are not automatically deleted in the Dogus. However, the assignment of accounts to groups is synchronized.
 
 ## Permission concept in the Cloudogu EcoSystem
 
@@ -206,15 +205,15 @@ The permission concept of the Cloudogu EcoSystem is based on a **central user ma
 
 The **User Management** is used to manage accounts and groups. In doing so, the **User Management** uses an internal *LDAP* as directory service.
 
-In addition to using the **User Management** provided by us, you have the option of using an **external directory service** for the Cloudogu EcoSystem. In this case, user management would **not** be done via the Dogu **User Management** presented here, but via the external directory service you have connected (such as an external *LDAP* or *Active Directory*).
+In addition to using the **User Management** provided by us, you have the option of using an **external directory service** for the Cloudogu EcoSystem. In this case, user management would **not** be done via the Dogu **User Management** presented here, but via the external directory service you have connected.
 
 ### Permission concepts of the Dogus
 
-You can create the accounts for users of the Cloudogu EcoSystem centrally in the **User Management**. To simplify the permission configuration, you can create groups for different user groups. A user can belong to more than one group. A group can have more than one member.
+You can create the accounts for users of the Cloudogu EcoSystem centrally in the **User Management**. To simplify the permission configuration, you can create groups for different user purposes. A user can belong to more than one group. A group can have more than one member.
 
 Accounts and groups are **synchronized** with the Dogus, meaning in each Dogu you will find the accounts and groups created in the **User Management**. 
 
-Since Dogus may be systems developed outside the Cloudogu EcoSystem, the **permission concept in the Dogus may differ** - as you can see in the following diagram exemplary.
+Since Dogus may be applications developed outside of the Cloudogu EcoSystem, the **permission concept in the Dogus may differ** - as you can see in the following diagram exemplary.
 
 ![Rights concept in the Dogus](figures/usermanagement/RoleConceptCloudoguEcoSystem_en.png)
 
@@ -224,9 +223,9 @@ You can also create accounts and groups directly in the Dogus. Please note that 
 
 ### Synchronization of accounts and groups
 
-User accounts and groups are passed on to a Dogu **as soon as the user with the respective account calls up the Dogu**. For this purpose, the user's group assignments are queried every time the user logs on to a Dogu via the CAS (Central Authentication Service) - the central *single sign-on* authentication service of the Cloudogu EcoSystem.
+User accounts and groups are forwarded to a Dogu **as soon as the the respective account logs into the Dogu**. For this purpose, the user's group assignments are queried every time the user logs on to a Dogu via the CAS (Central Authentication Service) - the central *single sign-on* authentication service of the Cloudogu EcoSystem.
 
-As can be seen in the following diagram, the CAS passes the required user information to the Dogu after successful authentication. The Dogu then checks whether the user's account and groups are already known. If this is not the case, the account and groups are created and linked if the Dogu supports this procedure.
+As can be seen in the following diagram, the CAS passes the required user information to the Dogu after successful authentication. The Dogu then validates whether the user's account and groups already exist. If this is not the case, the account and groups are created and assigned if the Dogu supports this procedure.
 
 In Dogus that do not manage groups or accounts, no groups or accounts will be created. For other Dogus, the creation of accounts and groups is often done by a CAS plugin that has been designed for this purpose.
 

@@ -1,8 +1,8 @@
 # User Management
 
-Das **User Management** ist ein Dogu zum **Verwalten der Nutzer:innen und Gruppen eines EcoSystems**. Neben den eigenen persönlichen Daten können Sie hier, wenn Sie die benötigten Rechte haben, Nutzer:innen sowie Gruppen anlegen, bearbeiten und löschen.
+Das **User Management** ist ein Dogu zum **Verwalten der Nutzer:innen und Gruppen des Cloudogu EcoSystems**. Neben den eigenen persönlichen Daten können Sie hier, wenn Sie die benötigten Rechte haben, Nutzer:innen sowie Gruppen anlegen, bearbeiten und löschen.
 
-Das **User Management** erreichen Sie über das Warp Menü im Bereich „Administration“ aufgerufen werden.
+Das **User Management** erreichen Sie über das Warp Menü im Bereich „Administration“.
 
 ![Warp Menü mit User Management](figures/usermanagement/CESUsermanagement_Warp_de.png)
 
@@ -13,9 +13,9 @@ Als Nutzer:in des Cloudogu EcoSystem können Sie **Ihre persönlichen Daten** im
 ![Bild von Seitenkopf mit Fokus auf Navbar mit eingeloggtem Benutzer](figures/usermanagement/CESUsermanagement_UserAccount_de.png)
 
 Der eigene Account-Bereich wird Ihnen beim Öffnen des **User Managements** direkt angezeigt. Über das 
-Formular können Sie Ihre persönlichen Daten wie Ihre E-Mail-Adresse oder Ihr Passwort anpassen. Die Anpassungen, die Sie vornehmen, werden erst **mit einem Klick auf den Speichern-Button aktualisiert**. Der Nutzername kann nicht geändert werden.
+Formular können Sie Ihre persönlichen Daten, wie Ihre E-Mail-Adresse oder Ihr Passwort, anpassen. Die Anpassungen, die Sie vornehmen, werden erst **mit einem Klick auf den Speichern-Button aktualisiert**. Der Nutzername kann nicht geändert werden.
 
-Im unteren Teil des Account-Bereichs können Sie Ihre eigenen Gruppen sehen.
+Im unteren Teil des Account-Bereichs können Sie die Ihnen zugeordneten Gruppen sehen.
 
 ![Bild von zugeordneten Gruppen](figures/usermanagement/CESUsermanagement_AssignedGroups_de.png)
 
@@ -31,7 +31,7 @@ Sofern Sie eine Vielzahl an Nutzer:innen administrieren, hilft Ihnen die **Suchf
 
 ![Nutzerübersicht mit zwei Nutzern](figures/usermanagement/CESUsermanagement_Users_de.png)
 
-2. Geben Sie dort im Bereich "Filter" Nutzername, Anzeigename oder E-Mail-Adresse des Accounts ein, den Sie finden möchten, und drücken Sie *Enter*. Ihnen werden in der Tabelle dann nur die Accounts angezeigt, deren Nutzername, Anzeigename oder deren E-Mail-Adresse zu Ihrer Sucheingabe passt.
+2. Geben Sie dort im Bereich "Filter" Nutzername, Anzeigename oder E-Mail-Adresse des Accounts ein, den Sie finden möchten, und drücken Sie *Enter*. Ihnen werden in der Tabelle dann nur die Accounts angezeigt, die mit Ihrem Suchkriterium übereinstimmen.
 
 ![Nutzerübersicht gefiltert nach Nutzer testuser](figures/usermanagement/CESUsermanagement_UsersSearchResult_de.png)
 
@@ -44,7 +44,7 @@ Um die Daten eines Accounts zu ändern, klicken Sie zunächst im Reiter „Nutze
 ![Daten der Nutzerinnen und Nutzer ändern](figures/usermanagement/CESUsermanagement_EditUser_de.png)
 
 Danach können Sie Änderungen vornehmen und diese durch einen Klick auf den „Speichern“-Button sichern. 
-Neben den Account-Informationen wie E-Mail-Adresse oder Anzeigename, können Sie auch das Passwort anpassen. Zusätzlich dazu bietet das **User Management** die Möglichkeit, dass die Nutzerin oder der Nutzer beim nächsten Login das Passwort ändern muss. 
+Neben den eigentlichen Account-Informationen, wie E-Mail-Adresse oder Anzeigename, können Sie auch das Passwort ändern. Zusätzlich dazu bietet das **User Management** die Möglichkeit, dass Passwort durch die Nutzerin / den Nutzer beim nächsten Login ändern zu lassen. 
 
 Beachten Sie, dass Sie den Nutzernamen **nicht** ändern können.
 
@@ -67,10 +67,10 @@ Ein Formular öffnet sich, in dem Sie folgende Eigenschaften des neuen Accounts 
 * Nutzername* (für die Anmeldung am Cloudogu EcoSystem)
 * Vorname
 * Nachname
-* Anzeigename (angezeigter Name des Nutzers / der Nutzerin in den einzelnen Dogus)
-* E-Mail* (Nutzer / Nutzerin wird über diese E-Mail benachrichtigt)
+* Anzeigename (angezeigter Name des Accounts in den einzelnen Dogus)
+* E-Mail* (Nutzer:in wird über diese E-Mail benachrichtigt)
 * Passwort (für die Anmeldung am Cloudogu EcoSystem)
-* „Nutzer muss sein Passwort beim nächsten Login ändern“ (Wird diese Option aktiviert, muss die Nutzerin / der Nutzer bei der nächsten Anmeldung sein Passwort ändern)
+* „Nutzer muss sein Passwort beim nächsten Login ändern“ (Wird diese Option aktiviert, muss bei der nächsten Anmeldung des Accounts das Passwort geändert werden)
 
 \* E-Mail-Adresse und Nutzername eines Accounts sind **eindeutige Eigenschaften** und dürfen daher nur für einen Account verwendet werden. Beim Anlegen eines Accounts wird überprüft, ob E-Mail-Adresse und Nutzername eindeutig sind. Sollte das nicht der Fall sein, bekommen Sie eine aussagekräftige Fehlermeldung angezeigt und können die Angaben des Accounts überarbeiten.
 
@@ -131,8 +131,8 @@ Mitglieder dieser Gruppe haben in **allen** Dogus des Cloudogu EcoSystem adminis
 Berechtigungen. Diese Nutzer:innen können in den einzelnen Dogus die administrativen Funktionen nutzen 
 und so zum Beispiel Plugins installieren oder Anwendungseinstellungen vornehmen.
 
-Das **Backup & Restore**-Dogu enthält ausschließlich administrative Funktionen und verwendet kein separates Rollenkonzept.
-Somit haben nur Nutzer und Nutzerinnen auf das **Backup & Restore**-Dogu Zugriff, die Mitglied der **Admin-Gruppe** sind.
+Die Nutzung des **Backup & Restore**-Dogus ist ausschließlich Administrator:innen vorbehalten.
+Somit haben nur Nutzer:innen auf das **Backup & Restore**-Dogu Zugriff, die Mitglieder der **Admin-Gruppe** sind.
 
 Sie können die zu verwendende **Admin-Gruppe** ändern, indem Sie in der Konfiguration des Cloudogu EcoSystem im Eintrag
 `/config/_global/admin_group` die gewünschte Gruppe einstellen:
@@ -176,7 +176,7 @@ Es gibt zwei Wege, einen Account einer Gruppe zuzuordnen:
 1. Im Reiter „Nutzer“ wählen Sie für den entsprechenden Account das Stift-Symbol aus.
 
 2. Danach tragen sie im Bereich „Gruppen“ unter *Gruppe hinzufügen* den Gruppennamen ein. Es erscheint automatische eine Liste mit Vorschlägen entsprechend der getätigten Eingabe. 
-3. Mit einem Klick auf die gewünschte aufgeführte Gruppe ordnen Sie die Gruppe dem Account zu.
+3. Mit einem Klick auf die gewünschte Gruppe ordnen Sie dem Account die Gruppe zu.
 
 ![](figures/usermanagement/CESUsermanagement_AssignGroups_de.png)
 
@@ -210,35 +210,35 @@ Das Rechtekonzept des Cloudogu EcoSystems basiert auf einer **zentralen Benutzer
 
 Das **User Management** dient der Verwaltung von Accounts und Gruppen. Dabei nutzt das **User Management** ein internes *LDAP* als Verzeichnisdienst.
 
-Neben der Nutzung des von uns zu Verfügung gestellten **User Managements** haben Sie die Möglichkeit, einen **externen Verzeichnisdienst** für das Cloudogu EcoSystem zu verwenden. In diesem Fall würde die Benutzerverwaltung **nicht** über das hier vorgestellte Dogu **User Management** erfolgen, sondern über den von Ihnen angebundenen externen Verzeichnisdienst (wie ein externes *LDAP* oder *Active Directory*).
+Neben der Nutzung des von Cloudogu zu Verfügung gestellten **User Managements** haben Sie die Möglichkeit, einen **externen Verzeichnisdienst** für das Cloudogu EcoSystem zu verwenden. In diesem Fall würde die Benutzerverwaltung **nicht** über das hier vorgestellte Dogu **User Management** erfolgen, sondern über den von Ihnen angebundenen externen Verzeichnisdienst.
 
 ### Rechtekonzepte der Dogus
 
-Die Accounts für Nutzer:innen des Cloudogu EcoSystems können Sie zentral im **User Management** anlegen. Dabei können Sie zur Vereinfachung der Rechtekonfiguration für unterschiedliche Benutzergruppen Gruppen anlegen. Eine Nutzerin / ein Nutzer kann dabei mehr als einer Gruppe zugehörig sein. In einer Gruppe kann mehr als ein Mitglied sein.
+Die Accounts für Nutzer:innen des Cloudogu EcoSystems können Sie zentral im **User Management** anlegen. Dabei können Sie zur Vereinfachung der Rechtekonfiguration Gruppen für unterschiedliche Rechtekonfigurationen anlegen. Nutzer:innen können dabei mehr als einer Gruppe zugeordnet sein. In einer Gruppe kann mehr als ein Mitglied sein.
 
 Accounts und Gruppen werden **mit den Dogus synchronisiert**, so dass Sie in jedem Dogu die im **User Management** angelegten Accounts und Gruppen vorfinden. 
 
- Da es sich bei Dogus um Systeme handeln kann, die außerhalb des Cloudogu EcoSystems entwickelt werden, können sich die **Rechtekonzepte der Dogus unterscheiden** - wie Sie im folgenden Schaubild exemplarisch erkennen können.
+ Da es sich bei Dogus um Anwendungen handeln kann, die außerhalb des Cloudogu EcoSystems entwickelt werden, können sich die **Rechtekonzepte der einzelnen Dogus unterscheiden** - wie im folgenden Schaubild exemplarisch dargestellt.
 
  ![Rechtekonzept in den Dogus](figures/usermanagement/RoleConceptCloudoguEcoSystem_de.png)
 
- Weitere Informationen zum Rechtekonzept einzelner Dogus finden Sie in der Dokumentation des jeweiligen Dogus.
+ Weitere Informationen zum Rechtekonzept einzelner Dogus finden Sie in der jeweiligen Dokumentation.
 
  Sie können auch direkt in den Dogus Accounts und Gruppen anlegen. Beachten Sie dabei, dass diese dann anderen Dogus nicht bekannt sind und auch nicht im **User Management** verwaltet werden können. Die Anlage von Accounts oder Gruppen außerhalb des **User Managements** ist daher **nicht** empfohlen.
 
 ### Synchronisation von Accounts und Gruppen
 
-Nutzeraccounts und Gruppen werden an ein Dogu weitergegeben, **sobald   die Nutzerin / der Nutzer mit dem jeweiligen Account das Dogu aufruft**. Dafür werden Gruppenzuordnungen der Nutzer:innen bei jeder Anmeldung an ein Dogu über den CAS (Central Authentication Service) - der zentrale *Single Sign-on* Authentifizierungsdienst des Cloudogu EcoSystem - neu abgefragt.
+Nutzeraccounts und Gruppen werden an ein Dogu weitergeleitet, **sobald das Dogu vom zugehörigen Account aufgerufen wird**. Dafür werden die Gruppenzuordnungen der Nutzer:innen bei jeder Anmeldung an ein Dogu über den CAS (Central Authentication Service) - der zentrale *Single Sign-on* Authentifizierungsdienst des Cloudogu EcoSystem - neu abgefragt.
 
-Wie in folgendem Schaubild erkennbar, übergibt der CAS nach erfolgreicher Authentifizierung die benötigten Nutzerinformationen an das Dogu. Das Dogu überprüft im Anschluss, ob der Account und die Gruppen des Nutzers / der Nutzerin schon bekannt sind. Sollte das nicht der Fall sein, werden Account und Gruppen angelegt und verknüpft, wenn das Dogu dieses Vorgehen unterstützt.
+Wie im folgenden Schaubild erkennbar, übergibt der CAS nach erfolgreicher Authentifizierung die benötigten Nutzerinformationen an das Dogu. Das Dogu überprüft im Anschluss, ob der Account und die Gruppen des Accounts schon bekannt sind. Sollte dies nicht der Fall sein, werden Account und Gruppen angelegt und zugeordnet, wenn das Dogu dieses Vorgehen unterstützt.
 
-In Dogus, die keine Gruppen oder Accounts verwalten, werden auch keine Gruppen oder Accounts hinterlegt. Für andere Dogus übernimmt das Anlegen von Accounts und Gruppen oft ein CAS-Plugin, welches für diesen Zweck konzipiert worden ist.
+In Dogus, die keine Gruppen oder Accounts verwalten, werden keine Gruppen oder Accounts hinterlegt. Für andere Dogus übernimmt das Anlegen von Accounts und Gruppen oft ein CAS-Plugin, welches für diesen Zweck konzipiert worden ist.
 
  ![Synchronisation von Accounts und Gruppen](figures/usermanagement/CES_UserManagement_Synchronization_Groups_de.png)
 
-Ist der Account eines Nutzers / einer Nutzerin schon intern im Dogu angelegt worden, wird der interne Account mit dem externen CAS-Account verknüpft, wenn der interne Nutzername mit dem externen Nutzernamen übereinstimmt. Dabei werden *im Regelfall* die internen Daten im Dogu mit den Daten aus dem **User Management** überschrieben und der Account wird wenn möglich, im Dogu als externer Account gekennzeichnet.
+Ist ein Account schon intern im Dogu angelegt worden, wird der interne Account mit dem externen CAS-Account verknüpft, wenn der interne Nutzername mit dem externen Nutzernamen übereinstimmt. Dabei werden *im Regelfall* die internen Daten im Dogu mit den Daten aus dem **User Management** überschrieben und der Account wird wenn möglich, im Dogu als externer Account gekennzeichnet.
 
-Beachten Sie beim Anlegen von Accounts und Gruppen im **User Management**, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen **nicht direkt** in anderen Dogus bekannt sind, sondern **bei der nächsten Anmeldung der Nutzerin / des Nutzers im jeweiligen Dogu** bekannt gemacht werden.
+Beachten Sie beim Anlegen von Accounts und Gruppen im **User Management**, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen **nicht direkt** in anderen Dogus bekannt sind, sondern **bei der nächsten Anmeldung des Accounts im jeweiligen Dogu** bekannt gemacht werden.
 
 ### Mögliches Vorgehen bei der Rechtekonfiguration
 
