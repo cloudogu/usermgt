@@ -12,7 +12,7 @@ Dies ist die Reihenfolge, in welcher die Werte eingelesen werden. Dabei ist nur 
 ersten Spalte können frei gewählt werden. 
 Daher könnten diese Spalten auch in Deutsch sein, zum Beispiel:
 ```csv
-Nutzername;Vorname;Nachname;Anzeigetitel;Mail;Gruppn
+Nutzername;Vorname;Nachname;Anzeigetitel;Mail;Gruppen
 ```
 
 Die Authentifizierung läuft über den Account des eingeloggten Benutzers. Hat dieser keine Manager-Rechte, so kann dieser 
