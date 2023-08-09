@@ -1,0 +1,6 @@
+username,displayname,givenname,surname,mail,pwdReset,external
+dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,true,false
+dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,yes,no
+dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,y,n
+dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,TRUE,FALSE
+dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,1,0
