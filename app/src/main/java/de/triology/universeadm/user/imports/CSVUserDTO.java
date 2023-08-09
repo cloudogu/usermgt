@@ -4,6 +4,12 @@ import com.opencsv.bean.CsvBindByName;
 
 import java.util.Objects;
 
+/**
+ * CSVUserDTO is the data transfer object (DTO) representing a user in a row of the csv file.
+ * <p>
+ * The name of the columns in the csv file must follow the names of the variables of the CSVUserDTO class. Required fields
+ * need to be set. Otherwise, an exception will be thrown.
+ */
 public class CSVUserDTO extends CSVRecord {
     @CsvBindByName(required = true)
     private String username;
@@ -11,7 +17,7 @@ public class CSVUserDTO extends CSVRecord {
     @CsvBindByName(required = true)
     private String displayname;
 
-    @CsvBindByName(required = true)
+    @CsvBindByName
     private String givenname;
 
     @CsvBindByName(required = true)

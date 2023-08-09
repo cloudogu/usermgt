@@ -7,6 +7,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.io.IOException;
 import java.io.Reader;
 
+/**
+ * CsvLineNumberReader is an extension of the CSVReader
+ * that provides the line number of a record within the csv file.
+ *
+ * @see <a href="https://stackoverflow.com/questions/12357163/opencsv-find-out-line-number">stack overflow</a>
+ */
 public class CsvLineNumberReader extends CSVReader {
     public CsvLineNumberReader(Reader reader) {
         super(reader);

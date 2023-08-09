@@ -35,12 +35,19 @@ import de.triology.universeadm.AbstractManagerResource;
 import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
+import de.triology.universeadm.user.imports.*;
+import org.apache.shiro.authz.AuthorizationException;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.BiFunction;
+
 
 /**
  * TODO remove package cycle with group.
@@ -79,6 +86,39 @@ public class UserResource extends AbstractManagerResource<User> {
         }
         return builder.build();
     }
+
+    @POST
+    @Path(":import")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response importUsers(MultipartFormDataInput input) {
+        logger.debug("Received csv import request.");
+
+        BiFunction<Response.Status, String, Response> createError = (status, errMsg) -> Response
+                        .status(status)
+                        .entity(errMsg)
+                        .build();
+
+        CSVHandler handler = new CSVHandler(this.userManager);
+
+        try {
+            Result result = handler.handle(input);
+
+            logger.debug("Successfully handled csv import {}", result);
+
+            return Response.status(Response.Status.OK).entity(result).build();
+        } catch (BadArgumentException e) {
+            logger.error("Bad input while handling csv user import", e);
+            String errMsg = e.getPublicErrMsg().isEmpty() ? e.getMessage() : e.getPublicErrMsg();
+
+            return createError.apply(Response.Status.BAD_REQUEST, errMsg);
+        } catch (AuthorizationException e) {
+            logger.error("Missing privileges while handling csv user import");
+
+            return createError.apply(Response.Status.FORBIDDEN, "Missing privileges to use import");
+        }
+    }
+
 
     /**
      * Method description
@@ -162,6 +202,9 @@ public class UserResource extends AbstractManagerResource<User> {
     }
 
     //~--- fields ---------------------------------------------------------------
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(UserResource.class);
 
     /**
      * Field description

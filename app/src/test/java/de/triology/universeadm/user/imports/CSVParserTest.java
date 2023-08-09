@@ -1,14 +1,8 @@
 package de.triology.universeadm.user.imports;
 
 import com.google.common.collect.Lists;
-import com.opencsv.bean.exceptionhandler.CsvExceptionHandler;
 import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import de.triology.universeadm.user.User;
-import de.triology.universeadm.user.UserSelfRemoveException;
-import de.triology.universeadm.user.Users;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.io.*;
 import java.net.URL;
@@ -16,7 +10,6 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -24,7 +17,7 @@ import static org.mockito.Mockito.*;
 public class CSVParserTest {
 
     @Test
-    public void testParse() {
+    public void testParse() throws BadArgumentException {
 
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
@@ -44,7 +37,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testKeepSpaces() {
+    public void testKeepSpaces() throws BadArgumentException {
 
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setSurname("     " +expUser.getSurname());
@@ -59,7 +52,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotes() {
+    public void testDoubleQuotes() throws BadArgumentException {
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
                 CSVUsers.createTrillian()
@@ -77,7 +70,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testFieldLineBreaks() {
+    public void testFieldLineBreaks() throws BadArgumentException {
         List<CSVUserDTO> userInputList = new CSVParser()
                 .parse(readTestFile("LineBreaks.csv"))
                 .collect(Collectors.toList());
@@ -87,7 +80,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotesInField() {
+    public void testDoubleQuotesInField() throws BadArgumentException {
         List<CSVUserDTO> userInputList = new CSVParser()
                 .parse(readTestFile("DoubleQuotesField.csv"))
                 .collect(Collectors.toList());
@@ -97,7 +90,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testUmlauts() {
+    public void testUmlauts() throws BadArgumentException {
         List<CSVUserDTO> userInputList = new CSVParser()
                 .parse(readTestFile("Umlauts.csv"))
                 .collect(Collectors.toList());
@@ -107,7 +100,19 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testParseBoolean() {
+    public void testEmptyGivenName() throws BadArgumentException {
+        CSVUserDTO expUser = CSVUsers.createDent();
+        expUser.setGivenname("");
+
+        List<CSVUserDTO> userInputList = new CSVParser()
+                .parse(readTestFile("EmptyGivenName.csv"))
+                .collect(Collectors.toList());
+
+        assertEquals(expUser, userInputList.get(0));
+    }
+
+    @Test
+    public void testParseBoolean() throws BadArgumentException {
         List<CSVUserDTO> userInputList = new CSVParser()
                 .parse(readTestFile("Boolean.csv"))
                 .collect(Collectors.toList());
@@ -115,8 +120,8 @@ public class CSVParserTest {
         assertEquals(5, userInputList.size());
     }
 
-    @Test
-    public void testReaderNull() {
+    @Test(expected=BadArgumentException.class)
+    public void testReaderNull() throws BadArgumentException {
         List<CSVUserDTO> userInputList = new CSVParser()
                 .parse(null)
                 .collect(Collectors.toList());
@@ -124,24 +129,20 @@ public class CSVParserTest {
         assertTrue(userInputList.isEmpty());
     }
 
-    @Test()
-    public void testInvalidHeader() {
-        ExecptionListener eh = mock(ExecptionListener.class);
-
+    @Test(expected=BadArgumentException.class)
+    public void testInvalidHeader() throws BadArgumentException {
         CSVParser parser = new CSVParser();
-        parser.registerListener(eh);
 
         List<CSVUserDTO> userInputList = parser
                 .parse(readTestFile("InvalidHeader.csv"))
                 .collect(Collectors.toList());
 
-        assertEquals(0, userInputList.size());
-        verify(eh, times(1)).notify(any());
+        assertTrue(userInputList.isEmpty());
     }
 
     @Test()
-    public void testInvalidLineFieldLength() {
-        ExecptionListener eh = mock(ExecptionListener.class);
+    public void testInvalidLineFieldLength() throws BadArgumentException {
+        ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
 
         CSVParser parser = new CSVParser();
         parser.registerListener(eh);
@@ -155,8 +156,23 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidLineDelimiter() {
-        ExecptionListener eh = mock(ExecptionListener.class);
+    public void testMissingRequiredField() throws BadArgumentException {
+        ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
+
+        CSVParser parser = new CSVParser();
+        parser.registerListener(eh);
+
+        List<CSVUserDTO> userInputList = parser
+                .parse(readTestFile("InvalidLine_MissingRequiredField.csv"))
+                .collect(Collectors.toList());
+
+        assertEquals(1, userInputList.size());
+        verify(eh, times(1)).notify(any());
+    }
+
+    @Test()
+    public void testInvalidLineDelimiter() throws BadArgumentException {
+        ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
 
         CSVParser parser = new CSVParser();
         parser.registerListener(eh);
@@ -171,7 +187,11 @@ public class CSVParserTest {
 
 
     private InputStreamReader readTestFile(String filename) {
-        ClassLoader classLoader = getClass().getClassLoader();
+        return new InputStreamReader(readTestFileInputStream(filename));
+    }
+
+    static InputStream readTestFileInputStream(String filename) {
+        ClassLoader classLoader = CSVParserTest.class.getClassLoader();
 
         File file = Optional
                 .ofNullable(classLoader.getResource("csvimports/" + filename))
@@ -182,8 +202,7 @@ public class CSVParserTest {
         assertNotNull(file);
 
         try {
-            InputStream inputStream = Files.newInputStream(file.toPath());
-            return new InputStreamReader(inputStream);
+            return Files.newInputStream(file.toPath());
         } catch (IOException e) {
             fail("Unable to read test file: " + e.getMessage());
 
