@@ -13,7 +13,7 @@ This repository contains the usermgt, an maven project written in java.
 - [Entwickler Dokumentation DE](docs/development/Developers_Guide_de.md)
 - [Developers Guide EN](docs/development/Developers_Guide_en.md)
 
-### Where do I find more information about the Cockpit dogu?
+### Where do I find more information about the User Management dogu?
 
 - [Deutsch] [Dokumentation](docs/getting_started_de.md)
 - [English] [Documentation](docs/getting_started_en.md)
