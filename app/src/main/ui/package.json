@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "backend": "cd api-mock && json-server --watch db.json --p 8080 --routes routes.json"
+    "backend": "cd api-mock && json-server --watch db.json --p 8080 --routes routes.json",
+    "lint": "yarn eslint \"src/**\"",
+    "fix": "yarn eslint --fix \"src/**\""
   },
   "dependencies": {
     "axios": "^1.3.3",
