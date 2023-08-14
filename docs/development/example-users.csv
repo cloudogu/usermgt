@@ -1,0 +1,3 @@
+DISPLAYNAME,EXTERNAL,MAIL,PWDRESET,SURNAME,USERNAME
+myadmin,TRUE,myadmin@test.de,TRUE,myadmin,myadmin
+mynormaluser,TRUE,mynormaluser@test.de,TRUE,mynormaluser,mynormaluser
