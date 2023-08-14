@@ -1,85 +1,38 @@
-import {
-    Button,
-    FileInput,
-    Form,
-    H1,
-    H3,
-    Table,
-    useAlertNotification,
-    useFormHandler
-} from "@cloudogu/ces-theme-tailwind";
+import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H1, H3, Table, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import React, {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import { ImportUsersService} from "../services/ImportUsers";
 import type {ImportUsersResponse} from "../services/ImportUsers";
-import type { FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import {ImportUsersService} from "../services/ImportUsers";
 
 type ImportUsersUploadModel = {
-    file?: File;
+    file?: File[];
     dryrun: boolean;
 };
 
 const UsersImport = (props: { title: string }) => {
     useSetPageTitle(props.title);
     const {notification, notify, clearNotification} = useAlertNotification();
-    const [file, setFile] = useState<File>();
-    const [content, setContent] = useState([[""]]);
     const [header, setHeader] = useState([""]);
+    const [content, setContent] = useState([[""]]);
     const [uploadResult, setUploadResult] = useState<ImportUsersResponse>();
-    // const uploadHandler = async () => {
-    //     if (file) {
-    //         const response = await ImportUsersService.save(file);
-    //         cleanupPreview();
-    //         setUploadResult(response.data);
-    //     }
-    // };
+    const [fileSize, setFileSize] = useState(0);
+    const [fileType, setFileType] = useState("");
     const cleanupPreview = () => {
-        setFile(undefined);
         setHeader([]);
         setContent([]);
     };
-    const onFileChanged = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.currentTarget.files;
-        if (files !== null && files.length > 0) {
-            const selectedFile = files[0];
-            if (selectedFile.type !== "text/csv") {
-                notify(`Wrong file type: '${selectedFile?.type}'. Only file type 'text/csv' is allowed.`, "danger");
-                cleanupPreview();
-                return;
-            }
-            await handler.setFieldValue("file", file);
 
-            setFile(selectedFile);
-            const fileContent = await selectedFile.text();
-            const lines = fileContent.split("\n");
-            setHeader(lines[0].split(","));
-            const csvContent: string[][] = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (lines[i].length > 0) {
-                    csvContent.push(lines[i].split(","));
-                }
-            }
-            setContent(csvContent);
-        } else {
-            cleanupPreview();
-            return;
-        }
-        clearNotification();
-    };
-
-    useEffect(() => {
-        const fileHelpers = handler.getFieldHelpers("file");
-        fileHelpers.setValue(file);
-    }, [file]);
     const handlerConfig: FormHandlerConfig<ImportUsersUploadModel> = {
         enableReinitialize: true,
-        initialValues: {file: new File([new Blob()], ""), dryrun: false},
+        initialValues: {file: [], dryrun: false},
         validationSchema: Yup.object({}),
         onSubmit: async (values, formikHelpers) => {
-            if (values.file) {
-                const response = await ImportUsersService.save(values.file);
+            if (values.file?.length ?? 0 > 0) {
+                const file = (values.file as File[])[0];
+                const response = await ImportUsersService.save(file);
                 cleanupPreview();
                 setUploadResult(response.data);
                 formikHelpers.resetForm();
@@ -87,6 +40,33 @@ const UsersImport = (props: { title: string }) => {
         }
     };
     const handler = useFormHandler(handlerConfig);
+
+    useEffect(() => {
+        const file = (handler.values["file"] ?? [])[0];
+        if (file && file.type === "text/csv") {
+            file.text().then(text => {
+                const lines = text.split("\n");
+                if (lines.length > 1) {
+                    setHeader(lines[0].split(","));
+                    const csvContent: string[][] = [];
+                    for (let i = 1; i < lines.length; i++) {
+                        if (lines[i].length > 0) {
+                            csvContent.push(lines[i].split(","));
+                        }
+                    }
+                    setContent(csvContent);
+                    setFileSize(file.size);
+                    setFileType(file.type);
+                }
+            });
+        } else {
+            setHeader([]);
+            setContent([]);
+            setFileSize(0);
+            setFileType("");
+        }
+    }, [handler.values]);
+
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -98,18 +78,22 @@ const UsersImport = (props: { title: string }) => {
                 <Form.ValidatedCheckboxLabelRight id={"dryrun"} className={"ml-2"} name={"dryrun"}>
                     Dry run?
                 </Form.ValidatedCheckboxLabelRight>
-                <FileInput className={"mt-4"} variant={"primary"} name={"file"} accept={"text/csv"} onChange={onFileChanged} />
-                <Button variant={"primary"} type={"submit"} >Hochladen</Button>
-                {/*onClick={uploadHandler}*/}
+                <Form.HandledFileInput
+                    className={"mt-4"}
+                    variant={"primary"}
+                    name={"file"}
+                    accept={"text/csv"}
+                />
+                <Button variant={"primary"} type={"submit"}>Hochladen</Button>
             </Form>
             {uploadResult && renderResult(uploadResult)}
 
-            {file && file?.type === "text/csv" &&
+            {fileSize > 0 &&
                 <>
                     <div>
                         <ul>
-                            <li>{`size: ${file?.size ?? 0 / 1024} kB`}</li>
-                            <li>{`type: ${file?.type}`}</li>
+                            <li>{`size: ${fileSize / 1024} kB`}</li>
+                            <li>{`type: ${fileType}`}</li>
                         </ul>
                     </div>
 
@@ -117,13 +101,19 @@ const UsersImport = (props: { title: string }) => {
                     <Table className="my-4 text-sm" data-testid="users-table">
                         <Table.Head>
                             <Table.Head.Tr className={"uppercase"}>
-                                {header.map((elem) => <Table.Head.Th key={elem}>{elem}</Table.Head.Th>)}
+                                {header.map((elem, i) => <Table.Head.Th key={`th-${i}-${elem}`}>{elem}</Table.Head.Th>)}
                             </Table.Head.Tr>
                         </Table.Head>
                         <Table.Body>
-                            {content.map((entry) => <Table.Body.Tr key={entry.toString()}>
-                                {entry.map((col) => <Table.Body.Td key={col}>{col}</Table.Body.Td>)}
-                            </Table.Body.Tr>)}
+                            {
+                                content.map(
+                                    (entry, i) =>
+                                        <Table.Body.Tr key={`row-${i}`}>
+                                            {entry.map((col, i) => <Table.Body.Td
+                                                key={`col-${i}-${col}`}>{col}</Table.Body.Td>)}
+                                        </Table.Body.Tr>
+                                )
+                            }
                         </Table.Body>
                     </Table>
                 </>
