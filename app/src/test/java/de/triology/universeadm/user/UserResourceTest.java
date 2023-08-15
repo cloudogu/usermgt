@@ -37,11 +37,11 @@ import de.triology.universeadm.*;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
 import de.triology.universeadm.configuration.I18nConfiguration;
 import de.triology.universeadm.configuration.Language;
-import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.csvimport.ProtocolWriter;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.Groups;
 import de.triology.universeadm.mail.MailSender;
+import de.triology.universeadm.user.imports.CSVHandler;
 import org.codehaus.jackson.JsonNode;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -51,11 +51,9 @@ import org.junit.Test;
 import org.mockito.Matchers;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -72,7 +70,6 @@ import static org.mockito.Mockito.*;
 )
 public class UserResourceTest {
     private GroupManager groupManager;
-    private CSVImportManager csvImportManager;
     private UserResource resource;
     private UserManager userManager;
     private ProtocolWriter.ProtocolWriterBuilder protocolWriterBuilder;
@@ -228,26 +225,6 @@ public class UserResourceTest {
 
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     }
-
-    @Test
-    public void testUserImportSuccesfull() throws URISyntaxException, IOException {
-        byte[] fileContent = Files.readAllBytes(new File("src/test/java/de/triology/universeadm/user/mockimports/UserImportSuccessfull.csv").toPath());
-
-        MockHttpRequest request = MockHttpRequest.post("/users/import").contentType("text/csv").content(fileContent);
-        MockHttpResponse response = Resources.dispatch(resource, request);
-
-        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    }
-
-    @Test
-    public void testUserImportFailure() throws URISyntaxException, IOException {
-        byte[] fileContent = Files.readAllBytes(new File("src/test/java/de/triology/universeadm/user/mockimports/UserImportFailure.csv").toPath());
-
-        MockHttpRequest request = MockHttpRequest.post("/users/import").contentType("text/csv").content(fileContent);
-        MockHttpResponse response = Resources.dispatch(resource, request);
-
-        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-    }
     //~--- set methods ----------------------------------------------------------
 
     @Before
@@ -258,9 +235,7 @@ public class UserResourceTest {
         this.mailSender = mockMailSender();
         this.i18nConfiguration = mockLanguageConfigs();
         this.applicationConfiguration = mockApplicationConfig();
-        PasswordGenerator pwdGen = new PasswordGenerator();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriterBuilder, mailSender, pwdGen, i18nConfiguration, applicationConfiguration);
-        this.resource = new UserResource(userManager, groupManager, csvImportManager);
+        this.resource = new UserResource(userManager, groupManager);
     }
 
     //~--- methods --------------------------------------------------------------

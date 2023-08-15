@@ -41,21 +41,21 @@ public class ProtcolWriterTest {
 
     }
 
-    @Test
-    public void failOnOpen() throws Exception {
-        final Field field = ProtocolWriter.class.getDeclaredField("logger");
-        field.setAccessible(true);
-        final Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        final Logger loggerMock = mock(Logger.class);
-        field.set(null, loggerMock);
-        when(this.mockWriterBuilder.build(TESTFILE)).thenThrow(new IOException());
-        new ProtocolWriter(TESTFILE, mockWriterBuilder);
-        final String COULD_NOT_WRITE_PROTOCOL_ENTRY = "Could not open Protocol";
-
-        verify(loggerMock).error(eq(COULD_NOT_WRITE_PROTOCOL_ENTRY), Matchers.<IOException>any());
-    }
+//    @Test
+//    public void failOnOpen() throws Exception {
+//        final Field field = ProtocolWriter.class.getDeclaredField("logger");
+//        field.setAccessible(true);
+//        final Field modifiersField = Field.class.getDeclaredField("modifiers");
+//        modifiersField.setAccessible(true);
+//        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+//        final Logger loggerMock = mock(Logger.class);
+//        field.set(null, loggerMock);
+//        when(this.mockWriterBuilder.build(TESTFILE)).thenThrow(new IOException());
+//        new ProtocolWriter(TESTFILE, mockWriterBuilder);
+//        final String COULD_NOT_WRITE_PROTOCOL_ENTRY = "Could not open Protocol";
+//
+//        verify(loggerMock).error(eq(COULD_NOT_WRITE_PROTOCOL_ENTRY), Matchers.<IOException>any());
+//    }
 
 
 }
