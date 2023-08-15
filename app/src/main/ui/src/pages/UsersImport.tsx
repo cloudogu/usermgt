@@ -8,7 +8,7 @@ import type {ImportUsersResponse} from "../services/ImportUsers";
 import {ImportUsersService} from "../services/ImportUsers";
 
 type ImportUsersUploadModel = {
-    file?: File[];
+    file?: FileList;
     dryrun: boolean;
 };
 
@@ -27,15 +27,16 @@ const UsersImport = (props: { title: string }) => {
 
     const handlerConfig: FormHandlerConfig<ImportUsersUploadModel> = {
         enableReinitialize: true,
-        initialValues: {file: [], dryrun: false},
+        initialValues: {file: undefined, dryrun: false},
         validationSchema: Yup.object({}),
         onSubmit: async (values, formikHelpers) => {
             if (values.file?.length ?? 0 > 0) {
-                const file = (values.file as File[])[0];
+                const file = values.file?.item(0) as File;
                 const response = await ImportUsersService.save(file);
                 cleanupPreview();
                 setUploadResult(response.data);
                 formikHelpers.resetForm();
+                handler.resetForm();
             }
         }
     };
