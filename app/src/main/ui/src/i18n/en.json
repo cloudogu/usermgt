@@ -182,5 +182,15 @@
       "email": "E-Mail",
       "username": "Username"
     }
+  },
+  "usersImport": {
+    "buttons": {
+      "upload": "Upload"
+    },
+    "headlines": {
+      "importSuccess": "Import abgeschlossen",
+      "importErrors": "Fehler",
+      "table": "Content of the CSV file"
+    }
   }
 }

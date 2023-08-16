@@ -48,29 +48,19 @@ const UsersImport = (props: { title: string }) => {
         <div>
             {notification}
             <Form handler={handler}>
-                <Form.ValidatedCheckboxLabelRight id={"dryrun"} className={"ml-2"} name={"dryrun"}>
-                    Dry run?
-                </Form.ValidatedCheckboxLabelRight>
                 <Form.HandledFileInput
                     className={"mt-4"}
                     variant={"primary"}
                     name={"file"}
                     accept={"text/csv"}
                 />
-                <Button variant={"primary"} type={"submit"}>Hochladen</Button>
+                <Button variant={"primary"} type={"submit"}>{t("usersImport.buttons.upload")}</Button>
             </Form>
             {uploadResult && renderResult(uploadResult)}
 
             {file !== undefined &&
                 <>
-                    <div>
-                        <ul>
-                            <li>{`size: ${file.size / 1024} kB`}</li>
-                            <li>{`type: ${file.type}`}</li>
-                        </ul>
-                    </div>
-
-
+                    <H3 className={"mt-12"}>{t("usersImport.headlines.table")}</H3>
                     <Table className="my-4 text-sm" data-testid="users-table">
                         <Table.Head>
                             <Table.Head.Tr className={"uppercase"}>
@@ -99,13 +89,13 @@ const UsersImport = (props: { title: string }) => {
 
 function renderResult(uploadResult: ImportUsersResponse) {
     return <>
-        <H3>Import abgeschlossen</H3>
+        <H3>{t("usersImport.headlines.importSuccess")}</H3>
         <p>{`Erstellt: ${uploadResult.summary.CREATED}`}</p>
         <p>{`Aktualisiert: ${uploadResult.summary.UPDATED}`}</p>
         <p>{`Übersprungen: ${uploadResult.summary.SKIPPED}`}</p>
-        <hr/>
         {uploadResult.errors && uploadResult.errors.length > 0 && <>
-            <H3>Fehler</H3>
+            <hr/>
+            <H3>{t("usersImport.headlines.importErrors")}</H3>
             <ul>
                 {uploadResult.errors.map(err => <li key={err}>err</li>)}
             </ul>

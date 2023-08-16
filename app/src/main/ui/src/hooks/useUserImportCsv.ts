@@ -1,36 +1,30 @@
 import {useEffect, useState} from "react";
-
-export type CsvParseError = "NO_CSV_FILE" | undefined;
+// This is a javascript module which would produce errors otherwise
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as CSV from "comma-separated-values";
 
 export default function useUserImportCsv(selectedFile: FileList | undefined) {
     const [header, setHeader] = useState([""]);
     const [rows, setRows] = useState([[""]]);
     const [fileSize, setFileSize] = useState(0);
     const [fileType, setFileType] = useState("");
-    const [errors, setErrors] = useState<CsvParseError[] | undefined>(undefined);
 
     useEffect(() => {
         const file = selectedFile?.item(0) as File;
-        if (file) {
-            if (file.type !== "text/csv") {
-                setErrors([...(errors ?? []), "NO_CSV_FILE"]);
-            } else {
-                file.text().then(text => {
-                    const lines = text.split("\n");
-                    if (lines.length > 1) {
-                        setHeader(lines[0].split(","));
-                        const csvContent: string[][] = [];
-                        for (let i = 1; i < lines.length; i++) {
-                            if (lines[i].length > 0) {
-                                csvContent.push(lines[i].split(","));
-                            }
-                        }
-                        setRows(csvContent);
-                        setFileSize(file.size);
-                        setFileType(file.type);
-                    }
-                });
-            }
+        if (file && file.type === "text/csv") {
+            file.text().then(text => {
+                const csv = new CSV(text);
+                const result = csv.parse();
+                const length = result?.length ?? 0;
+                if (length > 0) {
+                    setHeader(result[0]);
+                    result.shift();
+                    setRows([...result]);
+                    setFileSize(file.size);
+                    setFileType(file.type);
+                }
+            });
         } else {
             setHeader([]);
             setRows([]);
@@ -45,7 +39,6 @@ export default function useUserImportCsv(selectedFile: FileList | undefined) {
             type: fileType,
             header: header,
             rows: rows,
-        },
-        errors: errors,
+        }
     };
 }

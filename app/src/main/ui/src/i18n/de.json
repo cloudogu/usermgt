@@ -183,5 +183,15 @@
       "email": "E-Mail",
       "username": "Nutzername"
     }
+  },
+  "usersImport": {
+    "buttons": {
+      "upload": "Hochladen"
+    },
+    "headlines": {
+      "importSuccess": "Import abgeschlossen",
+      "importErrors": "Fehler",
+      "table": "Inhalt der CSV-Datei"
+    }
   }
 }
