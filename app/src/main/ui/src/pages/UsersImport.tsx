@@ -1,6 +1,5 @@
 import {Button, Form, H1, H3, Table, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
-import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
@@ -48,7 +47,7 @@ const UsersImport = (props: { title: string }) => {
     };
     const handler = useFormHandler(handlerConfig);
     const {file} = useUserImportCsv(handler?.values?.file);
-    const [uploadResult, setUploadResult] = useState<ImportUsersResponse>();
+    const [uploadResult, setUploadResult] = useState<ImportUsersResponse | undefined>(undefined);
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -62,8 +61,12 @@ const UsersImport = (props: { title: string }) => {
                     variant={"primary"}
                     name={"file"}
                     accept={"text/csv"}
+                    onChange={() => {
+                        setUploadResult(undefined);
+                    }}
                 />
-                <Button variant={"primary"} type={"submit"} className={"mt-4"}>{t("usersImport.buttons.upload")}</Button>
+                <Button disabled={(file?.size ?? 0) === 0} variant={"primary"} type={"submit"}
+                    className={"mt-4"}>{t("usersImport.buttons.upload")}</Button>
             </Form>
             {uploadResult && renderResult(uploadResult)}
 
