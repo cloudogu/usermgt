@@ -30,6 +30,7 @@ export default function UsersImportTable(file: { header: string[], rows: string[
             </Table.Body>
             <Table.ConditionalFoot show={pageCount > 1}>
                 <Table.Foot.Pagination
+                    className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
                     pageCount={pageCount}
                     currentPage={currentPage}
                     onPageChange={(p) => {
