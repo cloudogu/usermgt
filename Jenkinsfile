@@ -51,7 +51,7 @@ node('docker') {
 
     // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
     // builds run concurrently (e.g. feature branch, PR and develop)
-    new Docker(this).image('timbru31/java-node:8-jdk-18')
+    new Docker(this).image('timbru31/java-node:11-jdk-18')
             .mountJenkinsUser()
             .inside {
 
@@ -184,11 +184,11 @@ node('docker') {
 
         stage('Integration Tests - After Upgrade') {
          echo "run integration tests."
-         ecoSystem.runCypressIntegrationTests([
-                 cypressImage: "cypress/included:8.6.0",
-                 enableVideo: params.EnableVideoRecording,
-                 enableScreenshots    : params.EnableScreenshotRecording,
-         ])
+            ecoSystem.runCypressIntegrationTests([
+                    cypressImage: "cypress/included:12.9.0",
+                    enableVideo: params.EnableVideoRecording,
+                    enableScreenshots    : params.EnableScreenshotRecording,
+            ])
         }
       }
 

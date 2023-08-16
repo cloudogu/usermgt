@@ -2,7 +2,7 @@ ARG TOMCAT_MAJOR_VERSION=8
 ARG TOMCAT_VERSION=8.5.88
 ARG TOMCAT_TARGZ_SHA512=c31c794092b160c5b0099f4dfb5cf17d711d93ae68a60e414691dba65ad80c78a5fb602c7010d1226dae424b83921e440bd858b3eb0ef90b7932316d3ab44c1f
 
-FROM timbru31/java-node:8-jdk-18 as builder
+FROM timbru31/java-node:11-jdk-18 as builder
 COPY app/pom.xml /usermgt/pom.xml
 COPY app/mvnw /usermgt/mvnw
 COPY app/.mvn /usermgt/.mvn
@@ -33,7 +33,7 @@ RUN apk update && apk add wget && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
 
-FROM registry.cloudogu.com/official/java:8u362-1
+FROM registry.cloudogu.com/official/java:11.0.19-1
 
 ARG TOMCAT_VERSION
 
