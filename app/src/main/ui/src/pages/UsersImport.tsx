@@ -1,30 +1,29 @@
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 import {Button, Form, H1, H3, Table, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import * as Yup from "yup";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import type {ImportUsersResponse} from "../services/ImportUsers";
 import {ImportUsersService} from "../services/ImportUsers";
+import useUserImportCsv from "../hooks/useUserImportCsv";
 
 type ImportUsersUploadModel = {
     file?: FileList;
     dryrun: boolean;
 };
 
+export interface ImportUsersResponse {
+    summary: {
+        CREATED: number;
+        UPDATED: number;
+        SKIPPED: number;
+    },
+    errors: string[];
+}
+
 const UsersImport = (props: { title: string }) => {
     useSetPageTitle(props.title);
     const {notification, notify, clearNotification} = useAlertNotification();
-    const [header, setHeader] = useState([""]);
-    const [content, setContent] = useState([[""]]);
-    const [uploadResult, setUploadResult] = useState<ImportUsersResponse>();
-    const [fileSize, setFileSize] = useState(0);
-    const [fileType, setFileType] = useState("");
-    const cleanupPreview = () => {
-        setHeader([]);
-        setContent([]);
-    };
-
     const handlerConfig: FormHandlerConfig<ImportUsersUploadModel> = {
         enableReinitialize: true,
         initialValues: {file: undefined, dryrun: false},
@@ -33,41 +32,14 @@ const UsersImport = (props: { title: string }) => {
             if (values.file?.length ?? 0 > 0) {
                 const file = values.file?.item(0) as File;
                 const response = await ImportUsersService.save(file);
-                cleanupPreview();
                 setUploadResult(response.data);
                 formikHelpers.resetForm();
-                handler.resetForm();
             }
         }
     };
     const handler = useFormHandler(handlerConfig);
-
-    useEffect(() => {
-        const file = (handler.values["file"] ?? [])[0];
-        if (file && file.type === "text/csv") {
-            file.text().then(text => {
-                const lines = text.split("\n");
-                if (lines.length > 1) {
-                    setHeader(lines[0].split(","));
-                    const csvContent: string[][] = [];
-                    for (let i = 1; i < lines.length; i++) {
-                        if (lines[i].length > 0) {
-                            csvContent.push(lines[i].split(","));
-                        }
-                    }
-                    setContent(csvContent);
-                    setFileSize(file.size);
-                    setFileType(file.type);
-                }
-            });
-        } else {
-            setHeader([]);
-            setContent([]);
-            setFileSize(0);
-            setFileType("");
-        }
-    }, [handler.values]);
-
+    const {file} = useUserImportCsv(handler?.values?.file);
+    const [uploadResult, setUploadResult] = useState<ImportUsersResponse>();
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -89,12 +61,12 @@ const UsersImport = (props: { title: string }) => {
             </Form>
             {uploadResult && renderResult(uploadResult)}
 
-            {fileSize > 0 &&
+            {file !== undefined &&
                 <>
                     <div>
                         <ul>
-                            <li>{`size: ${fileSize / 1024} kB`}</li>
-                            <li>{`type: ${fileType}`}</li>
+                            <li>{`size: ${file.size / 1024} kB`}</li>
+                            <li>{`type: ${file.type}`}</li>
                         </ul>
                     </div>
 
@@ -102,12 +74,13 @@ const UsersImport = (props: { title: string }) => {
                     <Table className="my-4 text-sm" data-testid="users-table">
                         <Table.Head>
                             <Table.Head.Tr className={"uppercase"}>
-                                {header.map((elem, i) => <Table.Head.Th key={`th-${i}-${elem}`}>{elem}</Table.Head.Th>)}
+                                {file.header.map((elem, i) => <Table.Head.Th
+                                    key={`th-${i}-${elem}`}>{elem}</Table.Head.Th>)}
                             </Table.Head.Tr>
                         </Table.Head>
                         <Table.Body>
                             {
-                                content.map(
+                                file.rows.map(
                                     (entry, i) =>
                                         <Table.Body.Tr key={`row-${i}`}>
                                             {entry.map((col, i) => <Table.Body.Td

@@ -2,15 +2,8 @@ import {AxiosResponse, isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {AxiosError} from "axios";
+import {ImportUsersResponse} from "../hooks/useUserImportCsv";
 
-export interface ImportUsersResponse {
-    summary: {
-        CREATED: number;
-        UPDATED: number;
-        SKIPPED: number;
-    },
-    errors: string[];
-}
 
 export const ImportUsersService = {
     async save(file: File): Promise<AxiosResponse<ImportUsersResponse>> {
