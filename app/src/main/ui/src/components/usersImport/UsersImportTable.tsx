@@ -1,0 +1,42 @@
+import {Table} from "@cloudogu/ces-theme-tailwind";
+import React, {useState} from "react";
+
+export default function UsersImportTable(file: { header: string[], rows: string[][] }) {
+    const pageSize = 12;
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageCount = Math.ceil(file.rows.length / pageSize);
+    const startIndex = pageSize * (currentPage - 1);
+    const endIndex = pageSize * currentPage;
+    const entries = file.rows.filter((_, index) => index >= startIndex && index < endIndex);
+
+    return (
+        <Table className="my-4 text-sm" data-testid="users-table">
+            <Table.Head>
+                <Table.Head.Tr className={"uppercase"}>
+                    {file.header.map((elem, i) => <Table.Head.Th
+                        key={`th-${i}-${elem}`}>{elem}</Table.Head.Th>)}
+                </Table.Head.Tr>
+            </Table.Head>
+            <Table.Body>
+                {
+                    entries.map(
+                        (entry, i) =>
+                            <Table.Body.Tr key={`row-${i}`}>
+                                {entry.map((col, i) => <Table.Body.Td
+                                    key={`col-${i}-${col}`}>{col}</Table.Body.Td>)}
+                            </Table.Body.Tr>
+                    )
+                }
+            </Table.Body>
+            <Table.ConditionalFoot show={pageCount > 1}>
+                <Table.Foot.Pagination
+                    pageCount={pageCount}
+                    currentPage={currentPage}
+                    onPageChange={(p) => {
+                        setCurrentPage(p);
+                    }}
+                />
+            </Table.ConditionalFoot>
+        </Table>
+    );
+}

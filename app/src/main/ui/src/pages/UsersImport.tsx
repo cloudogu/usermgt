@@ -6,6 +6,7 @@ import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import UsersImportTable from "../components/usersImport/UsersImportTable";
 
 
 type ImportUsersUploadModel = {
@@ -73,25 +74,29 @@ const UsersImport = (props: { title: string }) => {
             {file !== undefined &&
                 <>
                     <H3 className={"mt-12"}>{t("usersImport.headlines.table")}</H3>
-                    <Table className="my-4 text-sm" data-testid="users-table">
-                        <Table.Head>
-                            <Table.Head.Tr className={"uppercase"}>
-                                {file.header.map((elem, i) => <Table.Head.Th
-                                    key={`th-${i}-${elem}`}>{elem}</Table.Head.Th>)}
-                            </Table.Head.Tr>
-                        </Table.Head>
-                        <Table.Body>
-                            {
-                                file.rows.map(
-                                    (entry, i) =>
-                                        <Table.Body.Tr key={`row-${i}`}>
-                                            {entry.map((col, i) => <Table.Body.Td
-                                                key={`col-${i}-${col}`}>{col}</Table.Body.Td>)}
-                                        </Table.Body.Tr>
-                                )
-                            }
-                        </Table.Body>
-                    </Table>
+                    <UsersImportTable header={file.header} rows={file.rows}/>
+                    {/*<Table className="my-4 text-sm" data-testid="users-table">*/}
+                    {/*    <Table.Head>*/}
+                    {/*        <Table.Head.Tr className={"uppercase"}>*/}
+                    {/*            {file.header.map((elem, i) => <Table.Head.Th*/}
+                    {/*                key={`th-${i}-${elem}`}>{elem}</Table.Head.Th>)}*/}
+                    {/*        </Table.Head.Tr>*/}
+                    {/*    </Table.Head>*/}
+                    {/*    <Table.Body>*/}
+                    {/*        {*/}
+                    {/*            file.rows.map(*/}
+                    {/*                (entry, i) =>*/}
+                    {/*                    <Table.Body.Tr key={`row-${i}`}>*/}
+                    {/*                        {entry.map((col, i) => <Table.Body.Td*/}
+                    {/*                            key={`col-${i}-${col}`}>{col}</Table.Body.Td>)}*/}
+                    {/*                    </Table.Body.Tr>*/}
+                    {/*            )*/}
+                    {/*        }*/}
+                    {/*    </Table.Body>*/}
+                    {/*    <Table.ConditionalFoot show={false}>*/}
+                    {/*        <Table.Foot.Pagination pageCount={12} currentPage={1} onPageChange={() => {}}/>*/}
+                    {/*    </Table.ConditionalFoot>*/}
+                    {/*</Table>*/}
                 </>
             }
 
