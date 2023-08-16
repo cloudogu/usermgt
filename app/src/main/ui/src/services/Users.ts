@@ -31,7 +31,9 @@ export type UsersModel = PagedModel & {
 }
 
 export enum UserConstraints {
+    // eslint-disable-next-line autofix/no-unused-vars
     UniqueEmail = "UNIQUE_EMAIL",
+    // eslint-disable-next-line autofix/no-unused-vars
     UniqueUsername = "UNIQUE_USERNAME",
 }
 
