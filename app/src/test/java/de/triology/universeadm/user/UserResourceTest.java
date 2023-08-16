@@ -34,28 +34,20 @@ import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import de.triology.universeadm.*;
-import de.triology.universeadm.configuration.ApplicationConfiguration;
-import de.triology.universeadm.configuration.I18nConfiguration;
-import de.triology.universeadm.configuration.Language;
-import de.triology.universeadm.csvimport.CSVImportManager;
-import de.triology.universeadm.csvimport.ProtocolWriter;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.Groups;
-import de.triology.universeadm.mail.MailSender;
+import de.triology.universeadm.user.imports.CSVHandler;
 import org.codehaus.jackson.JsonNode;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -72,13 +64,9 @@ import static org.mockito.Mockito.*;
 )
 public class UserResourceTest {
     private GroupManager groupManager;
-    private CSVImportManager csvImportManager;
     private UserResource resource;
     private UserManager userManager;
-    private ProtocolWriter.ProtocolWriterBuilder protocolWriterBuilder;
-    private MailSender mailSender;
-    private I18nConfiguration i18nConfiguration;
-    private ApplicationConfiguration applicationConfiguration;
+    private CSVHandler csvHandler;
 
     @Test
     public void testAddMembership() throws URISyntaxException, IOException {
@@ -228,39 +216,14 @@ public class UserResourceTest {
 
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     }
-
-    @Test
-    public void testUserImportSuccesfull() throws URISyntaxException, IOException {
-        byte[] fileContent = Files.readAllBytes(new File("src/test/java/de/triology/universeadm/user/mockimports/UserImportSuccessfull.csv").toPath());
-
-        MockHttpRequest request = MockHttpRequest.post("/users/import").contentType("text/csv").content(fileContent);
-        MockHttpResponse response = Resources.dispatch(resource, request);
-
-        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    }
-
-    @Test
-    public void testUserImportFailure() throws URISyntaxException, IOException {
-        byte[] fileContent = Files.readAllBytes(new File("src/test/java/de/triology/universeadm/user/mockimports/UserImportFailure.csv").toPath());
-
-        MockHttpRequest request = MockHttpRequest.post("/users/import").contentType("text/csv").content(fileContent);
-        MockHttpResponse response = Resources.dispatch(resource, request);
-
-        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-    }
     //~--- set methods ----------------------------------------------------------
 
     @Before
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
-        this.protocolWriterBuilder = mockProtocolWriterBuilder();
-        this.mailSender = mockMailSender();
-        this.i18nConfiguration = mockLanguageConfigs();
-        this.applicationConfiguration = mockApplicationConfig();
-        PasswordGenerator pwdGen = new PasswordGenerator();
-        this.csvImportManager = new CSVImportManager(userManager, groupManager, protocolWriterBuilder, mailSender, pwdGen, i18nConfiguration, applicationConfiguration);
-        this.resource = new UserResource(userManager, groupManager, csvImportManager);
+        this.csvHandler = new CSVHandler(userManager);
+        this.resource = new UserResource(userManager, groupManager, csvHandler);
     }
 
     //~--- methods --------------------------------------------------------------
@@ -292,24 +255,5 @@ public class UserResourceTest {
     public static void beforeClass()
     {
         System.setProperty("universeadm.home", "src/test/resources/");
-    }
-
-
-    private ProtocolWriter.ProtocolWriterBuilder mockProtocolWriterBuilder() {
-        ProtocolWriter.ProtocolWriterBuilder pWBuilder= mock(ProtocolWriter.ProtocolWriterBuilder.class);
-        when(pWBuilder.build(Matchers.anyString())).thenReturn(mock(ProtocolWriter.class));
-        return pWBuilder;
-    }
-
-    private MailSender mockMailSender() {
-        return mock(MailSender.class);
-    }
-
-    private I18nConfiguration mockLanguageConfigs() {
-        return new I18nConfiguration(Language.en, Language.de);
-    }
-
-    private ApplicationConfiguration mockApplicationConfig() {
-       return BaseDirectory.getConfiguration("application-configuration.xml", ApplicationConfiguration.class);
     }
 }
