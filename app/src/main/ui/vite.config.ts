@@ -30,6 +30,12 @@ export default defineConfig(({command, mode}) => {
                     changeOrigin: true,
                     secure: false,
                     auth: `${env.AUTH_USER}:${env.AUTH_PASSWORD}`
+                },
+                "/usermgt/:import": {
+                    target: "http://192.168.56.2",
+                    changeOrigin: true,
+                    secure: false,
+                    auth: `${env.AUTH_USER}:${env.AUTH_PASSWORD}`
                 }
             },
         };

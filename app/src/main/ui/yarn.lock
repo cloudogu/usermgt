@@ -217,10 +217,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/ces-theme-tailwind@^0.1.4":
-  version "0.1.4"
-  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.1.4.tgz#1f186f9f0f44d22b567734a19670667003e89e71"
-  integrity sha512-oOnGUywYsjJJJ16a+GFzs6UGU20nIN0Kzaw/H8SU+Z8+2D0c5907VzH7/2Gsv/JgC25+EMqn3Mr4oTFBL9+WIQ==
+"@cloudogu/ces-theme-tailwind@0.1.9":
+  version "0.1.9"
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.1.9.tgz#6071fbcb0171439fc8df22f2177986e76c58dc73"
+  integrity sha512-xa3RNfbi8QzUw31i/q95wjPSNLqnnutL+97vdW7T0f+G1GkdfIXNaPJ/k44kMI8a017udY8o9+FXxodtbZurlw==
   dependencies:
     "@heroicons/react" "^2.0.13"
     "@phosphor-icons/react" "^2.0.8"
@@ -1008,6 +1008,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+comma-separated-values@^3.6.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/comma-separated-values/-/comma-separated-values-3.6.4.tgz#c309ec7024f74b7ae19223372054242617e35bd2"
+  integrity sha512-B0mjBHUfu4JqzYM5NurRTBl2QuNqQ9/O62EUfL4+bo2KN81fGsFOFOHbHn5SP65n3lmFPzGLkdg8wfuLKk9HOQ==
 
 compressible@~2.0.16:
   version "2.0.18"

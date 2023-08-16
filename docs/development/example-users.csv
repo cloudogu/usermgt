@@ -1,0 +1,5 @@
+DISPLAYNAME,EXTERNAL,MAIL,PWDRESET,SURNAME,USERNAME
+myadmin,TRUE,myadmin@test.de,TRUE,myadmin,myadmin
+myadmin,TRUE,myadmin@test.de,TRUE,"myadmin, with ""long"" name",myadmin
+mynormaluser,TRUE,mynormaluser@test.de,TRUE,mynormaluser,mynormaluser
+mynormaluser,TRUE,mynormaluser@test.de,TRUE,mynormaluser,mynormaluser2
