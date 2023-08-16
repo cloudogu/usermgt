@@ -423,21 +423,6 @@
                 <executions>
                     <execution>
                         <phase>validate</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${endorsed.dir}</outputDirectory>
-                            <silent>true</silent>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>javax</groupId>
-                                    <artifactId>javaee-endorsed-api</artifactId>
-                                    <version>6.0</version>
-                                    <type>jar</type>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -761,7 +746,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.javaLevel>1.8</project.build.javaLevel>
+        <project.build.javaLevel>11</project.build.javaLevel>
         <powermock.version>1.5.3</powermock.version>
         <slf4j.version>1.7.36</slf4j.version>
         <resteasy.version>3.15.6.Final</resteasy.version>
@@ -773,6 +758,8 @@
         <yarn.version>v1.22.19</yarn.version>
         <jacoco.version>0.8.10</jacoco.version>
         <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
 </project>
