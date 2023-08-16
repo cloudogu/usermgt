@@ -31,9 +31,16 @@ const UsersImport = (props: { title: string }) => {
         onSubmit: async (values, formikHelpers) => {
             if (values.file?.length ?? 0 > 0) {
                 const file = values.file?.item(0) as File;
-                const response = await ImportUsersService.save(file);
-                setUploadResult(response.data);
-                formikHelpers.resetForm();
+                ImportUsersService.save(file)
+                    .then(response => {
+                        setUploadResult(response.data);
+                    })
+                    .catch(e => {
+                        notify(e.message, "danger");
+                    })
+                    .finally(() => {
+                        formikHelpers.resetForm();
+                    });
             }
         }
     };
@@ -94,7 +101,6 @@ function renderResult(uploadResult: ImportUsersResponse) {
         <p>{`Aktualisiert: ${uploadResult.summary.UPDATED}`}</p>
         <p>{`Übersprungen: ${uploadResult.summary.SKIPPED}`}</p>
         {uploadResult.errors && uploadResult.errors.length > 0 && <>
-            <hr/>
             <H3>{t("usersImport.headlines.importErrors")}</H3>
             <ul>
                 {uploadResult.errors.map(err => <li key={err}>err</li>)}

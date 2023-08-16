@@ -192,6 +192,10 @@
       "importSuccess": "Import abgeschlossen",
       "importErrors": "Fehler",
       "table": "Inhalt der CSV-Datei"
+    },
+    "notification": {
+      "genericError": "Die Nutzer aus der Datei '{{file}}' konnten nicht importiert werden.",
+      "invalidFile": "Die Datei '{{file}}' ist keine gültige CSV-Datei."
     }
   }
 }

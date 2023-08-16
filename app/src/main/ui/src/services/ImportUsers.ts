@@ -1,7 +1,7 @@
+import type {AxiosError} from "axios";
 import {AxiosResponse, isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
-import type {AxiosError} from "axios";
 import {ImportUsersResponse} from "../hooks/useUserImportCsv";
 
 
@@ -18,11 +18,11 @@ export const ImportUsersService = {
         } catch (e: AxiosError | unknown) {
             if (isAxiosError(e)) {
                 const axiosError = e as AxiosError;
-                if (axiosError.response?.status === 409) {
-                    throw axiosError.response.data;
+                if (axiosError.response?.status === 400) {
+                    throw new Error(t("usersImport.notification.invalidFile", {file: file.name}));
                 }
             }
-            throw new Error(t("newUser.notification.error", {username: file.name}));
+            throw new Error(t("usersImport.notification.genericError", {file: file.name}));
         }
     }
 };

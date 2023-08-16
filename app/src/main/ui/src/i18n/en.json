@@ -191,6 +191,10 @@
       "importSuccess": "Import abgeschlossen",
       "importErrors": "Fehler",
       "table": "Content of the CSV file"
+    },
+    "notification": {
+      "genericError": "Could not import users from '{{file}}' file.",
+      "invalidFile": "The file '{{file}}' is not a valid csv file."
     }
   }
 }
