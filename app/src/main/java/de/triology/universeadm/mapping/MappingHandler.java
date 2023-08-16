@@ -95,8 +95,8 @@ public class MappingHandler<T extends Comparable<T>> {
         logger.info("update entity {}", id);
         validator.validate(object, "entity is not valid");
         try {
-            var dn = searchDN(id);
-            var mappedObjectClasses = mapper.getObjectClasses();
+            String dn = searchDN(id);
+            Attribute mappedObjectClasses = mapper.getObjectClasses();
             List<Modification> modifications = mapper.getModifications(object);
             modifications = consume(object, modifications);
             if (modifications != null && !modifications.isEmpty()) {
