@@ -1,5 +1,6 @@
 package de.triology.universeadm.user.imports;
 
+import com.google.inject.Inject;
 import de.triology.universeadm.ConstraintViolationException;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
@@ -41,6 +42,7 @@ public class CSVHandler {
      * Constructs the CSVHandler. Initializes an empty ArrayList for the errors.
      * @param userManager
      */
+    @Inject
     public CSVHandler(UserManager userManager) {
         this.userManager = userManager;
         this.errors = new ArrayList<>();

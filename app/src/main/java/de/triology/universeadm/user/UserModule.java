@@ -34,6 +34,7 @@ package de.triology.universeadm.user;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
+import de.triology.universeadm.user.imports.CSVHandler;
 import org.kohsuke.MetaInfServices;
 
 /**
@@ -52,6 +53,7 @@ public class UserModule extends AbstractModule
   protected void configure()
   {
     bind(UserManager.class).to(LDAPUserManager.class);
+    bind(CSVHandler.class);
     bind(MemberListener.class).asEagerSingleton();
     bind(UserResource.class);
     bind(UserSelfRemoveExceptionMapper.class);

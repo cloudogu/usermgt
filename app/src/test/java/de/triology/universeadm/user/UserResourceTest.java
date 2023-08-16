@@ -72,10 +72,7 @@ public class UserResourceTest {
     private GroupManager groupManager;
     private UserResource resource;
     private UserManager userManager;
-    private ProtocolWriter.ProtocolWriterBuilder protocolWriterBuilder;
-    private MailSender mailSender;
-    private I18nConfiguration i18nConfiguration;
-    private ApplicationConfiguration applicationConfiguration;
+    private CSVHandler csvHandler;
 
     @Test
     public void testAddMembership() throws URISyntaxException, IOException {
@@ -231,11 +228,8 @@ public class UserResourceTest {
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
-        this.protocolWriterBuilder = mockProtocolWriterBuilder();
-        this.mailSender = mockMailSender();
-        this.i18nConfiguration = mockLanguageConfigs();
-        this.applicationConfiguration = mockApplicationConfig();
-        this.resource = new UserResource(userManager, groupManager);
+        this.csvHandler = new CSVHandler(userManager);
+        this.resource = new UserResource(userManager, groupManager, csvHandler);
     }
 
     //~--- methods --------------------------------------------------------------
@@ -267,24 +261,5 @@ public class UserResourceTest {
     public static void beforeClass()
     {
         System.setProperty("universeadm.home", "src/test/resources/");
-    }
-
-
-    private ProtocolWriter.ProtocolWriterBuilder mockProtocolWriterBuilder() {
-        ProtocolWriter.ProtocolWriterBuilder pWBuilder= mock(ProtocolWriter.ProtocolWriterBuilder.class);
-        when(pWBuilder.build(Matchers.anyString())).thenReturn(mock(ProtocolWriter.class));
-        return pWBuilder;
-    }
-
-    private MailSender mockMailSender() {
-        return mock(MailSender.class);
-    }
-
-    private I18nConfiguration mockLanguageConfigs() {
-        return new I18nConfiguration(Language.en, Language.de);
-    }
-
-    private ApplicationConfiguration mockApplicationConfig() {
-       return BaseDirectory.getConfiguration("application-configuration.xml", ApplicationConfiguration.class);
     }
 }

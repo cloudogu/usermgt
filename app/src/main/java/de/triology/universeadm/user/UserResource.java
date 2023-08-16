@@ -60,10 +60,11 @@ public class UserResource extends AbstractManagerResource<User> {
      * @param groupManager
      */
     @Inject
-    public UserResource(UserManager userManager, GroupManager groupManager) {
+    public UserResource(UserManager userManager, GroupManager groupManager, CSVHandler csvHandler) {
         super(userManager);
         this.userManager = userManager;
         this.groupManager = groupManager;
+        this.csvHandler = csvHandler;
     }
 
     //~--- methods --------------------------------------------------------------
@@ -78,9 +79,8 @@ public class UserResource extends AbstractManagerResource<User> {
                         .entity(errMsg)
                         .build();
 
-        CSVHandler csvHandler = new CSVHandler(this.userManager);
         try {
-            Result result = csvHandler.handle(input);
+            Result result = this.csvHandler.handle(input);
             logger.debug("Successfully handled csv import {}", result);
 
             return Response.status(Response.Status.OK).entity(result).build();
@@ -192,4 +192,9 @@ public class UserResource extends AbstractManagerResource<User> {
      * Field description
      */
     private final UserManager userManager;
+
+    /**
+     * Field description
+     */
+    private final CSVHandler csvHandler;
 }
