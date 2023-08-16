@@ -5,8 +5,8 @@ import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {emptyUser} from "../services/Account";
-import {isUsersConstraintsError, UserConstraints, UsersConstraintsError, UsersService} from "../services/Users";
-import type {User} from "../services/Users";
+import {isUsersConstraintsError, UserConstraints, UsersService} from "../services/Users";
+import type {User, UsersConstraintsError} from "../services/Users";
 
 export default function NewUser(props: { title: string }) {
     useSetPageTitle(props.title);
@@ -19,38 +19,36 @@ export default function NewUser(props: { title: string }) {
             groupsReadonly={false}
             passwordReset={true}
             disableUsernameField={false}
-            onSubmit={(user, notify, handler) => {
-                return UsersService.save(user)
-                    .then((msg: string) => {
-                        navigate("/users", {
-                            state: {
-                                alert: {
-                                    message: msg,
-                                    variant: "primary"
-                                }
+            onSubmit={(user, notify, handler) => UsersService.save(user)
+                .then((msg: string) => {
+                    navigate("/users", {
+                        state: {
+                            alert: {
+                                message: msg,
+                                variant: "primary"
                             }
-                        });
-                    }).catch((error: UsersConstraintsError | Error) => {
-                        if (isUsersConstraintsError(error)) {
-                            const messages = [];
-                            if (error.constraints.includes(UserConstraints.UniqueUsername)) {
-                                const msg = t("newUser.notification.errorDuplicateUsername", {username: user.username});
-                                messages.push(msg);
-                                handler.setFieldError("username", msg);
-                            }
-
-                            if (error.constraints.includes(UserConstraints.UniqueEmail)) {
-                                const msg = t("newUser.notification.errorDuplicateMail", {mail: user.mail});
-                                messages.push(msg);
-                                handler.setFieldError("mail", msg);
-                            }
-
-                            notify((<>{ messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
-                        } else {
-                            notify(error.message, "danger");
                         }
                     });
-            }}
+                }).catch((error: UsersConstraintsError | Error) => {
+                    if (isUsersConstraintsError(error)) {
+                        const messages = [];
+                        if (error.constraints.includes(UserConstraints.UniqueUsername)) {
+                            const msg = t("newUser.notification.errorDuplicateUsername", {username: user.username});
+                            messages.push(msg);
+                            handler.setFieldError("username", msg);
+                        }
+
+                        if (error.constraints.includes(UserConstraints.UniqueEmail)) {
+                            const msg = t("newUser.notification.errorDuplicateMail", {mail: user.mail});
+                            messages.push(msg);
+                            handler.setFieldError("mail", msg);
+                        }
+
+                        notify((<>{ messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
+                    } else {
+                        notify(error.message, "danger");
+                    }
+                })}
             additionalButtons={
                 <Button variant={"secondary"} type={"button"} className={"ml-4"} data-testid="back-button"
                     onClick={() => navigate("/users")}>

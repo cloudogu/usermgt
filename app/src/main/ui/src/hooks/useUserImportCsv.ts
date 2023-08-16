@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
 // This is a javascript module which would produce errors otherwise
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as CSV from "comma-separated-values";
+import {useEffect, useState} from "react";
 
 export default function useUserImportCsv(selectedFile: FileList | undefined) {
     const [header, setHeader] = useState([""]);

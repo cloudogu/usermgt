@@ -1,10 +1,10 @@
 import {createPaginationData} from "@cloudogu/ces-theme-tailwind";
-import {AxiosResponse, isAxiosError} from "axios";
+import { isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {QueryOptions} from "../hooks/useAPI";
 import type { PagedModel} from "@cloudogu/ces-theme-tailwind";
-import type {AxiosError} from "axios";
+import type {AxiosError,AxiosResponse} from "axios";
 
 export type GroupsModel = PagedModel & {
     groups: Group[];

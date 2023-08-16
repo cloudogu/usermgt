@@ -1,11 +1,11 @@
-import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 import {Button, Form, H1, H3, Table, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import * as Yup from "yup";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import {ImportUsersService} from "../services/ImportUsers";
 import useUserImportCsv from "../hooks/useUserImportCsv";
+import {ImportUsersService} from "../services/ImportUsers";
+import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
 type ImportUsersUploadModel = {
     file?: FileList;
@@ -23,7 +23,7 @@ export interface ImportUsersResponse {
 
 const UsersImport = (props: { title: string }) => {
     useSetPageTitle(props.title);
-    const {notification, notify, clearNotification} = useAlertNotification();
+    const {notification, notify } = useAlertNotification();
     const handlerConfig: FormHandlerConfig<ImportUsersUploadModel> = {
         enableReinitialize: true,
         initialValues: {file: undefined, dryrun: false},

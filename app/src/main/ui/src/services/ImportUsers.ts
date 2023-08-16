@@ -1,10 +1,8 @@
-import type {AxiosError} from "axios";
-import {AxiosResponse, isAxiosError} from "axios";
+import { isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
-import {ImportUsersResponse} from "../hooks/useUserImportCsv";
-
-
+import type {ImportUsersResponse} from "../pages/UsersImport";
+import type {AxiosError,AxiosResponse} from "axios";
 export const ImportUsersService = {
     async save(file: File): Promise<AxiosResponse<ImportUsersResponse>> {
         try {

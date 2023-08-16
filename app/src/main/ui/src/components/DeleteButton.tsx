@@ -1,18 +1,19 @@
-import React, {ComponentPropsWithoutRef} from "react";
 import {TrashIcon, PencilIcon} from "@heroicons/react/24/outline";
+import React from "react";
+import type {ComponentPropsWithoutRef} from "react";
 
 type ButtonProps = ComponentPropsWithoutRef<"button">
 
 export function DeleteButton(props: ButtonProps) {
     return <IconButton {...props}>
         <TrashIcon className={"w-6 h-6"}/>
-    </IconButton>
+    </IconButton>;
 }
 
 export function EditButton(props: ButtonProps) {
     return <IconButton {...props}>
         <PencilIcon className={"w-6 h-6"}/>
-    </IconButton>
+    </IconButton>;
 }
 
 function IconButton({children, ...props}: ButtonProps) {

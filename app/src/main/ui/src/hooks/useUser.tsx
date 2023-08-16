@@ -1,6 +1,7 @@
 import {emptyUser} from "../services/Account";
+import { UsersService} from "../services/Users";
 import {useAPI} from "./useAPI";
-import {User, UsersService} from "../services/Users";
+import type {User} from "../services/Users";
 
 export function useUser(username?: string) {
     const {data, isLoading, setData: setUser} = useAPI<User, string>(UsersService.get, username ?? "");
