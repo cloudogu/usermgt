@@ -27,6 +27,7 @@
 
 package de.triology.universeadm.mapping;
 
+import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.Modification;
@@ -44,6 +45,8 @@ public interface Mapper<T>
   public Filter getBaseFilter();
   
   public List<String> getSearchAttributes();
+  
+  public Attribute getObjectClasses();
   
   public String getRDNName();
   
