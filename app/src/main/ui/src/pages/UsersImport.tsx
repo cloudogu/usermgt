@@ -1,11 +1,13 @@
 import {Button, Form, H1, H3, Table, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
+import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+
 
 type ImportUsersUploadModel = {
     file?: FileList;
@@ -23,7 +25,7 @@ export interface ImportUsersResponse {
 
 const UsersImport = (props: { title: string }) => {
     useSetPageTitle(props.title);
-    const {notification, notify } = useAlertNotification();
+    const {notification, notify} = useAlertNotification();
     const handlerConfig: FormHandlerConfig<ImportUsersUploadModel> = {
         enableReinitialize: true,
         initialValues: {file: undefined, dryrun: false},
@@ -61,7 +63,7 @@ const UsersImport = (props: { title: string }) => {
                     name={"file"}
                     accept={"text/csv"}
                 />
-                <Button variant={"primary"} type={"submit"}>{t("usersImport.buttons.upload")}</Button>
+                <Button variant={"primary"} type={"submit"} className={"mt-4"}>{t("usersImport.buttons.upload")}</Button>
             </Form>
             {uploadResult && renderResult(uploadResult)}
 
