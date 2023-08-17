@@ -2,7 +2,7 @@ import {Table} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 
 export default function UsersImportTable(file: { header: string[], rows: string[][] }) {
-    const pageSize = 12;
+    const pageSize = 8;
     const [currentPage, setCurrentPage] = useState(1);
     const pageCount = Math.ceil(file.rows.length / pageSize);
     const startIndex = pageSize * (currentPage - 1);
@@ -30,7 +30,7 @@ export default function UsersImportTable(file: { header: string[], rows: string[
             </Table.Body>
             <Table.ConditionalFoot show={pageCount > 1}>
                 <Table.Foot.Pagination
-                    className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
+                    // className={"absolute bottom-0 left-1/2 -translate-x-1/2"}
                     pageCount={pageCount}
                     currentPage={currentPage}
                     onPageChange={(p) => {

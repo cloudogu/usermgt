@@ -217,10 +217,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/ces-theme-tailwind@0.1.10":
-  version "0.1.10"
-  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.1.10.tgz#a17d16cb18a742c32fa6cd55b1bb616379394e9a"
-  integrity sha512-cKFKfgIPxdTZs/NixbztXEawV5hB0uzBqN7jxopAjf+fEhjWXTFEorAPhCxdpCHsg/VWFVyomXxob1eRHTn/6w==
+"@cloudogu/ces-theme-tailwind@0.1.11":
+  version "0.1.11"
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.1.11.tgz#bf47da967cfa79184f0987722a049125ead674ec"
+  integrity sha512-C3alctPWE7FTzsJksuwI+9wFjHiLltxZFCn9cwGDhY9I2Gf6Um+vCmcUuodJotuPg/AP+91+z+rxCl4vNLGrEA==
   dependencies:
     "@heroicons/react" "^2.0.13"
     "@phosphor-icons/react" "^2.0.8"
@@ -3352,6 +3352,11 @@ tailwind-merge@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-1.11.0.tgz#8b50d3e7ad7fdd15514d57e8ac4084273aafbd1a"
   integrity sha512-oG3/328Y7LrfPMfkgMNxoqEk1ZQdXBxdphf9FFrreo8q0EtVIHt3bQf2IyFhQuVt8puB57lCRBNbazGhYAyz9w==
+
+tailwind-merge@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-1.14.0.tgz#e677f55d864edc6794562c63f5001f45093cdb8b"
+  integrity sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==
 
 tailwindcss@^3.2.4:
   version "3.2.7"

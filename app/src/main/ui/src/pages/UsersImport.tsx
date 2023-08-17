@@ -1,12 +1,13 @@
-import {Button, Form, H1, H3, Table, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H1, H3, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
+import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
+import UsersImportTable from "../components/usersImport/UsersImportTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
-import UsersImportTable from "../components/usersImport/UsersImportTable";
 
 
 type ImportUsersUploadModel = {
@@ -56,9 +57,10 @@ const UsersImport = (props: { title: string }) => {
         </div>
         <div>
             {notification}
+            <p className={"mt-4"}>{t("usersImport.infobox")}</p>
             <Form handler={handler}>
                 <Form.HandledFileInput
-                    className={"mt-4"}
+                    className={"mt-8"}
                     variant={"primary"}
                     name={"file"}
                     accept={"text/csv"}
@@ -66,40 +68,37 @@ const UsersImport = (props: { title: string }) => {
                         setUploadResult(undefined);
                     }}
                 />
-                <Button disabled={(file?.size ?? 0) === 0} variant={"primary"} type={"submit"}
-                    className={"mt-4"}>{t("usersImport.buttons.upload")}</Button>
+
+                {file !== undefined &&
+                    <>
+                        <H3 className={"mt-12"}>{t("usersImport.headlines.table")}</H3>
+                        <UsersImportTable header={file.header} rows={file.rows}/>
+                    </>
+                }
+
+                <div className={"flex flex-row"}>
+                    <Button
+                        disabled={(file?.size ?? 0) === 0}
+                        variant={"primary"}
+                        type={"submit"}
+                        className={twMerge("mt-4 flex-0 mr-4", (file?.size ?? 0) === 0 ? "" : "")}
+                    >
+                        {t("usersImport.buttons.upload")}
+                    </Button>
+                    <Button
+                        disabled={(file?.size ?? 0) === 0}
+                        variant={"secondary"}
+                        type={"button"}
+                        onClick={() => {
+                            handler.resetForm();
+                        }}
+                        className={twMerge("mt-4 flex-0", (file?.size ?? 0) === 0 ? "" : "")}
+                    >
+                        {t("usersImport.buttons.reset")}
+                    </Button>
+                </div>
             </Form>
             {uploadResult && renderResult(uploadResult)}
-
-            {file !== undefined &&
-                <>
-                    <H3 className={"mt-12"}>{t("usersImport.headlines.table")}</H3>
-                    <UsersImportTable header={file.header} rows={file.rows}/>
-                    {/*<Table className="my-4 text-sm" data-testid="users-table">*/}
-                    {/*    <Table.Head>*/}
-                    {/*        <Table.Head.Tr className={"uppercase"}>*/}
-                    {/*            {file.header.map((elem, i) => <Table.Head.Th*/}
-                    {/*                key={`th-${i}-${elem}`}>{elem}</Table.Head.Th>)}*/}
-                    {/*        </Table.Head.Tr>*/}
-                    {/*    </Table.Head>*/}
-                    {/*    <Table.Body>*/}
-                    {/*        {*/}
-                    {/*            file.rows.map(*/}
-                    {/*                (entry, i) =>*/}
-                    {/*                    <Table.Body.Tr key={`row-${i}`}>*/}
-                    {/*                        {entry.map((col, i) => <Table.Body.Td*/}
-                    {/*                            key={`col-${i}-${col}`}>{col}</Table.Body.Td>)}*/}
-                    {/*                    </Table.Body.Tr>*/}
-                    {/*            )*/}
-                    {/*        }*/}
-                    {/*    </Table.Body>*/}
-                    {/*    <Table.ConditionalFoot show={false}>*/}
-                    {/*        <Table.Foot.Pagination pageCount={12} currentPage={1} onPageChange={() => {}}/>*/}
-                    {/*    </Table.ConditionalFoot>*/}
-                    {/*</Table>*/}
-                </>
-            }
-
         </div>
     </>;
 };
