@@ -1,4 +1,4 @@
-import {Button, Form, H1, H3, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H1, H3, LoadingIcon, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
@@ -8,6 +8,8 @@ import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import {Simulate} from "react-dom/test-utils";
+import load = Simulate.load;
 
 
 type ImportUsersUploadModel = {
@@ -27,6 +29,7 @@ export interface ImportUsersResponse {
 const UsersImport = (props: { title: string }) => {
     useSetPageTitle(props.title);
     const {notification, notify} = useAlertNotification();
+    const [loading, setLoading] = useState(false);
     const handlerConfig: FormHandlerConfig<ImportUsersUploadModel> = {
         enableReinitialize: true,
         initialValues: {file: undefined, dryrun: false},
@@ -34,6 +37,7 @@ const UsersImport = (props: { title: string }) => {
         onSubmit: async (values, formikHelpers) => {
             if (values.file?.length ?? 0 > 0) {
                 const file = values.file?.item(0) as File;
+                setLoading(true);
                 ImportUsersService.save(file)
                     .then(response => {
                         setUploadResult(response.data);
@@ -43,6 +47,7 @@ const UsersImport = (props: { title: string }) => {
                     })
                     .finally(() => {
                         formikHelpers.resetForm();
+                        setLoading(false);
                     });
             }
         }
@@ -69,7 +74,7 @@ const UsersImport = (props: { title: string }) => {
                     }}
                 />
 
-                {file !== undefined &&
+                {(file !== undefined && !loading) &&
                     <>
                         <H3 className={"mt-12"}>{t("usersImport.headlines.table")}</H3>
                         <UsersImportTable header={file.header} rows={file.rows}/>
@@ -98,7 +103,8 @@ const UsersImport = (props: { title: string }) => {
                     </Button>
                 </div>
             </Form>
-            {uploadResult && renderResult(uploadResult)}
+            {(uploadResult && !loading) && renderResult(uploadResult)}
+            {loading && <div className={"w-full flex flex-row justify-center mt-16"}><LoadingIcon className={"w-64 h-64"}/></div>}
         </div>
     </>;
 };
