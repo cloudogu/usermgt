@@ -17,7 +17,6 @@
             <timezone>Europe/Berlin</timezone>
         </developer>
     </developers>
-
     <scm>
         <connection>scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm</connection>
         <developerConnection>scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm</developerConnection>
@@ -32,28 +31,23 @@
             <artifactId>mail</artifactId>
             <version>1.5.0-b01</version>
         </dependency>
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- injection -->
-
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-servlet</artifactId>
             <version>${guice.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-multibindings</artifactId>
@@ -61,250 +55,201 @@
         </dependency>
 
         <!-- security -->
-
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
             <version>${shiro.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-web</artifactId>
             <version>${shiro.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-guice</artifactId>
             <version>${shiro.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-cas</artifactId>
             <version>${shiro.version}</version>
         </dependency>
-
         <!-- saml to get cas shiro attributes -->
-
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.15</version>
         </dependency>
-
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
             <version>1.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
             <version>2.3.3</version>
         </dependency>
-
         <!-- rest -->
-
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-servlet-initializer</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-guice</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jackson-provider</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
-
-
         <!-- ldap -->
-
         <dependency>
             <groupId>com.unboundid</groupId>
             <artifactId>unboundid-ldapsdk</artifactId>
             <version>4.0.14</version>
         </dependency>
-
         <!-- events -->
-
         <dependency>
             <groupId>com.github.legman</groupId>
             <artifactId>core</artifactId>
             <version>${legman.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.legman.support</groupId>
             <artifactId>guice</artifactId>
             <version>${legman.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.legman.support</groupId>
             <artifactId>shiro</artifactId>
             <version>${legman.version}</version>
         </dependency>
-
         <!-- validation -->
-
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.2.5.Final</version>
         </dependency>
-
         <!-- util -->
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>31.1-jre</version>
         </dependency>
-
         <!-- date and time -->
-
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.12.5</version>
         </dependency>
-
         <!-- logging -->
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.9</version>
         </dependency>
-
         <!-- services -->
-
         <dependency>
             <groupId>org.kohsuke.metainf-services</groupId>
             <artifactId>metainf-services</artifactId>
             <version>1.9</version>
             <optional>true</optional>
         </dependency>
-
-
         <!-- test -->
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.github.sdorra</groupId>
             <artifactId>ldap-unit</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.github.sdorra</groupId>
             <artifactId>shiro-unit</artifactId>
             <version>1.0.2</version>
             <scope>test</scope>
         </dependency>
-
         <!-- hibernate validator dependencies -->
-
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.el</artifactId>
             <version>3.0.0</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>uk.org.lidalia</groupId>
             <artifactId>slf4j-test</artifactId>
             <version>1.2.0</version>
             <scope>test</scope>
         </dependency>
-
         <!-- CSV parsing -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.8</version>
         </dependency>
-
         <!--
         use provided scope to create a global exclude
         -->
-
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
             <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -329,7 +274,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -346,7 +290,6 @@
 <!--                    </compilerArguments>-->
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -373,7 +316,6 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -382,31 +324,26 @@
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>2.5</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.7</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -415,7 +352,6 @@
                     <tagNameFormat>@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -426,7 +362,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -436,7 +371,7 @@
                         <port>8084</port>
                     </httpConnector>
                     <webAppConfig>
-                        <contextPath>/universeadm</contextPath>
+                        <contextPath>/usermgt</contextPath>
                     </webAppConfig>
                     <stopPort>8005</stopPort>
                     <stopKey>stop-instance</stopKey>
@@ -452,7 +387,6 @@
                     </systemProperties>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -463,7 +397,6 @@
                     </classpathDependencyExcludes>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -489,18 +422,15 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!--
                fix maven troubleshooting part on
                https://bitbucket.org/sdorra/scm-manager/wiki/configure-eclipse
             -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.6</version>
             </plugin>
-
             <!-- maven wrapper -->
             <plugin>
                 <groupId>com.rimerosolutions.maven.plugins</groupId>
@@ -518,9 +448,7 @@
                     <mavenVersion>3.2.3</mavenVersion>
                 </configuration>
             </plugin>
-
             <!-- reporting -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -528,7 +456,6 @@
             </plugin>
         </plugins>
     </build>
-
     <reporting>
         <plugins>
             <plugin>
@@ -536,25 +463,21 @@
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
                 <version>2.3</version>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>2.4.0</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.12</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -565,7 +488,6 @@
                     <targetJdk>${project.build.javaLevel}</targetJdk>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -573,15 +495,12 @@
             </plugin>
         </plugins>
     </reporting>
-
     <repositories>
-
         <repository>
             <id>packages.scm-manager.org</id>
             <name>scm-manager release repository</name>
             <url>https://packages.scm-manager.org/repository/public</url>
         </repository>
-
         <repository>
             <id>oss.sonatype.org</id>
             <name>oss.sonatype.org snapshot repository</name>
@@ -593,11 +512,8 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-
     </repositories>
-
     <pluginRepositories>
-
         <pluginRepository>
             <id>packages.scm-manager.org</id>
             <name>scm-manager release repository</name>
@@ -609,7 +525,6 @@
                 <updatePolicy>never</updatePolicy>
             </releases>
         </pluginRepository>
-
         <pluginRepository>
             <id>oss.sonatype.org</id>
             <name>oss.sonatype.org snapshot repository</name>
@@ -621,9 +536,7 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
-
     </pluginRepositories>
-
     <distributionManagement>
         <repository>
             <id>universe.triology.de</id>
@@ -637,9 +550,7 @@
             <url>https://universe.triology.de/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
     <profiles>
-
         <profile>
             <id>test</id>
             <properties>
@@ -650,7 +561,6 @@
                 <skip.unit.tests>false</skip.unit.tests>
             </properties>
         </profile>
-
         <profile>
             <id>webcomponents</id>
             <activation>
@@ -742,11 +652,10 @@
 
         </profile>
     </profiles>
-
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.javaLevel>11</project.build.javaLevel>
+        <project.build.javaLevel>1.8</project.build.javaLevel>
         <powermock.version>1.5.3</powermock.version>
         <slf4j.version>1.7.36</slf4j.version>
         <resteasy.version>3.15.6.Final</resteasy.version>
@@ -757,9 +666,6 @@
         <node.version>v18.7.0</node.version>
         <yarn.version>v1.22.19</yarn.version>
         <jacoco.version>0.8.10</jacoco.version>
-        <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <frontend-maven-plugin.version>1.13.4</frontend-maven-plugin.version>
     </properties>
-
 </project>

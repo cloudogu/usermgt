@@ -134,7 +134,7 @@ public class TemplateServlet extends HttpServlet
     }
     else
     {
-      logger.trace("return chached value for {}", path);
+      logger.trace("return cached value for {}", path);
     }
 
     writeOutput(resp, path, value);

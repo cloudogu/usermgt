@@ -11,7 +11,11 @@ public class ImportError {
      */
     public enum Code {
         PARSING_ERROR(100),
-        VALIDATION_ERROR(200);
+        FIELD_CONVERSION_ERROR(101),
+        MISSING_FIELD_ERROR(101),
+        VALIDATION_ERROR(200),
+        UNIQUE_FIELD_ERROR(201),
+        FIELD_FORMAT_ERROR(202);
 
         public final int value;
 
