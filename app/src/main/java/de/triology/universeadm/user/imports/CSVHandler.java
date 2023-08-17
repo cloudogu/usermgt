@@ -2,6 +2,7 @@ package de.triology.universeadm.user.imports;
 
 import com.google.inject.Inject;
 import de.triology.universeadm.ConstraintViolationException;
+import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
 import org.apache.commons.lang3.tuple.Pair;
@@ -199,7 +200,7 @@ public class CSVHandler {
      * <p>
      * @return ResultType whether the user has been created, updated or skipped
      */
-    private ResultType saveCSVImport(Triple<Long, Boolean, User> userTriple, ExceptionListener<ConstraintViolationException> listener) {
+    private ResultType saveCSVImport(Triple<Long, Boolean, User> userTriple, ExceptionListener<RuntimeException> listener) {
         try {
             if (userTriple.getMiddle()) {
                 this.userManager.create(userTriple.getRight());
@@ -208,7 +209,7 @@ public class CSVHandler {
                 this.userManager.modify(userTriple.getRight());
                 return ResultType.UPDATED;
             }
-        } catch (ConstraintViolationException e) {
+        } catch (ConstraintViolationException | IllegalQueryException e) {
             listener.notify(e);
         }
 
