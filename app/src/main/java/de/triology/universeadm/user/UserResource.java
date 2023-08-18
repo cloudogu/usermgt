@@ -31,6 +31,7 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.AbstractManagerResource;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
@@ -43,6 +44,8 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 
 
@@ -69,7 +72,7 @@ public class UserResource extends AbstractManagerResource<User> {
 
     //~--- methods --------------------------------------------------------------
     @POST
-    @Path(":import")
+    @Path("import")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response importUsers(MultipartFormDataInput input) {
@@ -86,9 +89,16 @@ public class UserResource extends AbstractManagerResource<User> {
             return Response.status(Response.Status.OK).entity(result).build();
         } catch (BadArgumentException e) {
             logger.error("Bad input while handling csv user import", e);
-            String errMsg = e.getPublicErrMsg().isEmpty() ? e.getMessage() : e.getPublicErrMsg();
-
-            return createError.apply(Response.Status.BAD_REQUEST, errMsg);
+            List<ImportError> errors = new ArrayList<>();
+            if (e.getCause() instanceof CsvRequiredFieldEmptyException) {
+                CsvRequiredFieldEmptyException exp = (CsvRequiredFieldEmptyException)e.getCause();
+                errors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, 0, exp.getMessage()));
+            } else {
+                String errMsg = e.getPublicErrMsg().isEmpty() ? e.getMessage() : e.getPublicErrMsg();
+                errors.add(new ImportError(ImportError.Code.PARSING_ERROR, 0, errMsg));
+            }
+            Result result = new Result(null, errors);
+            return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
         } catch (AuthorizationException e) {
             logger.error("Missing privileges while handling csv user import");
 

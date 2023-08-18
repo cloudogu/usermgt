@@ -1,12 +1,12 @@
 package de.triology.universeadm.user.imports;
 
 import com.google.inject.Inject;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.ConstraintViolationException;
 import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 /**
@@ -81,13 +82,24 @@ public class CSVHandler {
         CSVParser parser = new CSVParser();
         parser.registerListener(e -> errors.add(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage())));
 
-        Map<ResultType, Long> summary = parser.parse(fileReader)
+        Stream<CSVUserDTO> parsedDataStream = null;
+        try {
+            parsedDataStream = parser.parse(fileReader);
+        } catch (BadArgumentException exp) {
+            if (exp.getCause() instanceof CsvRequiredFieldEmptyException) {
+                CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) exp.getCause();
+                errors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, csvExp.getLineNumber(), csvExp.getMessage()));
+                return new Result(null, errors);
+            }
+        }
+
+        Map<ResultType, Long> summary = parsedDataStream
                 .sequential()
                 .map(this::getUserPair)
                 .map(Mapper::decode)
                 .map(userTriple -> saveCSVImport(
-                        userTriple,
-                        e -> errors.add(new ImportError(ImportError.Code.VALIDATION_ERROR, userTriple.getLeft(), e.getMessage()))
+                        userTriple.getMiddle(), userTriple.getRight(),
+                        e -> createValidationError(ImportError.Code.VALIDATION_ERROR, e, userTriple.getLeft())
                 ))
                 .reduce(
                         createMap(0L, 0L, (long) this.errors.size()),
@@ -105,6 +117,10 @@ public class CSVHandler {
         logger.debug("Generated CSV import result: {}", result);
 
         return result;
+    }
+
+    private void createValidationError(ImportError.Code code, RuntimeException exception, long lineNumber) {
+        this.errors.add(new ImportError(code, lineNumber, exception.getMessage()));
     }
 
     /**
@@ -189,24 +205,19 @@ public class CSVHandler {
 
     /**
      * Saves or modifies the users within the repository.
-     * @param userTriple consisting of:
-     * <ul>
-     *  <li>Long: Line number within the csv file</li>
-     *  <li>Boolean: Flag indication whether the user needs to be created</li>
-     *  <li>User: User object to be saved / modified</li>
-     * </ul>
-     *
+     * @param create: Flag indication whether the user needs to be created
+     * @param user: User object to be saved / modified
      * @param listener that will be notified when ConstraintViolationException occurs
      * <p>
      * @return ResultType whether the user has been created, updated or skipped
      */
-    private ResultType saveCSVImport(Triple<Long, Boolean, User> userTriple, ExceptionListener<RuntimeException> listener) {
+    private ResultType saveCSVImport(Boolean create, User user, ExceptionListener<RuntimeException> listener) {
         try {
-            if (userTriple.getMiddle()) {
-                this.userManager.create(userTriple.getRight());
+            if (create) {
+                this.userManager.create(user);
                 return ResultType.CREATED;
             } else {
-                this.userManager.modify(userTriple.getRight());
+                this.userManager.modify(user);
                 return ResultType.UPDATED;
             }
         } catch (ConstraintViolationException | IllegalQueryException e) {

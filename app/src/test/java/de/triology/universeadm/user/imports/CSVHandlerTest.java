@@ -8,7 +8,6 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.junit.Test;
-import org.mockito.verification.VerificationMode;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -110,7 +109,7 @@ public class CSVHandlerTest {
         csvHandler.handle(input);
     }
 
-    @Test(expected = BadArgumentException.class)
+    @Test
     public void testInvalidCSVHeader() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
@@ -122,7 +121,8 @@ public class CSVHandlerTest {
 
         CSVHandler csvHandler = new CSVHandler(userManager);
 
-        csvHandler.handle(input);
+        Result result = csvHandler.handle(input);
+        assertEquals(1, result.getErrors().size());
     }
 
     @Test(expected = AuthorizationException.class)

@@ -8,7 +8,7 @@ export const ImportUsersService = {
         try {
             const formData = new FormData();
             formData.append("file", file, file.name);
-            return await Axios.post<ImportUsersResponse>("/users/:import", formData, {
+            return await Axios.post<ImportUsersResponse>("/users/import", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }

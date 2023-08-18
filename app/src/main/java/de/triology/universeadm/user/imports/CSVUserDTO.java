@@ -26,10 +26,10 @@ public class CSVUserDTO extends CSVRecord {
     @CsvBindByName(required = true)
     private String mail;
 
-    @CsvBindByName(required = true)
+    @CsvBindByName
     private boolean pwdReset;
 
-    @CsvBindByName(required = true)
+    @CsvBindByName
     private boolean external;
 
     public String getUsername() {
