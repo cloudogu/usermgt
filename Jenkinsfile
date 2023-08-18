@@ -63,7 +63,6 @@ node('docker') {
 
             stage('ESLint') {
                 dir('src/main/ui'){
-                    sh "yarn install"
                     sh "yarn lint"
                 }
             }
