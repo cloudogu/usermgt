@@ -8,9 +8,6 @@ import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
-import {Simulate} from "react-dom/test-utils";
-import load = Simulate.load;
-
 
 type ImportUsersUploadModel = {
     file?: FileList;
