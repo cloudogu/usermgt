@@ -61,6 +61,12 @@ node('docker') {
                 archive '**/target/*.jar,**/target/*.zip'
             }
 
+            stage('ESLint') {
+                dir('src/main/ui'){
+                    sh "yarn lint"
+                }
+            }
+
             stage('Unit Test') {
                 mvn 'test jacoco:report'
             }
