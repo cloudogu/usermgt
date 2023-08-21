@@ -9,11 +9,14 @@ import de.triology.universeadm.user.UserManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.opensaml.artifact.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -36,18 +39,12 @@ public class CSVHandler {
     private final UserManager userManager;
 
     /**
-     * A list of errors that occurred when processing the import.
-     */
-    private final List<ImportError> errors;
-
-    /**
      * Constructs the CSVHandler. Initializes an empty ArrayList for the errors.
      * @param userManager
      */
     @Inject
     public CSVHandler(UserManager userManager) {
         this.userManager = userManager;
-        this.errors = new ArrayList<>();
     }
 
     /**
@@ -78,49 +75,47 @@ public class CSVHandler {
 
         Reader fileReader = getFileReader(fileParts.get(0));
         logger.debug("Got reader from first file part");
-
+        List<ImportError> validationErrors = new ArrayList<>();
+        List<ImportError> parsingErrors = new ArrayList<>();
         CSVParser parser = new CSVParser();
-        parser.registerListener(e -> errors.add(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage())));
+        parser.registerListener(e -> parsingErrors.add(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage())));
 
-        Stream<CSVUserDTO> parsedDataStream = null;
+        Stream<CSVUserDTO> parsedDataStream;
         try {
             parsedDataStream = parser.parse(fileReader);
         } catch (BadArgumentException exp) {
             if (exp.getCause() instanceof CsvRequiredFieldEmptyException) {
                 CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) exp.getCause();
-                errors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, csvExp.getLineNumber(), csvExp.getMessage()));
-                return new Result(null, errors);
+                validationErrors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, csvExp.getLineNumber(), csvExp.getMessage()));
+                return new Result(null, validationErrors);
             }
+            throw exp;
         }
 
-        Map<ResultType, Long> summary = parsedDataStream
+        Stream<ImportEntryResult> parsingResults = parsingErrors.stream().map(ImportEntryResult::Skipped);
+        Stream<ImportEntryResult> results = parsedDataStream
                 .sequential()
-                .map(this::getUserPair)
-                .map(Mapper::decode)
-                .map(userTriple -> saveCSVImport(
-                        userTriple.getMiddle(), userTriple.getRight(),
-                        e -> createValidationError(ImportError.Code.VALIDATION_ERROR, e, userTriple.getLeft())
-                ))
-                .reduce(
-                        createMap(0L, 0L, (long) this.errors.size()),
+                .map(this::getUserPair) // load user from LDAP
+                .map(Mapper::decode) // add more information
+                .map(userTriple -> {
+                    ImportEntryResult partialResult = saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight());
+                    if (partialResult.importError != null){
+                        validationErrors.add(partialResult.importError);
+                    }
+                    return partialResult;
+                });
+
+        Stream<ImportEntryResult> results2 = Stream.concat(parsingResults, results);
+        Map<ResultType, Long> summary = results2.reduce(
+                        createMap(0L, 0L, 0L),
                         this::accumulateResultType,
                         this::combineAccumulators
                 );
 
-        Map<ResultType, Long> finalSummary = createMap(
-                summary.get(ResultType.CREATED),
-                summary.get(ResultType.UPDATED),
-                (long) errors.size()
-        );
-
-        Result result = new Result(finalSummary, errors);
+        Result result = new Result(summary, validationErrors);
         logger.debug("Generated CSV import result: {}", result);
 
         return result;
-    }
-
-    private void createValidationError(ImportError.Code code, RuntimeException exception, long lineNumber) {
-        this.errors.add(new ImportError(code, lineNumber, exception.getMessage()));
     }
 
     /**
@@ -176,7 +171,7 @@ public class CSVHandler {
      * @return Reader (= BufferedReader)
      * @throws BadArgumentException
      */
-    private Reader getFileReader(InputPart file) throws BadArgumentException {
+    private Reader getFileReader(@NotNull InputPart file) throws BadArgumentException {
         BufferedReader inputReader;
 
         try {
@@ -184,12 +179,9 @@ public class CSVHandler {
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
 
             return inputReader;
-        } catch (IOException | NullPointerException e) {
-            throw new BadArgumentException(
-                    "unable to parse file",
-                    "could not convert multipart file to InputStream",
-                    e
-            );
+        } catch (IOException e) {
+            logger.error(e.toString());
+            throw new InvalidArgumentException("unable to parse file");
         }
     }
 
@@ -205,26 +197,25 @@ public class CSVHandler {
 
     /**
      * Saves or modifies the users within the repository.
-     * @param create: Flag indication whether the user needs to be created
+     * @param isNewUser: Flag indication whether the user needs to be created
      * @param user: User object to be saved / modified
-     * @param listener that will be notified when ConstraintViolationException occurs
      * <p>
      * @return ResultType whether the user has been created, updated or skipped
      */
-    private ResultType saveCSVImport(Boolean create, User user, ExceptionListener<RuntimeException> listener) {
+    private ImportEntryResult saveCSVImport(long lineNumber, Boolean isNewUser, User user) {
         try {
-            if (create) {
+            if (isNewUser) {
                 this.userManager.create(user);
-                return ResultType.CREATED;
+                return new ImportEntryResult(ResultType.CREATED);
             } else {
                 this.userManager.modify(user);
-                return ResultType.UPDATED;
+                return new ImportEntryResult(ResultType.UPDATED);
             }
-        } catch (ConstraintViolationException | IllegalQueryException e) {
-            listener.notify(e);
+        } catch (IllegalQueryException e) {
+            return ImportEntryResult.Skipped(new ImportError(ImportError.Code.PARSING_ERROR, lineNumber, e.getMessage()));
+        } catch (ConstraintViolationException e) {
+            return new ImportEntryResult(ResultType.SKIPPED, new ImportError(ImportError.Code.VALIDATION_ERROR, lineNumber, e.getMessage()));
         }
-
-        return ResultType.SKIPPED;
     }
 
     /**
@@ -249,27 +240,28 @@ public class CSVHandler {
      * @param next - next result of an import
      * @return EnumMap<ResultType, Long> as final summary
      */
-    private EnumMap<ResultType, Long> accumulateResultType(EnumMap<ResultType, Long> partialAcc, ResultType next) {
-        switch (next) {
+    private EnumMap<ResultType, Long> accumulateResultType(EnumMap<ResultType, Long> partialAcc, ImportEntryResult next) {
+        switch (next.resultType) {
             case CREATED:
                 return createMap(
                         partialAcc.get(ResultType.CREATED) +1,
                         partialAcc.get(ResultType.UPDATED),
-                        (long) errors.size()
+                        partialAcc.get(ResultType.SKIPPED)
                 );
             case UPDATED:
                 return createMap(
                         partialAcc.get(ResultType.CREATED),
                         partialAcc.get(ResultType.UPDATED) + 1,
-                        (long) errors.size()
+                        partialAcc.get(ResultType.SKIPPED)
                 );
-            default:
+            case SKIPPED:
                 return createMap(
                         partialAcc.get(ResultType.CREATED),
                         partialAcc.get(ResultType.UPDATED),
-                        (long) errors.size()
+                        partialAcc.get(ResultType.SKIPPED) + 1
                 );
         }
+        throw new UnsupportedOperationException(String.format("operation '%s' is not supported", next.resultType));
     }
 
     /**
