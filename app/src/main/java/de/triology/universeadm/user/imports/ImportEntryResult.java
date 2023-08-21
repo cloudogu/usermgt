@@ -1,8 +1,8 @@
 package de.triology.universeadm.user.imports;
 
-class ImportEntryResult {
-    public ResultType resultType;
-    public ImportError importError;
+public class ImportEntryResult {
+    private final ResultType resultType;
+    private final ImportError importError;
 
     public static ImportEntryResult Skipped(ImportError importError) {
         return new ImportEntryResult(ResultType.SKIPPED, importError);
@@ -15,5 +15,13 @@ class ImportEntryResult {
     public ImportEntryResult(ResultType resultType, ImportError importError) {
         this.resultType = resultType;
         this.importError = importError;
+    }
+
+    public ResultType getResultType() {
+        return resultType;
+    }
+
+    public ImportError getImportError() {
+        return importError;
     }
 }

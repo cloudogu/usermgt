@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Reader;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -22,6 +23,8 @@ public class CSVParser {
      * ExceptionListener is used to inform the calling entity about any CsvExceptions that may occur.
      */
     private ExceptionListener<CsvException> exceptionListener;
+
+    private CsvToBean<CSVUserDTO> csv2bean;
 
     /**
      * Fallback ExceptionHandler in case no listener is provided.
@@ -54,12 +57,24 @@ public class CSVParser {
         CsvToBean<CSVUserDTO> beans = new CsvToBeanBuilder<CSVUserDTO>(new CsvLineNumberReader(reader))
                 .withType(CSVUserDTO.class)
                 .withIgnoreEmptyLine(true)
-                .withExceptionHandler(this::handleException)
+                .withThrowExceptions(false)
                 .build();
+
+        this.csv2bean = beans;
 
         logger.debug("Build CsvToBean instance for CSVUserDTO");
 
         return this.prepareStream(beans::stream);
+    }
+
+    public Stream<ImportEntryResult> getErrors() {
+        return Optional.ofNullable(csv2bean)
+                .map(CsvToBean::getCapturedExceptions)
+                .map(Collection::stream)
+                .map(csvExceptionStream -> csvExceptionStream
+                        // TODO: Add CSVException - ImportError Mapper
+                        .map(e -> ImportEntryResult.Skipped(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage()))))
+                .orElse(Stream.empty());
     }
 
     /**

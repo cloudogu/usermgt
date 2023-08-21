@@ -99,8 +99,8 @@ public class CSVHandler {
                 .map(Mapper::decode) // add more information
                 .map(userTriple -> {
                     ImportEntryResult partialResult = saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight());
-                    if (partialResult.importError != null){
-                        validationErrors.add(partialResult.importError);
+                    if (partialResult.getImportError() != null){
+                        validationErrors.add(partialResult.getImportError());
                     }
                     return partialResult;
                 });
@@ -241,7 +241,7 @@ public class CSVHandler {
      * @return EnumMap<ResultType, Long> as final summary
      */
     private EnumMap<ResultType, Long> accumulateResultType(EnumMap<ResultType, Long> partialAcc, ImportEntryResult next) {
-        switch (next.resultType) {
+        switch (next.getResultType()) {
             case CREATED:
                 return createMap(
                         partialAcc.get(ResultType.CREATED) +1,
@@ -261,7 +261,7 @@ public class CSVHandler {
                         partialAcc.get(ResultType.SKIPPED) + 1
                 );
         }
-        throw new UnsupportedOperationException(String.format("operation '%s' is not supported", next.resultType));
+        throw new UnsupportedOperationException(String.format("operation '%s' is not supported", next.getResultType()));
     }
 
     /**
