@@ -17,14 +17,14 @@ import static org.mockito.Mockito.*;
 public class CSVParserTest {
 
     @Test
-    public void testParse() throws BadArgumentException {
+    public void testParse() throws MissingHeaderFieldException {
 
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
                 CSVUsers.createTrillian()
         );
 
-        List<CSVUserDTO> userInputList = new CSVParser()
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("ImportUsers.csv"))
                 .collect(Collectors.toList());
 
@@ -37,13 +37,13 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testKeepSpaces() throws BadArgumentException {
+    public void testKeepSpaces() throws MissingHeaderFieldException {
 
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setSurname("     " +expUser.getSurname());
 
 
-        List<CSVUserDTO> userInputList = new CSVParser()
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("KeepSpaces.csv"))
                 .collect(Collectors.toList());
 
@@ -52,13 +52,13 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotes() throws BadArgumentException {
+    public void testDoubleQuotes() throws MissingHeaderFieldException {
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
                 CSVUsers.createTrillian()
         );
 
-        List<CSVUserDTO> userInputList = new CSVParser()
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("DoubleQuotes.csv"))
                 .collect(Collectors.toList());
 
@@ -70,8 +70,8 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testFieldLineBreaks() throws BadArgumentException {
-        List<CSVUserDTO> userInputList = new CSVParser()
+    public void testFieldLineBreaks() throws MissingHeaderFieldException {
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("LineBreaks.csv"))
                 .collect(Collectors.toList());
 
@@ -80,8 +80,8 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotesInField() throws BadArgumentException {
-        List<CSVUserDTO> userInputList = new CSVParser()
+    public void testDoubleQuotesInField() throws MissingHeaderFieldException {
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("DoubleQuotesField.csv"))
                 .collect(Collectors.toList());
 
@@ -90,8 +90,8 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testUmlauts() throws BadArgumentException {
-        List<CSVUserDTO> userInputList = new CSVParser()
+    public void testUmlauts() throws MissingHeaderFieldException {
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("Umlauts.csv"))
                 .collect(Collectors.toList());
 
@@ -100,11 +100,11 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testEmptyGivenName() throws BadArgumentException {
+    public void testEmptyGivenName() throws MissingHeaderFieldException {
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setGivenname("");
 
-        List<CSVUserDTO> userInputList = new CSVParser()
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("EmptyGivenName.csv"))
                 .collect(Collectors.toList());
 
@@ -112,8 +112,8 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testParseBoolean() throws BadArgumentException {
-        List<CSVUserDTO> userInputList = new CSVParser()
+    public void testParseBoolean() throws MissingHeaderFieldException {
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("Boolean.csv"))
                 .collect(Collectors.toList());
 
@@ -121,17 +121,17 @@ public class CSVParserTest {
     }
 
     @Test(expected=BadArgumentException.class)
-    public void testReaderNull() throws BadArgumentException {
-        List<CSVUserDTO> userInputList = new CSVParser()
+    public void testReaderNull() throws MissingHeaderFieldException {
+        List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(null)
                 .collect(Collectors.toList());
 
         assertTrue(userInputList.isEmpty());
     }
 
-    @Test(expected=BadArgumentException.class)
-    public void testInvalidHeader() throws BadArgumentException {
-        CSVParser parser = new CSVParser();
+    @Test(expected=MissingHeaderFieldException.class)
+    public void testInvalidHeader() throws MissingHeaderFieldException {
+        CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
                 .parse(readTestFile("InvalidHeader.csv"))
@@ -141,11 +141,10 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidLineFieldLength() throws BadArgumentException {
+    public void testInvalidLineFieldLength() throws MissingHeaderFieldException {
         ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
 
-        CSVParser parser = new CSVParser();
-        parser.registerListener(eh);
+        CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
                 .parse(readTestFile("InvalidLine_NumberFields.csv"))
@@ -156,11 +155,10 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testMissingRequiredField() throws BadArgumentException {
+    public void testMissingRequiredField() throws MissingHeaderFieldException {
         ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
 
-        CSVParser parser = new CSVParser();
-        parser.registerListener(eh);
+        CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
                 .parse(readTestFile("InvalidLine_MissingRequiredField.csv"))
@@ -171,11 +169,10 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidLineDelimiter() throws BadArgumentException {
+    public void testInvalidLineDelimiter() throws MissingHeaderFieldException {
         ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
 
-        CSVParser parser = new CSVParser();
-        parser.registerListener(eh);
+        CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
                 .parse(readTestFile("InvalidLine_Delimiter.csv"))

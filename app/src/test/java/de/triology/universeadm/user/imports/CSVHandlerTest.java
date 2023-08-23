@@ -22,35 +22,39 @@ public class CSVHandlerTest {
     private static final String VALID_FILENAME = "ImportUsers.csv";
 
     @Test(expected = BadArgumentException.class)
-    public void testMissingFileParts() throws BadArgumentException {
+    public void testMissingFileParts() throws MissingHeaderFieldException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = Collections.emptyMap();
 
+        CSVParser parser = mock(CSVParser.class);
+
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
 
     @Test(expected = BadArgumentException.class)
-    public void testEmptyFileParts() throws BadArgumentException {
+    public void testEmptyFileParts() throws MissingHeaderFieldException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
+
+        CSVParser parser = mock(CSVParser.class);
 
         inputParts.put("file", Collections.emptyList());
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
 
     @Test(expected = BadArgumentException.class)
-    public void testMultipleFileParts() throws BadArgumentException {
+    public void testMultipleFileParts() throws MissingHeaderFieldException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -59,7 +63,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVParser parser = mock(CSVParser.class);
+
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
@@ -70,11 +76,13 @@ public class CSVHandlerTest {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
+        CSVParser parser = mock(CSVParser.class);
+
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_HEADER_FILE_EXTENSION)));
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
@@ -85,11 +93,13 @@ public class CSVHandlerTest {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
+        CSVParser parser = mock(CSVParser.class);
+
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_HEADER_MISSING_FILE_NAME)));
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
@@ -100,11 +110,13 @@ public class CSVHandlerTest {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
+        CSVParser parser = mock(CSVParser.class);
+
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_BODY_PART)));
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
@@ -119,7 +131,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVParser parser = mock(CSVParser.class);
+
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         Result result = csvHandler.handle(input);
         assertEquals(1, result.getErrors().size());
@@ -133,9 +147,11 @@ public class CSVHandlerTest {
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
 
+        CSVParser parser = mock(CSVParser.class);
+
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
@@ -150,7 +166,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVParser parser = mock(CSVParser.class);
+
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         Result result = csvHandler.handle(input);
 
@@ -173,7 +191,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVParser parser = mock(CSVParser.class);
+
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         Result result = csvHandler.handle(input);
 
@@ -196,7 +216,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVParser parser = mock(CSVParser.class);
+
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         Result result = csvHandler.handle(input);
 
@@ -225,7 +247,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager);
+        CSVParser parser = mock(CSVParser.class);
+
+        CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         Result result = csvHandler.handle(input);
 

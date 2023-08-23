@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -38,13 +37,16 @@ public class CSVHandler {
      */
     private final UserManager userManager;
 
+    private final CSVParser csvParser;
+
     /**
      * Constructs the CSVHandler. Initializes an empty ArrayList for the errors.
      * @param userManager
      */
     @Inject
-    public CSVHandler(UserManager userManager) {
+    public CSVHandler(UserManager userManager, CSVParser csvParser) {
         this.userManager = userManager;
+        this.csvParser = csvParser;
     }
 
     /**
@@ -58,13 +60,13 @@ public class CSVHandler {
      * @throws BadArgumentException in case further processing of the csv file is not possible. Throwing the exception
      * means no data has been processed.
      */
-    public Result handle(MultipartFormDataInput input) throws BadArgumentException {
+    public Result handle(MultipartFormDataInput input) throws MissingHeaderFieldException {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
 
         //only get file parts
         Optional<List<InputPart>> optFileParts = Optional.ofNullable(inputParts.get(PART_NAME));
         if (!optFileParts.isPresent()) {
-            throw new BadArgumentException(String.format("unable to find parts with name \"%s\"", PART_NAME));
+            throw new InvalidArgumentException(String.format("unable to find parts with name \"%s\"", PART_NAME));
         }
 
         List<InputPart> fileParts = optFileParts.get();
@@ -77,13 +79,12 @@ public class CSVHandler {
         logger.debug("Got reader from first file part");
         List<ImportError> validationErrors = new ArrayList<>();
         List<ImportError> parsingErrors = new ArrayList<>();
-        CSVParser parser = new CSVParser();
-        parser.registerListener(e -> parsingErrors.add(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage())));
+
 
         Stream<CSVUserDTO> parsedDataStream;
         try {
-            parsedDataStream = parser.parse(fileReader);
-        } catch (BadArgumentException exp) {
+            parsedDataStream = this.csvParser.parse(fileReader);
+        } catch (MissingHeaderFieldException exp) {
             if (exp.getCause() instanceof CsvRequiredFieldEmptyException) {
                 CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) exp.getCause();
                 validationErrors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, csvExp.getLineNumber(), csvExp.getMessage()));
@@ -123,25 +124,25 @@ public class CSVHandler {
      * @param fileParts from the MultipartForm
      * @throws BadArgumentException
      */
-    private void validateFile(List<InputPart> fileParts) throws BadArgumentException {
+    private void validateFile(List<InputPart> fileParts) throws InvalidArgumentException {
 
         if (fileParts.isEmpty()) {
-            throw new BadArgumentException("file part of request is empty");
+            throw new InvalidArgumentException("file part of request is empty");
         }
 
         if (fileParts.size() > 1) {
-            throw new BadArgumentException("only one file may be uploaded with one request");
+            throw new InvalidArgumentException("only one file may be uploaded with one request");
         }
 
         InputPart filePart = fileParts.get(0);
         String filename = this.getFileName(filePart);
 
         if (filename.isEmpty()){
-            throw new BadArgumentException("invalid or empty filename in Content-Disposition");
+            throw new InvalidArgumentException("invalid or empty filename in Content-Disposition");
         }
 
         if (!filename.endsWith(".csv")){
-            throw new BadArgumentException(String.format("Unsupported filetype \"%s\"",
+            throw new InvalidArgumentException(String.format("Unsupported filetype \"%s\"",
                     filename.substring(filename.lastIndexOf("."))
             ));
         }
@@ -171,7 +172,7 @@ public class CSVHandler {
      * @return Reader (= BufferedReader)
      * @throws BadArgumentException
      */
-    private Reader getFileReader(@NotNull InputPart file) throws BadArgumentException {
+    private Reader getFileReader(@NotNull InputPart file) throws InvalidArgumentException {
         BufferedReader inputReader;
 
         try {
