@@ -78,7 +78,6 @@ public class CSVHandler {
         Reader fileReader = getFileReader(fileParts.get(0));
         logger.debug("Got reader from first file part");
         List<ImportError> validationErrors = new ArrayList<>();
-        List<ImportError> parsingErrors = new ArrayList<>();
 
 
         Stream<CSVUserDTO> parsedDataStream;
@@ -93,7 +92,6 @@ public class CSVHandler {
             throw exp;
         }
 
-        Stream<ImportEntryResult> parsingResults = parsingErrors.stream().map(ImportEntryResult::skipped);
         Stream<ImportEntryResult> results = parsedDataStream
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
@@ -106,14 +104,14 @@ public class CSVHandler {
                     return partialResult;
                 });
 
-        Stream<ImportEntryResult> finalResultStream = Stream.concat(parsingResults, results);
+
+        Stream<ImportEntryResult> finalResultStream = Stream.concat(csvParser.getErrors(), results);
         Result finalResult = finalResultStream.reduce(
                         new Result(),
                         this::accumulateResultType,
                         this::combineAccumulators
                 );
 
-//        Result result = new Result(validationErrors);
         logger.debug("Generated CSV import result: {}", finalResult);
 
         return finalResult;
@@ -180,7 +178,7 @@ public class CSVHandler {
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
 
             return inputReader;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             logger.error(e.toString());
             throw new InvalidArgumentException("unable to parse file");
         }

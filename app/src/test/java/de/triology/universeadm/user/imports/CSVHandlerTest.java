@@ -8,10 +8,12 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.junit.Test;
+import org.opensaml.artifact.InvalidArgumentException;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -21,13 +23,14 @@ public class CSVHandlerTest {
 
     private static final String VALID_FILENAME = "ImportUsers.csv";
 
-    @Test(expected = BadArgumentException.class)
+    @Test(expected = InvalidArgumentException.class)
     public void testMissingFileParts() throws MissingHeaderFieldException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = Collections.emptyMap();
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
@@ -36,13 +39,14 @@ public class CSVHandlerTest {
         csvHandler.handle(input);
     }
 
-    @Test(expected = BadArgumentException.class)
+    @Test(expected = InvalidArgumentException.class)
     public void testEmptyFileParts() throws MissingHeaderFieldException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
 
         inputParts.put("file", Collections.emptyList());
 
@@ -53,7 +57,7 @@ public class CSVHandlerTest {
         csvHandler.handle(input);
     }
 
-    @Test(expected = BadArgumentException.class)
+    @Test(expected = InvalidArgumentException.class)
     public void testMultipleFileParts() throws MissingHeaderFieldException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
@@ -64,19 +68,21 @@ public class CSVHandlerTest {
         when(input.getFormDataMap()).thenReturn(inputParts);
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
 
         CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         csvHandler.handle(input);
     }
 
-    @Test(expected = BadArgumentException.class)
+    @Test(expected = InvalidArgumentException.class)
     public void testInvalidFileExtension() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_HEADER_FILE_EXTENSION)));
 
@@ -87,13 +93,14 @@ public class CSVHandlerTest {
         csvHandler.handle(input);
     }
 
-    @Test(expected = BadArgumentException.class)
+    @Test(expected = InvalidArgumentException.class)
     public void testMissingFileName() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_HEADER_MISSING_FILE_NAME)));
 
@@ -104,13 +111,15 @@ public class CSVHandlerTest {
         csvHandler.handle(input);
     }
 
-    @Test(expected = BadArgumentException.class)
+    @Test(expected = InvalidArgumentException.class)
     public void testInvalidFileBodyPart() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
+        when(parser.getErrors()).thenReturn(createMockErrorStream(1L));
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_BODY_PART)));
 
@@ -132,11 +141,20 @@ public class CSVHandlerTest {
         when(input.getFormDataMap()).thenReturn(inputParts);
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(Stream.empty());
+        when(parser.getErrors()).thenReturn(createMockErrorStream(1));
 
         CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
         Result result = csvHandler.handle(input);
         assertEquals(1, result.getErrors().size());
+    }
+
+    private Stream<ImportEntryResult> createMockErrorStream(long lineNumber) {
+        ImportError error = new ImportError(ImportError.Code.PARSING_ERROR, lineNumber, "test error");
+        List<ImportEntryResult> results = new ArrayList<>();
+        results.add(ImportEntryResult.skipped(error));
+        return results.stream();
     }
 
     @Test(expected = AuthorizationException.class)
@@ -148,6 +166,8 @@ public class CSVHandlerTest {
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
+        when(parser.getErrors()).thenReturn(Stream.empty());
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
@@ -167,6 +187,8 @@ public class CSVHandlerTest {
         when(input.getFormDataMap()).thenReturn(inputParts);
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
+        when(parser.getErrors()).thenReturn(Stream.empty());
 
         CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
@@ -192,6 +214,8 @@ public class CSVHandlerTest {
         when(input.getFormDataMap()).thenReturn(inputParts);
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
+        when(parser.getErrors()).thenReturn(Stream.empty());
 
         CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
@@ -217,6 +241,8 @@ public class CSVHandlerTest {
         when(input.getFormDataMap()).thenReturn(inputParts);
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
+        when(parser.getErrors()).thenReturn(Stream.empty());
 
         CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
@@ -248,6 +274,8 @@ public class CSVHandlerTest {
         when(input.getFormDataMap()).thenReturn(inputParts);
 
         CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(1));
+        when(parser.getErrors()).thenReturn(createMockErrorStream(2L));
 
         CSVHandler csvHandler = new CSVHandler(userManager, parser);
 
@@ -363,6 +391,19 @@ public class CSVHandlerTest {
         Long skipped = (long)result.getErrors().size();
         assertNotNull(skipped);
         assertEquals(expSkipped, skipped);
+    }
+
+    private Stream<CSVUserDTO> createMockStream(int count){
+        List<CSVUserDTO> users = new ArrayList<>();
+        CSVUserDTO dent = CSVUsers.createDent();
+        dent.setLineNumber(2L);
+        users.add(dent);
+        if (count > 1) {
+            CSVUserDTO trillian = CSVUsers.createTrillian();
+            trillian.setLineNumber(3L);
+            users.add(trillian);
+        }
+        return users.stream();
     }
 
 }

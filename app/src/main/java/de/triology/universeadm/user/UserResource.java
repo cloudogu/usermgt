@@ -87,15 +87,14 @@ public class UserResource extends AbstractManagerResource<User> {
             logger.debug("Successfully handled csv import {}", result);
 
             return Response.status(Response.Status.OK).entity(result).build();
-        } catch (BadArgumentException e) {
+        } catch (MissingHeaderFieldException e) {
             logger.error("Bad input while handling csv user import", e);
             List<ImportError> errors = new ArrayList<>();
             if (e.getCause() instanceof CsvRequiredFieldEmptyException) {
                 CsvRequiredFieldEmptyException exp = (CsvRequiredFieldEmptyException)e.getCause();
                 errors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, 0, exp.getMessage()));
             } else {
-                String errMsg = e.getPublicErrMsg().isEmpty() ? e.getMessage() : e.getPublicErrMsg();
-                errors.add(new ImportError(ImportError.Code.PARSING_ERROR, 0, errMsg));
+                errors.add(new ImportError(ImportError.Code.PARSING_ERROR, 0, e.getMessage()));
             }
             Result result = new Result(errors);
             return Response.status(Response.Status.BAD_REQUEST).entity(result).build();

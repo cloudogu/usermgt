@@ -44,7 +44,7 @@ public class CSVParserImpl implements CSVParser {
                 .map(Collection::stream)
                 .map(csvExceptionStream -> csvExceptionStream
                         // TODO: Add CSVException - ImportError Mapper
-                        .map(e -> ImportEntryResult.Skipped(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage()))))
+                        .map(e -> ImportEntryResult.skipped(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage()))))
                 .orElse(Stream.empty());
     }
 
