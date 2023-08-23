@@ -1,7 +1,9 @@
 package de.triology.universeadm.user.imports;
 
+import de.triology.universeadm.user.User;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The result of a csv import.
@@ -11,28 +13,40 @@ import java.util.Map;
  * provided for the skipped rows.
  */
 public class Result {
+    private List<User> created = new ArrayList<>();
+    private List<User> updated = new ArrayList<>();
+    private List<ImportError> errors = new ArrayList<>();
 
-    private final Map<ResultType, Long> summary;
-    private final List<ImportError> errors;
+    public Result() {}
 
-    public Result(Map<ResultType, Long> summary, List<ImportError> errors) {
-        this.summary = summary;
+    public Result(List<ImportError> errors) {
         this.errors = errors;
     }
 
-    public Map<ResultType, Long> getSummary() {
-        return summary;
-    }
-
-    public List<ImportError> getErrors() {
-        return errors;
+    public Result(List<User> created, List<User> updated, List<ImportError> errors) {
+        this.created = created;
+        this.updated = updated;
+        this.errors = errors;
     }
 
     @Override
     public String toString() {
         return "Result{" +
-                "summary=" + summary +
+                ", created=" + created +
+                ", update=" + updated +
                 ", errors=" + errors +
                 '}';
+    }
+
+    public List<User> getCreated() {
+        return created;
+    }
+
+    public List<User> getUpdated() {
+        return updated;
+    }
+
+    public List<ImportError> getErrors() {
+        return errors;
     }
 }

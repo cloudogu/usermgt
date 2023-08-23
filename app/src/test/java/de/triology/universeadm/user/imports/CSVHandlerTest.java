@@ -352,18 +352,15 @@ public class CSVHandlerTest {
     }
 
     private void assertSummary(Long expCreated, Long expUpdated, Long expSkipped, Result result) {
-        Map<ResultType, Long> summary = result.getSummary();
-        assertNotNull(summary);
-
-        Long created = summary.get(ResultType.CREATED);
+        Long created = (long)result.getCreated().size();
         assertNotNull(created);
         assertEquals(expCreated, created);
 
-        Long updated = summary.get(ResultType.UPDATED);
+        Long updated = (long)result.getUpdated().size();
         assertNotNull(updated);
         assertEquals(expUpdated, updated);
 
-        Long skipped = summary.get(ResultType.SKIPPED);
+        Long skipped = (long)result.getErrors().size();
         assertNotNull(skipped);
         assertEquals(expSkipped, skipped);
     }

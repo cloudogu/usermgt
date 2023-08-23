@@ -97,7 +97,7 @@ public class UserResource extends AbstractManagerResource<User> {
                 String errMsg = e.getPublicErrMsg().isEmpty() ? e.getMessage() : e.getPublicErrMsg();
                 errors.add(new ImportError(ImportError.Code.PARSING_ERROR, 0, errMsg));
             }
-            Result result = new Result(null, errors);
+            Result result = new Result(errors);
             return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
         } catch (AuthorizationException e) {
             logger.error("Missing privileges while handling csv user import");
