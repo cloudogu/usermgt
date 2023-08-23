@@ -78,7 +78,6 @@ public class CSVHandler {
         Reader fileReader = getFileReader(fileParts.get(0));
         logger.debug("Got reader from first file part");
         List<ImportError> validationErrors = new ArrayList<>();
-        List<ImportError> parsingErrors = new ArrayList<>();
 
 
         Stream<CSVUserDTO> parsedDataStream;
@@ -88,12 +87,11 @@ public class CSVHandler {
             if (exp.getCause() instanceof CsvRequiredFieldEmptyException) {
                 CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) exp.getCause();
                 validationErrors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, csvExp.getLineNumber(), csvExp.getMessage()));
-                return new Result(null, validationErrors);
+                return new Result(validationErrors);
             }
             throw exp;
         }
 
-        Stream<ImportEntryResult> parsingResults = parsingErrors.stream().map(ImportEntryResult::Skipped);
         Stream<ImportEntryResult> results = parsedDataStream
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
@@ -106,17 +104,17 @@ public class CSVHandler {
                     return partialResult;
                 });
 
-        Stream<ImportEntryResult> results2 = Stream.concat(parsingResults, results);
-        Map<ResultType, Long> summary = results2.reduce(
-                        createMap(0L, 0L, 0L),
+
+        Stream<ImportEntryResult> finalResultStream = Stream.concat(csvParser.getErrors(), results);
+        Result finalResult = finalResultStream.reduce(
+                        new Result(),
                         this::accumulateResultType,
                         this::combineAccumulators
                 );
 
-        Result result = new Result(summary, validationErrors);
-        logger.debug("Generated CSV import result: {}", result);
+        logger.debug("Generated CSV import result: {}", finalResult);
 
-        return result;
+        return finalResult;
     }
 
     /**
@@ -170,7 +168,7 @@ public class CSVHandler {
      * For efficient reading a BufferedReader is used.
      * @param file uploaded be the user.
      * @return Reader (= BufferedReader)
-     * @throws BadArgumentException
+     * @throws InvalidArgumentException
      */
     private Reader getFileReader(@NotNull InputPart file) throws InvalidArgumentException {
         BufferedReader inputReader;
@@ -180,7 +178,7 @@ public class CSVHandler {
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
 
             return inputReader;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             logger.error(e.toString());
             throw new InvalidArgumentException("unable to parse file");
         }
@@ -207,13 +205,13 @@ public class CSVHandler {
         try {
             if (isNewUser) {
                 this.userManager.create(user);
-                return new ImportEntryResult(ResultType.CREATED);
+                return ImportEntryResult.created(user);
             } else {
                 this.userManager.modify(user);
-                return new ImportEntryResult(ResultType.UPDATED);
+                return ImportEntryResult.updated(user);
             }
         } catch (IllegalQueryException e) {
-            return ImportEntryResult.Skipped(new ImportError(ImportError.Code.PARSING_ERROR, lineNumber, e.getMessage()));
+            return ImportEntryResult.skipped(new ImportError(ImportError.Code.PARSING_ERROR, lineNumber, e.getMessage()));
         } catch (ConstraintViolationException e) {
             return new ImportEntryResult(ResultType.SKIPPED, new ImportError(ImportError.Code.VALIDATION_ERROR, lineNumber, e.getMessage()));
         }
@@ -241,26 +239,17 @@ public class CSVHandler {
      * @param next - next result of an import
      * @return EnumMap<ResultType, Long> as final summary
      */
-    private EnumMap<ResultType, Long> accumulateResultType(EnumMap<ResultType, Long> partialAcc, ImportEntryResult next) {
+    private Result accumulateResultType(Result partialAcc, ImportEntryResult next) {
         switch (next.getResultType()) {
             case CREATED:
-                return createMap(
-                        partialAcc.get(ResultType.CREATED) +1,
-                        partialAcc.get(ResultType.UPDATED),
-                        partialAcc.get(ResultType.SKIPPED)
-                );
+                partialAcc.getCreated().add(next.getUser());
+                return partialAcc;
             case UPDATED:
-                return createMap(
-                        partialAcc.get(ResultType.CREATED),
-                        partialAcc.get(ResultType.UPDATED) + 1,
-                        partialAcc.get(ResultType.SKIPPED)
-                );
+                partialAcc.getUpdated().add(next.getUser());
+                return partialAcc;
             case SKIPPED:
-                return createMap(
-                        partialAcc.get(ResultType.CREATED),
-                        partialAcc.get(ResultType.UPDATED),
-                        partialAcc.get(ResultType.SKIPPED) + 1
-                );
+                partialAcc.getErrors().add(next.getImportError());
+                return partialAcc;
         }
         throw new UnsupportedOperationException(String.format("operation '%s' is not supported", next.getResultType()));
     }
@@ -271,12 +260,12 @@ public class CSVHandler {
      * @param partialAcc2 - of stream 2
      * @return EnumMap<ResultType, Long> as final result for different streams
      */
-    private EnumMap<ResultType, Long> combineAccumulators(EnumMap<ResultType, Long> partialAcc, EnumMap<ResultType, Long> partialAcc2) {
-        return createMap(
-                partialAcc.get(ResultType.CREATED) + partialAcc2.get(ResultType.CREATED),
-                partialAcc.get(ResultType.UPDATED) + partialAcc2.get(ResultType.UPDATED),
-                partialAcc.get(ResultType.SKIPPED) + partialAcc2.get(ResultType.SKIPPED)
-        );
+    private Result combineAccumulators(Result partialAcc, Result partialAcc2) {
+        partialAcc.getCreated().addAll(partialAcc2.getCreated());
+        partialAcc.getUpdated().addAll(partialAcc2.getUpdated());
+        partialAcc.getErrors().addAll(partialAcc2.getErrors());
+
+        return new Result(partialAcc.getCreated(), partialAcc.getUpdated(), partialAcc.getErrors());
     }
 
 
