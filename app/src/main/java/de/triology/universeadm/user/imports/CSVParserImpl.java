@@ -2,8 +2,7 @@ package de.triology.universeadm.user.imports;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.opencsv.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -44,7 +44,7 @@ public class CSVParserImpl implements CSVParser {
                 .map(Collection::stream)
                 .map(csvExceptionStream -> csvExceptionStream
                         // TODO: Add CSVException - ImportError Mapper
-                        .map(e -> ImportEntryResult.Skipped(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage()))))
+                        .map(e -> ImportEntryResult.Skipped(mapCSVExceptionToImportError(e))))
                 .orElse(Stream.empty());
     }
 
@@ -53,7 +53,7 @@ public class CSVParserImpl implements CSVParser {
      * CsvException wrapped inside a RuntimeException when the header row of the csv cannot be parsed.
      * @param csvStream - supplier to get the stream
      * @return Stream containing {@link CSVUserDTO} elements
-     * @throws BadArgumentException - wraps the CsvException
+     * @throws MissingHeaderFieldException - wraps the CsvException
      */
     private Stream<CSVUserDTO> prepareStream(Supplier<Stream<CSVUserDTO>> csvStream) throws MissingHeaderFieldException {
         try {
@@ -76,6 +76,25 @@ public class CSVParserImpl implements CSVParser {
             // wrap CsvException in MissingHeaderFieldException instead of RuntimeException
             throw new MissingHeaderFieldException(e.getMessage(), cause);
         }
+    }
+
+    private ImportError mapCSVExceptionToImportError(CsvException e) {
+        Function<ImportError.Code, ImportError> createImportError = code ->
+                new ImportError(code, e.getLineNumber(), e.getMessage());
+
+        if (e instanceof CsvDataTypeMismatchException) {
+            return createImportError.apply(ImportError.Code.FIELD_CONVERSION_ERROR);
+        }
+
+        if (e instanceof CsvRequiredFieldEmptyException) {
+            return createImportError.apply(ImportError.Code.MISSING_FIELD_ERROR);
+        }
+
+        if (e instanceof CsvFieldAssignmentException) {
+            return createImportError.apply(ImportError.Code.FIELD_ASSIGNMENT_ERROR);
+        }
+
+        return createImportError.apply(ImportError.Code.PARSING_ERROR);
     }
 
 }
