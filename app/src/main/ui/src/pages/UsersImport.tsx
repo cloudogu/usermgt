@@ -1,3 +1,4 @@
+import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 import {Button, Form, H1, H3, LoadingIcon, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import {twMerge} from "tailwind-merge";
@@ -6,23 +7,13 @@ import UsersImportTable from "../components/usersImport/UsersImportTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
-import {ImportUsersService} from "../services/ImportUsers";
-import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import {ImportUsersResponse, ImportUsersService} from "../services/ImportUsers";
+import {Navigate} from "react-router-dom";
 
 type ImportUsersUploadModel = {
     file?: FileList;
     dryrun: boolean;
 };
-
-export interface ImportUsersResponse {
-    summary: {
-        CREATED: number;
-        UPDATED: number;
-        SKIPPED: number;
-    },
-    errors: string[];
-}
-
 const UsersImport = (props: { title: string }) => {
     useSetPageTitle(props.title);
     const {notification, notify} = useAlertNotification();
@@ -100,26 +91,13 @@ const UsersImport = (props: { title: string }) => {
                     </Button>
                 </div>
             </Form>
-            {(uploadResult && !loading) && renderResult(uploadResult)}
-            {loading && <div className={"w-full flex flex-row justify-center mt-16"}><LoadingIcon className={"w-64 h-64"}/></div>}
+            {(uploadResult && !loading) && <Navigate to={"/users/import/results"} state={uploadResult}/>}
+            {loading &&
+                <div className={"w-full flex flex-row justify-center mt-16"}><LoadingIcon className={"w-64 h-64"}/>
+                </div>}
         </div>
     </>;
 };
 
-function renderResult(uploadResult: ImportUsersResponse) {
-    return <>
-        <H3>{t("usersImport.headlines.importSuccess")}</H3>
-        <p>{`Erstellt: ${uploadResult.summary.CREATED}`}</p>
-        <p>{`Aktualisiert: ${uploadResult.summary.UPDATED}`}</p>
-        <p>{`Übersprungen: ${uploadResult.summary.SKIPPED}`}</p>
-        {uploadResult.errors && uploadResult.errors.length > 0 && <>
-            <H3>{t("usersImport.headlines.importErrors")}</H3>
-            <ul>
-                {uploadResult.errors.map(err => <li key={err}>err</li>)}
-            </ul>
-        </>
-        }
-    </>;
-}
 
 export default UsersImport;

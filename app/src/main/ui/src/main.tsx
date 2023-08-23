@@ -20,6 +20,7 @@ import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
+import UsersImportResult from "./pages/UsersImportResult";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
             {
                 path: "users/import",
                 element: <UsersImport title={t("pages.usersImport") + " | User Management"}/>,
+            },
+            {
+                path: "users/import/results",
+                element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
             },
             {
                 path: "users/:username/edit",
