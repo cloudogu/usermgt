@@ -1,7 +1,6 @@
 package de.triology.universeadm.user.imports;
 
 import com.google.common.collect.Lists;
-import com.opencsv.exceptions.CsvException;
 import org.junit.Test;
 
 import java.io.*;
@@ -12,7 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class CSVParserTest {
 
@@ -120,15 +118,6 @@ public class CSVParserTest {
         assertEquals(5, userInputList.size());
     }
 
-    @Test(expected=BadArgumentException.class)
-    public void testReaderNull() throws MissingHeaderFieldException {
-        List<CSVUserDTO> userInputList = new CSVParserImpl()
-                .parse(null)
-                .collect(Collectors.toList());
-
-        assertTrue(userInputList.isEmpty());
-    }
-
     @Test(expected=MissingHeaderFieldException.class)
     public void testInvalidHeader() throws MissingHeaderFieldException {
         CSVParserImpl parser = new CSVParserImpl();
@@ -142,8 +131,6 @@ public class CSVParserTest {
 
     @Test()
     public void testInvalidLineFieldLength() throws MissingHeaderFieldException {
-        ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
-
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -151,13 +138,11 @@ public class CSVParserTest {
                 .collect(Collectors.toList());
 
         assertEquals(3, userInputList.size());
-        verify(eh, times(2)).notify(any());
+        assertEquals(2, parser.getErrors().count());
     }
 
     @Test()
     public void testMissingRequiredField() throws MissingHeaderFieldException {
-        ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
-
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -165,13 +150,11 @@ public class CSVParserTest {
                 .collect(Collectors.toList());
 
         assertEquals(1, userInputList.size());
-        verify(eh, times(1)).notify(any());
+        assertEquals(1, parser.getErrors().count());
     }
 
     @Test()
     public void testInvalidLineDelimiter() throws MissingHeaderFieldException {
-        ExceptionListener<CsvException> eh = mock(ExceptionListener.class);
-
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -179,7 +162,7 @@ public class CSVParserTest {
                 .collect(Collectors.toList());
 
         assertEquals(2, userInputList.size());
-        verify(eh, times(1)).notify(any());
+        assertEquals(1, parser.getErrors().count());
     }
 
 
