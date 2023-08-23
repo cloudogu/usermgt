@@ -4,28 +4,24 @@ import de.triology.universeadm.user.User;
 
 public class ImportEntryResult {
     private final ResultType resultType;
-    private ImportError importError = null;
-    private User user = null;
+    private final ImportError importError;
+    private final User user;
 
     public static ImportEntryResult skipped(ImportError importError) {
-        return new ImportEntryResult(ResultType.SKIPPED, importError);
+        return new ImportEntryResult(ResultType.SKIPPED, importError, null);
     }
 
     public static ImportEntryResult created(User user) {
-        return new ImportEntryResult(ResultType.CREATED, user);
+        return new ImportEntryResult(ResultType.CREATED, null, user);
     }
 
     public static ImportEntryResult updated(User user) {
-        return new ImportEntryResult(ResultType.UPDATED, user);
+        return new ImportEntryResult(ResultType.UPDATED, null, user);
     }
 
-    public ImportEntryResult(ResultType resultType, ImportError importError) {
+    private ImportEntryResult(ResultType resultType, ImportError importError, User user) {
         this.resultType = resultType;
         this.importError = importError;
-    }
-
-    public ImportEntryResult(ResultType resultType, User user) {
-        this.resultType = resultType;
         this.user = user;
     }
 
