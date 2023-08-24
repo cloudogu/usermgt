@@ -1,8 +1,8 @@
 import {Table} from "@cloudogu/ces-theme-tailwind";
-import type {ComponentPropsWithoutRef} from "react";
 import React from "react";
-import type {ImportError} from "../../services/ImportUsers";
 import {t} from "../../helpers/i18nHelpers";
+import type {ImportError} from "../../services/ImportUsers";
+import type {ComponentPropsWithoutRef} from "react";
 
 export interface UsersImportErrorTableProps extends Omit<ComponentPropsWithoutRef<"table">, "content"> {
     content: ImportError[];
@@ -13,10 +13,8 @@ export default function UsersImportErrorTable({content, ...props}: UsersImportEr
         return (<></>);
     }
 
-    // const createdHeadlines = Object.keys(content[0] ?? {}) ?? [];
-
     return (
-        <Table {...props}>
+        <Table {...props} className={"min-w-[900px]"}>
             <Table.Head>
                 <Table.Head.Tr>
                     <Table.Head.Th>

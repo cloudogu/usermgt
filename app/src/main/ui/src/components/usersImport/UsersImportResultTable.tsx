@@ -13,11 +13,8 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
         return (<></>);
     }
 
-    const createdHeadlines = Object.keys(content[0] ?? {}) ?? [];
-    console.log(createdHeadlines);
-
     return (
-        <Table {...props} className={"table-fixed"}>
+        <Table {...props} className={"table-fixed min-w-[900px]"} >
             <Table.Head>
                 <Table.Head.Tr>
                     {

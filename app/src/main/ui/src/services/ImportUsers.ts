@@ -2,6 +2,9 @@ import {isAxiosError} from "axios";
 import {t} from "../helpers/i18nHelpers";
 import type {User} from "./Users";
 import type {AxiosError, AxiosResponse} from "axios";
+import {QueryOptions} from "../hooks/useAPI";
+import {GroupsModel} from "./Groups";
+import {ProtocolsDtoModel, ProtocolsModel} from "../hooks/useProtocolList";
 
 export const IMPORT_PARSING_ERROR = 100;
 export const IMPORT_FIELD_CONVERSION_ERROR = 101;
@@ -30,7 +33,50 @@ export interface ImportUsersResponse {
 }
 
 export const ImportUsersService = {
-    async save(file: File): Promise<AxiosResponse<ImportUsersResponse>> {
+    async listImportProtocols(signal?: AbortSignal, opts?: QueryOptions): Promise<ProtocolsDtoModel>{
+        console.log(JSON.stringify(opts));
+        return {
+            protocols: [
+                {
+                    date: 1692881846335,
+                    name: "import-default-users.csv",
+                    result: {
+                        timestamp: 1692881846335,
+                        created: [],
+                        updated: [],
+                        errors: [],
+                    },
+                },
+                {
+                    date: 1692881867143,
+                    name: "import-special-users.csv",
+                    result: {
+                        timestamp: 1692881867143,
+                        created: [],
+                        updated: [],
+                        errors: [],
+                    },
+                },
+                {
+                    date: 1692881868902,
+                    name: "import-more-users.csv",
+                    result: {
+                        timestamp: 1692881868902,
+                        created: [],
+                        updated: [],
+                        errors: [],
+                    },
+                },
+            ],
+            pagination: {
+                pageCount: 1,
+                current: 1,
+            },
+        };
+    },
+    async deleteProtocol(): Promise<void>{
+    },
+    async importCsv(file: File): Promise<AxiosResponse<ImportUsersResponse>> {
         try {
             const formData = new FormData();
             formData.append("file", file, file.name);

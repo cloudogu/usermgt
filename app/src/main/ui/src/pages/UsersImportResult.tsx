@@ -37,21 +37,21 @@ const UsersImportResult = (props: { title: string }) => {
                 <Details hidden={createdRows === 0}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
-                        Erstellt ({successfulRows})
+                        Erstellte Nutzerkonten ({successfulRows})
                     </Details.Summary>
                     <UsersImportResultTable content={result.created}/>
                 </Details>
                 <Details hidden={updatedRows === 0}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
-                        Aktualisiert ({updatedRows})
+                        Aktualisierte Nutzerkonten ({updatedRows})
                     </Details.Summary>
                     <UsersImportResultTable content={result.updated}/>
                 </Details>
                 <Details hidden={failedRows === 0}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
-                        Übersprungen ({failedRows})
+                        Übersprungene Datenzeilen ({failedRows})
                     </Details.Summary>
                     <UsersImportErrorTable content={result.errors}/>
                 </Details>

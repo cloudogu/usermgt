@@ -26,7 +26,7 @@ const UsersImport = (props: { title: string }) => {
             if (values.file?.length ?? 0 > 0) {
                 const file = values.file?.item(0) as File;
                 setLoading(true);
-                ImportUsersService.save(file)
+                ImportUsersService.importCsv(file)
                     .then(response => {
                         setUploadResult(response.data);
                     })

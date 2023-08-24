@@ -21,6 +21,7 @@ import type {CasUser} from "./services/CasUser";
 // import i18n (needs to be bundled)
 import "./i18n";
 import UsersImportResult from "./pages/UsersImportResult";
+import ImportProtocolList from "./pages/ImportProtocolList";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
             {
                 path: "users/import/results",
                 element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
+            },
+            {
+                path: "users/import/protocols",
+                element: <ImportProtocolList title={t("pages.importProtocolList") + " | User Management"}/>,
             },
             {
                 path: "users/:username/edit",
@@ -124,6 +129,10 @@ function Nav() {
                             <Navbar.ListItem path={"/users/import"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.usersImport")}
+                            </Navbar.ListItem>
+                            <Navbar.ListItem path={"/users/import/protocols"}>
+                                <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
+                                {t("pages.importProtocols")}
                             </Navbar.ListItem>
                             <Navbar.ListItem path={"/groups"}>
                                 <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
