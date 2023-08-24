@@ -151,7 +151,11 @@ public class CSVHandlerTest {
     }
 
     private Stream<ImportEntryResult> createMockErrorStream(long lineNumber) {
-        ImportError error = new ImportError(ImportError.Code.PARSING_ERROR, lineNumber, "test error");
+        ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+                .withLineNumber(lineNumber)
+                .withErrorMessage("test error")
+                .withAffectedColumns(null)
+                .build();
         List<ImportEntryResult> results = new ArrayList<>();
         results.add(ImportEntryResult.skipped(error));
         return results.stream();
@@ -331,7 +335,7 @@ public class CSVHandlerTest {
         return inputPart;
     }
 
-    private MultivaluedMap<String,String> createInputPartHeader(InputPartCase c) {
+    private MultivaluedMap<String, String> createInputPartHeader(InputPartCase c) {
         //Content-Disposition: form-data; name="fieldName"; filename="filename.jpg"
 
         MultivaluedMap<String, String> header = new MultivaluedHashMap<>();
@@ -380,20 +384,20 @@ public class CSVHandlerTest {
     }
 
     private void assertSummary(Long expCreated, Long expUpdated, Long expSkipped, Result result) {
-        Long created = (long)result.getCreated().size();
+        Long created = (long) result.getCreated().size();
         assertNotNull(created);
         assertEquals(expCreated, created);
 
-        Long updated = (long)result.getUpdated().size();
+        Long updated = (long) result.getUpdated().size();
         assertNotNull(updated);
         assertEquals(expUpdated, updated);
 
-        Long skipped = (long)result.getErrors().size();
+        Long skipped = (long) result.getErrors().size();
         assertNotNull(skipped);
         assertEquals(expSkipped, skipped);
     }
 
-    private Stream<CSVUserDTO> createMockStream(int count){
+    private Stream<CSVUserDTO> createMockStream(int count) {
         List<CSVUserDTO> users = new ArrayList<>();
         CSVUserDTO dent = CSVUsers.createDent();
         dent.setLineNumber(2L);

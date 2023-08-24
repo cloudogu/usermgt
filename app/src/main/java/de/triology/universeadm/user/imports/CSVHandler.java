@@ -20,12 +20,11 @@ import java.util.stream.Stream;
 
 
 /**
- *  Handles the data provided by the csv import.
+ * Handles the data provided by the csv import.
  * <p>
- *  It uses the UserManager to retrieve and store users during the import.
- *  ImportErrors that have been occurred during the import are stored in errors.
- *  Because of this CSVHandler is a stateful component that needs be initialized with every import.
- *
+ * It uses the UserManager to retrieve and store users during the import.
+ * ImportErrors that have been occurred during the import are stored in errors.
+ * Because of this CSVHandler is a stateful component that needs be initialized with every import.
  */
 public class CSVHandler {
 
@@ -41,6 +40,7 @@ public class CSVHandler {
 
     /**
      * Constructs the CSVHandler. Initializes an empty ArrayList for the errors.
+     *
      * @param userManager
      */
     @Inject
@@ -54,11 +54,12 @@ public class CSVHandler {
      * <p>
      * It converts the information provided by the csv file and stores or modifies it in the repository.
      * The MultipartFormDataInput is processed within a stream.
+     *
      * @param input as MultipartFormDataInput
      * @return Result containing information how many lines (Users) are created, modified or skipped. In terms of
      * skipped rows, errors are provided as well.
      * @throws BadArgumentException in case further processing of the csv file is not possible. Throwing the exception
-     * means no data has been processed.
+     *                              means no data has been processed.
      */
     public Result handle(MultipartFormDataInput input) throws MissingHeaderFieldException {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
@@ -86,7 +87,12 @@ public class CSVHandler {
         } catch (MissingHeaderFieldException exp) {
             if (exp.getCause() instanceof CsvRequiredFieldEmptyException) {
                 CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) exp.getCause();
-                validationErrors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, csvExp.getLineNumber(), csvExp.getMessage()));
+                ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                        .withLineNumber(csvExp.getLineNumber())
+                        .withErrorMessage(csvExp.getMessage())
+                        .withAffectedColumns(null)
+                        .build();
+                validationErrors.add(error);
                 return new Result(validationErrors);
             }
             throw exp;
@@ -98,7 +104,7 @@ public class CSVHandler {
                 .map(Mapper::decode) // add more information
                 .map(userTriple -> {
                     ImportEntryResult partialResult = saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight());
-                    if (partialResult.getImportError() != null){
+                    if (partialResult.getImportError() != null) {
                         validationErrors.add(partialResult.getImportError());
                     }
                     return partialResult;
@@ -107,10 +113,10 @@ public class CSVHandler {
 
         Stream<ImportEntryResult> finalResultStream = Stream.concat(csvParser.getErrors(), results);
         Result finalResult = finalResultStream.reduce(
-                        new Result(),
-                        this::accumulateResultType,
-                        this::combineAccumulators
-                );
+                new Result(),
+                this::accumulateResultType,
+                this::combineAccumulators
+        );
 
         logger.debug("Generated CSV import result: {}", finalResult);
 
@@ -119,6 +125,7 @@ public class CSVHandler {
 
     /**
      * Validates the formal correctness of the imported file.
+     *
      * @param fileParts from the MultipartForm
      * @throws BadArgumentException
      */
@@ -135,11 +142,11 @@ public class CSVHandler {
         InputPart filePart = fileParts.get(0);
         String filename = this.getFileName(filePart);
 
-        if (filename.isEmpty()){
+        if (filename.isEmpty()) {
             throw new InvalidArgumentException("invalid or empty filename in Content-Disposition");
         }
 
-        if (!filename.endsWith(".csv")){
+        if (!filename.endsWith(".csv")) {
             throw new InvalidArgumentException(String.format("Unsupported filetype \"%s\"",
                     filename.substring(filename.lastIndexOf("."))
             ));
@@ -148,6 +155,7 @@ public class CSVHandler {
 
     /**
      * Returns the filename from MultipartForm header stored within Content-Disposition.
+     *
      * @param filePart containing the header.
      * @return filename of the uploaded file.
      */
@@ -166,6 +174,7 @@ public class CSVHandler {
     /**
      * Returns the reader used to read the uploaded file.
      * For efficient reading a BufferedReader is used.
+     *
      * @param file uploaded be the user.
      * @return Reader (= BufferedReader)
      * @throws InvalidArgumentException
@@ -186,6 +195,7 @@ public class CSVHandler {
 
     /**
      * The user DTO generated from the csv file is used to check whether the user already exists.
+     *
      * @param userDTO from csv file.
      * @return Pair containing the potential existing user and the user dto.
      */
@@ -196,9 +206,10 @@ public class CSVHandler {
 
     /**
      * Saves or modifies the users within the repository.
+     *
      * @param isNewUser: Flag indication whether the user needs to be created
-     * @param user: User object to be saved / modified
-     * <p>
+     * @param user:      User object to be saved / modified
+     *                   <p>
      * @return ResultType whether the user has been created, updated or skipped
      */
     private ImportEntryResult saveCSVImport(long lineNumber, Boolean isNewUser, User user) {
@@ -211,14 +222,25 @@ public class CSVHandler {
                 return ImportEntryResult.updated(user);
             }
         } catch (IllegalQueryException e) {
-            return ImportEntryResult.skipped(new ImportError(ImportError.Code.PARSING_ERROR, lineNumber, e.getMessage()));
+            ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .withAffectedColumns(null)
+                    .build();
+            return ImportEntryResult.skipped(error);
         } catch (ConstraintViolationException e) {
-            return new ImportEntryResult(ResultType.SKIPPED, new ImportError(ImportError.Code.VALIDATION_ERROR, lineNumber, e.getMessage()));
+            ImportError error = new ImportError.Builder(ImportError.Code.VALIDATION_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .withAffectedColumns(null)
+                    .build();
+            return ImportEntryResult.skipped(error);
         }
     }
 
     /**
      * Creates a map with a summary of the import process
+     *
      * @param created users
      * @param updated users
      * @param skipped users
@@ -235,8 +257,9 @@ public class CSVHandler {
 
     /**
      * Accumulator to increment the number for each ResultType
+     *
      * @param partialAcc - Partial summary of the import process
-     * @param next - next result of an import
+     * @param next       - next result of an import
      * @return EnumMap<ResultType, Long> as final summary
      */
     private Result accumulateResultType(Result partialAcc, ImportEntryResult next) {
@@ -256,7 +279,8 @@ public class CSVHandler {
 
     /**
      * Combiner used within the reduce function as the function itself is used with different types.
-     * @param partialAcc - of stream 1
+     *
+     * @param partialAcc  - of stream 1
      * @param partialAcc2 - of stream 2
      * @return EnumMap<ResultType, Long> as final result for different streams
      */

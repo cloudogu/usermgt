@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
@@ -44,13 +45,14 @@ public class CSVParserImpl implements CSVParser {
                 .map(Collection::stream)
                 .map(csvExceptionStream -> csvExceptionStream
                         // TODO: Add CSVException - ImportError Mapper
-                        .map(e -> ImportEntryResult.Skipped(mapCSVExceptionToImportError(e))))
+                        .map(e -> ImportEntryResult.skipped(mapCSVExceptionToImportError(e))))
                 .orElse(Stream.empty());
     }
 
     /**
      * Prepares the stream by calling the supplier function for the csv stream. Doing this can cause a
      * CsvException wrapped inside a RuntimeException when the header row of the csv cannot be parsed.
+     *
      * @param csvStream - supplier to get the stream
      * @return Stream containing {@link CSVUserDTO} elements
      * @throws MissingHeaderFieldException - wraps the CsvException
@@ -79,8 +81,11 @@ public class CSVParserImpl implements CSVParser {
     }
 
     private ImportError mapCSVExceptionToImportError(CsvException e) {
-        Function<ImportError.Code, ImportError> createImportError = code ->
-                new ImportError(code, e.getLineNumber(), e.getMessage());
+        Function<ImportError.Code, ImportError> createImportError = code -> new ImportError.Builder(code)
+                .withLineNumber(e.getLineNumber())
+                .withErrorMessage(e.getMessage())
+                .withAffectedColumns(null)
+                .build();
 
         if (e instanceof CsvDataTypeMismatchException) {
             return createImportError.apply(ImportError.Code.FIELD_CONVERSION_ERROR);
