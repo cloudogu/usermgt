@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -62,7 +64,7 @@ public class CSVHandler {
      * @throws BadArgumentException in case further processing of the csv file is not possible. Throwing the exception
      *                              means no data has been processed.
      */
-    public Result handle(MultipartFormDataInput input) throws MissingHeaderFieldException {
+    public Result handle(MultipartFormDataInput input) {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
 
         //only get file parts
@@ -79,38 +81,29 @@ public class CSVHandler {
 
         Reader fileReader = getFileReader(fileParts.get(0));
         logger.debug("Got reader from first file part");
-        List<ImportError> validationErrors = new ArrayList<>();
-
 
         Stream<CSVUserDTO> parsedDataStream;
         try {
             parsedDataStream = this.csvParser.parse(fileReader);
-        } catch (MissingHeaderFieldException exp) {
-            if (exp.getCause() instanceof CsvRequiredFieldEmptyException) {
-                CsvRequiredFieldEmptyException csvExp = (CsvRequiredFieldEmptyException) exp.getCause();
+        } catch (CsvRequiredFieldEmptyException exp) {
+                List<String> affectedColumns = exp.getDestinationFields().stream()
+                        .map(Field::getName)
+                        .collect(Collectors.toList());;
+
                 ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
-                        .withLineNumber(csvExp.getLineNumber())
-                        .withErrorMessage(csvExp.getMessage())
-                        .withAffectedColumns(null)
+                        .withLineNumber(0)
+                        .withErrorMessage(exp.getMessage())
+                        .withAffectedColumns(affectedColumns)
                         .build();
-                validationErrors.add(error);
-                return new Result(validationErrors);
+
+                return new Result(Collections.singletonList(error));
             }
-            throw exp;
-        }
 
         Stream<ImportEntryResult> results = parsedDataStream
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
                 .map(Mapper::decode) // add more information
-                .map(userTriple -> {
-                    ImportEntryResult partialResult = saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight());
-                    if (partialResult.getImportError() != null) {
-                        validationErrors.add(partialResult.getImportError());
-                    }
-                    return partialResult;
-                });
-
+                .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()));
 
         Stream<ImportEntryResult> finalResultStream = Stream.concat(csvParser.getErrors(), results);
         Result finalResult = finalResultStream.reduce(

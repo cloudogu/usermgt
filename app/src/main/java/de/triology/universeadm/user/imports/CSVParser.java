@@ -1,5 +1,7 @@
 package de.triology.universeadm.user.imports;
 
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+
 import java.io.Reader;
 import java.util.stream.Stream;
 
@@ -12,9 +14,9 @@ public interface CSVParser {
      * Parses the incoming csv file represented as io reader.
      * @param reader - io Reader of the file
      * @return Stream containing {@link CSVUserDTO} elements. In case reader is null, an empty stream is returned.
-     * @throws MissingHeaderFieldException - in case the stream cannot be prepared.
+     * @throws CsvRequiredFieldEmptyException - in case the stream cannot be prepared.
      */
-    Stream<CSVUserDTO> parse(Reader reader) throws MissingHeaderFieldException;
+    Stream<CSVUserDTO> parse(Reader reader) throws CsvRequiredFieldEmptyException;
 
     /**
      * Returns the stream of all exceptions that would have been thrown during the import, but were queued.

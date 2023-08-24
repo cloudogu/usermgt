@@ -24,7 +24,7 @@ public class CSVParserImpl implements CSVParser {
             LoggerFactory.getLogger(CSVParserImpl.class);
 
 
-    public Stream<CSVUserDTO> parse(@NotNull Reader reader) throws MissingHeaderFieldException {
+    public Stream<CSVUserDTO> parse(@NotNull Reader reader) throws CsvRequiredFieldEmptyException {
 
         CsvToBean<CSVUserDTO> beans = new CsvToBeanBuilder<CSVUserDTO>(new CsvLineNumberReader(reader))
                 .withType(CSVUserDTO.class)
@@ -56,7 +56,7 @@ public class CSVParserImpl implements CSVParser {
      * @return Stream containing {@link CSVUserDTO} elements
      * @throws MissingHeaderFieldException - wraps the CsvException
      */
-    private Stream<CSVUserDTO> prepareStream(Supplier<Stream<CSVUserDTO>> csvStream) throws MissingHeaderFieldException {
+    private Stream<CSVUserDTO> prepareStream(Supplier<Stream<CSVUserDTO>> csvStream) throws CsvRequiredFieldEmptyException {
         try {
             return csvStream.get();
         } catch (RuntimeException e) {
@@ -64,18 +64,12 @@ public class CSVParserImpl implements CSVParser {
 
             Throwable cause = e.getCause();
 
-            if (!(cause instanceof CsvException)) {
+            if ((cause instanceof CsvRequiredFieldEmptyException)) {
                 // Rethrow exception as it is not expected.
-                throw e;
+                throw (CsvRequiredFieldEmptyException) cause;
             }
 
-            if (!(cause instanceof CsvRequiredFieldEmptyException)) {
-                // Rethrow exception as it is not expected.
-                throw e;
-            }
-
-            // wrap CsvException in MissingHeaderFieldException instead of RuntimeException
-            throw new MissingHeaderFieldException(e.getMessage(), cause);
+            throw e;
         }
     }
 

@@ -1,6 +1,7 @@
 package de.triology.universeadm.user.imports;
 
 import com.google.common.collect.Lists;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.junit.Test;
 
 import java.io.*;
@@ -16,7 +17,7 @@ import static org.junit.Assert.*;
 public class CSVParserTest {
 
     @Test
-    public void testParse() throws MissingHeaderFieldException {
+    public void testParse() throws CsvRequiredFieldEmptyException {
 
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
@@ -36,7 +37,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testKeepSpaces() throws MissingHeaderFieldException {
+    public void testKeepSpaces() throws CsvRequiredFieldEmptyException {
 
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setSurname("     " +expUser.getSurname());
@@ -51,7 +52,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotes() throws MissingHeaderFieldException {
+    public void testDoubleQuotes() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
                 CSVUsers.createTrillian()
@@ -69,7 +70,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testFieldLineBreaks() throws MissingHeaderFieldException {
+    public void testFieldLineBreaks() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("LineBreaks.csv"))
                 .collect(Collectors.toList());
@@ -79,7 +80,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotesInField() throws MissingHeaderFieldException {
+    public void testDoubleQuotesInField() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("DoubleQuotesField.csv"))
                 .collect(Collectors.toList());
@@ -89,7 +90,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testUmlauts() throws MissingHeaderFieldException {
+    public void testUmlauts() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("Umlauts.csv"))
                 .collect(Collectors.toList());
@@ -99,7 +100,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testEmptyGivenName() throws MissingHeaderFieldException {
+    public void testEmptyGivenName() throws CsvRequiredFieldEmptyException {
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setGivenname("");
 
@@ -111,7 +112,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testParseBoolean() throws MissingHeaderFieldException {
+    public void testParseBoolean() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("Boolean.csv"))
                 .collect(Collectors.toList());
@@ -119,8 +120,8 @@ public class CSVParserTest {
         assertEquals(5, userInputList.size());
     }
 
-    @Test(expected=MissingHeaderFieldException.class)
-    public void testInvalidHeader() throws MissingHeaderFieldException {
+    @Test(expected=CsvRequiredFieldEmptyException.class)
+    public void testInvalidHeader() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -131,7 +132,7 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidLineFieldLength() throws MissingHeaderFieldException {
+    public void testInvalidLineFieldLength() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -143,7 +144,7 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testMissingRequiredField() throws MissingHeaderFieldException {
+    public void testMissingRequiredField() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -155,7 +156,7 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidLineDelimiter() throws MissingHeaderFieldException {
+    public void testInvalidLineDelimiter() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -167,7 +168,7 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidTypeConversion() throws MissingHeaderFieldException {
+    public void testInvalidTypeConversion() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser

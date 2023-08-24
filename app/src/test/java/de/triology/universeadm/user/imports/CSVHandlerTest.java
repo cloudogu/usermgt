@@ -1,6 +1,7 @@
 package de.triology.universeadm.user.imports;
 
 
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
 import de.triology.universeadm.ConstraintViolationException;
 import de.triology.universeadm.user.UserManager;
@@ -25,7 +26,7 @@ public class CSVHandlerTest {
     private static final String VALID_FILENAME = "ImportUsers.csv";
 
     @Test(expected = InvalidArgumentException.class)
-    public void testMissingFileParts() throws MissingHeaderFieldException {
+    public void testMissingFileParts() throws CsvRequiredFieldEmptyException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = Collections.emptyMap();
@@ -41,7 +42,7 @@ public class CSVHandlerTest {
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void testEmptyFileParts() throws MissingHeaderFieldException {
+    public void testEmptyFileParts() throws CsvRequiredFieldEmptyException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -59,7 +60,7 @@ public class CSVHandlerTest {
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void testMultipleFileParts() throws MissingHeaderFieldException {
+    public void testMultipleFileParts() throws CsvRequiredFieldEmptyException {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
