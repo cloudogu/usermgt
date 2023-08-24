@@ -2,6 +2,7 @@ package de.triology.universeadm.user.imports;
 
 import com.google.inject.Inject;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import de.triology.universeadm.Constraint;
 import de.triology.universeadm.ConstraintViolationException;
 import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
@@ -232,12 +233,29 @@ public class CSVHandler {
             ImportError error = new ImportError.Builder(ImportError.Code.VALIDATION_ERROR)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
-                    .withAffectedColumns(null)
+                    .withAffectedColumns(mapConstraintToColumn(e.violated))
                     .build();
             return ImportEntryResult.skipped(error);
         }
     }
 
+    private List<String> mapConstraintToColumn(Constraint.ID[] constraints) {
+        if (constraints.length < 1) {
+            return new ArrayList<>();
+        }
+        List<String> violatedColumnConstraints = new ArrayList<>();
+        for (Constraint.ID constraint : constraints) {
+            switch (constraint) {
+                case UNIQUE_EMAIL:
+                    violatedColumnConstraints.add("mail");
+                    break;
+                case UNIQUE_USERNAME:
+                    violatedColumnConstraints.add("username");
+                    break;
+            }
+        }
+        return violatedColumnConstraints;
+    }
     /**
      * Creates a map with a summary of the import process
      *

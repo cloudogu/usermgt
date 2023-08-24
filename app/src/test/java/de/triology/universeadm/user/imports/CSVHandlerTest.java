@@ -1,6 +1,7 @@
 package de.triology.universeadm.user.imports;
 
 
+import de.triology.universeadm.Constraint;
 import de.triology.universeadm.ConstraintViolationException;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
@@ -370,7 +371,7 @@ public class CSVHandlerTest {
                 doThrow(new AuthorizationException()).when(manager).create(any());
                 break;
             case VALIDATION_EXCEPTION_CREATE:
-                doThrow(new ConstraintViolationException()).when(manager).create(any());
+                doThrow(new ConstraintViolationException(Constraint.ID.UNIQUE_EMAIL)).when(manager).create(any());
                 break;
             case VALID_CREATE_MODIFY:
                 when(manager.get(anyString())).thenAnswer(invocation -> {
