@@ -113,25 +113,6 @@ public class CSVHandlerTest {
         csvHandler.handle(input);
     }
 
-    @Test(expected = InvalidArgumentException.class)
-    public void testInvalidFileBodyPart() throws Exception {
-        UserManager userManager = mock(UserManager.class);
-        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
-        Map<String, List<InputPart>> inputParts = new HashMap<>();
-
-        CSVParser parser = mock(CSVParser.class);
-        when(parser.parse(any())).thenReturn(createMockStream(2));
-        when(parser.getErrors()).thenReturn(createMockErrorStream(1L));
-
-        inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_BODY_PART)));
-
-        when(input.getFormDataMap()).thenReturn(inputParts);
-
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
-
-        csvHandler.handle(input);
-    }
-
     @Test
     public void testInvalidCSVHeader() throws Exception {
         UserManager userManager = mock(UserManager.class);
@@ -156,7 +137,6 @@ public class CSVHandlerTest {
         ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
                 .withLineNumber(lineNumber)
                 .withErrorMessage("test error")
-                .withAffectedColumns(null)
                 .build();
         List<ImportEntryResult> results = new ArrayList<>();
         results.add(ImportEntryResult.skipped(error));
@@ -304,7 +284,6 @@ public class CSVHandlerTest {
         VALID_ROW_PARSING_ERROR,
         INVALID_HEADER_FILE_EXTENSION,
         INVALID_HEADER_MISSING_FILE_NAME,
-        INVALID_BODY_PART,
         INVALID_CSV_HEADER,
     }
 
@@ -316,10 +295,6 @@ public class CSVHandlerTest {
             case INVALID_HEADER_FILE_EXTENSION:
             case INVALID_HEADER_MISSING_FILE_NAME:
                 when(inputPart.getHeaders()).thenReturn(createInputPartHeader(c));
-                break;
-            case INVALID_BODY_PART:
-                when(inputPart.getHeaders()).thenReturn(createInputPartHeader(InputPartCase.VALID));
-                when(inputPart.getBody(any())).thenReturn(null);
                 break;
             case INVALID_CSV_HEADER:
                 when(inputPart.getHeaders()).thenReturn(createInputPartHeader(InputPartCase.VALID));

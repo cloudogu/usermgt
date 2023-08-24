@@ -54,20 +54,20 @@ public class CSVParserImpl implements CSVParser {
      *
      * @param csvStream - supplier to get the stream
      * @return Stream containing {@link CSVUserDTO} elements
-     * @throws MissingHeaderFieldException - wraps the CsvException
+     * @throws CsvRequiredFieldEmptyException - when header cannot be parsed
      */
     private Stream<CSVUserDTO> prepareStream(Supplier<Stream<CSVUserDTO>> csvStream) throws CsvRequiredFieldEmptyException {
         try {
             return csvStream.get();
         } catch (RuntimeException e) {
-            logger.warn("Received RuntimeException while getting CSV stream");
-
             Throwable cause = e.getCause();
 
             if ((cause instanceof CsvRequiredFieldEmptyException)) {
                 // Rethrow exception as it is not expected.
                 throw (CsvRequiredFieldEmptyException) cause;
             }
+
+            logger.warn("Received unexpected RuntimeException while getting CSV stream");
 
             throw e;
         }

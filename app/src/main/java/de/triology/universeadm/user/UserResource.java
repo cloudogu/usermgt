@@ -45,10 +45,12 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 
 /**
@@ -79,24 +81,42 @@ public class UserResource extends AbstractManagerResource<User> {
     @Produces(MediaType.APPLICATION_JSON)
     public Response importUsers(MultipartFormDataInput input) {
         logger.debug("Received csv import request.");
-        BiFunction<Response.Status, String, Response> createError = (status, errMsg) -> Response
-                        .status(status)
-                        .entity(errMsg)
-                        .build();
 
         try {
             Result result = this.csvHandler.handle(input);
             logger.debug("Successfully handled csv import {}", result);
 
             return Response.status(Response.Status.OK).entity(result).build();
+        } catch (CsvRequiredFieldEmptyException e) {
+            List<String> affectedColumns = e.getDestinationFields().stream()
+                    .map(Field::getName)
+                    .collect(Collectors.toList());;
+
+            ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                    .withLineNumber(0)
+                    .withErrorMessage(e.getMessage())
+                    .withAffectedColumns(affectedColumns)
+                    .build();
+
+            logger.error("Invalid header when parsing csv file", e);
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         } catch (InvalidArgumentException e) {
             logger.error("Bad input while handling csv user import", e);
 
-            return createError.apply(Response.Status.BAD_REQUEST, e.getMessage());
+            ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .build();
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         } catch (AuthorizationException e) {
             logger.error("Missing privileges while handling csv user import");
 
-            return createError.apply(Response.Status.FORBIDDEN, "Missing privileges to use import");
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("Missing privileges to use import")
+                    .build();
+
         } catch (RuntimeException e) {
             logger.error("Unexpected internal RuntimeException", e);
 

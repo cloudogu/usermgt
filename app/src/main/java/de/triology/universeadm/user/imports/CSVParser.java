@@ -14,7 +14,7 @@ public interface CSVParser {
      * Parses the incoming csv file represented as io reader.
      * @param reader - io Reader of the file
      * @return Stream containing {@link CSVUserDTO} elements. In case reader is null, an empty stream is returned.
-     * @throws CsvRequiredFieldEmptyException - in case the stream cannot be prepared.
+     * @throws CsvRequiredFieldEmptyException - in case the stream cannot be prepared by parsing the header.
      */
     Stream<CSVUserDTO> parse(Reader reader) throws CsvRequiredFieldEmptyException;
 

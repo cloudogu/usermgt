@@ -113,11 +113,17 @@ public class CSVParserTest {
 
     @Test
     public void testParseBoolean() throws CsvRequiredFieldEmptyException {
+        CSVUserDTO expUsers = CSVUsers.createDent();
+
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("Boolean.csv"))
                 .collect(Collectors.toList());
 
         assertEquals(5, userInputList.size());
+
+        for(CSVUserDTO user: userInputList){
+            assertEquals(expUsers, user);
+        }
     }
 
     @Test(expected=CsvRequiredFieldEmptyException.class)

@@ -26,8 +26,7 @@ import java.util.stream.Stream;
  * Handles the data provided by the csv import.
  * <p>
  * It uses the UserManager to retrieve and store users during the import.
- * ImportErrors that have been occurred during the import are stored in errors.
- * Because of this CSVHandler is a stateful component that needs be initialized with every import.
+ * ImportErrors that have been occurred during the import are part of the Result.
  */
 public class CSVHandler {
 
@@ -39,12 +38,16 @@ public class CSVHandler {
      */
     private final UserManager userManager;
 
+    /**
+     * CSVParser to parse the csv file to DTOs
+     */
     private final CSVParser csvParser;
 
     /**
-     * Constructs the CSVHandler. Initializes an empty ArrayList for the errors.
+     * Constructs the CSVHandler.
      *
-     * @param userManager
+     * @param userManager - injected
+     * @param csvParser - injuected
      */
     @Inject
     public CSVHandler(UserManager userManager, CSVParser csvParser) {
@@ -61,10 +64,10 @@ public class CSVHandler {
      * @param input as MultipartFormDataInput
      * @return Result containing information how many lines (Users) are created, modified or skipped. In terms of
      * skipped rows, errors are provided as well.
-     * @throws BadArgumentException in case further processing of the csv file is not possible. Throwing the exception
-     *                              means no data has been processed.
+     * @throws InvalidArgumentException in case further processing of the csv file is not possible.
+     * Throwing the exception means no data has been processed.
      */
-    public Result handle(MultipartFormDataInput input) {
+    public Result handle(MultipartFormDataInput input) throws CsvRequiredFieldEmptyException {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
 
         //only get file parts
@@ -82,30 +85,14 @@ public class CSVHandler {
         Reader fileReader = getFileReader(fileParts.get(0));
         logger.debug("Got reader from first file part");
 
-        Stream<CSVUserDTO> parsedDataStream;
-        try {
-            parsedDataStream = this.csvParser.parse(fileReader);
-        } catch (CsvRequiredFieldEmptyException exp) {
-                List<String> affectedColumns = exp.getDestinationFields().stream()
-                        .map(Field::getName)
-                        .collect(Collectors.toList());;
-
-                ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
-                        .withLineNumber(0)
-                        .withErrorMessage(exp.getMessage())
-                        .withAffectedColumns(affectedColumns)
-                        .build();
-
-                return new Result(Collections.singletonList(error));
-            }
-
-        Stream<ImportEntryResult> results = parsedDataStream
+        Stream<ImportEntryResult> results = this.csvParser.parse(fileReader)
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
                 .map(Mapper::decode) // add more information
                 .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()));
 
         Stream<ImportEntryResult> finalResultStream = Stream.concat(csvParser.getErrors(), results);
+
         Result finalResult = finalResultStream.reduce(
                 new Result(),
                 this::accumulateResultType,
@@ -121,7 +108,7 @@ public class CSVHandler {
      * Validates the formal correctness of the imported file.
      *
      * @param fileParts from the MultipartForm
-     * @throws BadArgumentException
+     * @throws InvalidArgumentException
      */
     private void validateFile(List<InputPart> fileParts) throws InvalidArgumentException {
 
@@ -181,7 +168,7 @@ public class CSVHandler {
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
 
             return inputReader;
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException e) {
             logger.error(e.toString());
             throw new InvalidArgumentException("unable to parse file");
         }
@@ -203,7 +190,7 @@ public class CSVHandler {
      *
      * @param isNewUser: Flag indication whether the user needs to be created
      * @param user:      User object to be saved / modified
-     *                   <p>
+     * <p>
      * @return ResultType whether the user has been created, updated or skipped
      */
     private ImportEntryResult saveCSVImport(long lineNumber, Boolean isNewUser, User user) {
@@ -219,8 +206,8 @@ public class CSVHandler {
             ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
-                    .withAffectedColumns(null)
                     .build();
+
             return ImportEntryResult.skipped(error);
         } catch (ConstraintViolationException e) {
             ImportError error = new ImportError.Builder(ImportError.Code.VALIDATION_ERROR)
@@ -228,13 +215,14 @@ public class CSVHandler {
                     .withLineNumber(lineNumber)
                     .withAffectedColumns(mapConstraintToColumn(e.violated))
                     .build();
+
             return ImportEntryResult.skipped(error);
         }
     }
 
     private List<String> mapConstraintToColumn(Constraint.ID[] constraints) {
         if (constraints.length < 1) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
         List<String> violatedColumnConstraints = new ArrayList<>();
         for (Constraint.ID constraint : constraints) {
@@ -248,22 +236,6 @@ public class CSVHandler {
             }
         }
         return violatedColumnConstraints;
-    }
-    /**
-     * Creates a map with a summary of the import process
-     *
-     * @param created users
-     * @param updated users
-     * @param skipped users
-     * @return EnumMap<ResultType, Long> with the amount of users that have been created, updated or skipped.
-     */
-    private EnumMap<ResultType, Long> createMap(Long created, Long updated, Long skipped) {
-        EnumMap<ResultType, Long> summary = new EnumMap<>(ResultType.class);
-        summary.put(ResultType.CREATED, created);
-        summary.put(ResultType.UPDATED, updated);
-        summary.put(ResultType.SKIPPED, skipped);
-
-        return summary;
     }
 
     /**

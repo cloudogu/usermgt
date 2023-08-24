@@ -9,6 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ResourceBundle;
 
+/**
+ * CustomConverterBoolean extends the ConverterLanguageToBoolean by wrapping the
+ * CsvDataTypeMismatchException into CustomCsvDataTypeMismatchException. It uses the default
+ * {@link BooleanConverter} which means only English language is supported for parsing boolean values.
+ */
 public class CustomConverterBoolean<T, I> extends ConverterLanguageToBoolean<T, I> {
     @Override
     protected String getLocalizedTrue() {

@@ -103,12 +103,14 @@ public class ImportError {
         }
 
         public ImportError build() {
-            if (this.affectedColumns == null || this.affectedColumns.isEmpty()) {
+            if (this.affectedColumns.isEmpty()) {
                 return new ImportError(this.errorCode, this.lineNumber, this.message, null);
             }
+
             Map<String, List<String>> params = ImmutableMap.<String, List<String>>builder()
                     .put("columns", this.affectedColumns)
                     .build();
+
             return new ImportError(this.errorCode, this.lineNumber, this.message, params);
         }
     }
