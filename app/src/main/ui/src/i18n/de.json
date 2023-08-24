@@ -207,6 +207,7 @@
       "successWithFailures": "Import mit Fehlern abgeschlossen!",
       "failure": "Import fehlgeschlagen!"
     },
+    "error": "Keine Import-Ergebnisse gefunden.",
     "msg": {
       "code-100": "Das Format der Zeile konnte nicht zugeordnet werden.",
       "code-101": "Folgende Spalten hatten einen ungültigen Wert: '{{columns}}'",

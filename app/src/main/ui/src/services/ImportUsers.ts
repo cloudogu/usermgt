@@ -26,6 +26,7 @@ export interface ImportUsersResponse {
     created: ImportedUser[],
     updated: ImportedUser[],
     errors: ImportError[],
+    timestamp: number,
 }
 
 export const ImportUsersService = {
@@ -139,6 +140,7 @@ export const ImportUsersService = {
                             }
                         },
                     ],
+                    timestamp: 1692879385304,
                 }
             };
         } catch (e: AxiosError | unknown) {
