@@ -47,7 +47,7 @@ export const ImportUsersService = {
                             external: true,
                             mail: "super@admin.de",
                             givenname: "Mr.Super",
-                            memberOf: ["admin", "superadmin", "megaadmin"],
+                            memberOf: ["user", "user2", "user3", "user4","admin", "superadmin", "megaadmin", "ultraadmin", "godadmin", "godhimself"],
                             password: "",
                             pwdReset: true,
                             surname: "Admin",

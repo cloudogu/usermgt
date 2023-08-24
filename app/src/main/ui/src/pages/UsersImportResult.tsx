@@ -1,6 +1,8 @@
-import {Details, H1, Table} from "@cloudogu/ces-theme-tailwind";
+import {Details, H1} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useLocation} from "react-router-dom";
+import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTable";
+import UsersImportResultTable from "../components/usersImport/UsersImportResultTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import type {ImportUsersResponse} from "../services/ImportUsers";
@@ -10,8 +12,11 @@ const UsersImportResult = (props: { title: string }) => {
     const {state: result} = useLocation() as Location<ImportUsersResponse>;
     useSetPageTitle(props.title);
 
-    const createdHeadlines = Object.keys(result.created[0] ?? {}) ?? [];
-
+    const createdRows = result?.created?.length ?? 0;
+    const updatedRows = result?.updated?.length ?? 0;
+    const failedRows = result?.errors?.length ?? 0;
+    const successfulRows = createdRows + updatedRows;
+    const affectedRows = successfulRows + failedRows;
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -22,44 +27,24 @@ const UsersImportResult = (props: { title: string }) => {
                 ERROR
             </div>
         }
-        {result &&
+        {result && affectedRows > 0 &&
             <div>
-                <Details>
-                    <Details.Summary>Erstellt</Details.Summary>
-                    <Table>
-                        <Table.Head>
-                            <Table.Head.Tr>
-                                {
-                                    createdHeadlines.map(k =>
-                                        <Table.Head.Th key={k}>
-                                            {k}
-                                        </Table.Head.Th>
-                                    )
-                                }
-                            </Table.Head.Tr>
-                        </Table.Head>
-                        <Table.Body>
-                            {
-                                result?.created?.map((c, i) =>
-                                    <Table.Body.Tr key={i}>
-                                        {createdHeadlines.map(h =>
-                                            <Table.Body.Td key={h}>
-                                                {(result?.created[i] as any)[h]}
-                                            </Table.Body.Td>
-                                        )}
-                                    </Table.Body.Tr>
-                                )
-                            }
-                        </Table.Body>
-                    </Table>
+                <p className={"mb-4 mt-2"}>
+                    {failedRows === 0 && t("usersImportResult.result.success")}
+                    {failedRows > 0 && t("usersImportResult.result.successWithFailures")}
+                    {successfulRows === 0 && t("usersImportResult.result.failure")}
+                </p>
+                <Details hidden={createdRows === 0}>
+                    <Details.Summary>Erstellt ({successfulRows})</Details.Summary>
+                    <UsersImportResultTable content={result.created}/>
                 </Details>
-                <Details>
-                    <Details.Summary>Aktualisiert</Details.Summary>
-                    TABELLE
+                <Details hidden={updatedRows === 0}>
+                    <Details.Summary>Aktualisiert ({updatedRows})</Details.Summary>
+                    <UsersImportResultTable content={result.updated}/>
                 </Details>
-                <Details>
-                    <Details.Summary>Übersprungen</Details.Summary>
-                    TABELLE
+                <Details hidden={failedRows === 0}>
+                    <Details.Summary>Übersprungen ({failedRows})</Details.Summary>
+                    <UsersImportErrorTable content={result.errors}/>
                 </Details>
             </div>
         }
