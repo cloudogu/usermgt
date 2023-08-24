@@ -8,10 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.Reader;
-import java.util.Collection;
-import java.util.Optional;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -43,8 +44,7 @@ public class CSVParserImpl implements CSVParser {
                 .map(CsvToBean::getCapturedExceptions)
                 .map(Collection::stream)
                 .map(csvExceptionStream -> csvExceptionStream
-                        // TODO: Add CSVException - ImportError Mapper
-                        .map(e -> ImportEntryResult.Skipped(mapCSVExceptionToImportError(e))))
+                        .map(e -> ImportEntryResult.skipped(mapCSVExceptionToImportError(e))))
                 .orElse(Stream.empty());
     }
 
@@ -79,22 +79,44 @@ public class CSVParserImpl implements CSVParser {
     }
 
     private ImportError mapCSVExceptionToImportError(CsvException e) {
-        Function<ImportError.Code, ImportError> createImportError = code ->
-                new ImportError(code, e.getLineNumber(), e.getMessage());
+        Function<ImportError.Code, ImportError.Builder> createImportBuilder = code ->
+                new ImportError.Builder(code)
+                        .withLineNumber(e.getLineNumber())
+                        .withErrorMessage(e.getMessage());
 
         if (e instanceof CsvDataTypeMismatchException) {
-            return createImportError.apply(ImportError.Code.FIELD_CONVERSION_ERROR);
+            ImportError.Builder builder = createImportBuilder.apply(ImportError.Code.FIELD_CONVERSION_ERROR);
+
+            if (e instanceof CustomCsvDataTypeMismatchException) {
+                String affectedColumn = ((CustomCsvDataTypeMismatchException) e).getAffectedField().getName();
+                builder.withAffectedColumns(Collections.singletonList((affectedColumn)));
+            }
+
+            return builder.build();
         }
 
         if (e instanceof CsvRequiredFieldEmptyException) {
-            return createImportError.apply(ImportError.Code.MISSING_FIELD_ERROR);
+            CsvRequiredFieldEmptyException exception = (CsvRequiredFieldEmptyException) e;
+
+            List<String> columns = exception.getDestinationFields().stream()
+                    .map(Field::getName)
+                    .collect(Collectors.toList());
+
+            return createImportBuilder
+                    .apply(ImportError.Code.MISSING_FIELD_ERROR)
+                    .withAffectedColumns(columns)
+                    .build();
         }
 
         if (e instanceof CsvFieldAssignmentException) {
-            return createImportError.apply(ImportError.Code.FIELD_ASSIGNMENT_ERROR);
+            return createImportBuilder
+                    .apply(ImportError.Code.FIELD_ASSIGNMENT_ERROR)
+                    .build();
         }
 
-        return createImportError.apply(ImportError.Code.PARSING_ERROR);
+        return createImportBuilder
+                .apply(ImportError.Code.PARSING_ERROR)
+                .build();
     }
 
 }

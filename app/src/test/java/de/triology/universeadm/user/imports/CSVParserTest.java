@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -165,9 +166,20 @@ public class CSVParserTest {
         assertEquals(1, parser.getErrors().count());
     }
 
+    @Test()
+    public void testInvalidTypeConversion() throws MissingHeaderFieldException {
+        CSVParserImpl parser = new CSVParserImpl();
+
+        List<CSVUserDTO> userInputList = parser
+                .parse(readTestFile("InvalidLine_TypeConversion.csv"))
+                .collect(Collectors.toList());
+
+        assertEquals(1, parser.getErrors().count());
+    }
+
 
     private InputStreamReader readTestFile(String filename) {
-        return new InputStreamReader(readTestFileInputStream(filename));
+        return new InputStreamReader(Objects.requireNonNull(readTestFileInputStream(filename)));
     }
 
     static InputStream readTestFileInputStream(String filename) {
