@@ -1,4 +1,4 @@
-import {Details, H1, Href} from "@cloudogu/ces-theme-tailwind";
+import {Details, H1, Href, Paragraph} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {Link, useLocation} from "react-router-dom";
 import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTable";
@@ -23,17 +23,17 @@ const UsersImportResult = (props: { title: string }) => {
             <H1 className="uppercase">{t("pages.usersImportResult")}</H1>
         </div>
         {!result &&
-            <p className={"mt-6"}>
+            <Paragraph className={"mt-6"}>
                 {t("usersImportResult.error")}
-            </p>
+            </Paragraph>
         }
         {result && affectedRows > 0 &&
             <>
-                <p className={"mb-8 mt-2"}>
+                <Paragraph className={"mb-8 mt-2"}>
                     {failedRows === 0 && t("usersImportResult.result.success")}
                     {failedRows > 0 && t("usersImportResult.result.successWithFailures")}
                     {successfulRows === 0 && t("usersImportResult.result.failure")}
-                </p>
+                </Paragraph>
                 <Details hidden={createdRows === 0}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
@@ -56,12 +56,11 @@ const UsersImportResult = (props: { title: string }) => {
                     <UsersImportErrorTable content={result.errors}/>
                 </Details>
 
-                <p className={"mt-6"}>
+                <Paragraph className={"mt-6"}>
                     <Href href={`/usermgt/protocol/download/${result.timestamp}`}>Protokoll herunterladen</Href>
-                </p>
+                </Paragraph>
             </>
         }
-
     </>;
 };
 
