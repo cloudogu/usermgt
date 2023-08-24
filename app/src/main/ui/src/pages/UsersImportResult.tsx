@@ -35,15 +35,24 @@ const UsersImportResult = (props: { title: string }) => {
                     {successfulRows === 0 && t("usersImportResult.result.failure")}
                 </p>
                 <Details hidden={createdRows === 0}>
-                    <Details.Summary>Erstellt ({successfulRows})</Details.Summary>
+                    <Details.Summary>
+                        <Details.Summary.Arrow/>
+                        Erstellt ({successfulRows})
+                    </Details.Summary>
                     <UsersImportResultTable content={result.created}/>
                 </Details>
                 <Details hidden={updatedRows === 0}>
-                    <Details.Summary>Aktualisiert ({updatedRows})</Details.Summary>
+                    <Details.Summary>
+                        <Details.Summary.Arrow/>
+                        Aktualisiert ({updatedRows})
+                    </Details.Summary>
                     <UsersImportResultTable content={result.updated}/>
                 </Details>
                 <Details hidden={failedRows === 0}>
-                    <Details.Summary>Übersprungen ({failedRows})</Details.Summary>
+                    <Details.Summary>
+                        <Details.Summary.Arrow/>
+                        Übersprungen ({failedRows})
+                    </Details.Summary>
                     <UsersImportErrorTable content={result.errors}/>
                 </Details>
             </div>

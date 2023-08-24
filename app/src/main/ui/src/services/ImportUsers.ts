@@ -52,6 +52,28 @@ export const ImportUsersService = {
                             pwdReset: true,
                             surname: "Admin",
                             username: "SuperAdmin",
+                        },
+                        {
+                            displayName: "Super Admin",
+                            external: true,
+                            mail: "super@admin.de",
+                            givenname: "Mr.Super",
+                            memberOf: ["user"],
+                            password: "",
+                            pwdReset: true,
+                            surname: "Admin",
+                            username: "SuperAdmin",
+                        },
+                        {
+                            displayName: "Super Admin",
+                            external: true,
+                            mail: "super@admin.de",
+                            givenname: "Mr.Super",
+                            memberOf: ["user", "asdasdaasdasdasdasdasdasdasdDsss"],
+                            password: "",
+                            pwdReset: true,
+                            surname: "Admin",
+                            username: "SuperAdmin",
                         }
                     ],
                     updated: [

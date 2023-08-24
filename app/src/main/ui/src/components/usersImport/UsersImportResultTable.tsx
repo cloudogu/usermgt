@@ -17,7 +17,7 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
     console.log(createdHeadlines);
 
     return (
-        <Table {...props}>
+        <Table {...props} className={"table-fixed"}>
             <Table.Head>
                 <Table.Head.Tr>
                     {
@@ -31,7 +31,7 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                             "Password-Reset",
                             "Gruppen"
                         ].map(k =>
-                            <Table.Head.Th key={k}>
+                            <Table.Head.Th key={k} className={"w-[12.5%] break-all"}>
                                 {k}
                             </Table.Head.Th>
                         )
@@ -59,7 +59,7 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                                         const isString = !isBoolean && !isArray;
 
                                         return (
-                                            <Table.Body.Td key={h}>
+                                            <Table.Body.Td key={h} className={"w-[12.5%] break-all"}>
                                                 {isBoolean && ((content[i]) ? "TRUE" : "FALSE")}
                                                 {isString && ((content[i] as any)[h])}
                                                 {isArray && ((content[i] as any)[h] as string[]).join(", ")}
