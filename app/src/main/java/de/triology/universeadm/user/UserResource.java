@@ -92,9 +92,19 @@ public class UserResource extends AbstractManagerResource<User> {
             List<ImportError> errors = new ArrayList<>();
             if (e.getCause() instanceof CsvRequiredFieldEmptyException) {
                 CsvRequiredFieldEmptyException exp = (CsvRequiredFieldEmptyException)e.getCause();
-                errors.add(new ImportError(ImportError.Code.MISSING_FIELD_ERROR, 0, exp.getMessage()));
+                ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                        .withLineNumber(0)
+                        .withErrorMessage(exp.getMessage())
+                        .withAffectedColumns(null)
+                        .build();
+                errors.add(error);
             } else {
-                errors.add(new ImportError(ImportError.Code.PARSING_ERROR, 0, e.getMessage()));
+                ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+                        .withLineNumber(0)
+                        .withErrorMessage(e.getMessage())
+                        .withAffectedColumns(null)
+                        .build();
+                errors.add(error);
             }
             Result result = new Result(errors);
             return Response.status(Response.Status.BAD_REQUEST).entity(result).build();

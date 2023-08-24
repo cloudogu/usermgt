@@ -51,6 +51,7 @@ public class CSVParserImpl implements CSVParser {
     /**
      * Prepares the stream by calling the supplier function for the csv stream. Doing this can cause a
      * CsvException wrapped inside a RuntimeException when the header row of the csv cannot be parsed.
+     *
      * @param csvStream - supplier to get the stream
      * @return Stream containing {@link CSVUserDTO} elements
      * @throws MissingHeaderFieldException - wraps the CsvException
