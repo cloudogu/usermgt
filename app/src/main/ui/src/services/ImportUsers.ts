@@ -55,6 +55,108 @@ export type ProtocolsModel = PagedModel & {
     protocols: ImportProtocol[];
 }
 
+const mockResponse: ImportUsersResponse = {
+    created: [
+        {
+            displayName: "Super Admin",
+            external: true,
+            mail: "super@admin.de",
+            givenname: "Mr.Super",
+            memberOf: ["user", "user2", "user3", "user4", "admin", "superadmin", "megaadmin", "ultraadmin", "godadmin", "godhimself"],
+            password: "",
+            pwdReset: true,
+            surname: "Admin",
+            username: "SuperAdmin",
+        },
+        {
+            displayName: "Super Admin",
+            external: true,
+            mail: "super@admin.de",
+            givenname: "Mr.Super",
+            memberOf: ["user"],
+            password: "",
+            pwdReset: true,
+            surname: "Admin",
+            username: "SuperAdmin",
+        },
+        {
+            displayName: "Super Admin",
+            external: true,
+            mail: "super@admin.de",
+            givenname: "Mr.Super",
+            memberOf: ["user", "asdasdaasdasdasdasdasdasdasdDsss"],
+            password: "",
+            pwdReset: true,
+            surname: "Admin",
+            username: "SuperAdmin",
+        }
+    ],
+    updated: [
+        {
+            displayName: "Super Duper Man",
+            external: true,
+            mail: "super@duper.com",
+            givenname: "Mr.Superman",
+            memberOf: ["superadmin"],
+            password: "",
+            pwdReset: true,
+            surname: "Man",
+            username: "SuperMan",
+        }
+    ],
+    errors: [
+        {
+            code: IMPORT_PARSING_ERROR,
+            lineNumber: 1,
+            message: "could not parse line",
+            params: {
+                columns: ["MAIL"]
+            }
+        },
+        {
+            code: IMPORT_FIELD_CONVERSION_ERROR,
+            lineNumber: 2,
+            message: "asdf is not a valid value for field external",
+            params: {
+                columns: ["EXTERNAL"]
+            }
+        },
+        {
+            code: IMPORT_MISSING_FIELD_ERROR,
+            lineNumber: 3,
+            message: "asdf is not a valid value for field external",
+            params: {
+                columns: ["MAIL"]
+            }
+        },
+        {
+            code: IMPORT_VALIDATION_ERROR,
+            lineNumber: 4,
+            message: "some fields are invalid",
+            params: {
+                columns: ["USERNAME", "MAIL"]
+            }
+        },
+        {
+            code: IMPORT_UNIQUE_FIELD_ERROR,
+            lineNumber: 5,
+            message: "the mail must be unique",
+            params: {
+                columns: ["MAIL"]
+            }
+        },
+        {
+            code: IMPORT_FIELD_FORMAT_ERROR,
+            lineNumber: 6,
+            message: "some fields are invalid",
+            params: {
+                columns: ["USERNAME", "MAIL"]
+            }
+        },
+    ],
+    timestamp: new Date(1692879385304),
+};
+
 export const ImportUsersService = {
     async listImportProtocols(signal?: AbortSignal, opts?: QueryOptions): Promise<ProtocolsModel> {
         console.log(JSON.stringify(opts));
@@ -62,30 +164,15 @@ export const ImportUsersService = {
             protocols: [
                 {
                     name: "import-default-users.csv",
-                    result: {
-                        timestamp: new Date(1692881846335),
-                        created: [],
-                        updated: [],
-                        errors: [],
-                    },
+                    result: mockResponse,
                 },
                 {
                     name: "import-special-users.csv",
-                    result: {
-                        timestamp: new Date(1692881867143),
-                        created: [],
-                        updated: [],
-                        errors: [],
-                    },
+                    result: mockResponse
                 },
                 {
                     name: "import-more-users.csv",
-                    result: {
-                        timestamp: new Date(1692881868902),
-                        created: [],
-                        updated: [],
-                        errors: [],
-                    },
+                    result: mockResponse,
                 },
             ],
             pagination: {
@@ -109,108 +196,12 @@ export const ImportUsersService = {
             // TODO: map dto to normal
 
             return {
-                config: undefined as any, headers: undefined as any, request: undefined, status: 200, statusText: "",
-                data: {
-                    created: [
-                        {
-                            displayName: "Super Admin",
-                            external: true,
-                            mail: "super@admin.de",
-                            givenname: "Mr.Super",
-                            memberOf: ["user", "user2", "user3", "user4", "admin", "superadmin", "megaadmin", "ultraadmin", "godadmin", "godhimself"],
-                            password: "",
-                            pwdReset: true,
-                            surname: "Admin",
-                            username: "SuperAdmin",
-                        },
-                        {
-                            displayName: "Super Admin",
-                            external: true,
-                            mail: "super@admin.de",
-                            givenname: "Mr.Super",
-                            memberOf: ["user"],
-                            password: "",
-                            pwdReset: true,
-                            surname: "Admin",
-                            username: "SuperAdmin",
-                        },
-                        {
-                            displayName: "Super Admin",
-                            external: true,
-                            mail: "super@admin.de",
-                            givenname: "Mr.Super",
-                            memberOf: ["user", "asdasdaasdasdasdasdasdasdasdDsss"],
-                            password: "",
-                            pwdReset: true,
-                            surname: "Admin",
-                            username: "SuperAdmin",
-                        }
-                    ],
-                    updated: [
-                        {
-                            displayName: "Super Duper Man",
-                            external: true,
-                            mail: "super@duper.com",
-                            givenname: "Mr.Superman",
-                            memberOf: ["superadmin"],
-                            password: "",
-                            pwdReset: true,
-                            surname: "Man",
-                            username: "SuperMan",
-                        }
-                    ],
-                    errors: [
-                        {
-                            code: IMPORT_PARSING_ERROR,
-                            lineNumber: 1,
-                            message: "could not parse line",
-                            params: {
-                                columns: ["MAIL"]
-                            }
-                        },
-                        {
-                            code: IMPORT_FIELD_CONVERSION_ERROR,
-                            lineNumber: 2,
-                            message: "asdf is not a valid value for field external",
-                            params: {
-                                columns: ["EXTERNAL"]
-                            }
-                        },
-                        {
-                            code: IMPORT_MISSING_FIELD_ERROR,
-                            lineNumber: 3,
-                            message: "asdf is not a valid value for field external",
-                            params: {
-                                columns: ["MAIL"]
-                            }
-                        },
-                        {
-                            code: IMPORT_VALIDATION_ERROR,
-                            lineNumber: 4,
-                            message: "some fields are invalid",
-                            params: {
-                                columns: ["USERNAME", "MAIL"]
-                            }
-                        },
-                        {
-                            code: IMPORT_UNIQUE_FIELD_ERROR,
-                            lineNumber: 5,
-                            message: "the mail must be unique",
-                            params: {
-                                columns: ["MAIL"]
-                            }
-                        },
-                        {
-                            code: IMPORT_FIELD_FORMAT_ERROR,
-                            lineNumber: 6,
-                            message: "some fields are invalid",
-                            params: {
-                                columns: ["USERNAME", "MAIL"]
-                            }
-                        },
-                    ],
-                    timestamp: new Date(1692879385304),
-                }
+                config: undefined as any,
+                headers: undefined as any,
+                request: undefined,
+                status: 200,
+                statusText: "",
+                data: mockResponse,
             };
         } catch (e: AxiosError | unknown) {
             if (isAxiosError(e)) {
