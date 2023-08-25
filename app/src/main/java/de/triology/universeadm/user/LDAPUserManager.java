@@ -132,7 +132,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
    * If so, throws ConstraintViolationException containing all violations.
    * @param user
    * @param category
-   * @throws ConstraintViolationException
+   * @throws UniqueConstraintViolationException
    */
   private void checkConstraints(final User user, final Constraint.Category category) {
     final List<Constraint.ID> violatedConstraints = new ArrayList<>();
@@ -141,8 +141,8 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
         violatedConstraints.add(constraint.getUniqueID());
       }
     }
-    if (violatedConstraints.size() > 0) {
-      throw new ConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[0]));
+    if (!violatedConstraints.isEmpty()) {
+      throw new UniqueConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[0]));
     }
   }
 

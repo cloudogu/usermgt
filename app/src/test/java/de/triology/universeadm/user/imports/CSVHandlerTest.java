@@ -3,7 +3,7 @@ package de.triology.universeadm.user.imports;
 
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
-import de.triology.universeadm.ConstraintViolationException;
+import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
 import org.apache.shiro.authz.AuthorizationException;
@@ -347,7 +347,7 @@ public class CSVHandlerTest {
                 doThrow(new AuthorizationException()).when(manager).create(any());
                 break;
             case VALIDATION_EXCEPTION_CREATE:
-                doThrow(new ConstraintViolationException(Constraint.ID.UNIQUE_EMAIL)).when(manager).create(any());
+                doThrow(new UniqueConstraintViolationException(Constraint.ID.UNIQUE_EMAIL)).when(manager).create(any());
                 break;
             case VALID_CREATE_MODIFY:
                 when(manager.get(anyString())).thenAnswer(invocation -> {

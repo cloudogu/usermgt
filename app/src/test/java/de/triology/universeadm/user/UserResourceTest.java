@@ -119,7 +119,7 @@ public class UserResourceTest {
     public void testCreateAlreadyExists() throws URISyntaxException, IOException {
         User dent = Users.createDent();
 
-        doThrow(new ConstraintViolationException(Constraint.ID.UNIQUE_USERNAME)).when(userManager).create(dent);
+        doThrow(new UniqueConstraintViolationException(Constraint.ID.UNIQUE_USERNAME)).when(userManager).create(dent);
 
         MockHttpRequest request = MockHttpRequest.post("/users");
         MockHttpResponse response = Resources.dispatch(resource, request, dent);

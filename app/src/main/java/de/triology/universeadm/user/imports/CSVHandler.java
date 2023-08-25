@@ -3,7 +3,7 @@ package de.triology.universeadm.user.imports;
 import com.google.inject.Inject;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
-import de.triology.universeadm.ConstraintViolationException;
+import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
@@ -14,9 +14,11 @@ import org.opensaml.artifact.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 import javax.validation.constraints.NotNull;
 import java.io.*;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -203,20 +205,30 @@ public class CSVHandler {
                 return ImportEntryResult.updated(user);
             }
         } catch (IllegalQueryException e) {
-            ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+            ImportError error = new ImportError.Builder(ImportError.Code.VALIDATION_ERROR)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
                     .build();
 
             return ImportEntryResult.skipped(error);
-        } catch (ConstraintViolationException e) {
-            ImportError error = new ImportError.Builder(ImportError.Code.VALIDATION_ERROR)
+        } catch (UniqueConstraintViolationException e) {
+            ImportError error = new ImportError.Builder(ImportError.Code.UNIQUE_FIELD_ERROR)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
                     .withAffectedColumns(mapConstraintToColumn(e.violated))
                     .build();
 
             return ImportEntryResult.skipped(error);
+        } catch (ConstraintViolationException e) {
+                List<ConstraintViolation<?>> violas = new ArrayList<>(e.getConstraintViolations());
+                List<String> strViolas = violas.stream().map(ConstraintViolation::getPropertyPath).map(Path::toString).collect(Collectors.toList());
+                ImportError error = new ImportError.Builder(ImportError.Code.FIELD_FORMAT_ERROR)
+                        .withErrorMessage(e.getMessage())
+                        .withLineNumber(lineNumber)
+                        .withAffectedColumns(strViolas)
+                        .build();
+
+                return ImportEntryResult.skipped(error);
         }
     }
 

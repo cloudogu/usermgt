@@ -37,11 +37,13 @@ import static de.triology.universeadm.AbstractLDAPManager.WILDCARD;
 
 import de.triology.universeadm.*;
 import de.triology.universeadm.validation.Validator;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,10 +79,9 @@ public class MappingHandler<T extends Comparable<T>> {
         try {
             entry = consume(object, entry);
             if (entry != null) {
-//        if (logger.isTraceEnabled())
-//        {
-                logger.info("create ldap entry:\n{}", LDAPUtil.toLDIF(entry));
-//        }
+                if (logger.isTraceEnabled()) {
+                    logger.info("create ldap entry:\n{}", LDAPUtil.toLDIF(entry));
+                }
                 strategy.get().add(entry);
             } else {
                 logger.debug("consumer returned null entry");
