@@ -1,10 +1,9 @@
 import {isAxiosError} from "axios";
 import {t} from "../helpers/i18nHelpers";
 import type {User} from "./Users";
+import type {QueryOptions} from "../hooks/useAPI";
+import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
 import type {AxiosError, AxiosResponse} from "axios";
-import {QueryOptions} from "../hooks/useAPI";
-import {GroupsModel} from "./Groups";
-import {ProtocolsDtoModel, ProtocolsModel} from "../hooks/useProtocolList";
 
 export const IMPORT_PARSING_ERROR = 100;
 export const IMPORT_FIELD_CONVERSION_ERROR = 101;
@@ -29,39 +28,60 @@ export interface ImportUsersResponse {
     created: ImportedUser[],
     updated: ImportedUser[],
     errors: ImportError[],
+    timestamp: Date,
+}
+
+export interface ImportUsersResponseDto {
+    created: ImportedUser[],
+    updated: ImportedUser[],
+    errors: ImportError[],
     timestamp: number,
+}
+export interface ImportProtocol {
+    name: string;
+    result: ImportUsersResponse,
+}
+
+export interface ImportProtocolDto {
+    name: string;
+    result: ImportUsersResponseDto,
+}
+
+export type ProtocolsDtoModel = PagedModel & {
+    protocols: ImportProtocolDto[];
+}
+
+export type ProtocolsModel = PagedModel & {
+    protocols: ImportProtocol[];
 }
 
 export const ImportUsersService = {
-    async listImportProtocols(signal?: AbortSignal, opts?: QueryOptions): Promise<ProtocolsDtoModel>{
+    async listImportProtocols(signal?: AbortSignal, opts?: QueryOptions): Promise<ProtocolsModel> {
         console.log(JSON.stringify(opts));
         return {
             protocols: [
                 {
-                    date: 1692881846335,
                     name: "import-default-users.csv",
                     result: {
-                        timestamp: 1692881846335,
+                        timestamp: new Date(1692881846335),
                         created: [],
                         updated: [],
                         errors: [],
                     },
                 },
                 {
-                    date: 1692881867143,
                     name: "import-special-users.csv",
                     result: {
-                        timestamp: 1692881867143,
+                        timestamp: new Date(1692881867143),
                         created: [],
                         updated: [],
                         errors: [],
                     },
                 },
                 {
-                    date: 1692881868902,
                     name: "import-more-users.csv",
                     result: {
-                        timestamp: 1692881868902,
+                        timestamp: new Date(1692881868902),
                         created: [],
                         updated: [],
                         errors: [],
@@ -74,17 +94,20 @@ export const ImportUsersService = {
             },
         };
     },
-    async deleteProtocol(): Promise<void>{
+    async deleteProtocol(): Promise<void> {
     },
     async importCsv(file: File): Promise<AxiosResponse<ImportUsersResponse>> {
         try {
             const formData = new FormData();
             formData.append("file", file, file.name);
-            // return await Axios.post<ImportUsersResponse>("/users/import", formData, {
+            // return await Axios.post<ImportUsersResponseDto>("/users/import", formData, {
             //     headers: {
             //         "Content-Type": "multipart/form-data"
             //     }
             // });
+
+            // TODO: map dto to normal
+
             return {
                 config: undefined as any, headers: undefined as any, request: undefined, status: 200, statusText: "",
                 data: {
@@ -94,7 +117,7 @@ export const ImportUsersService = {
                             external: true,
                             mail: "super@admin.de",
                             givenname: "Mr.Super",
-                            memberOf: ["user", "user2", "user3", "user4","admin", "superadmin", "megaadmin", "ultraadmin", "godadmin", "godhimself"],
+                            memberOf: ["user", "user2", "user3", "user4", "admin", "superadmin", "megaadmin", "ultraadmin", "godadmin", "godhimself"],
                             password: "",
                             pwdReset: true,
                             surname: "Admin",
@@ -186,7 +209,7 @@ export const ImportUsersService = {
                             }
                         },
                     ],
-                    timestamp: 1692879385304,
+                    timestamp: new Date(1692879385304),
                 }
             };
         } catch (e: AxiosError | unknown) {

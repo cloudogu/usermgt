@@ -1,6 +1,6 @@
 import {Details, H1, Href, Paragraph} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
-import {Link, useLocation} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTable";
 import UsersImportResultTable from "../components/usersImport/UsersImportResultTable";
 import {t} from "../helpers/i18nHelpers";
@@ -57,7 +57,7 @@ const UsersImportResult = (props: { title: string }) => {
                 </Details>
 
                 <Paragraph className={"mt-6"}>
-                    <Href href={`/usermgt/protocol/download/${result.timestamp}`}>Protokoll herunterladen</Href>
+                    <Href href={`/usermgt/protocol/download/${result.timestamp.getTime()}`}>Protokoll herunterladen</Href>
                 </Paragraph>
             </>
         }

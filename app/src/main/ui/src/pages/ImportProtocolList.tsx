@@ -1,21 +1,26 @@
 import {H1} from "@cloudogu/ces-theme-tailwind";
-import React, {useState} from "react";
+import React from "react";
+import ProtocolList from "../components/importProtocolList/ProtocolList";
 import {t} from "../helpers/i18nHelpers";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import {useFilter} from "../hooks/useFilter";
 import useProtocolList from "../hooks/useProtocolList";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
 
 const UsersImportResult = (props: { title: string }) => {
-    const [test, setTest] = useState({limit: 0, query: "", start: 0});
-    const {data, isLoading} = useProtocolList(test);
+    const {opts, updatePage} = useFilter();
+    const {data} = useProtocolList(opts);
     useSetPageTitle(props.title);
 
     return <>
         <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.importProtocols")}</H1>
         </div>
-
-        {data?.protocols?.length}
-        {isLoading ? "TRUE" : "FALSE"}
+        <ProtocolList
+            protocols={data?.protocols || []}
+            pageCount={data?.pagination?.pageCount ?? 1}
+            currentPage={data?.pagination?.current ?? 1}
+            onPageChange={updatePage}
+        />
     </>;
 };
 
