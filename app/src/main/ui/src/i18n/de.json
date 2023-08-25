@@ -217,5 +217,25 @@
       "code-201": "Folgende Spalten enthielten einen Wert, der als einzigartig gekennzeichnet ist und bereits vergeben war: '{{columns}}'",
       "code-202": "Folgende Spalten haben ein ungültiges Format: '{{columns}}'"
     }
+  },
+  "importProtocols": {
+    "aria": {
+      "download": "Herunterladen des Protokolls: '{{identifier}}'",
+      "delete": "Löschen des Protokolls: '{{identifier}}'",
+      "info": "Detaillierte Informationen zu den Importergebnissen des Protokolls: '{{identifier}}'"
+    },
+    "table": {
+      "headline": {
+        "name": "Name der CSV-Datei",
+        "date": "Datum",
+        "result": "Ergebnis",
+        "functions": "Funktionen"
+      }
+    },
+    "result": {
+      "created": "Neu",
+      "updated": "Aktualisiert",
+      "errors": "Übersprungen"
+    }
   }
 }

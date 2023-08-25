@@ -159,7 +159,6 @@ const mockResponse: ImportUsersResponse = {
 
 export const ImportUsersService = {
     async listImportProtocols(signal?: AbortSignal, opts?: QueryOptions): Promise<ProtocolsModel> {
-        console.log(JSON.stringify(opts));
         return {
             protocols: [
                 {
@@ -181,7 +180,7 @@ export const ImportUsersService = {
             },
         };
     },
-    async deleteProtocol(): Promise<void> {
+    async deleteProtocol(protocol: ImportProtocol): Promise<void> {
     },
     async importCsv(file: File): Promise<AxiosResponse<ImportUsersResponse>> {
         try {
