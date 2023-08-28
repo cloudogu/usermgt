@@ -39,22 +39,22 @@ export default function ProtocolList({protocols, pageCount, currentPage, onPageC
                                 {p.name}
                             </Table.Body.Td>
                             <Table.Body.Td>
-                                {p.result.timestamp.toUTCString()}
+                                {p.timestamp.toUTCString()}
                             </Table.Body.Td>
                             <Table.Body.Td>
-                                {t("importProtocols.result.created")}: {p.result.created.length}{", "}
-                                {t("importProtocols.result.updated")}: {p.result.updated.length}{", "}
-                                {t("importProtocols.result.errors")}: {p.result.errors.length}
+                                {t("importProtocols.result.created")}: {p.result.created}{", "}
+                                {t("importProtocols.result.updated")}: {p.result.updated}{", "}
+                                {t("importProtocols.result.errors")}: {p.result.skipped}
                             </Table.Body.Td>
                             <Table.Body.Td className={"flex flex-row"}>
                                 <a
-                                    href={`/usermgt/protocol/download/${p.result.timestamp.getTime()}`}
+                                    href={`/usermgt/protocol/download/${p.timestamp.getTime()}`}
                                     aria-description={t("importProtocols.aria.download", {identifier: p.name})}
                                 >
                                     <CesIcons.DownloadSimple weight={"bold"} className={"w-6 h-6"} aria-hidden={true}/>
                                 </a>
                                 <Link to={"/users/import/results"} 
-                                    state={p.result}
+                                    state={{protocol: p.result}}
                                     aria-description={t("importProtocols.aria.info", {identifier: p.name})}
                                 >
                                     <CesIcons.Link weight={"bold"} className={"w-6 h-6"} aria-hidden={true}/>

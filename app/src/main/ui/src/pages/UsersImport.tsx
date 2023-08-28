@@ -91,7 +91,7 @@ const UsersImport = (props: { title: string }) => {
                     </Button>
                 </div>
             </Form>
-            {(uploadResult && !loading) && <Navigate to={"/users/import/results"} state={uploadResult}/>}
+            {(uploadResult && !loading) && <Navigate to={"/users/import/results"} state={{result: uploadResult}}/>}
             {loading &&
                 <div className={"w-full flex flex-row justify-center mt-16"}><LoadingIcon className={"w-64 h-64"}/>
                 </div>}

@@ -4,6 +4,7 @@ import type {User} from "./Users";
 import type {QueryOptions} from "../hooks/useAPI";
 import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
 import type {AxiosError, AxiosResponse} from "axios";
+import {mock} from "node:test";
 
 export const IMPORT_PARSING_ERROR = 100;
 export const IMPORT_FIELD_CONVERSION_ERROR = 101;
@@ -37,14 +38,27 @@ export interface ImportUsersResponseDto {
     errors: ImportError[],
     timestamp: number,
 }
+
 export interface ImportProtocol {
+    id: string;
     name: string;
-    result: ImportUsersResponse,
+    timestamp: Date;
+    result: {
+        created: number;
+        updated: number;
+        skipped: number;
+    },
 }
 
 export interface ImportProtocolDto {
+    id: string;
     name: string;
-    result: ImportUsersResponseDto,
+    timestamp: number;
+    result: {
+        created: number;
+        updated: number;
+        skipped: number;
+    },
 }
 
 export type ProtocolsDtoModel = PagedModel & {
@@ -162,16 +176,34 @@ export const ImportUsersService = {
         return {
             protocols: [
                 {
+                    id: "a5105f0e-4561-11ee-be56-0242ac120002",
+                    timestamp: new Date(1692879385304),
                     name: "import-default-users.csv",
-                    result: mockResponse,
+                    result: {
+                        created: 1,
+                        updated: 2,
+                        skipped: 7,
+                    },
                 },
                 {
+                    id: "a5105f0e-4561-11ee-be56-0242ac120002",
+                    timestamp: new Date(1692879386304),
                     name: "import-special-users.csv",
-                    result: mockResponse
+                    result: {
+                        created: 3,
+                        updated: 12,
+                        skipped: 2,
+                    },
                 },
                 {
+                    id: "a5105f0e-4561-11ee-be56-0242ac120002",
+                    timestamp: new Date(1692879389304),
                     name: "import-more-users.csv",
-                    result: mockResponse,
+                    result: {
+                        created: 15,
+                        updated: 3,
+                        skipped: 0,
+                    },
                 },
             ],
             pagination: {
@@ -181,6 +213,9 @@ export const ImportUsersService = {
         };
     },
     async deleteProtocol(protocol: ImportProtocol): Promise<void> {
+    },
+    async getImportDetails(protocol: ImportProtocol): Promise<ImportUsersResponse>{
+        return mockResponse;
     },
     async importCsv(file: File): Promise<AxiosResponse<ImportUsersResponse>> {
         try {
