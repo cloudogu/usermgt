@@ -243,10 +243,10 @@ public class CSVHandlerTest {
         assertEquals(2, errors.size());
 
         assertEquals(2, errors.get(0).getLineNumber());
-        assertEquals(ImportError.Code.VALIDATION_ERROR.value, errors.get(0).getErrorCode());
+        assertEquals(ImportError.Code.UNIQUE_FIELD_ERROR.value, errors.get(0).getErrorCode());
 
         assertEquals(3, errors.get(1).getLineNumber());
-        assertEquals(ImportError.Code.VALIDATION_ERROR.value, errors.get(1).getErrorCode());
+        assertEquals(ImportError.Code.UNIQUE_FIELD_ERROR.value, errors.get(1).getErrorCode());
     }
 
     @Test()

@@ -87,15 +87,15 @@ public class CSVHandler {
         Reader fileReader = getFileReader(fileParts.get(0));
         logger.debug("Got reader from first file part");
 
-        Stream<ImportEntryResult> results = this.csvParser.parse(fileReader)
+        List<ImportEntryResult> results = this.csvParser.parse(fileReader)
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
                 .map(Mapper::decode) // add more information
-                .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()));
+                .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()))
+                .collect(Collectors.toList());
 
-        Stream<ImportEntryResult> finalResultStream = Stream.concat(csvParser.getErrors(), results);
-
-        Result finalResult = finalResultStream.reduce(
+        results.addAll(csvParser.getErrors().collect(Collectors.toList()));
+        Result finalResult = results.stream().reduce(
                 new Result(),
                 this::accumulateResultType,
                 this::combineAccumulators

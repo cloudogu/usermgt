@@ -21,10 +21,10 @@ public class ImportError {
         FIELD_CONVERSION_ERROR(101),
         MISSING_FIELD_ERROR(102),
         FIELD_ASSIGNMENT_ERROR(103),
-        MALFORMED_LINE_ERROR(104),
         VALIDATION_ERROR(200),
         UNIQUE_FIELD_ERROR(201),
-        FIELD_FORMAT_ERROR(202);
+        FIELD_FORMAT_ERROR(202),
+        MISSING_REQUIRED_FIELD_ERROR(204);
 
         public final int value;
 

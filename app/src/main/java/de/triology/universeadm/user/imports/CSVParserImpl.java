@@ -98,7 +98,7 @@ public class CSVParserImpl implements CSVParser {
                     .collect(Collectors.toList());
 
             return createImportBuilder
-                    .apply(ImportError.Code.MISSING_FIELD_ERROR)
+                    .apply(ImportError.Code.MISSING_REQUIRED_FIELD_ERROR)
                     .withAffectedColumns(columns)
                     .build();
         }
