@@ -57,7 +57,7 @@ export default function ProtocolList({protocols, pageCount, currentPage, onPageC
                                     state={{protocol: p.result}}
                                     aria-description={t("importProtocols.aria.info", {identifier: p.name})}
                                 >
-                                    <CesIcons.Link weight={"bold"} className={"w-6 h-6"} aria-hidden={true}/>
+                                    <CesIcons.Table weight={"bold"} className={"w-6 h-6"} aria-hidden={true}/>
                                 </Link>
                                 <button
                                     onClick={() => ImportUsersService.deleteProtocol(p)}

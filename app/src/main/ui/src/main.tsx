@@ -62,8 +62,8 @@ const router = createBrowserRouter([
                 element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
             },
             {
-                path: "users/import/protocols",
-                element: <ImportProtocolList title={t("pages.importProtocolList") + " | User Management"}/>,
+                path: "protocols",
+                element: <ImportProtocolList title={t("pages.importProtocols") + " | User Management"}/>,
             },
             {
                 path: "users/:username/edit",
@@ -130,7 +130,7 @@ function Nav() {
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.usersImport")}
                             </Navbar.ListItem>
-                            <Navbar.ListItem path={"/users/import/protocols"}>
+                            <Navbar.ListItem path={"/protocols"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.importProtocols")}
                             </Navbar.ListItem>
