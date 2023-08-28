@@ -26,6 +26,11 @@ export const ValidationSchemaService = {
         if (response.status < 200 || response.status > 299) {
             throw new Error("failed to load validation schema: " + response.status);
         }
+
+        if (!response.data?.Rules) {
+            return defaultPasswordPolicy;
+        }
+
         return response.data;
     },
 };

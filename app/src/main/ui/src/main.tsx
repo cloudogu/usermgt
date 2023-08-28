@@ -15,6 +15,7 @@ import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
 import Users from "./pages/Users";
+import UsersImport from "./pages/UsersImport";
 import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             {
                 path: "users",
                 element: <Users title={t("pages.users") + " | User Management"}/>,
+            },
+            {
+                path: "users/import",
+                element: <UsersImport title={t("pages.usersImport") + " | User Management"}/>,
             },
             {
                 path: "users/:username/edit",
@@ -110,6 +115,10 @@ function Nav() {
                             <Navbar.ListItem path={"/users"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.users")}
+                            </Navbar.ListItem>
+                            <Navbar.ListItem path={"/users/import"}>
+                                <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
+                                {t("pages.usersImport")}
                             </Navbar.ListItem>
                             <Navbar.ListItem path={"/groups"}>
                                 <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>

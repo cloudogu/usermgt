@@ -31,22 +31,26 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.AbstractManagerResource;
-import de.triology.universeadm.csvimport.CSVImportManager;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.user.imports.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.opensaml.artifact.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 
 /**
@@ -63,59 +67,60 @@ public class UserResource extends AbstractManagerResource<User> {
      * @param groupManager
      */
     @Inject
-    public UserResource(UserManager userManager, GroupManager groupManager, CSVImportManager csvImportManager) {
+    public UserResource(UserManager userManager, GroupManager groupManager, CSVHandler csvHandler) {
         super(userManager);
         this.userManager = userManager;
         this.groupManager = groupManager;
-        this.csvImportManager = csvImportManager;
+        this.csvHandler = csvHandler;
     }
 
     //~--- methods --------------------------------------------------------------
     @POST
-    @Path("/import")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response importUsers(InputStream inputStream) {
-        Response.ResponseBuilder builder;
-        try {
-            this.csvImportManager.importUsers(inputStream);
-            builder = Response.status(Response.Status.OK);
-        } catch (IOException e) {
-            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR);
-        } catch (IllegalArgumentException e) {
-            builder = Response.status(Response.Status.BAD_REQUEST);
-        }
-        return builder.build();
-    }
-
-    @POST
-    @Path(":import")
+    @Path("import")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response importUsers(MultipartFormDataInput input) {
         logger.debug("Received csv import request.");
 
-        BiFunction<Response.Status, String, Response> createError = (status, errMsg) -> Response
-                        .status(status)
-                        .entity(errMsg)
-                        .build();
-
-        CSVHandler handler = new CSVHandler(this.userManager);
-
         try {
-            Result result = handler.handle(input);
-
+            Result result = this.csvHandler.handle(input);
             logger.debug("Successfully handled csv import {}", result);
 
             return Response.status(Response.Status.OK).entity(result).build();
-        } catch (BadArgumentException e) {
-            logger.error("Bad input while handling csv user import", e);
-            String errMsg = e.getPublicErrMsg().isEmpty() ? e.getMessage() : e.getPublicErrMsg();
+        } catch (CsvRequiredFieldEmptyException e) {
+            List<String> affectedColumns = e.getDestinationFields().stream()
+                    .map(Field::getName)
+                    .collect(Collectors.toList());;
 
-            return createError.apply(Response.Status.BAD_REQUEST, errMsg);
+            ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                    .withLineNumber(0)
+                    .withErrorMessage(e.getMessage())
+                    .withAffectedColumns(affectedColumns)
+                    .build();
+
+            logger.error("Invalid header when parsing csv file", e);
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        } catch (InvalidArgumentException e) {
+            logger.error("Bad input while handling csv user import", e);
+
+            ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .build();
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         } catch (AuthorizationException e) {
             logger.error("Missing privileges while handling csv user import");
 
-            return createError.apply(Response.Status.FORBIDDEN, "Missing privileges to use import");
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("Missing privileges to use import")
+                    .build();
+
+        } catch (RuntimeException e) {
+            logger.error("Unexpected internal RuntimeException", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -219,5 +224,5 @@ public class UserResource extends AbstractManagerResource<User> {
     /**
      * Field description
      */
-    private final CSVImportManager csvImportManager;
+    private final CSVHandler csvHandler;
 }

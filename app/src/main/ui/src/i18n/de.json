@@ -141,6 +141,7 @@
     "groupsNew": "Neue Gruppe",
     "users": "Nutzer",
     "usersEdit": "Nutzer bearbeiten",
+    "usersImport": "Nutzerimport",
     "usersNew": "Nutzer anlegen"
   },
   "users": {
@@ -181,6 +182,22 @@
       "displayName": "Anzeigename",
       "email": "E-Mail",
       "username": "Nutzername"
+    }
+  },
+  "usersImport": {
+    "infobox": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden. Weitere Informationen dazu: https://docs.cloudogu.com",
+    "buttons": {
+      "upload": "Importieren",
+      "reset": "Abbrechen"
+    },
+    "headlines": {
+      "importSuccess": "Import abgeschlossen",
+      "importErrors": "Fehler",
+      "table": "Inhalt der ausgewählten Datei"
+    },
+    "notification": {
+      "genericError": "Die Nutzer aus der Datei '{{file}}' konnten nicht importiert werden.",
+      "invalidFile": "Die Datei '{{file}}' ist keine gültige CSV-Datei."
     }
   }
 }

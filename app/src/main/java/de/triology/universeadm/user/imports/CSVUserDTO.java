@@ -1,6 +1,7 @@
 package de.triology.universeadm.user.imports;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
 
 import java.util.Objects;
 
@@ -26,10 +27,10 @@ public class CSVUserDTO extends CSVRecord {
     @CsvBindByName(required = true)
     private String mail;
 
-    @CsvBindByName(required = true)
+    @CsvCustomBindByName(converter = CustomConverterBoolean.class)
     private boolean pwdReset;
 
-    @CsvBindByName(required = true)
+    @CsvCustomBindByName(converter = CustomConverterBoolean.class)
     private boolean external;
 
     public String getUsername() {

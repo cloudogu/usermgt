@@ -84,12 +84,6 @@ Then("the password-confirm rules are displayed", function () {
     cy.get('div[data-testid="confirmPassword-input-error-errors"]').contains('Passwords must match.')
 });
 
-Then("the import finished with status code {int}", (statusCode) => {
-    cy.get("@responseStatus").then((status) => {
-       expect(status).to.eq(statusCode)
-    });
-})
-
 Then("the user {string} was created",function (username) {
     cy.api({
         method: "GET",

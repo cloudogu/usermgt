@@ -53,8 +53,8 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
         <ConfirmationDialog open={open ?? false}
             data-testid="remove-member-dialog"
             onClose={() => toggleModal(false)}
-            onConfirm={async () => {
-                await onConfirmDeleteMember(username ?? "");
+            onConfirm={() => {
+                onConfirmDeleteMember(username ?? "");
             }}
             title={t("groups.labels.removeMember")}
             message={t("groups.labels.removeMemberConfirmationMessage", {username: username})}/>

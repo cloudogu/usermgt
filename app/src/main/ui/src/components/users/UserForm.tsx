@@ -1,4 +1,3 @@
-import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import React from "react";
@@ -9,6 +8,7 @@ import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
 import type {User} from "../../services/Users";
+import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
 
 const MAX_SEARCH_RESULTS = 10;
 
@@ -97,31 +97,31 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         <Form handler={handler}>
             {notification}
             <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}
-                                     data-testid="username" placeholder={t("users.placeholder.username")}>
+                data-testid="username" placeholder={t("users.placeholder.username")}>
                 {t("editUser.labels.username")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname"
-                                     placeholder={t("users.placeholder.givenname")}>
+                placeholder={t("users.placeholder.givenname")}>
                 {t("editUser.labels.givenName")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"surname"} data-testid="surname"
-                                     placeholder={t("users.placeholder.surname")}>
+                placeholder={t("users.placeholder.surname")}>
                 {t("editUser.labels.surname")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName"
-                                     placeholder={t("users.placeholder.displayName")}>
+                placeholder={t("users.placeholder.displayName")}>
                 {t("editUser.labels.displayName")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail"
-                                     placeholder={t("users.placeholder.mail")}>
+                placeholder={t("users.placeholder.mail")}>
                 {t("editUser.labels.email")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"password"} name={"password"} data-testid="password"
-                                     placeholder={t("users.placeholder.password")}>
+                placeholder={t("users.placeholder.password")}>
                 {t("editUser.labels.password")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"password"} name={"confirmPassword"} data-testid="confirmPassword"
-                                     placeholder={t("users.placeholder.confirmPassword")}>
+                placeholder={t("users.placeholder.confirmPassword")}>
                 {t("editUser.labels.confirmPassword")}
             </Form.ValidatedTextInput>
 

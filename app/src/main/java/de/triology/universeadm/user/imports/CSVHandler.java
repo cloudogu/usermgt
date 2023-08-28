@@ -1,26 +1,34 @@
 package de.triology.universeadm.user.imports;
 
-import de.triology.universeadm.ConstraintViolationException;
+import com.google.inject.Inject;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import de.triology.universeadm.Constraint;
+import de.triology.universeadm.UniqueConstraintViolationException;
+import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.opensaml.artifact.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
- *  Handles the data provided by the csv import.
+ * Handles the data provided by the csv import.
  * <p>
- *  It uses the UserManager to retrieve and store users during the import.
- *  ImportErrors that have been occurred during the import are stored in errors.
- *  Because of this CSVHandler is a stateful component that needs be initialized with every import.
- *
+ * It uses the UserManager to retrieve and store users during the import.
+ * ImportErrors that have been occurred during the import are part of the Result.
  */
 public class CSVHandler {
 
@@ -33,17 +41,20 @@ public class CSVHandler {
     private final UserManager userManager;
 
     /**
-     * A list of errors that occurred when processing the import.
+     * CSVParser to parse the csv file to DTOs
      */
-    private final List<ImportError> errors;
+    private final CSVParser csvParser;
 
     /**
-     * Constructs the CSVHandler. Initializes an empty ArrayList for the errors.
-     * @param userManager
+     * Constructs the CSVHandler.
+     *
+     * @param userManager - injected
+     * @param csvParser - injuected
      */
-    public CSVHandler(UserManager userManager) {
+    @Inject
+    public CSVHandler(UserManager userManager, CSVParser csvParser) {
         this.userManager = userManager;
-        this.errors = new ArrayList<>();
+        this.csvParser = csvParser;
     }
 
     /**
@@ -51,19 +62,20 @@ public class CSVHandler {
      * <p>
      * It converts the information provided by the csv file and stores or modifies it in the repository.
      * The MultipartFormDataInput is processed within a stream.
+     *
      * @param input as MultipartFormDataInput
      * @return Result containing information how many lines (Users) are created, modified or skipped. In terms of
      * skipped rows, errors are provided as well.
-     * @throws BadArgumentException in case further processing of the csv file is not possible. Throwing the exception
-     * means no data has been processed.
+     * @throws InvalidArgumentException in case further processing of the csv file is not possible.
+     * Throwing the exception means no data has been processed.
      */
-    public Result handle(MultipartFormDataInput input) throws BadArgumentException {
+    public Result handle(MultipartFormDataInput input) throws CsvRequiredFieldEmptyException {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
 
         //only get file parts
         Optional<List<InputPart>> optFileParts = Optional.ofNullable(inputParts.get(PART_NAME));
         if (!optFileParts.isPresent()) {
-            throw new BadArgumentException(String.format("unable to find parts with name \"%s\"", PART_NAME));
+            throw new InvalidArgumentException(String.format("unable to find parts with name \"%s\"", PART_NAME));
         }
 
         List<InputPart> fileParts = optFileParts.get();
@@ -75,59 +87,50 @@ public class CSVHandler {
         Reader fileReader = getFileReader(fileParts.get(0));
         logger.debug("Got reader from first file part");
 
-        CSVParser parser = new CSVParser();
-        parser.registerListener(e -> errors.add(new ImportError(ImportError.Code.PARSING_ERROR, e.getLineNumber(), e.getMessage())));
-
-        Map<ResultType, Long> summary = parser.parse(fileReader)
+        List<ImportEntryResult> results = this.csvParser.parse(fileReader)
                 .sequential()
-                .map(this::getUserPair)
-                .map(Mapper::decode)
-                .map(userTriple -> saveCSVImport(
-                        userTriple,
-                        e -> errors.add(new ImportError(ImportError.Code.VALIDATION_ERROR, userTriple.getLeft(), e.getMessage()))
-                ))
-                .reduce(
-                        createMap(0L, 0L, (long) this.errors.size()),
-                        this::accumulateResultType,
-                        this::combineAccumulators
-                );
+                .map(this::getUserPair) // load user from LDAP
+                .map(Mapper::decode) // add more information
+                .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()))
+                .collect(Collectors.toList());
 
-        Map<ResultType, Long> finalSummary = createMap(
-                summary.get(ResultType.CREATED),
-                summary.get(ResultType.UPDATED),
-                (long) errors.size()
+        results.addAll(csvParser.getErrors().collect(Collectors.toList()));
+        Result finalResult = results.stream().reduce(
+                new Result(),
+                this::accumulateResultType,
+                this::combineAccumulators
         );
 
-        Result result = new Result(finalSummary, errors);
-        logger.debug("Generated CSV import result: {}", result);
+        logger.debug("Generated CSV import result: {}", finalResult);
 
-        return result;
+        return finalResult;
     }
 
     /**
      * Validates the formal correctness of the imported file.
+     *
      * @param fileParts from the MultipartForm
-     * @throws BadArgumentException
+     * @throws InvalidArgumentException
      */
-    private void validateFile(List<InputPart> fileParts) throws BadArgumentException {
+    private void validateFile(List<InputPart> fileParts) throws InvalidArgumentException {
 
         if (fileParts.isEmpty()) {
-            throw new BadArgumentException("file part of request is empty");
+            throw new InvalidArgumentException("file part of request is empty");
         }
 
         if (fileParts.size() > 1) {
-            throw new BadArgumentException("only one file may be uploaded with one request");
+            throw new InvalidArgumentException("only one file may be uploaded with one request");
         }
 
         InputPart filePart = fileParts.get(0);
         String filename = this.getFileName(filePart);
 
-        if (filename.isEmpty()){
-            throw new BadArgumentException("invalid or empty filename in Content-Disposition");
+        if (filename.isEmpty()) {
+            throw new InvalidArgumentException("invalid or empty filename in Content-Disposition");
         }
 
-        if (!filename.endsWith(".csv")){
-            throw new BadArgumentException(String.format("Unsupported filetype \"%s\"",
+        if (!filename.endsWith(".csv")) {
+            throw new InvalidArgumentException(String.format("Unsupported filetype \"%s\"",
                     filename.substring(filename.lastIndexOf("."))
             ));
         }
@@ -135,6 +138,7 @@ public class CSVHandler {
 
     /**
      * Returns the filename from MultipartForm header stored within Content-Disposition.
+     *
      * @param filePart containing the header.
      * @return filename of the uploaded file.
      */
@@ -153,11 +157,12 @@ public class CSVHandler {
     /**
      * Returns the reader used to read the uploaded file.
      * For efficient reading a BufferedReader is used.
+     *
      * @param file uploaded be the user.
      * @return Reader (= BufferedReader)
-     * @throws BadArgumentException
+     * @throws InvalidArgumentException
      */
-    private Reader getFileReader(InputPart file) throws BadArgumentException {
+    private Reader getFileReader(@NotNull InputPart file) throws InvalidArgumentException {
         BufferedReader inputReader;
 
         try {
@@ -165,17 +170,15 @@ public class CSVHandler {
             inputReader = new BufferedReader(new InputStreamReader(inputStream));
 
             return inputReader;
-        } catch (IOException | NullPointerException e) {
-            throw new BadArgumentException(
-                    "unable to parse file",
-                    "could not convert multipart file to InputStream",
-                    e
-            );
+        } catch (IOException e) {
+            logger.error(e.toString());
+            throw new InvalidArgumentException("unable to parse file");
         }
     }
 
     /**
      * The user DTO generated from the csv file is used to check whether the user already exists.
+     *
      * @param userDTO from csv file.
      * @return Pair containing the potential existing user and the user dto.
      */
@@ -186,90 +189,102 @@ public class CSVHandler {
 
     /**
      * Saves or modifies the users within the repository.
-     * @param userTriple consisting of:
-     * <ul>
-     *  <li>Long: Line number within the csv file</li>
-     *  <li>Boolean: Flag indication whether the user needs to be created</li>
-     *  <li>User: User object to be saved / modified</li>
-     * </ul>
      *
-     * @param listener that will be notified when ConstraintViolationException occurs
+     * @param isNewUser: Flag indication whether the user needs to be created
+     * @param user:      User object to be saved / modified
      * <p>
      * @return ResultType whether the user has been created, updated or skipped
      */
-    private ResultType saveCSVImport(Triple<Long, Boolean, User> userTriple, ExceptionListener<ConstraintViolationException> listener) {
+    private ImportEntryResult saveCSVImport(long lineNumber, Boolean isNewUser, User user) {
         try {
-            if (userTriple.getMiddle()) {
-                this.userManager.create(userTriple.getRight());
-                return ResultType.CREATED;
+            if (isNewUser) {
+                this.userManager.create(user);
+                return ImportEntryResult.created(user);
             } else {
-                this.userManager.modify(userTriple.getRight());
-                return ResultType.UPDATED;
+                this.userManager.modify(user);
+                return ImportEntryResult.updated(user);
             }
-        } catch (ConstraintViolationException e) {
-            listener.notify(e);
-        }
+        } catch (IllegalQueryException e) {
+            ImportError error = new ImportError.Builder(ImportError.Code.VALIDATION_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .build();
 
-        return ResultType.SKIPPED;
+            return ImportEntryResult.skipped(error);
+        } catch (UniqueConstraintViolationException e) {
+            ImportError error = new ImportError.Builder(ImportError.Code.UNIQUE_FIELD_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .withAffectedColumns(mapConstraintToColumn(e.violated))
+                    .build();
+
+            return ImportEntryResult.skipped(error);
+        } catch (ConstraintViolationException e) {
+                List<ConstraintViolation<?>> violas = new ArrayList<>(e.getConstraintViolations());
+                List<String> strViolas = violas.stream().map(ConstraintViolation::getPropertyPath).map(Path::toString).collect(Collectors.toList());
+                ImportError error = new ImportError.Builder(ImportError.Code.FIELD_FORMAT_ERROR)
+                        .withErrorMessage(e.getMessage())
+                        .withLineNumber(lineNumber)
+                        .withAffectedColumns(strViolas)
+                        .build();
+
+                return ImportEntryResult.skipped(error);
+        }
     }
 
-    /**
-     * Creates a map with a summary of the import process
-     * @param created users
-     * @param updated users
-     * @param skipped users
-     * @return EnumMap<ResultType, Long> with the amount of users that have been created, updated or skipped.
-     */
-    private EnumMap<ResultType, Long> createMap(Long created, Long updated, Long skipped) {
-        EnumMap<ResultType, Long> summary = new EnumMap<>(ResultType.class);
-        summary.put(ResultType.CREATED, created);
-        summary.put(ResultType.UPDATED, updated);
-        summary.put(ResultType.SKIPPED, skipped);
-
-        return summary;
+    private List<String> mapConstraintToColumn(Constraint.ID[] constraints) {
+        if (constraints.length < 1) {
+            return Collections.emptyList();
+        }
+        List<String> violatedColumnConstraints = new ArrayList<>();
+        for (Constraint.ID constraint : constraints) {
+            switch (constraint) {
+                case UNIQUE_EMAIL:
+                    violatedColumnConstraints.add("mail");
+                    break;
+                case UNIQUE_USERNAME:
+                    violatedColumnConstraints.add("username");
+                    break;
+            }
+        }
+        return violatedColumnConstraints;
     }
 
     /**
      * Accumulator to increment the number for each ResultType
+     *
      * @param partialAcc - Partial summary of the import process
-     * @param next - next result of an import
+     * @param next       - next result of an import
      * @return EnumMap<ResultType, Long> as final summary
      */
-    private EnumMap<ResultType, Long> accumulateResultType(EnumMap<ResultType, Long> partialAcc, ResultType next) {
-        switch (next) {
+    private Result accumulateResultType(Result partialAcc, ImportEntryResult next) {
+        switch (next.getResultType()) {
             case CREATED:
-                return createMap(
-                        partialAcc.get(ResultType.CREATED) +1,
-                        partialAcc.get(ResultType.UPDATED),
-                        (long) errors.size()
-                );
+                partialAcc.getCreated().add(next.getUser());
+                return partialAcc;
             case UPDATED:
-                return createMap(
-                        partialAcc.get(ResultType.CREATED),
-                        partialAcc.get(ResultType.UPDATED) + 1,
-                        (long) errors.size()
-                );
-            default:
-                return createMap(
-                        partialAcc.get(ResultType.CREATED),
-                        partialAcc.get(ResultType.UPDATED),
-                        (long) errors.size()
-                );
+                partialAcc.getUpdated().add(next.getUser());
+                return partialAcc;
+            case SKIPPED:
+                partialAcc.getErrors().add(next.getImportError());
+                return partialAcc;
         }
+        throw new UnsupportedOperationException(String.format("operation '%s' is not supported", next.getResultType()));
     }
 
     /**
      * Combiner used within the reduce function as the function itself is used with different types.
-     * @param partialAcc - of stream 1
+     *
+     * @param partialAcc  - of stream 1
      * @param partialAcc2 - of stream 2
      * @return EnumMap<ResultType, Long> as final result for different streams
      */
-    private EnumMap<ResultType, Long> combineAccumulators(EnumMap<ResultType, Long> partialAcc, EnumMap<ResultType, Long> partialAcc2) {
-        return createMap(
-                partialAcc.get(ResultType.CREATED) + partialAcc2.get(ResultType.CREATED),
-                partialAcc.get(ResultType.UPDATED) + partialAcc2.get(ResultType.UPDATED),
-                partialAcc.get(ResultType.SKIPPED) + partialAcc2.get(ResultType.SKIPPED)
-        );
+    private Result combineAccumulators(Result partialAcc, Result partialAcc2) {
+        partialAcc.getCreated().addAll(partialAcc2.getCreated());
+        partialAcc.getUpdated().addAll(partialAcc2.getUpdated());
+        partialAcc.getErrors().addAll(partialAcc2.getErrors());
+
+        return new Result(partialAcc.getCreated(), partialAcc.getUpdated(), partialAcc.getErrors());
     }
 
 

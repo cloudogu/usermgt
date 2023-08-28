@@ -61,6 +61,12 @@ node('docker') {
                 archive '**/target/*.jar,**/target/*.zip'
             }
 
+            stage('ESLint') {
+                dir('src/main/ui'){
+                    sh "yarn lint"
+                }
+            }
+
             stage('Unit Test') {
                 mvn 'test jacoco:report'
             }
@@ -184,11 +190,11 @@ node('docker') {
 
         stage('Integration Tests - After Upgrade') {
          echo "run integration tests."
-         ecoSystem.runCypressIntegrationTests([
-                 cypressImage: "cypress/included:8.6.0",
-                 enableVideo: params.EnableVideoRecording,
-                 enableScreenshots    : params.EnableScreenshotRecording,
-         ])
+            ecoSystem.runCypressIntegrationTests([
+                    cypressImage: "cypress/included:12.9.0",
+                    enableVideo: params.EnableVideoRecording,
+                    enableScreenshots    : params.EnableScreenshotRecording,
+            ])
         }
       }
 
@@ -255,7 +261,7 @@ void createNpmrcFile(credentialsId) {
                     script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
             )}""".trim()
             writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
-    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+    @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
     email=jenkins@cloudogu.com
     always-auth=true
     _auth=${NPM_TOKEN}
