@@ -1,4 +1,4 @@
-import {CesIcons, Table} from "@cloudogu/ces-theme-tailwind";
+import {Button, CesIcons, DropdownMenu, Href, RouterLink, Table, TextWithIcon} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {Link} from "react-router-dom";
 import {t} from "../../helpers/i18nHelpers";
@@ -47,24 +47,36 @@ export default function ProtocolList({protocols, pageCount, currentPage, onPageC
                                 {t("importProtocols.result.errors")}: {p.result.skipped}
                             </Table.Body.Td>
                             <Table.Body.Td className={"flex flex-row"}>
-                                <a
-                                    href={`/usermgt/protocol/download/${p.timestamp.getTime()}`}
-                                    aria-description={t("importProtocols.aria.download", {identifier: p.name})}
-                                >
-                                    <CesIcons.DownloadSimple weight={"bold"} className={"w-6 h-6"} aria-hidden={true}/>
-                                </a>
-                                <Link to={"/users/import/results"} 
-                                    state={{protocol: p.result}}
-                                    aria-description={t("importProtocols.aria.info", {identifier: p.name})}
-                                >
-                                    <CesIcons.Table weight={"bold"} className={"w-6 h-6"} aria-hidden={true}/>
-                                </Link>
-                                <button
-                                    onClick={() => ImportUsersService.deleteProtocol(p)}
-                                    aria-description={t("importProtocols.aria.delete", {identifier: p.name})}
-                                >
-                                    <CesIcons.TrashSimple weight={"bold"} className={"w-6 h-6"} aria-hidden={true}/>
-                                </button>
+                                <DropdownMenu>
+                                    <DropdownMenu.Button>
+                                        Funktionen
+                                        <DropdownMenu.Button.Arrow/>
+                                    </DropdownMenu.Button>
+                                    <DropdownMenu.Items>
+                                        <DropdownMenu.Items.LinkItem
+                                            href={`/usermgt/protocol/download/${p.timestamp.getTime()}`}
+                                            className={"flex flex-row"}
+                                        >
+                                            <TextWithIcon icon={<CesIcons.DownloadSimple weight={"bold"}/>}>
+                                                Herunterladen
+                                            </TextWithIcon>
+                                        </DropdownMenu.Items.LinkItem>
+                                        <DropdownMenu.Items.RouterLinkItem
+                                            to={"/users/import/results"}
+                                            state={{protocol: p.result}}
+                                            className={"flex"}
+                                        >
+                                            <TextWithIcon icon={<CesIcons.Table weight={"bold"}/>}>
+                                                Details
+                                            </TextWithIcon>
+                                        </DropdownMenu.Items.RouterLinkItem>
+                                        <DropdownMenu.Items.ButtonItem className={"flex flex-row"}>
+                                            <TextWithIcon icon={<CesIcons.TrashSimple weight={"bold"}/>}>
+                                                Löschen
+                                            </TextWithIcon>
+                                        </DropdownMenu.Items.ButtonItem>
+                                    </DropdownMenu.Items>
+                                </DropdownMenu>
                             </Table.Body.Td>
                         </Table.Body.Tr>
                     ))

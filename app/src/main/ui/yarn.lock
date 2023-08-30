@@ -225,11 +225,12 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/ces-theme-tailwind@0.1.17":
-  version "0.1.17"
-  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.1.17.tgz#2ce37d8061b3ef3d9e2d5f49130e0918b5c923cc"
-  integrity sha512-XjbEgwrurmAb3trIlCBrTejcI6rbhAcs+CDtr9riKG40YhAFNuPudszfLoBwkdlYpy78X2lndlcLWzaZkPZWTw==
+"@cloudogu/ces-theme-tailwind@0.1.23":
+  version "0.1.23"
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.1.23.tgz#01946384dca7928327334598459049774b4bd52a"
+  integrity sha512-ixQFjQiRiTofi8Dvx/DqvPY0jO/knMWRIEgcJcGUL7a/mD2IR8mFI4mhrBrbAnIhAgqKKObJ1monrajPVyUXig==
   dependencies:
+    "@headlessui/react" "^1.7.17"
     "@heroicons/react" "^2.0.13"
     "@phosphor-icons/react" "^2.0.10"
     eslint-plugin-import "^2.27.5"
@@ -382,6 +383,13 @@
   version "8.47.0"
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.47.0.tgz#5478fdf443ff8158f9de171c704ae45308696c7d"
   integrity sha512-P6omY1zv5MItm93kLM8s2vr1HICJH8v0dvddDhysbIuZ+vcjOHg5Zbkf1mTkcmi2JA9oBG2anOkRnW8WJTS8Og==
+
+"@headlessui/react@^1.7.17":
+  version "1.7.17"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.17.tgz#a0ec23af21b527c030967245fd99776aa7352bc6"
+  integrity sha512-4am+tzvkqDSSgiwrsEpGWqgGo9dz8qU5M3znCkC4PgkpY4HcCZzEDEvozltGGGHIKl9jbXbZPSH5TWn4sWJdow==
+  dependencies:
+    client-only "^0.0.1"
 
 "@heroicons/react@^2.0.13":
   version "2.0.18"
@@ -1004,6 +1012,11 @@ chokidar@^3.5.3:
     readdirp "~3.6.0"
   optionalDependencies:
     fsevents "~2.3.2"
+
+client-only@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/client-only/-/client-only-0.0.1.tgz#38bba5d403c41ab150bff64a95c85013cf73bca1"
+  integrity sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==
 
 cliui@^8.0.1:
   version "8.0.1"
