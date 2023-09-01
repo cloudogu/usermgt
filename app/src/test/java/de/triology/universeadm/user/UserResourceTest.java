@@ -39,6 +39,7 @@ import de.triology.universeadm.group.Groups;
 import de.triology.universeadm.user.imports.CSVHandler;
 import de.triology.universeadm.user.imports.CSVParser;
 import de.triology.universeadm.user.imports.CSVParserImpl;
+import de.triology.universeadm.user.imports.ResultRepository;
 import org.codehaus.jackson.JsonNode;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -69,8 +70,8 @@ public class UserResourceTest {
     private UserResource resource;
     private UserManager userManager;
     private CSVHandler csvHandler;
-
     private CSVParser csvParser;
+    private ResultRepository resultRepository;
 
     @Test
     public void testAddMembership() throws URISyntaxException, IOException {
@@ -227,7 +228,9 @@ public class UserResourceTest {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
         this.csvParser = mock(CSVParserImpl.class);
-        this.csvHandler = new CSVHandler(userManager, csvParser);
+        this.resultRepository = mock(ResultRepository.class);
+
+        this.csvHandler = new CSVHandler(userManager, csvParser, resultRepository);
         this.resource = new UserResource(userManager, groupManager, csvHandler);
     }
 

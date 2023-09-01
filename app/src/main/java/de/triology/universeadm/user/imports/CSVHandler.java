@@ -21,7 +21,6 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -46,15 +45,22 @@ public class CSVHandler {
     private final CSVParser csvParser;
 
     /**
+     * ResultRepository persists the result of the csv import.
+     */
+    private final ResultRepository resultRepository;
+
+    /**
      * Constructs the CSVHandler.
      *
-     * @param userManager - injected
-     * @param csvParser - injuected
+     * @param userManager      - injected
+     * @param csvParser        - injected
+     * @param resultRepository - injected
      */
     @Inject
-    public CSVHandler(UserManager userManager, CSVParser csvParser) {
+    public CSVHandler(UserManager userManager, CSVParser csvParser, ResultRepository resultRepository) {
         this.userManager = userManager;
         this.csvParser = csvParser;
+        this.resultRepository = resultRepository;
     }
 
     /**
@@ -84,8 +90,13 @@ public class CSVHandler {
         this.validateFile(fileParts);
         logger.debug("Validated file parts in MultipartFormData");
 
-        Reader fileReader = getFileReader(fileParts.get(0));
+        InputPart filePart = fileParts.get(0);
+
+        Reader fileReader = getFileReader(filePart);
         logger.debug("Got reader from first file part");
+
+        UUID importID = UUID.randomUUID();
+        logger.debug("Created ImportID with UUID {}", importID);
 
         List<ImportEntryResult> results = this.csvParser.parse(fileReader)
                 .sequential()
@@ -96,12 +107,18 @@ public class CSVHandler {
 
         results.addAll(csvParser.getErrors().collect(Collectors.toList()));
         Result finalResult = results.stream().reduce(
-                new Result(),
+                new Result(importID, this.getFileName(filePart)),
                 this::accumulateResultType,
                 this::combineAccumulators
         );
 
         logger.debug("Generated CSV import result: {}", finalResult);
+
+        Optional<ImportError> optWriteError = this.writeResult(finalResult);
+        optWriteError.ifPresent(importError -> {
+            logger.debug("Received WriteError for result - add Error to result and return it");
+            finalResult.getErrors().add(importError);
+        });
 
         return finalResult;
     }
@@ -284,7 +301,21 @@ public class CSVHandler {
         partialAcc.getUpdated().addAll(partialAcc2.getUpdated());
         partialAcc.getErrors().addAll(partialAcc2.getErrors());
 
-        return new Result(partialAcc.getCreated(), partialAcc.getUpdated(), partialAcc.getErrors());
+        return new Result(partialAcc.getImportID(), partialAcc.getFilename(), partialAcc.getCreated(), partialAcc.getUpdated(), partialAcc.getErrors());
+    }
+
+    private Optional<ImportError> writeResult(Result result) {
+        try {
+            this.resultRepository.write(result);
+        } catch (IOException e) {
+            logger.warn("Could not write Result", e);
+
+            return Optional.of(new ImportError.Builder(ImportError.Code.WRITE_RESULT_ERROR)
+                    .withErrorMessage("Unable to save result to repository")
+                    .build());
+        }
+
+        return Optional.empty();
     }
 
 

@@ -1,11 +1,13 @@
 package de.triology.universeadm.user.imports;
 
 import com.google.common.collect.ImmutableMap;
+import org.omg.CORBA.INTERNAL;
 
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * ImportError is an error occurred during the import. The occurrence of the error does not
@@ -24,7 +26,9 @@ public class ImportError {
         VALIDATION_ERROR(200),
         UNIQUE_FIELD_ERROR(201),
         FIELD_FORMAT_ERROR(202),
-        MISSING_REQUIRED_FIELD_ERROR(204);
+        MISSING_REQUIRED_FIELD_ERROR(204),
+        INTERNAL_ERROR(300),
+        WRITE_RESULT_ERROR(301);
 
         public final int value;
 
@@ -75,6 +79,29 @@ public class ImportError {
 
     public Map<String, List<String>> getParams() {
         return params;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImportError that = (ImportError) o;
+        return errorCode == that.errorCode && lineNumber == that.lineNumber && Objects.equals(message, that.message) && Objects.equals(params, that.params);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(errorCode, lineNumber, message, params);
+    }
+
+    @Override
+    public String toString() {
+        return "ImportError{" +
+                "errorCode=" + errorCode +
+                ", lineNumber=" + lineNumber +
+                ", message='" + message + '\'' +
+                ", params=" + params +
+                '}';
     }
 
     public static class Builder {
