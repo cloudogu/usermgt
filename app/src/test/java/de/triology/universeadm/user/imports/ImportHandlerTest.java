@@ -20,9 +20,11 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class CSVHandlerTest {
+public class ImportHandlerTest {
 
     private static final String VALID_FILENAME = "ImportUsers.csv";
+
+    private final SummaryRepository summaryRepositoryMock = mock(SummaryRepository.class);
 
     @Test(expected = InvalidArgumentException.class)
     public void testMissingFileParts() throws Exception {
@@ -36,9 +38,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository,summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -55,9 +57,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -74,9 +76,9 @@ public class CSVHandlerTest {
         CSVParser parser = mock(CSVParser.class);
         when(parser.parse(any())).thenReturn(createMockStream(2));
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -93,9 +95,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
@@ -112,9 +114,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test
@@ -132,9 +134,9 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(Stream.empty());
         when(parser.getErrors()).thenReturn(createMockErrorStream(1));
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
         assertEquals(1, result.getErrors().size());
     }
 
@@ -163,9 +165,9 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test()
@@ -183,9 +185,9 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, atLeast(1)).create(any());
         verify(userManager, never()).modify(any());
@@ -211,9 +213,9 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, atLeast(1)).create(any());
         verify(userManager, atLeast(1)).modify(any());
@@ -239,9 +241,9 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, times(2)).create(any());
         verify(userManager, never()).modify(any());
@@ -273,9 +275,9 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(1));
         when(parser.getErrors()).thenReturn(createMockErrorStream(2L));
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, times(1)).create(any());
         verify(userManager, never()).modify(any());
@@ -304,9 +306,9 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser, resultRepository);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, atLeast(1)).create(any());
         verify(userManager, never()).modify(any());

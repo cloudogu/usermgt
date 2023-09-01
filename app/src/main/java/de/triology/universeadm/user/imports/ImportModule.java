@@ -10,6 +10,7 @@ public class ImportModule extends AbstractModule {
     protected void configure() {
         bind(CSVParser.class).to(CSVParserImpl.class);
         bind(ResultRepository.class).toInstance(new ResultRepository("/var/lib/usermgt/importHistory"));
-        bind(CSVHandler.class);
+        bind(SummaryRepository.class);
+        bind(ImportHandler.class);
     }
 }

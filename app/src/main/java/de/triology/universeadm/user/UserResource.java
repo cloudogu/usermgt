@@ -45,11 +45,11 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -67,63 +67,14 @@ public class UserResource extends AbstractManagerResource<User> {
      * @param groupManager
      */
     @Inject
-    public UserResource(UserManager userManager, GroupManager groupManager, CSVHandler csvHandler) {
+    public UserResource(UserManager userManager, GroupManager groupManager, ImportHandler importHandler) {
         super(userManager);
         this.userManager = userManager;
         this.groupManager = groupManager;
-        this.csvHandler = csvHandler;
+        this.importHandler = importHandler;
     }
 
     //~--- methods --------------------------------------------------------------
-    @POST
-    @Path("import")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response importUsers(MultipartFormDataInput input) {
-        logger.debug("Received csv import request.");
-
-        try {
-            Result result = this.csvHandler.handle(input);
-            logger.debug("Successfully handled csv import {}", result);
-
-            return Response.status(Response.Status.OK).entity(result).build();
-        } catch (CsvRequiredFieldEmptyException e) {
-            List<String> affectedColumns = e.getDestinationFields().stream()
-                    .map(Field::getName)
-                    .collect(Collectors.toList());;
-
-            ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
-                    .withLineNumber(0)
-                    .withErrorMessage(e.getMessage())
-                    .withAffectedColumns(affectedColumns)
-                    .build();
-
-            logger.error("Invalid header when parsing csv file", e);
-
-            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-        } catch (InvalidArgumentException e) {
-            logger.error("Bad input while handling csv user import", e);
-
-            ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
-                    .withErrorMessage(e.getMessage())
-                    .build();
-
-            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
-        } catch (AuthorizationException e) {
-            logger.error("Missing privileges while handling csv user import");
-
-            return Response
-                    .status(Response.Status.FORBIDDEN)
-                    .entity("Missing privileges to use import")
-                    .build();
-
-        } catch (RuntimeException e) {
-            logger.error("Unexpected internal RuntimeException", e);
-
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
 
     /**
      * Method description
@@ -206,6 +157,108 @@ public class UserResource extends AbstractManagerResource<User> {
         return user.getUsername();
     }
 
+    //~--- import methods ----------------------------------------------------------
+
+    @POST
+    @Path("import")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response importUsers(MultipartFormDataInput input) {
+        logger.debug("Received csv import request.");
+
+        try {
+            Result result = this.importHandler.handle(input);
+            logger.debug("Successfully handled csv import {}", result);
+
+            return Response.status(Response.Status.OK).entity(result).build();
+        } catch (CsvRequiredFieldEmptyException e) {
+            List<String> affectedColumns = e.getDestinationFields().stream()
+                    .map(Field::getName)
+                    .collect(Collectors.toList());;
+
+            ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                    .withLineNumber(0)
+                    .withErrorMessage(e.getMessage())
+                    .withAffectedColumns(affectedColumns)
+                    .build();
+
+            logger.error("Invalid header when parsing csv file", e);
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        } catch (InvalidArgumentException e) {
+            logger.error("Bad input while handling csv user import", e);
+
+            ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .build();
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        } catch (AuthorizationException e) {
+            logger.error("Missing privileges while handling csv user import");
+
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("Missing privileges to use import")
+                    .build();
+
+        } catch (RuntimeException e) {
+            logger.error("Unexpected internal RuntimeException", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("import/{importID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getImportResult(@PathParam("importID") String importID) {
+        logger.debug("Received request for import result with ID {}", importID);
+
+        try {
+            UUID importUUID = UUID.fromString(importID);
+            Result result = this.importHandler.getResult(importUUID);
+
+            String fileName = String.format("%s.json", result.getImportID().toString());
+
+            Response.ResponseBuilder response = Response.ok(result);
+            response.header("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
+            return response.build();
+        } catch (IllegalArgumentException e) {
+            logger.warn("Request for import result with invalid UUID {}", importID, e);
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid UUIDv4 for importID")
+                    .build();
+        } catch (FileNotFoundException e) {
+            logger.warn("Could not find import result for ID {}", importID, e);
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("Requested result not available")
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("import/summaries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSummaries() {
+        logger.debug("Received request get all summaries");
+
+        try {
+            List<Result.Summary> summaries = this.importHandler.getSummaries();
+
+            return Response.status(Response.Status.OK).entity(summaries).build();
+        } catch (IOException e) {
+            logger.error("Unable to read summaries from system", e);
+
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Failure reading summaries")
+                    .build();
+        }
+    }
+
+
     //~--- fields ---------------------------------------------------------------
 
     private static final Logger logger =
@@ -224,5 +277,5 @@ public class UserResource extends AbstractManagerResource<User> {
     /**
      * Field description
      */
-    private final CSVHandler csvHandler;
+    private final ImportHandler importHandler;
 }

@@ -29,9 +29,9 @@ import java.util.stream.Collectors;
  * It uses the UserManager to retrieve and store users during the import.
  * ImportErrors that have been occurred during the import are part of the Result.
  */
-public class CSVHandler {
+public class ImportHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(CSVHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportHandler.class);
     private static final String PART_NAME = "file";
 
     /**
@@ -50,6 +50,11 @@ public class CSVHandler {
     private final ResultRepository resultRepository;
 
     /**
+     * ResultRepository get the summaries of the csv imports.
+     */
+    private final SummaryRepository summaryRepository;
+
+    /**
      * Constructs the CSVHandler.
      *
      * @param userManager      - injected
@@ -57,10 +62,11 @@ public class CSVHandler {
      * @param resultRepository - injected
      */
     @Inject
-    public CSVHandler(UserManager userManager, CSVParser csvParser, ResultRepository resultRepository) {
+    public ImportHandler(UserManager userManager, CSVParser csvParser, ResultRepository resultRepository, SummaryRepository summaryRepository) {
         this.userManager = userManager;
         this.csvParser = csvParser;
         this.resultRepository = resultRepository;
+        this.summaryRepository = summaryRepository;
     }
 
     /**
@@ -318,5 +324,12 @@ public class CSVHandler {
         return Optional.empty();
     }
 
+    public Result getResult(UUID importID) throws FileNotFoundException {
+       return this.resultRepository.read(importID);
+    }
+
+    public List<Result.Summary> getSummaries() throws IOException {
+        return this.summaryRepository.getSummaries();
+    }
 
 }
