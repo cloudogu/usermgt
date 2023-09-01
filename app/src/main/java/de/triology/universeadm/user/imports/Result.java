@@ -130,5 +130,28 @@ public class Result {
         public Map<String, Integer> getSummary() {
             return summary;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Summary summary1 = (Summary) o;
+            return timestamp == summary1.timestamp && Objects.equals(importID, summary1.importID) && Objects.equals(filename, summary1.filename) && Objects.equals(summary, summary1.summary);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(importID, filename, timestamp, summary);
+        }
+
+        @Override
+        public String toString() {
+            return "Summary{" +
+                    "importID=" + importID +
+                    ", filename='" + filename + '\'' +
+                    ", timestamp=" + timestamp +
+                    ", summary=" + summary +
+                    '}';
+        }
     }
 }
