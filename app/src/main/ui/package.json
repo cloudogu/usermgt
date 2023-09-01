@@ -2,6 +2,7 @@
   "name": "usermgt",
   "license": "MIT",
   "private": true,
+  "packageManager": "yarn@1.22.19",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

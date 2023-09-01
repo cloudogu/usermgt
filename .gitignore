@@ -462,6 +462,7 @@ sketch
 
 # netbeans temp & private files
 app/target/
+app/.frontend-gradle-plugin/
 # MacOS X Files
 .DS_Store
 ._.DS_Store
