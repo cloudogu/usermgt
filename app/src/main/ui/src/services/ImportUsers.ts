@@ -12,6 +12,8 @@ export const IMPORT_MISSING_FIELD_ERROR = 102;
 export const IMPORT_VALIDATION_ERROR = 200;
 export const IMPORT_UNIQUE_FIELD_ERROR = 201;
 export const IMPORT_FIELD_FORMAT_ERROR = 202;
+export const IMPORT_ERROR_UNKNOWN_1 = 203; //TODO implement
+export const IMPORT_ERROR_UNKNOWN_2 = 204; //TODO implement
 
 export type ImportErrorCode =
     typeof IMPORT_PARSING_ERROR |
@@ -19,6 +21,8 @@ export type ImportErrorCode =
     typeof IMPORT_MISSING_FIELD_ERROR |
     typeof IMPORT_VALIDATION_ERROR |
     typeof IMPORT_UNIQUE_FIELD_ERROR |
+    typeof IMPORT_ERROR_UNKNOWN_1 |
+    typeof IMPORT_ERROR_UNKNOWN_2 |
     typeof IMPORT_FIELD_FORMAT_ERROR;
 
 export type ImportedUser = User
