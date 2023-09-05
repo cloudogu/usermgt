@@ -123,7 +123,7 @@ public class LDAPUserManagerTest {
     @Test()
     @LDAP(baseDN = BASEDN, ldif = LDIF_001)
     public void testCreateAlreadyExists() throws LDAPException {
-        expectedException.expect(ConstraintViolationException.class);
+        expectedException.expect(UniqueConstraintViolationException.class);
         expectedException.expectMessage("Constraints violated: ");
         expectedException.expectMessage("UNIQUE_EMAIL");
         expectedException.expectMessage("UNIQUE_USERNAME");
@@ -137,7 +137,7 @@ public class LDAPUserManagerTest {
     @Test()
     @LDAP(baseDN = BASEDN, ldif = LDIF_001)
     public void testCreateEmailAlreadyExists() throws LDAPException {
-        expectedException.expect(ConstraintViolationException.class);
+        expectedException.expect(UniqueConstraintViolationException.class);
         expectedException.expectMessage("Constraints violated: ");
         expectedException.expectMessage("UNIQUE_EMAIL");
 

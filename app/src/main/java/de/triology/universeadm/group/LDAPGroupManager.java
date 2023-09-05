@@ -84,7 +84,7 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
      * If so, throws ConstraintViolationException containing all violations.
      * @param group
      * @param category
-     * @throws ConstraintViolationException
+     * @throws UniqueConstraintViolationException
      */
     private void checkConstraints(final Group group, final Constraint.Category category) {
         final List<Constraint.ID> violatedConstraints = new ArrayList<>();
@@ -94,7 +94,7 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
             }
         }
         if (!violatedConstraints.isEmpty()) {
-            throw new ConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[2]));
+            throw new UniqueConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[2]));
         }
     }
 

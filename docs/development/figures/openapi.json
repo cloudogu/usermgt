@@ -99,6 +99,148 @@
         }
       }
     },
+    "/api/users/import": {
+      "post": {
+        "summary": "Import Users from CSV",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "CSV file to be imported"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful import",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/users/import/{importID}": {
+      "get": {
+        "summary": "Get Import Result",
+        "parameters": [
+          {
+            "name": "importID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the import result."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            },
+            "headers": {
+              "Content-Disposition": {
+                "description": "File attachment header",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid UUID",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Result not found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/import/summaries": {
+      "get": {
+        "summary": "Get All Import Summaries",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ImportSummary"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/groups/{groupname}/members/{username}": {
       "post": {
         "description": "Adds a user to a group. Fails if user is already member of the group.",
@@ -604,6 +746,100 @@
         "type": "array",
         "items": {
           "type": "string"
+        }
+      },
+      "Result": {
+        "type": "object",
+        "properties": {
+          "importID": {
+            "type": "string",
+            "description": "The ID of the import result."
+          },
+          "filename": {
+            "type": "string",
+            "description": "The filename of the import result."
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The timestamp of the import result."
+          },
+          "created": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/api_users_body"
+            },
+            "description": "List of created users."
+          },
+          "updated": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/api_users_body"
+            },
+            "description": "List of updated users."
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportError"
+            },
+            "description": "List of import errors."
+          }
+        }
+      },
+      "ImportError": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "integer",
+            "description": "The error code representing the type of error."
+          },
+          "lineNumber": {
+            "type": "integer",
+            "description": "The line number of the import error."
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message describing the reason for the error."
+          },
+          "params": {
+            "type": "object",
+            "properties": {
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of affected columns in case of an error."
+              }
+            }
+          }
+        },
+        "required": ["errorCode", "lineNumber", "message"]
+      },
+      "ImportSummary": {
+        "type": "object",
+        "properties": {
+          "importID": {
+            "type": "string",
+            "description": "The ID of the import."
+          },
+          "filename": {
+            "type": "string",
+            "description": "The filename of the import."
+          },
+          "created": {
+            "type": "integer",
+            "description": "The number of users created during the import."
+          },
+          "updated": {
+            "type": "integer",
+            "description": "The number of users updated during the import."
+          },
+          "skipped": {
+            "type": "integer",
+            "description": "The number of rows skipped during the import."
+          }
         }
       }
     },

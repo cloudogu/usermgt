@@ -36,7 +36,7 @@ import com.google.common.collect.Iterables;
 import de.triology.universeadm.*;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.Groups;
-import de.triology.universeadm.user.imports.CSVHandler;
+import de.triology.universeadm.user.imports.*;
 import org.codehaus.jackson.JsonNode;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -66,7 +66,11 @@ public class UserResourceTest {
     private GroupManager groupManager;
     private UserResource resource;
     private UserManager userManager;
-    private CSVHandler csvHandler;
+    private ImportHandler importHandler;
+    private CSVParser csvParser;
+    private ResultRepository resultRepository;
+
+    private SummaryRepository summaryRepository;
 
     @Test
     public void testAddMembership() throws URISyntaxException, IOException {
@@ -115,7 +119,7 @@ public class UserResourceTest {
     public void testCreateAlreadyExists() throws URISyntaxException, IOException {
         User dent = Users.createDent();
 
-        doThrow(new ConstraintViolationException(Constraint.ID.UNIQUE_USERNAME)).when(userManager).create(dent);
+        doThrow(new UniqueConstraintViolationException(Constraint.ID.UNIQUE_USERNAME)).when(userManager).create(dent);
 
         MockHttpRequest request = MockHttpRequest.post("/users");
         MockHttpResponse response = Resources.dispatch(resource, request, dent);
@@ -222,8 +226,13 @@ public class UserResourceTest {
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
-        this.csvHandler = new CSVHandler(userManager);
-        this.resource = new UserResource(userManager, groupManager, csvHandler);
+        this.csvParser = mock(CSVParserImpl.class);
+        this.resultRepository = mock(ResultRepository.class);
+        this.summaryRepository = mock(SummaryRepository.class);
+
+
+        this.importHandler = new ImportHandler(userManager, csvParser, resultRepository, summaryRepository);
+        this.resource = new UserResource(userManager, groupManager, importHandler);
     }
 
     //~--- methods --------------------------------------------------------------

@@ -22,7 +22,6 @@ declare global {
             usermgtDeleteGroup(groupname: string): void
             usermgtCleanupTestGroups(): void
             withUser(username: string): any
-            withImportData(userCount: number): any
             logout(): void
             deleteUserFromDoguViaAPI(usernamen: string, exitOnFail: boolean)
         }
@@ -76,16 +75,6 @@ const withUser = (username) => {
             return filteredUsers[0];
         }
         throw `no data found for user ${username}`;
-    })
-};
-
-const withImportData = (userCount) => {
-    cy.fixture("importdata").then(data => {
-        const filteredImportData = data.filter(el => el.userCount === userCount);
-        if (filteredImportData.length > 0) {
-            return filteredImportData[0];
-        }
-        throw `no data found for userCount ${userCount}`;
     })
 };
 
@@ -299,7 +288,6 @@ const deleteUserFromDoguViaAPI = (username, exitOnFail = false) => {
 Cypress.Commands.add("logout", logout)
 Cypress.Commands.add("login", login)
 Cypress.Commands.add("withUser", withUser)
-Cypress.Commands.add("withImportData", withImportData)
 Cypress.Commands.add("deleteUserFromDoguViaAPI", deleteUserFromDoguViaAPI)
 
 // users

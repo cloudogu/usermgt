@@ -41,8 +41,8 @@
       "NeedsBackup": false
     },
     {
-      "Name": "protocol",
-      "Path": "/var/lib/usermgt/protocol",
+      "Name": "importHistory",
+      "Path": "/var/lib/usermgt/importHistory",
       "Owner": "1000",
       "Group": "1000",
       "NeedsBackup": true

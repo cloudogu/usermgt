@@ -57,5 +57,6 @@ public class UserModule extends AbstractModule
     bind(MemberListener.class).asEagerSingleton();
     bind(UserResource.class);
     bind(UserSelfRemoveExceptionMapper.class);
+
   }
 }
