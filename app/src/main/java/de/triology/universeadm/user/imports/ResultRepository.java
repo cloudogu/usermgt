@@ -55,6 +55,19 @@ public class ResultRepository {
     }
 
     /**
+     * Deletes the result file
+     * @param importID - UUID of the import process
+     * @return boolean
+     *  - successfully deleted file
+     *  - false means no file found for path
+     * @throws IOException - exception thrown when something is wrong reading the base path.
+     */
+    public boolean delete(UUID importID) throws IOException {
+        Path filePath = this.getFilePath(importID);
+        return Files.deleteIfExists(filePath);
+    }
+
+    /**
      * Reads all files under the base path. It filters all result files. Others files that don't match the name
      * convention will be ignored.
      * @return List of {@link Result}

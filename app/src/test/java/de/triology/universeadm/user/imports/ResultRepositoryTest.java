@@ -75,6 +75,34 @@ public class ResultRepositoryTest {
         assertEquals(2, results.size());
     }
 
+    @Test
+    public void deleteExistingFile() throws IOException {
+        String folderPath = getFolderPath();
+        ResultRepository repo = new ResultRepository(folderPath);
+
+        try {
+            this.folder.newFile("ebf9d27f-f83c-4832-9c9e-06cb42976a0a.json");
+        } catch (IOException e) {
+            fail("unexpected exception while writing file");
+        }
+
+        assertTrue(repo.delete(UUID.fromString("ebf9d27f-f83c-4832-9c9e-06cb42976a0a")));
+    }
+
+    @Test
+    public void deleteNonExistingFile() throws IOException {
+        String folderPath = getFolderPath();
+        ResultRepository repo = new ResultRepository(folderPath);
+
+        try {
+            this.folder.newFile("ebf9d27f-f83c-4832-9c9e-06cb42976a0a.json");
+        } catch (IOException e) {
+            fail("unexpected exception while writing file");
+        }
+
+        assertFalse(repo.delete(UUID.fromString("ebf9d27f-f83c-4832-8c8e-06cb42976a0a")));
+    }
+
     private Result createResult() {
         return new Result(
                 UUID.randomUUID(),
