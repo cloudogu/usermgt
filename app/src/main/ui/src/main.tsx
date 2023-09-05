@@ -3,7 +3,7 @@ import React, {createContext, useContext} from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import {useTranslation} from "react-i18next";
-import {Outlet, useLocation, createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
+import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from "react-router-dom";
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
@@ -12,16 +12,16 @@ import {EditGroup} from "./pages/EditGroup";
 import EditUser from "./pages/EditUser";
 import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
+import ImportProtocolList from "./pages/ImportProtocolList";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
 import Users from "./pages/Users";
 import UsersImport from "./pages/UsersImport";
+import UsersImportResult from "./pages/UsersImportResult";
 import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
-import UsersImportResult from "./pages/UsersImportResult";
-import ImportProtocolList from "./pages/ImportProtocolList";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -38,12 +38,12 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
 const router = createBrowserRouter([
     {
         path: "",
-        element: <React.StrictMode><ApplicationContainer children={<Outlet />} /></React.StrictMode>,
-        errorElement: <React.StrictMode><ApplicationContainer children={<ErrorPage />} /></React.StrictMode>,
+        element: <React.StrictMode><ApplicationContainer children={<Outlet/>}/></React.StrictMode>,
+        errorElement: <React.StrictMode><ApplicationContainer children={<ErrorPage/>}/></React.StrictMode>,
         children: [
             {
                 path: "",
-                element: <Navigate to="/account" replace />,
+                element: <Navigate to="/account" replace/>,
             },
             {
                 path: "account",
@@ -89,13 +89,14 @@ const router = createBrowserRouter([
     },
 ], {basename: contextPath});
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router} />);
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router}/>);
 
 export type ApplicationContainerProps = {
     children: JSX.Element;
 }
+
 function ApplicationContainer({children}: ApplicationContainerProps) {
-    const {user:casUser} = useCasUser();
+    const {user: casUser} = useCasUser();
     return <ApplicationContext.Provider value={{casUser: casUser}}>
         <Nav/>
         <Main>

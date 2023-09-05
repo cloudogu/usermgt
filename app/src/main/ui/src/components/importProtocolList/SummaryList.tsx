@@ -31,18 +31,18 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
             </Table.Head>
             <Table.Body>
                 {
-                    protocols.map((p, i) => (
+                    protocols.map((s, i) => (
                         <Table.Body.Tr key={i}>
                             <Table.Body.Td>
-                                {p.filename}
+                                {s.filename}
                             </Table.Body.Td>
                             <Table.Body.Td>
-                                {p.timestamp.toUTCString()}
+                                {s.timestamp.toUTCString()}
                             </Table.Body.Td>
                             <Table.Body.Td>
-                                {t("importProtocols.result.created")}: {p.summary.created}{", "}
-                                {t("importProtocols.result.updated")}: {p.summary.updated}{", "}
-                                {t("importProtocols.result.errors")}: {p.summary.skipped}
+                                {t("importProtocols.result.created")}: {s.summary.created}{", "}
+                                {t("importProtocols.result.updated")}: {s.summary.updated}{", "}
+                                {t("importProtocols.result.errors")}: {s.summary.skipped}
                             </Table.Body.Td>
                             <Table.Body.Td className={"flex flex-row"}>
                                 <DropdownMenu>
@@ -52,7 +52,7 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                                     </DropdownMenu.Button>
                                     <DropdownMenu.Items>
                                         <DropdownMenu.Items.LinkItem
-                                            href={`/usermgt/protocol/download/${p.timestamp.getTime()}`}
+                                            href={`/usermgt/protocol/download/${s.timestamp.getTime()}`}
                                             className={"flex flex-row"}
                                         >
                                             <TextWithIcon icon={<CesIcons.DownloadSimple weight={"bold"}/>}>
@@ -61,7 +61,7 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                                         </DropdownMenu.Items.LinkItem>
                                         <DropdownMenu.Items.RouterLinkItem
                                             to={"/users/import/results"}
-                                            state={{protocol: p}}
+                                            state={{summary: s}}
                                             className={"flex"}
                                         >
                                             <TextWithIcon icon={<CesIcons.Table weight={"bold"}/>}>

@@ -5,14 +5,14 @@ import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTab
 import UsersImportResultTable from "../components/usersImport/UsersImportResultTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import type {ImportSummary, ImportUsersResponse, ImportUsersResponseDto} from "../services/ImportUsers";
-import type {Location} from "history";
 import {ImportUsersService} from "../services/ImportUsers";
+import type {ImportSummary, ImportUsersResponse} from "../services/ImportUsers";
+import type {Location} from "history";
 
 const UsersImportResult = (props: { title: string }) => {
-    const {state: {result: r, protocol}} = useLocation() as Location<{
+    const {state: {result: r, summary}} = useLocation() as Location<{
         result?: ImportUsersResponse,
-        protocol?: ImportSummary
+        summary?: ImportSummary
     }>;
     const [result, setResult] = useState(r);
     const [error, setError] = useState(false);
@@ -25,10 +25,9 @@ const UsersImportResult = (props: { title: string }) => {
     const affectedRows = successfulRows + failedRows;
 
     useEffect(() => {
-        if (!r && protocol) {
-            ImportUsersService.getImportDetails(protocol)
+        if (!r && summary) {
+            ImportUsersService.getImportDetails(summary)
                 .then((r) => {
-                    console.log(r);
                     setResult(r.data);
                 })
                 .catch(e => {
@@ -36,13 +35,13 @@ const UsersImportResult = (props: { title: string }) => {
                     console.log(e);
                 });
         }
-    }, [protocol]);
+    }, [summary]);
 
     return <>
         <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.usersImportResult")}</H1>
         </div>
-        {((!result && !protocol) || error) &&
+        {((!result && !summary) || error) &&
             <Paragraph className={"mt-6"}>
                 {t("usersImportResult.error")}
             </Paragraph>
@@ -80,7 +79,7 @@ const UsersImportResult = (props: { title: string }) => {
                 </Details>
 
                 <Paragraph className={"mt-6"}>
-                    <Href href={`/usermgt/protocol/download/${result.timestamp.getTime()}`}>Protokoll
+                    <Href href={`/usermgt/api/users/import/${result.importID}`}>Protokoll
                         herunterladen</Href>
                 </Paragraph>
             </>
