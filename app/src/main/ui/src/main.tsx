@@ -58,7 +58,7 @@ const router = createBrowserRouter([
                 element: <UsersImport title={t("pages.usersImport") + " | User Management"}/>,
             },
             {
-                path: "users/import/results",
+                path: "users/import/:id",
                 element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
             },
             {

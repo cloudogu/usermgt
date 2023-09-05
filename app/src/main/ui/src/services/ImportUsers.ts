@@ -90,8 +90,8 @@ export const ImportUsersService = {
     },
     async deleteProtocol(): Promise<void> {
     },
-    async getImportDetails(summary: ImportSummary): Promise<AxiosResponse<ImportUsersResponse>> {
-        const result = await Axios.get<ImportUsersResponseDto>(`/users/import/${summary.importID}`, {
+    async getImportDetails(id: string): Promise<AxiosResponse<ImportUsersResponse>> {
+        const result = await Axios.get<ImportUsersResponseDto>(`/users/import/${id}`, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }

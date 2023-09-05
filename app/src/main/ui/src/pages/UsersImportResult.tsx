@@ -1,19 +1,20 @@
 import {Details, H1, Href, Paragraph} from "@cloudogu/ces-theme-tailwind";
 import React, {useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTable";
 import UsersImportResultTable from "../components/usersImport/UsersImportResultTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import type {ImportUsersResponse} from "../services/ImportUsers";
 import {ImportUsersService} from "../services/ImportUsers";
-import type {ImportSummary, ImportUsersResponse} from "../services/ImportUsers";
 import type {Location} from "history";
 
 const UsersImportResult = (props: { title: string }) => {
-    const {state: {result: r, summary}} = useLocation() as Location<{
+    const {state} = useLocation() as Location<{
         result?: ImportUsersResponse,
-        summary?: ImportSummary
     }>;
+    const r = state?.result;
+    const {id} = useParams();
     const [result, setResult] = useState(r);
     const [error, setError] = useState(false);
     useSetPageTitle(props.title);
@@ -25,23 +26,22 @@ const UsersImportResult = (props: { title: string }) => {
     const affectedRows = successfulRows + failedRows;
 
     useEffect(() => {
-        if (!r && summary) {
-            ImportUsersService.getImportDetails(summary)
+        if (!r && id) {
+            ImportUsersService.getImportDetails(id ?? "")
                 .then((r) => {
                     setResult(r.data);
                 })
-                .catch(e => {
+                .catch(() => {
                     setError(true);
-                    console.log(e);
                 });
         }
-    }, [summary]);
+    }, [id]);
 
     return <>
         <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.usersImportResult")}</H1>
         </div>
-        {((!result && !summary) || error) &&
+        {((!result && !id) || error) &&
             <Paragraph className={"mt-6"}>
                 {t("usersImportResult.error")}
             </Paragraph>
@@ -79,7 +79,7 @@ const UsersImportResult = (props: { title: string }) => {
                 </Details>
 
                 <Paragraph className={"mt-6"}>
-                    <Href href={`/usermgt/api/users/import/${result.importID}`}>Protokoll
+                    <Href href={`/usermgt/api/users/import/${result.importID}/download`}>Protokoll
                         herunterladen</Href>
                 </Paragraph>
             </>
