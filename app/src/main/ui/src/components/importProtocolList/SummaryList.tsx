@@ -1,18 +1,16 @@
-import {Button, CesIcons, DropdownMenu, Href, RouterLink, Table, TextWithIcon} from "@cloudogu/ces-theme-tailwind";
+import {CesIcons, DropdownMenu, Table, TextWithIcon} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
-import {Link} from "react-router-dom";
 import {t} from "../../helpers/i18nHelpers";
-import {ImportUsersService} from "../../services/ImportUsers";
-import type {ImportProtocol} from "../../services/ImportUsers";
+import type {ImportSummary} from "../../services/ImportUsers";
 
 export interface ProtocolListProps {
-    protocols: ImportProtocol[],
+    protocols: ImportSummary[],
     pageCount: number;
     currentPage: number;
     onPageChange: (_newPage: number) => void;
 }
 
-export default function ProtocolList({protocols, pageCount, currentPage, onPageChange}: ProtocolListProps) {
+export default function SummaryList({protocols, pageCount, currentPage, onPageChange}: ProtocolListProps) {
     return (
         <Table>
             <Table.Head>
@@ -36,15 +34,15 @@ export default function ProtocolList({protocols, pageCount, currentPage, onPageC
                     protocols.map((p, i) => (
                         <Table.Body.Tr key={i}>
                             <Table.Body.Td>
-                                {p.name}
+                                {p.filename}
                             </Table.Body.Td>
                             <Table.Body.Td>
                                 {p.timestamp.toUTCString()}
                             </Table.Body.Td>
                             <Table.Body.Td>
-                                {t("importProtocols.result.created")}: {p.result.created}{", "}
-                                {t("importProtocols.result.updated")}: {p.result.updated}{", "}
-                                {t("importProtocols.result.errors")}: {p.result.skipped}
+                                {t("importProtocols.result.created")}: {p.summary.created}{", "}
+                                {t("importProtocols.result.updated")}: {p.summary.updated}{", "}
+                                {t("importProtocols.result.errors")}: {p.summary.skipped}
                             </Table.Body.Td>
                             <Table.Body.Td className={"flex flex-row"}>
                                 <DropdownMenu>
@@ -63,7 +61,7 @@ export default function ProtocolList({protocols, pageCount, currentPage, onPageC
                                         </DropdownMenu.Items.LinkItem>
                                         <DropdownMenu.Items.RouterLinkItem
                                             to={"/users/import/results"}
-                                            state={{protocol: p.result}}
+                                            state={{protocol: p}}
                                             className={"flex"}
                                         >
                                             <TextWithIcon icon={<CesIcons.Table weight={"bold"}/>}>

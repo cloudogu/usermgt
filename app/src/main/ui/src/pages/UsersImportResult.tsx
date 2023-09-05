@@ -5,14 +5,14 @@ import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTab
 import UsersImportResultTable from "../components/usersImport/UsersImportResultTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import type {ImportProtocol, ImportUsersResponse} from "../services/ImportUsers";
+import type {ImportSummary, ImportUsersResponse, ImportUsersResponseDto} from "../services/ImportUsers";
 import type {Location} from "history";
 import {ImportUsersService} from "../services/ImportUsers";
 
 const UsersImportResult = (props: { title: string }) => {
     const {state: {result: r, protocol}} = useLocation() as Location<{
         result?: ImportUsersResponse,
-        protocol?: ImportProtocol
+        protocol?: ImportSummary
     }>;
     const [result, setResult] = useState(r);
     const [error, setError] = useState(false);
@@ -28,7 +28,8 @@ const UsersImportResult = (props: { title: string }) => {
         if (!r && protocol) {
             ImportUsersService.getImportDetails(protocol)
                 .then((r) => {
-                    setResult(r);
+                    console.log(r);
+                    setResult(r.data);
                 })
                 .catch(e => {
                     setError(true);

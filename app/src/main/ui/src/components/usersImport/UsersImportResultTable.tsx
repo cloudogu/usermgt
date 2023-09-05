@@ -12,9 +12,18 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
     if ((content ?? []).length === 0) {
         return (<></>);
     }
+    const columnWidths = [
+        "w-[12.5%]",
+        "w-[12.5%]",
+        "w-[12.5%]",
+        "w-[12.5%]",
+        "w-[12.5%]",
+        "w-[12.5%]",
+        "w-[12.5%]",
+    ];
 
     return (
-        <Table {...props} className={"table-fixed min-w-[900px]"} >
+        <Table {...props} className={"table-fixed min-w-[900px]"}>
             <Table.Head>
                 <Table.Head.Tr>
                     {
@@ -25,10 +34,9 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                             "Anzeigename",
                             "Email",
                             "Extern",
-                            "Password-Reset",
-                            "Gruppen"
-                        ].map(k =>
-                            <Table.Head.Th key={k} className={"w-[12.5%] break-all"}>
+                            "Passwort temporär"
+                        ].map((k, i) =>
+                            <Table.Head.Th key={k} className={`${columnWidths[i]} break-all`}>
                                 {k}
                             </Table.Head.Th>
                         )
@@ -37,7 +45,7 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
             </Table.Head>
             <Table.Body>
                 {
-                    content.map((c, i) =>
+                    content.map((c, i) => (
                         <Table.Body.Tr key={i}>
                             {[
                                 "username",
@@ -47,26 +55,22 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                                 "mail",
                                 "external",
                                 "passwordReset",
-                                "memberOf",
                             ]
                                 .map(
-                                    h => {
+                                    (h, i) => {
                                         const isBoolean = h === "external" || h === "passwordReset";
-                                        const isArray = h === "memberOf";
-                                        const isString = !isBoolean && !isArray;
-
+                                        const isString = !isBoolean;
                                         return (
-                                            <Table.Body.Td key={h} className={"w-[12.5%] break-all"}>
-                                                {isBoolean && ((content[i]) ? "TRUE" : "FALSE")}
-                                                {isString && ((content[i] as any)[h])}
-                                                {isArray && ((content[i] as any)[h] as string[]).join(", ")}
+                                            <Table.Body.Td key={h} className={`${columnWidths[i]} break-all`}>
+                                                {isBoolean && ((content[i]) ? "Ja" : "Nein")}
+                                                {isString && (((content[i] || {}) as any)[h])}
                                             </Table.Body.Td>
                                         );
                                     }
                                 )
                             }
                         </Table.Body.Tr>
-                    )
+                    ))
                 }
             </Table.Body>
         </Table>
