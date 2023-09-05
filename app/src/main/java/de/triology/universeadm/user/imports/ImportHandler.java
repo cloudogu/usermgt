@@ -332,4 +332,8 @@ public class ImportHandler {
         return this.summaryRepository.getSummaries();
     }
 
+    public boolean deleteResult(UUID importID) throws IOException {
+        return this.resultRepository.delete(importID);
+    }
+
 }
