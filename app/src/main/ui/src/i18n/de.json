@@ -230,7 +230,13 @@
         "date": "Datum",
         "result": "Ergebnis",
         "functions": "Funktionen"
-      }
+      },
+      "function": {
+        "download": "Herunterladen",
+        "details": "Details",
+        "delete": "Löschen"
+      },
+      "functions": "Funktionen"
     },
     "result": {
       "created": "Neu",

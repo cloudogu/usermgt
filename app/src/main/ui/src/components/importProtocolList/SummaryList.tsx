@@ -47,7 +47,7 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                             <Table.Body.Td className={"flex flex-row"}>
                                 <DropdownMenu>
                                     <DropdownMenu.Button>
-                                        Funktionen
+                                        {t("importProtocols.table.functions")}
                                         <DropdownMenu.Button.Arrow/>
                                     </DropdownMenu.Button>
                                     <DropdownMenu.Items>
@@ -56,7 +56,7 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                                             className={"flex flex-row"}
                                         >
                                             <TextWithIcon icon={<CesIcons.DownloadSimple weight={"bold"}/>}>
-                                                Herunterladen
+                                                {t("importProtocols.table.function.download")}
                                             </TextWithIcon>
                                         </DropdownMenu.Items.LinkItem>
                                         <DropdownMenu.Items.RouterLinkItem
@@ -64,12 +64,12 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                                             className={"flex"}
                                         >
                                             <TextWithIcon icon={<CesIcons.Table weight={"bold"}/>}>
-                                                Details
+                                                {t("importProtocols.table.function.details")}
                                             </TextWithIcon>
                                         </DropdownMenu.Items.RouterLinkItem>
                                         <DropdownMenu.Items.ButtonItem className={"flex flex-row"}>
                                             <TextWithIcon icon={<CesIcons.TrashSimple weight={"bold"}/>}>
-                                                Löschen
+                                                {t("importProtocols.table.function.delete")}
                                             </TextWithIcon>
                                         </DropdownMenu.Items.ButtonItem>
                                     </DropdownMenu.Items>
