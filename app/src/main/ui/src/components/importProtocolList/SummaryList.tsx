@@ -60,7 +60,7 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                                             </TextWithIcon>
                                         </DropdownMenu.Items.LinkItem>
                                         <DropdownMenu.Items.RouterLinkItem
-                                            to={`/usermgt/api/users/import/${s.importID}/download`}
+                                            to={`/users/import/${s.importID}`}
                                             className={"flex"}
                                         >
                                             <TextWithIcon icon={<CesIcons.Table weight={"bold"}/>}>
