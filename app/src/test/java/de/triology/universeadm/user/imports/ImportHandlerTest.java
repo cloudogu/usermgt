@@ -4,9 +4,11 @@ import de.triology.universeadm.Constraint;
 import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.junit.Assert;
 import org.junit.Test;
 import org.opensaml.artifact.InvalidArgumentException;
 
@@ -321,6 +323,47 @@ public class ImportHandlerTest {
         assertEquals(ImportError.Code.WRITE_RESULT_ERROR.value, errors.get(0).getErrorCode());
     }
 
+    @Test()
+    public void testGetResult() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
+        CSVParser parser = mock(CSVParser.class);
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+
+        Result res = importHandler.getResult(UUID.randomUUID());
+
+        assertNotNull(res);
+    }
+
+    @Test
+    public void getSummaries() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
+        CSVParser parser = mock(CSVParser.class);
+
+        SummaryRepository sRepo = mock(SummaryRepository.class);
+        when(sRepo.getSummaries()).thenReturn(Collections.emptyList());
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+
+        Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 0);
+
+        assertNotNull(res);
+    }
+
+    @Test()
+    public void testDeleteResult() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_DELETE);
+        CSVParser parser = mock(CSVParser.class);
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+
+        assertTrue(importHandler.deleteResult(UUID.randomUUID()));
+    }
+
+
     private enum InputPartCase {
         VALID,
         VALID_ROW_PARSING_ERROR,
@@ -427,6 +470,8 @@ public class ImportHandlerTest {
 
     private enum ResultRepositoryCase {
         VALID_WRITE,
+        VALID_READ,
+        VALID_DELETE,
         THROW_IOEXCEPTION_WRITE
     }
 
@@ -436,6 +481,12 @@ public class ImportHandlerTest {
         switch (c) {
             case VALID_WRITE:
                 doNothing().when(repo).write(any());
+                break;
+            case VALID_READ:
+                when(repo.read(any())).thenReturn(new Result(UUID.randomUUID(), "test.csv"));
+                break;
+            case VALID_DELETE:
+                when(repo.delete(any())).thenReturn(true);
                 break;
             case THROW_IOEXCEPTION_WRITE:
                 doThrow(new IOException("test IO Exception")).when(repo).write(any());

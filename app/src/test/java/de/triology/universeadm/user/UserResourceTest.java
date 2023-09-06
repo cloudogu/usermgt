@@ -33,25 +33,31 @@ package de.triology.universeadm.user;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.*;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.group.Groups;
 import de.triology.universeadm.user.imports.*;
+import org.apache.shiro.authz.AuthorizationException;
 import org.codehaus.jackson.JsonNode;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.opensaml.artifact.InvalidArgumentException;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -67,10 +73,6 @@ public class UserResourceTest {
     private UserResource resource;
     private UserManager userManager;
     private ImportHandler importHandler;
-    private CSVParser csvParser;
-    private ResultRepository resultRepository;
-
-    private SummaryRepository summaryRepository;
 
     @Test
     public void testAddMembership() throws URISyntaxException, IOException {
@@ -220,18 +222,129 @@ public class UserResourceTest {
 
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     }
+
+    @Test
+    public void testImport() throws CsvRequiredFieldEmptyException {
+        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        UserManager userManager = mock(UserManager.class);
+        GroupManager groupManager = mock(GroupManager.class);
+
+        ImportHandler importHandler = mock(ImportHandler.class);
+        when(importHandler.handle(input)).thenReturn(new Result(
+                UUID.randomUUID(),
+                "testFile.csv",
+                Collections.singletonList(Users.createDent()),
+                Collections.singletonList(Users.createDent2()),
+                Collections.singletonList(new ImportError.Builder(ImportError.Code.UNIQUE_FIELD_ERROR)
+                        .withLineNumber(3)
+                        .withErrorMessage("testError")
+                        .build())));
+
+        this.resource = new UserResource(userManager, groupManager, importHandler);
+        Response response = this.resource.importUsers(input);
+
+        assertNotNull(response);
+        verify(importHandler, times(1)).handle(input);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void testImportParsingHeaderError() throws NoSuchFieldException, CsvRequiredFieldEmptyException {
+        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        UserManager userManager = mock(UserManager.class);
+        GroupManager groupManager = mock(GroupManager.class);
+
+        ImportHandler importHandler = mock(ImportHandler.class);
+        doThrow(new CsvRequiredFieldEmptyException(
+            CSVParser.class,
+            CSVUserDTO.class.getDeclaredField("username"),
+            "Error"
+        )).when(importHandler).handle(input);
+
+        this.resource = new UserResource(userManager, groupManager, importHandler);
+        Response response = this.resource.importUsers(input);
+
+        assertNotNull(response);
+        verify(importHandler, times(1)).handle(input);
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        ImportError expError = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                .withLineNumber(0)
+                .withErrorMessage("Error")
+                .withAffectedColumns(Collections.singletonList("username"))
+                .build();
+
+        ImportError importError = response.readEntity(ImportError.class);
+        assertEquals(expError, importError);
+    }
+
+    @Test
+    public void testImportInvalidRequest() throws CsvRequiredFieldEmptyException {
+        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        UserManager userManager = mock(UserManager.class);
+        GroupManager groupManager = mock(GroupManager.class);
+
+        ImportHandler importHandler = mock(ImportHandler.class);
+        doThrow(new InvalidArgumentException("Error")).when(importHandler).handle(input);
+
+        this.resource = new UserResource(userManager, groupManager, importHandler);
+        Response response = this.resource.importUsers(input);
+
+        assertNotNull(response);
+        verify(importHandler, times(1)).handle(input);
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        ImportError expError = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                .withErrorMessage("Error")
+                .build();
+
+        ImportError importError = response.readEntity(ImportError.class);
+        assertEquals(expError, importError);
+    }
+
+    @Test
+    public void testImportForbidden() throws CsvRequiredFieldEmptyException {
+        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        UserManager userManager = mock(UserManager.class);
+        GroupManager groupManager = mock(GroupManager.class);
+
+        ImportHandler importHandler = mock(ImportHandler.class);
+        doThrow(new AuthorizationException("Error")).when(importHandler).handle(input);
+
+        this.resource = new UserResource(userManager, groupManager, importHandler);
+        Response response = this.resource.importUsers(input);
+
+        assertNotNull(response);
+        verify(importHandler, times(1)).handle(input);
+        assertEquals(Response.Status.FORBIDDEN.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void testImportInternalError() throws CsvRequiredFieldEmptyException {
+        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        UserManager userManager = mock(UserManager.class);
+        GroupManager groupManager = mock(GroupManager.class);
+
+        ImportHandler importHandler = mock(ImportHandler.class);
+        doThrow(new RuntimeException("Error")).when(importHandler).handle(input);
+
+        this.resource = new UserResource(userManager, groupManager, importHandler);
+        Response response = this.resource.importUsers(input);
+
+        assertNotNull(response);
+        verify(importHandler, times(1)).handle(input);
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    }
+
+
     //~--- set methods ----------------------------------------------------------
 
     @Before
     public void setUp() {
         this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
-        this.csvParser = mock(CSVParserImpl.class);
-        this.resultRepository = mock(ResultRepository.class);
-        this.summaryRepository = mock(SummaryRepository.class);
+        this.importHandler = mock(ImportHandler.class);
 
-
-        this.importHandler = new ImportHandler(userManager, csvParser, resultRepository, summaryRepository);
         this.resource = new UserResource(userManager, groupManager, importHandler);
     }
 

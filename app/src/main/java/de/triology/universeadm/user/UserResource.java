@@ -33,9 +33,11 @@ package de.triology.universeadm.user;
 import com.google.inject.Inject;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.AbstractManagerResource;
+import de.triology.universeadm.PagedResultList;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.user.imports.*;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.opensaml.artifact.InvalidArgumentException;
@@ -188,7 +190,7 @@ public class UserResource extends AbstractManagerResource<User> {
         } catch (InvalidArgumentException e) {
             logger.error("Bad input while handling csv user import", e);
 
-            ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+            ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
                     .withErrorMessage(e.getMessage())
                     .build();
 
@@ -212,19 +214,15 @@ public class UserResource extends AbstractManagerResource<User> {
     @Path("import/{importID}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getImportResult(@PathParam("importID") String importID) {
-        logger.debug("Received request for import result with ID {}", importID);
+        logger.debug("Received get request for import result with ID {}", importID);
 
         try {
             UUID importUUID = UUID.fromString(importID);
             Result result = this.importHandler.getResult(importUUID);
 
-            String fileName = String.format("%s.json", result.getImportID().toString());
-
-            Response.ResponseBuilder response = Response.ok(result);
-            response.header("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
-            return response.build();
+            return Response.status(Response.Status.OK).entity(result).build();
         } catch (IllegalArgumentException e) {
-            logger.warn("Request for import result with invalid UUID {}", importID, e);
+            logger.warn("GET request for import result with invalid UUID {}", importID, e);
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("Invalid UUIDv4 for importID")
@@ -239,15 +237,71 @@ public class UserResource extends AbstractManagerResource<User> {
     }
 
     @GET
-    @Path("import/summaries")
+    @Path("import/{importID}/download")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSummaries() {
-        logger.debug("Received request get all summaries");
+    public Response getImportResultBinary(@PathParam("importID") String importID) {
+        logger.debug("Received get request for downloading the import result with ID {}", importID);
+
+        Response response = this.getImportResult(importID);
+
+        if (response.getStatus() != Response.Status.OK.getStatusCode()){
+            return response;
+        }
+
+        String fileName = String.format("%s.json", importID);
+        response.getHeaders().putSingle("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
+
+        return response;
+    }
+
+    @DELETE
+    @Path("import/{importID}")
+    public Response deleteImportResult(@PathParam("importID") String importID) {
+        logger.debug("Received delete request for import result with ID {}", importID);
 
         try {
-            List<Result.Summary> summaries = this.importHandler.getSummaries();
+            UUID importUUID = UUID.fromString(importID);
+            boolean result = this.importHandler.deleteResult(importUUID);
 
-            return Response.status(Response.Status.OK).entity(summaries).build();
+            if(result) {
+                logger.info("ImportFile with ID {} has been deleted.", importID);
+            } else {
+                logger.warn("Could not delete import file with ID {}, because it has not been found", importID);
+            }
+
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (IllegalArgumentException e) {
+            logger.warn("DELETE request for import result with invalid UUID {}", importID, e);
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid UUIDv4 for importID")
+                    .build();
+        } catch (IOException e) {
+            logger.error("Could not delete import file with ID {}", importID, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @GET
+    @Path("import/summaries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSummaries(@QueryParam("start") int start, @QueryParam("limit") int limit) {
+        logger.debug("Received request get all summaries");
+
+        if (start < 0) {
+            start = PAGING_DEFAULT_START;
+        }
+
+        if (limit <= 0 || limit > PAGING_MAXIMUM) {
+            limit = PAGING_DEFAULT_LIMIT;
+        }
+
+        try {
+            Pair<List<Result.Summary>, Integer> summaries = this.importHandler.getSummaries(start, limit);
+            PagedResultList<Result.Summary> result = new PagedResultList<>(summaries.getLeft(), start, limit, summaries.getRight());
+
+            return Response.status(Response.Status.OK).entity(result).build();
         } catch (IOException e) {
             logger.error("Unable to read summaries from system", e);
 

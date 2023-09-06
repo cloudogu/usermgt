@@ -328,8 +328,21 @@ public class ImportHandler {
        return this.resultRepository.read(importID);
     }
 
-    public List<Result.Summary> getSummaries() throws IOException {
-        return this.summaryRepository.getSummaries();
+    public Pair<List<Result.Summary>, Integer> getSummaries(int start, int limit) throws IOException {
+        List<Result.Summary> allSummaries = this.summaryRepository.getSummaries();
+
+        int numberSkipEntries = (start*limit) - limit;
+
+        List<Result.Summary> paginatedList = allSummaries.stream()
+                .skip(numberSkipEntries)
+                .limit(limit)
+                .collect(Collectors.toList());
+
+        return Pair.of(paginatedList, allSummaries.size());
+    }
+
+    public boolean deleteResult(UUID importID) throws IOException {
+        return this.resultRepository.delete(importID);
     }
 
 }
