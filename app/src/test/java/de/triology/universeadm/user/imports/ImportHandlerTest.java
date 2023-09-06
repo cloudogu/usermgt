@@ -4,6 +4,7 @@ import de.triology.universeadm.Constraint;
 import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -346,7 +347,7 @@ public class ImportHandlerTest {
 
         ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        List<Result.Summary> res = importHandler.getSummaries();
+        Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 0);
 
         assertNotNull(res);
     }
