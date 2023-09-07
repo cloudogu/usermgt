@@ -3,12 +3,9 @@ import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {User} from "./Users";
-import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
+import type {QueryOptions} from "../hooks/useAPI";
+import type {RefetchResponse} from "../hooks/usePaginatedData";
 import type {AxiosError, AxiosResponse} from "axios";
-import {UsersResponse} from "./Users";
-import {AbortableCallbackWithArgs, QueryOptions} from "../hooks/useAPI";
-import {createPaginationData} from "@cloudogu/ces-theme-tailwind";
-import {RefetchResponse} from "../hooks/usePaginatedData";
 
 export const IMPORT_PARSING_ERROR = 100;
 export const IMPORT_FIELD_CONVERSION_ERROR = 101;

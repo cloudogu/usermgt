@@ -5,8 +5,8 @@ import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTab
 import UsersImportResultTable from "../components/usersImport/UsersImportResultTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import type {ImportUsersResponse} from "../services/ImportUsers";
 import {ImportUsersService} from "../services/ImportUsers";
+import type {ImportUsersResponse} from "../services/ImportUsers";
 import type {Location} from "history";
 
 const UsersImportResult = (props: { title: string }) => {

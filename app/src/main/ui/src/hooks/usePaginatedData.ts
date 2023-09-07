@@ -1,8 +1,8 @@
+
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import {useAPI, UseApiResponse} from "./useAPI";
+import {useAPI} from "./useAPI";
 import type {QueryOptions, AbortableCallbackWithArgs} from "./useAPI";
-import {createPaginationData} from "@cloudogu/ces-theme-tailwind";
 
 const PAGE_QUERY_PARAM = "p";
 const SEARCH_QUERY_PARAM = "q";
