@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
 import org.siouan.frontendgradleplugin.infrastructure.gradle.InstallFrontendTask
 import java.nio.file.Files
 import kotlin.io.path.Path
@@ -9,10 +8,14 @@ description = "usermgt"
 
 plugins {
     id("java")
-    id("maven-publish")
     id("war")
+    jacoco
+    id("org.zeroturnaround.gradle.jrebel")
+    id("org.gretty")
     id("org.siouan.frontend-jdk11")
-    kotlin("jvm") version "1.7.20"  // for gradle file integration
+    id("project-report")
+    eclipse
+    kotlin("jvm")
 }
 
 buildscript {
@@ -104,31 +107,6 @@ dependencies {
     providedCompile("javax.el:javax.el-api:3.0.0")
 }
 
-// TODO modify publishing later (talk with team if universe triology deployment is still relevant)
-//publishing {
-//    publications {
-//        create<MavenPublication>("usermgt") {
-//            from(components["java"])
-//            pom {
-//                developers {
-//                    developer {
-//                        id.set("sdorra")
-//                        name.set("Sebastian Sdorra")
-//                        email.set("sebastian.sdorra@triology.de")
-//                        timezone.set("Europe/Berlin")
-//                    }
-//                }
-//                scm {
-//                    connection.set("scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm")
-//                    developerConnection.set("scm:git:https://universe.triology.de/scm/git/SCM-Manager/universeadm")
-//                    url.set("https://universe.triology.de/scm/git/SCM-Manager/universeadm")
-//                    tag.set("HEAD")
-//                }
-//            }
-//        }
-//    }
-//}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11 // todo update to java 17 once migration to gradle done
     targetCompatibility = JavaVersion.VERSION_11
@@ -137,8 +115,8 @@ java {
 tasks.compileJava {
     // replaces animal sniffer plugin
     options.compilerArgs.addAll(mutableListOf("--release",  JavaVersion.VERSION_11.toString()));
+    //    options.compilerArgs.addAll(mutableListOf("-Xlint:", "unchecked"));
 }
-
 
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
@@ -149,6 +127,9 @@ tasks.withType(Javadoc::class) {
 }
 
 tasks.war {
+    if (project.properties["profile.jrebel"] == "enabled") {
+        dependsOn(tasks.generateRebel)
+    }
     webAppDirectory.set(file("src/main/ui/dist"))
     webInf { from("src/main/webapp/WEB-INF") }
     metaInf { from("src/main/webapp/META-INF") }
@@ -162,13 +143,29 @@ tasks.named<Test>("test") {
     testLogging {
         events("passed")
     }
+
+    finalizedBy(tasks.jacocoTestReport)
 }
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.named("test"))
+}
+
+// no need for copy target/classes/static ?
+//tasks.processResources {
+//    from("${project.buildDir}/classes/static") {
+//        project.extra.get("frontendPath")?.let { into("$it/dist") }
+//    }
+//}
 
 frontend {
     packageJsonDirectory.set(project.extra.get("frontendPath")?.let { file(it) })
     nodeVersion.set("18.7.0")
     assembleScript.set("run build")
-    cleanScript.set("run clean")
     checkScript.set("run lint")
     verboseModeEnabled.set(true)
 }
