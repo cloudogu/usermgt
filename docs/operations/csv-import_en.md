@@ -28,18 +28,19 @@ A result entry is created for the import. This result can be found in the `impor
 `/var/lib/usermgt/importHistory`. The result contains a summary of the users that were created or modified. 
 Furthermore, the result contains possible errors that occurred during the import. Per entry e error code is given:
 
-| Code | Error description                                                             |
-|------|-------------------------------------------------------------------------------|
-| 100 | General error that occurred while parsing the CSV file                        |
-| 101 | Value from column could not be transferred to data type, e.g. "10" as Boolean |
-| 102 | A column entry is missing in the row                                          |
-| 103 | The value of the column could not be assigned to the user                     |
-| 200 | General error while validating the line                                       |
-| 201 | The username is already used                                                  |
-| 202 | The format of the value does not match the required format                    |
-| 204 | Required value is not set                                                     |
-| 300 | Internal server error                                                         |
-| 301 | An error occurred while writing the result                                    |
+| Code  | Error description                                                             |
+|-------|-------------------------------------------------------------------------------|
+| 100   | General error that occurred while parsing the CSV file                        |
+| 101   | Value from column could not be transferred to data type, e.g. "10" as Boolean |
+| 102   | A column entry is missing in the header                                       |
+| 103   | The value of the column could not be assigned to the user                     |
+| 104   | The number of columns of a row do not match those of the header               |
+| 200   | General error while validating the line                                       |
+| 201   | The username is already used                                                  |
+| 202   | The format of the value does not match the required format                    |
+| 204   | Required value is not set                                                     |
+| 300   | Internal server error                                                         |
+| 301   | An error occurred while writing the result                                    |
 
 In addition to the volume, summaries of the imports can be accessed via the `/users/import/summaries` endpoint.
 Individual results are available via the endpoint `/users/import/{importID}` and can be downloaded via 

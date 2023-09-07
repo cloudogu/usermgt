@@ -30,18 +30,19 @@ Für den Import wird ein Ergebnis-Eintrag angelegt. Dieses Ergebnis ist im Volum
 oder modifiziert wurden. Ferner enthält das Ergebnis mögliche Fehler, die während des Imports aufgetreten sind. Pro 
 Eintrag wird ein Fehlercode ausgegeben:
 
-| Code | Fehlerbeschreibung                                                                         |
-|------|--------------------------------------------------------------------------------------------|
-| 100  | Allgemeiner Fehler, der beim Parsing der CSV Datei aufgetreten ist                         |
-| 101  | Wert aus der Spalte, konnte nicht auf Datentypen übertragen werden, z.b. "10" als Boolean  |
-| 102  | Es fehlt ein Spalteneintrag in der Zeile                                                   |
-| 103  | Der Wert der Spalte konnte dem User nicht zugewiesen werden                                |
-| 200  | Allgemeiner Fehler bei der Validierung der Zeile                                           |
-| 201  | Der Username ist bereits vergeben                                                          |
-| 202  | Das Format des Wertes stimmt nicht mit dem geforderten Format überein                      |
-| 204  | Erforderlicher Wert ist nicht gesetzt                                                      |
-| 300  | Interner Server Fehler                                                                     |
-| 301  | Beim Schreiben des Ergebnisses ist ein Fehler aufgetreten                                  |
+| Code | Fehlerbeschreibung                                                                        |
+|------|-------------------------------------------------------------------------------------------|
+| 100  | Allgemeiner Fehler, der beim Parsing der CSV Datei aufgetreten ist                        |
+| 101  | Wert aus der Spalte, konnte nicht auf Datentypen übertragen werden, z.b. "10" als Boolean |
+| 102  | Es fehlt ein Spalteneintrag in der Kopfzeile                                              |
+| 103  | Der Wert der Spalte konnte dem User nicht zugewiesen werden                               |
+| 104  | Die Anzahl der Spalten einer Zeilen passen nicht mit denen der Kopfzeile überein          |
+| 200  | Allgemeiner Fehler bei der Validierung der Zeile                                          |
+| 201  | Der Username ist bereits vergeben                                                         |
+| 202  | Das Format des Wertes stimmt nicht mit dem geforderten Format überein                     |
+| 204  | Erforderlicher Wert ist nicht gesetzt                                                     |
+| 300  | Interner Server Fehler                                                                    |
+| 301  | Beim Schreiben des Ergebnisses ist ein Fehler aufgetreten                                 |
 
 Neben dem Volume können Zusammenfassungen der Imports über den Endpunkt `/users/import/summaries` abgerufen werden.
 Einzelne Ergebnisse sind über den Endpunkt `/users/import/{importID}` verfügbar können über `/users/import/{importID}/download`
