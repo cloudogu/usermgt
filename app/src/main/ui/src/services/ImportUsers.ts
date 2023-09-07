@@ -92,11 +92,12 @@ export const ImportUsersService = {
     },
     async deleteProtocol(): Promise<void> {
     },
-    async getImportDetails(id: string): Promise<AxiosResponse<ImportUsersResponse>> {
+    async getImportDetails(id: string, signal?: AbortSignal): Promise<AxiosResponse<ImportUsersResponse>> {
         const result = await Axios.get<ImportUsersResponseDto>(`/users/import/${id}`, {
             headers: {
                 "Content-Type": "multipart/form-data"
-            }
+            },
+            signal: signal
         });
 
         return {

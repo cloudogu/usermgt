@@ -127,6 +127,10 @@ function Nav() {
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.users")}
                             </Navbar.ListItem>
+                            <Navbar.ListItem path={"/groups"}>
+                                <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
+                                {t("pages.groups")}
+                            </Navbar.ListItem>
                             <Navbar.ListItem path={"/users/import"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.usersImport")}
@@ -134,10 +138,6 @@ function Nav() {
                             <Navbar.ListItem path={"/summaries"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.summaries")}
-                            </Navbar.ListItem>
-                            <Navbar.ListItem path={"/groups"}>
-                                <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
-                                {t("pages.groups")}
                             </Navbar.ListItem>
                         </> :
                         <></>

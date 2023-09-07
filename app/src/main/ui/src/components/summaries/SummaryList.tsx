@@ -65,6 +65,7 @@ export default function SummaryList({summaries, pageCount, currentPage, onPageCh
                                         <DropdownMenu.Items.RouterLinkItem
                                             to={`/users/import/${s.importID}`}
                                             className={"flex"}
+                                            state={{}}
                                         >
                                             <TextWithIcon icon={<CesIcons.Table weight={"bold"}/>}>
                                                 {t("summaries.table.function.details")}
