@@ -3,35 +3,36 @@ import React from "react";
 import {t} from "../../helpers/i18nHelpers";
 import type {ImportSummary} from "../../services/ImportUsers";
 
-export interface ProtocolListProps {
-    protocols: ImportSummary[],
+export interface SummaryListProps {
+    summaries: ImportSummary[],
     pageCount: number;
     currentPage: number;
     onPageChange: (_newPage: number) => void;
+    isLoading: boolean;
 }
 
-export default function SummaryList({protocols, pageCount, currentPage, onPageChange}: ProtocolListProps) {
+export default function SummaryList({summaries, pageCount, currentPage, onPageChange, isLoading}: SummaryListProps) {
     return (
         <Table>
             <Table.Head>
                 <Table.Head.Tr>
                     <Table.Head.Th>
-                        {t("importProtocols.table.headline.name")}
+                        {t("summaries.table.headline.name")}
                     </Table.Head.Th>
                     <Table.Head.Th>
-                        {t("importProtocols.table.headline.date")}
+                        {t("summaries.table.headline.date")}
                     </Table.Head.Th>
                     <Table.Head.Th>
-                        {t("importProtocols.table.headline.result")}
+                        {t("summaries.table.headline.result")}
                     </Table.Head.Th>
                     <Table.Head.Th>
-                        {t("importProtocols.table.headline.functions")}
+                        {t("summaries.table.headline.functions")}
                     </Table.Head.Th>
                 </Table.Head.Tr>
             </Table.Head>
-            <Table.Body>
+            <Table.ConditionalBody show={!isLoading}>
                 {
-                    protocols.map((s, i) => (
+                    summaries.map((s, i) => (
                         <Table.Body.Tr key={i}>
                             <Table.Body.Td>
                                 {s.filename}
@@ -40,23 +41,23 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                                 {s.timestamp.toUTCString()}
                             </Table.Body.Td>
                             <Table.Body.Td>
-                                {t("importProtocols.result.created")}: {s.summary.created}{", "}
-                                {t("importProtocols.result.updated")}: {s.summary.updated}{", "}
-                                {t("importProtocols.result.errors")}: {s.summary.skipped}
+                                {t("summaries.result.created")}: {s.summary.created}{", "}
+                                {t("summaries.result.updated")}: {s.summary.updated}{", "}
+                                {t("summaries.result.errors")}: {s.summary.skipped}
                             </Table.Body.Td>
                             <Table.Body.Td className={"flex flex-row"}>
                                 <DropdownMenu>
                                     <DropdownMenu.Button>
-                                        {t("importProtocols.table.functions")}
+                                        {t("summaries.table.functions")}
                                         <DropdownMenu.Button.Arrow/>
                                     </DropdownMenu.Button>
                                     <DropdownMenu.Items>
                                         <DropdownMenu.Items.LinkItem
-                                            href={`/usermgt/protocol/download/${s.timestamp.getTime()}`}
+                                            href={`/usermgt/api/users/import/${s.importID}/download`}
                                             className={"flex flex-row"}
                                         >
                                             <TextWithIcon icon={<CesIcons.DownloadSimple weight={"bold"}/>}>
-                                                {t("importProtocols.table.function.download")}
+                                                {t("summaries.table.function.download")}
                                             </TextWithIcon>
                                         </DropdownMenu.Items.LinkItem>
                                         <DropdownMenu.Items.RouterLinkItem
@@ -64,12 +65,12 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                                             className={"flex"}
                                         >
                                             <TextWithIcon icon={<CesIcons.Table weight={"bold"}/>}>
-                                                {t("importProtocols.table.function.details")}
+                                                {t("summaries.table.function.details")}
                                             </TextWithIcon>
                                         </DropdownMenu.Items.RouterLinkItem>
                                         <DropdownMenu.Items.ButtonItem className={"flex flex-row"}>
                                             <TextWithIcon icon={<CesIcons.TrashSimple weight={"bold"}/>}>
-                                                {t("importProtocols.table.function.delete")}
+                                                {t("summaries.table.function.delete")}
                                             </TextWithIcon>
                                         </DropdownMenu.Items.ButtonItem>
                                     </DropdownMenu.Items>
@@ -78,7 +79,7 @@ export default function SummaryList({protocols, pageCount, currentPage, onPageCh
                         </Table.Body.Tr>
                     ))
                 }
-            </Table.Body>
+            </Table.ConditionalBody>
             <Table.ConditionalFoot show={pageCount > 1}>
                 <Table.Foot.Pagination pageCount={pageCount} currentPage={currentPage} onPageChange={onPageChange}/>
             </Table.ConditionalFoot>

@@ -143,7 +143,7 @@
     "usersEdit": "Nutzer bearbeiten",
     "usersImport": "Nutzerimport",
     "usersImportResult": "Nutzerimport",
-    "importProtocols": "Importprotokolle",
+    "summaries": "Importübersicht",
     "usersNew": "Nutzer anlegen"
   },
   "users": {
@@ -218,11 +218,11 @@
       "code-202": "Folgende Spalten haben ein ungültiges Format: '{{columns}}'"
     }
   },
-  "importProtocols": {
+  "summaries": {
     "aria": {
-      "download": "Herunterladen des Protokolls: '{{identifier}}'",
-      "delete": "Löschen des Protokolls: '{{identifier}}'",
-      "info": "Detaillierte Informationen zu den Importergebnissen des Protokolls: '{{identifier}}'"
+      "download": "Herunterladen der Übersicht: '{{identifier}}'",
+      "delete": "Löschen der Übersicht: '{{identifier}}'",
+      "info": "Detaillierte Informationen zu den Importergebnissen der Übersicht: '{{identifier}}'"
     },
     "table": {
       "headline": {

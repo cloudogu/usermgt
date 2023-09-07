@@ -12,7 +12,6 @@ import {EditGroup} from "./pages/EditGroup";
 import EditUser from "./pages/EditUser";
 import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
-import ImportProtocolList from "./pages/ImportProtocolList";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
 import Users from "./pages/Users";
@@ -22,6 +21,7 @@ import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
+import Summaries from "./pages/Summaries";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -62,8 +62,8 @@ const router = createBrowserRouter([
                 element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
             },
             {
-                path: "protocols",
-                element: <ImportProtocolList title={t("pages.importProtocols") + " | User Management"}/>,
+                path: "summaries",
+                element: <Summaries title={t("pages.summaries") + " | User Management"}/>,
             },
             {
                 path: "users/:username/edit",
@@ -131,9 +131,9 @@ function Nav() {
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.usersImport")}
                             </Navbar.ListItem>
-                            <Navbar.ListItem path={"/protocols"}>
+                            <Navbar.ListItem path={"/summaries"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
-                                {t("pages.importProtocols")}
+                                {t("pages.summaries")}
                             </Navbar.ListItem>
                             <Navbar.ListItem path={"/groups"}>
                                 <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
