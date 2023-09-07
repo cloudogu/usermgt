@@ -334,6 +334,7 @@ public class ImportHandler {
         int numberSkipEntries = (start*limit) - limit;
 
         List<Result.Summary> paginatedList = allSummaries.stream()
+                .sorted(Comparator.comparingLong(Result.Summary::getTimestamp).reversed())
                 .skip(numberSkipEntries)
                 .limit(limit)
                 .collect(Collectors.toList());
