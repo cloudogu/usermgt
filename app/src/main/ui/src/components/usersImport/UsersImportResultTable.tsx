@@ -3,6 +3,7 @@ import React from "react";
 
 import type {ImportedUser} from "../../services/ImportUsers";
 import type {ComponentPropsWithoutRef} from "react";
+import {User} from "../../services/Users";
 
 export interface UsersImportResultTableProps extends Omit<ComponentPropsWithoutRef<"table">, "content"> {
     content: ImportedUser[];
@@ -45,32 +46,35 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
             </Table.Head>
             <Table.Body>
                 {
-                    content.map((c, i) => (
-                        <Table.Body.Tr key={i}>
-                            {[
-                                "username",
-                                "givenname",
-                                "surname",
-                                "displayName",
-                                "mail",
-                                "external",
-                                "passwordReset",
-                            ]
-                                .map(
-                                    (h, i) => {
-                                        const isBoolean = h === "external" || h === "passwordReset";
-                                        const isString = !isBoolean;
-                                        return (
-                                            <Table.Body.Td key={h} className={`${columnWidths[i]} break-all`}>
-                                                {isBoolean && ((content[i]) ? "Ja" : "Nein")}
-                                                {isString && (((content[i] || {}) as any)[h])}
-                                            </Table.Body.Td>
-                                        );
-                                    }
-                                )
-                            }
-                        </Table.Body.Tr>
-                    ))
+                    content.map((c, key) => {
+                        const user = (c as any) || {};
+                        return (
+                            <Table.Body.Tr key={key}>
+                                {[
+                                    "username",
+                                    "givenname",
+                                    "surname",
+                                    "displayName",
+                                    "mail",
+                                    "external",
+                                    "passwordReset",
+                                ]
+                                    .map(
+                                        (h,i) => {
+                                            const isBoolean = h === "external" || h === "passwordReset";
+                                            const isString = !isBoolean;
+                                            return (
+                                                <Table.Body.Td key={h} className={`${columnWidths[i]} break-all`}>
+                                                    {isBoolean && ((user[h] as boolean) ? "Ja" : "Nein")}
+                                                    {isString && user[h]}
+                                                </Table.Body.Td>
+                                            );
+                                        }
+                                    )
+                                }
+                            </Table.Body.Tr>
+                        );
+                    })
                 }
             </Table.Body>
         </Table>

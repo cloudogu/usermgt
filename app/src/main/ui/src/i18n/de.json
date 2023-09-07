@@ -211,11 +211,15 @@
     "error": "Keine Import-Ergebnisse gefunden.",
     "msg": {
       "code-100": "Das Format der Zeile konnte nicht zugeordnet werden.",
-      "code-101": "Folgende Spalten hatten einen ungültigen Wert: '{{columns}}'",
+      "code-101": "Folgende Spalten hatten einen ungültigen Datentypen: '{{columns}}'",
       "code-102": "Folgende Spalten waren nicht enthalten: '{{columns}}'",
-      "code-200": "Folgende Spalten konnten nicht validiert werden: '{{columns}}'",
+      "code-103": "Die Zeile konnte nicht eindeutig identifiziert werden",
+      "code-200": "Allgemeiner Fehler beim Verarbeiten der Zeile",
       "code-201": "Folgende Spalten enthielten einen Wert, der als einzigartig gekennzeichnet ist und bereits vergeben war: '{{columns}}'",
-      "code-202": "Folgende Spalten haben ein ungültiges Format: '{{columns}}'"
+      "code-202": "Folgende Spalten entsprechen nicht dem vorgegebenen Format '{{columns}}'",
+      "code-204": "Folgende Spalten werden benötigt, waren aber leer: '{{columns}}'",
+      "code-300": "Allgemeiner interner Server-Fehler",
+      "code-301": "Serverfehler beim Schreiben des Ergebnisses ins Dateisystem"
     }
   },
   "summaries": {
