@@ -3,6 +3,7 @@ package de.triology.universeadm.user.imports;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.*;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +79,14 @@ public class CSVParserImpl implements CSVParser {
                 new ImportError.Builder(code)
                         .withLineNumber(e.getLineNumber())
                         .withErrorMessage(e.getMessage());
+
+        if (FieldUtils.getAllFields(CSVUserDTO.class).length != e.getLine().length) {
+            return createImportBuilder
+                    .apply(ImportError.Code.FIELD_LENGTH_ERROR)
+                    .withLineNumber(e.getLineNumber())
+                    .withErrorMessage(e.getMessage())
+                    .build();
+        }
 
         if (e instanceof CsvDataTypeMismatchException) {
             ImportError.Builder builder = createImportBuilder.apply(ImportError.Code.FIELD_CONVERSION_ERROR);
