@@ -53,27 +53,27 @@ const UsersImportResult = (props: { title: string }) => {
             <>
                 <Paragraph className={"mb-8 mt-2"}>
                     {failedRows === 0 && t("usersImportResult.result.success")}
-                    {failedRows > 0 && t("usersImportResult.result.successWithFailures")}
+                    {(failedRows > 0 && successfulRows > 0) && t("usersImportResult.result.successWithFailures")}
                     {successfulRows === 0 && t("usersImportResult.result.failure")}
                 </Paragraph>
                 <Details hidden={createdRows === 0}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
-                        Erstellte Nutzerkonten ({successfulRows})
+                        {t("usersImportResult.rows.created")} ({createdRows})
                     </Details.Summary>
                     <UsersImportResultTable content={result.created}/>
                 </Details>
                 <Details hidden={updatedRows === 0}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
-                        Aktualisierte Nutzerkonten ({updatedRows})
+                        {t("usersImportResult.rows.updated")} ({updatedRows})
                     </Details.Summary>
                     <UsersImportResultTable content={result.updated}/>
                 </Details>
                 <Details hidden={failedRows === 0}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
-                        Übersprungene Datenzeilen ({failedRows})
+                        {t("usersImportResult.rows.skipped")} ({failedRows})
                     </Details.Summary>
                     <UsersImportErrorTable content={result.errors}/>
                 </Details>

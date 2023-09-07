@@ -203,6 +203,11 @@
     }
   },
   "usersImportResult": {
+    "rows": {
+      "created": "Erstellte Nutzerkonten",
+      "updated": "Aktualisierte Nutzerkonten",
+      "skipped": "Übersprungene Datenzeilen"
+    },
     "result":{
       "success": "Import erfolgreich abgeschlossen!",
       "successWithFailures": "Import mit Fehlern abgeschlossen!",
