@@ -17,10 +17,10 @@ function updateQueryOptions(currentState: QueryOptions, newState: QueryOptionsRe
     return currentState;
 }
 
-export function useFilter() {
+export function useFilter(options?: { start?: number, pageSize?: number }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const [page, query] = [+(searchParams.get(PAGE_QUERY_PARAM) ?? 1), searchParams.get(SEARCH_QUERY_PARAM) ?? ""];
-    const [opts, updateOpts] = useReducer(updateQueryOptions, {start: 0, limit: DEFAULT_PAGE_SIZE, query: ""});
+    const [opts, updateOpts] = useReducer(updateQueryOptions, {start: options?.start ?? 0, limit: options?.pageSize ?? DEFAULT_PAGE_SIZE, query: ""});
     const refetch = () => updateOpts({...opts, force: true});
     const updatePage = (newPage: number): void => {
         setSearchParams(current => {
@@ -38,8 +38,8 @@ export function useFilter() {
     };
 
     useEffect(() => {
-        const newStart = calcPageStart(page ?? 1, 20);
-        updateOpts({start: newStart, limit: DEFAULT_PAGE_SIZE, query: query, force: false});
+        const newStart = calcPageStart(page ?? 1, options?.pageSize ?? 20);
+        updateOpts({start: newStart, limit: options?.pageSize ?? DEFAULT_PAGE_SIZE, query: query, force: false});
     }, [searchParams]);
 
     return {updateQuery, updatePage, refetch, searchParams, opts};

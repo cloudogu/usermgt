@@ -5,6 +5,10 @@ import {t} from "../helpers/i18nHelpers";
 import type {User} from "./Users";
 import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
 import type {AxiosError, AxiosResponse} from "axios";
+import {UsersResponse} from "./Users";
+import {AbortableCallbackWithArgs, QueryOptions} from "../hooks/useAPI";
+import {createPaginationData} from "@cloudogu/ces-theme-tailwind";
+import {RefetchResponse} from "../hooks/usePaginatedData";
 
 export const IMPORT_PARSING_ERROR = 100;
 export const IMPORT_FIELD_CONVERSION_ERROR = 101;
@@ -67,25 +71,26 @@ export interface ImportSummary extends Omit<ImportSummaryDto, "timestamp"> {
     timestamp: Date;
 }
 
-export type SummariesModelDto = ImportSummaryDto[];
-export type SummariesModel = PagedModel & {
-    summaries: ImportSummary[];
-}
-
+export type SummariesModel = {
+    entries: ImportSummaryDto[],
+    start: number,
+    limit: number,
+    totalEntries: number,
+};
 export const ImportUsersService = {
-    async listSummaries(): Promise<SummariesModel> {
-        const result = await Axios.get<SummariesModelDto>("/users/import/summaries", {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
+    async listSummaries(signal?: AbortSignal, opts?: QueryOptions): Promise<RefetchResponse<ImportSummary[]>> {
+        const summariesResponse = await Axios.get<SummariesModel>("/users/import/summaries", {
+            params: opts,
+            signal: signal
+        } as any);
 
         return {
+            data: summariesResponse.data.entries.map(s => ({...s, timestamp: new Date(s.timestamp || 0)})),
             pagination: {
-                current: 1,
-                pageCount: 1,
-            },
-            summaries: result.data.map(s => ({...s, timestamp: new Date(s.timestamp || 0)})),
+                start: summariesResponse.data.start,
+                limit: summariesResponse.data.limit,
+                totalEntries: summariesResponse.data.totalEntries,
+            }
         };
     },
     async deleteProtocol(): Promise<void> {
