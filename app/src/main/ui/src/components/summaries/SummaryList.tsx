@@ -12,6 +12,8 @@ export interface SummaryListProps {
 }
 
 export default function SummaryList({summaries, pageCount, currentPage, onPageChange, isLoading}: SummaryListProps) {
+    const language = navigator?.language ?? "de-DE";
+
     return (
         <Table>
             <Table.Head>
@@ -38,7 +40,7 @@ export default function SummaryList({summaries, pageCount, currentPage, onPageCh
                                 {s.filename}
                             </Table.Body.Td>
                             <Table.Body.Td>
-                                {s.timestamp.toUTCString()}
+                                {s.timestamp.toLocaleString(language)}
                             </Table.Body.Td>
                             <Table.Body.Td>
                                 {t("summaries.result.created")}: {s.summary.created}{", "}
