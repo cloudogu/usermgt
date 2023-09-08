@@ -153,8 +153,6 @@ public class CSVParserTest {
         assertTrue(userInputList.isEmpty());
     }
 
-
-
     @Test()
     public void testInvalidLineFieldLength() throws CsvRequiredFieldEmptyException, IOException {
         CSVParserImpl parser = new CSVParserImpl();
@@ -165,6 +163,22 @@ public class CSVParserTest {
 
         assertEquals(3, userInputList.size());
         assertEquals(2, parser.getErrors().count());
+    }
+
+    @Test()
+    public void testEmptyGivenNameHeader() throws CsvRequiredFieldEmptyException, IOException {
+        CSVParserImpl parser = new CSVParserImpl();
+
+        List<CSVUserDTO> userInputList = parser
+                .parse(readTestFile("EmptyGivenNameHeader.csv"))
+                .collect(Collectors.toList());
+
+        assertTrue(userInputList.isEmpty());
+
+        List<ImportError> errors = parser.getErrors().map(ImportEntryResult::getImportError).collect(Collectors.toList());
+
+        assertEquals(1, errors.size());
+        assertEquals(ImportError.Code.FIELD_LENGTH_ERROR.value, errors.get(0).getErrorCode());
     }
 
     @Test()
