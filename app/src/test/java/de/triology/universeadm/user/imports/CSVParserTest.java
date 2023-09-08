@@ -137,6 +137,19 @@ public class CSVParserTest {
         assertTrue(userInputList.isEmpty());
     }
 
+    @Test(expected=CsvRequiredFieldEmptyException.class)
+    public void testInvalidFileType() throws CsvRequiredFieldEmptyException {
+        CSVParserImpl parser = new CSVParserImpl();
+
+        List<CSVUserDTO> userInputList = parser
+                .parse(readTestFile("WrongFileType.txt"))
+                .collect(Collectors.toList());
+
+        assertTrue(userInputList.isEmpty());
+    }
+
+
+
     @Test()
     public void testInvalidLineFieldLength() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
