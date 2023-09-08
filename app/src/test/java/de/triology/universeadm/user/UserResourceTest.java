@@ -224,7 +224,7 @@ public class UserResourceTest {
     }
 
     @Test
-    public void testImport() throws CsvRequiredFieldEmptyException {
+    public void testImport() throws CsvRequiredFieldEmptyException, IOException {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         UserManager userManager = mock(UserManager.class);
         GroupManager groupManager = mock(GroupManager.class);
@@ -249,7 +249,7 @@ public class UserResourceTest {
     }
 
     @Test
-    public void testImportParsingHeaderError() throws NoSuchFieldException, CsvRequiredFieldEmptyException {
+    public void testImportParsingHeaderError() throws NoSuchFieldException, CsvRequiredFieldEmptyException, IOException {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         UserManager userManager = mock(UserManager.class);
         GroupManager groupManager = mock(GroupManager.class);
@@ -279,7 +279,7 @@ public class UserResourceTest {
     }
 
     @Test
-    public void testImportInvalidRequest() throws CsvRequiredFieldEmptyException {
+    public void testImportInvalidRequest() throws CsvRequiredFieldEmptyException, IOException {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         UserManager userManager = mock(UserManager.class);
         GroupManager groupManager = mock(GroupManager.class);
@@ -303,7 +303,7 @@ public class UserResourceTest {
     }
 
     @Test
-    public void testImportForbidden() throws CsvRequiredFieldEmptyException {
+    public void testImportForbidden() throws CsvRequiredFieldEmptyException, IOException {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         UserManager userManager = mock(UserManager.class);
         GroupManager groupManager = mock(GroupManager.class);
@@ -320,7 +320,7 @@ public class UserResourceTest {
     }
 
     @Test
-    public void testImportInternalError() throws CsvRequiredFieldEmptyException {
+    public void testImportInternalError() throws CsvRequiredFieldEmptyException, IOException {
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         UserManager userManager = mock(UserManager.class);
         GroupManager groupManager = mock(GroupManager.class);
