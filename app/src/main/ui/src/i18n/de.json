@@ -235,7 +235,21 @@
     "aria": {
       "download": "Herunterladen der Übersicht: '{{identifier}}'",
       "delete": "Löschen der Übersicht: '{{identifier}}'",
-      "info": "Detaillierte Informationen zu den Importergebnissen der Übersicht: '{{identifier}}'"
+      "info": "Detaillierte Informationen zu den Importergebnissen der Übersicht: '{{identifier}}'",
+      "label": {
+        "dropdown": "Aktionen",
+        "dropdownOpen": "Öffnen",
+        "dropdownDownload": "Herunterladen",
+        "dropdownDetails": "Details",
+        "dropdownDelete": "Löschen"
+      },
+      "description": {
+        "dropdown": "Aktionen, die auf diese importübersicht angewendet werden können",
+        "dropdownOpen": "Schaltfläche zum Anzeigen der möglichen Aktionen",
+        "dropdownDownload": "Link zum Herunterladen dieser Importübersicht",
+        "dropdownDetails": "Link zum Anzeigen der Details dieser Importübersicht",
+        "dropdownDelete": "Aktion zum Löschen dieser Importübersicht"
+      }
     },
     "table": {
       "headline": {
