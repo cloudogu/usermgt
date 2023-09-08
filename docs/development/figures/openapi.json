@@ -164,7 +164,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             },
             "description": "The ID of the import result."
           }
@@ -176,14 +177,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Result"
-                }
-              }
-            },
-            "headers": {
-              "Content-Disposition": {
-                "description": "File attachment header",
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -207,6 +200,77 @@
                 }
               }
             }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Import Result",
+        "description": "Deletes an import result by its ID.",
+        "parameters": [
+          {
+            "name": "importID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The ID of the import result to delete."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Import result deleted successfully."
+          },
+          "400": {
+            "description": "Invalid UUID provided in the request."
+          },
+          "500": {
+            "description": "Internal server error while deleting the import result."
+          }
+        }
+      }
+    },
+    "/api/users/import/{importID}/download": {
+      "get": {
+        "summary": "Download Import Result",
+        "description": "Downloads an import result in JSON format by its ID.",
+        "parameters": [
+          {
+            "name": "importID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The ID of the import result to download."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Import result downloaded successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            },
+            "headers": {
+              "Content-Disposition": {
+                "description": "File attachment header",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid UUID provided in the request or an error occurred."
+          },
+          "404": {
+            "description": "Import result with the specified ID not found."
           }
         }
       }
