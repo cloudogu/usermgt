@@ -1,7 +1,9 @@
 import {CesIcons, DropdownMenu, Table, TextWithIcon} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {t} from "../../helpers/i18nHelpers";
+import {ImportUsersService} from "../../services/ImportUsers";
 import type {ImportSummary} from "../../services/ImportUsers";
+import type {NotifyFunction} from "@cloudogu/ces-theme-tailwind";
 
 export interface SummaryListProps {
     summaries: ImportSummary[],
@@ -9,9 +11,20 @@ export interface SummaryListProps {
     currentPage: number;
     onPageChange: (_newPage: number) => void;
     isLoading: boolean;
+    notify: NotifyFunction;
+    refetch: () => void;
 }
 
-export default function SummaryList({summaries, pageCount, currentPage, onPageChange, isLoading}: SummaryListProps) {
+export default function SummaryList(
+    {
+        notify,
+        summaries,
+        pageCount,
+        currentPage,
+        onPageChange,
+        isLoading,
+        refetch,
+    }: SummaryListProps) {
     const language = navigator?.language ?? "de-DE";
 
     return (
@@ -71,7 +84,15 @@ export default function SummaryList({summaries, pageCount, currentPage, onPageCh
                                                 {t("summaries.table.function.details")}
                                             </TextWithIcon>
                                         </DropdownMenu.Items.RouterLinkItem>
-                                        <DropdownMenu.Items.ButtonItem className={"flex flex-row"}>
+                                        <DropdownMenu.Items.ButtonItem
+                                            className={"flex flex-row"}
+                                            onClick={
+                                                () => ImportUsersService.deleteSummary(s)
+                                                    .then(() => notify(t("summaries.delete.success"), "primary"))
+                                                    .catch(() => notify(t("summaries.delete.error"), "danger"))
+                                                    .finally(() => refetch())
+                                            }
+                                        >
                                             <TextWithIcon icon={<CesIcons.TrashSimple weight={"bold"}/>}>
                                                 {t("summaries.table.function.delete")}
                                             </TextWithIcon>

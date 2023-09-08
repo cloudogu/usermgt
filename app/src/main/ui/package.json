@@ -30,7 +30,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@cloudogu/ces-theme-tailwind": "0.1.26",
+    "@cloudogu/ces-theme-tailwind": "0.1.27",
     "@mertasan/tailwindcss-variables": "^2.5.1",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.26",

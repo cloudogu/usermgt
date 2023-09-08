@@ -143,7 +143,7 @@
     "usersEdit": "Nutzer bearbeiten",
     "usersImport": "Nutzerimport",
     "usersImportResult": "Nutzerimport",
-    "summaries": "Importübersicht",
+    "summaries": "Importübersichten",
     "usersNew": "Nutzer anlegen"
   },
   "users": {
@@ -228,6 +228,10 @@
     }
   },
   "summaries": {
+    "delete": {
+      "success": "Die Importübersicht wurde erfolgreich gelöscht.",
+      "error": "Die Importübersicht konnte nicht gelöscht werden."
+    },
     "aria": {
       "download": "Herunterladen der Übersicht: '{{identifier}}'",
       "delete": "Löschen der Übersicht: '{{identifier}}'",

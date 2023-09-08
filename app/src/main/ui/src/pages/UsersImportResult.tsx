@@ -27,8 +27,7 @@ const UsersImportResult = (props: { title: string }) => {
                         setError(false);
                         return details.data;
                     })
-                    .catch(e => {
-                        console.log(e);
+                    .catch(() => {
                         setError(true);
                     });
             }
@@ -45,12 +44,6 @@ const UsersImportResult = (props: { title: string }) => {
     const failedRows = summary?.errors?.length ?? 0;
     const successfulRows = createdRows + updatedRows;
     const affectedRows = successfulRows + failedRows;
-
-
-    console.log(state.result);
-    console.log(isLoading);
-    console.log(summary);
-
 
     return <>
         <div className="flex flex-wrap justify-between">

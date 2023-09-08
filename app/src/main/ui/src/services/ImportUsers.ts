@@ -90,7 +90,8 @@ export const ImportUsersService = {
             }
         };
     },
-    async deleteProtocol(): Promise<void> {
+    async deleteSummary(summary: ImportSummary): Promise<void> {
+        return Axios.delete(`/users/import/${summary.importID}`, {});
     },
     async getImportDetails(id: string, signal?: AbortSignal): Promise<AxiosResponse<ImportUsersResponse>> {
         const result = await Axios.get<ImportUsersResponseDto>(`/users/import/${id}`, {
