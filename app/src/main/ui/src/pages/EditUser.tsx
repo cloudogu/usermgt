@@ -15,7 +15,6 @@ export default function EditUser(props: { title: string }) {
     const {username} = useParams();
     const {user, isLoading} = useUser(username);
     const navigate = useNavigate();
-    navigate("", {});
     const {backURL} = useBackURL();
     const {casUser} = useContext(ApplicationContext);
 
