@@ -17,16 +17,20 @@ import static org.junit.Assert.*;
 public class CSVParserTest {
 
     @Test
-    public void testParse() throws CsvRequiredFieldEmptyException {
+    public void testParse() throws CsvRequiredFieldEmptyException, IOException {
 
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
                 CSVUsers.createTrillian()
         );
 
-        List<CSVUserDTO> userInputList = new CSVParserImpl()
+        CSVParser parser = new CSVParserImpl();
+
+        List<CSVUserDTO> userInputList = parser
                 .parse(readTestFile("ImportUsers.csv"))
                 .collect(Collectors.toList());
+
+        List<ImportEntryResult> errors = parser.getErrors().collect(Collectors.toList());
 
         assertEquals(expUsers.size(), userInputList.size());
 
@@ -34,10 +38,11 @@ public class CSVParserTest {
             assertEquals(expUsers.get(i), userInputList.get(i));
         }
 
+        assertTrue(errors.isEmpty());
     }
 
     @Test
-    public void testKeepSpaces() throws CsvRequiredFieldEmptyException {
+    public void testKeepSpaces() throws CsvRequiredFieldEmptyException, IOException {
 
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setSurname("     " +expUser.getSurname());
@@ -52,7 +57,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotes() throws CsvRequiredFieldEmptyException {
+    public void testDoubleQuotes() throws CsvRequiredFieldEmptyException, IOException {
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
                 CSVUsers.createTrillian()
@@ -70,7 +75,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testFieldLineBreaks() throws CsvRequiredFieldEmptyException {
+    public void testFieldLineBreaks() throws CsvRequiredFieldEmptyException, IOException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("LineBreaks.csv"))
                 .collect(Collectors.toList());
@@ -80,7 +85,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotesInField() throws CsvRequiredFieldEmptyException {
+    public void testDoubleQuotesInField() throws CsvRequiredFieldEmptyException, IOException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("DoubleQuotesField.csv"))
                 .collect(Collectors.toList());
@@ -90,7 +95,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testUmlauts() throws CsvRequiredFieldEmptyException {
+    public void testUmlauts() throws CsvRequiredFieldEmptyException, IOException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("Umlauts.csv"))
                 .collect(Collectors.toList());
@@ -100,7 +105,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testEmptyGivenName() throws CsvRequiredFieldEmptyException {
+    public void testEmptyGivenName() throws CsvRequiredFieldEmptyException, IOException, InterruptedException {
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setGivenname("");
 
@@ -112,7 +117,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testParseBoolean() throws CsvRequiredFieldEmptyException {
+    public void testParseBoolean() throws CsvRequiredFieldEmptyException, IOException {
         CSVUserDTO expUsers = CSVUsers.createDent();
 
         List<CSVUserDTO> userInputList = new CSVParserImpl()
@@ -127,7 +132,7 @@ public class CSVParserTest {
     }
 
     @Test(expected=CsvRequiredFieldEmptyException.class)
-    public void testInvalidHeader() throws CsvRequiredFieldEmptyException {
+    public void testInvalidHeader() throws CsvRequiredFieldEmptyException, IOException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -138,7 +143,7 @@ public class CSVParserTest {
     }
 
     @Test(expected=CsvRequiredFieldEmptyException.class)
-    public void testInvalidFileType() throws CsvRequiredFieldEmptyException {
+    public void testInvalidFileType() throws CsvRequiredFieldEmptyException, IOException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -151,7 +156,7 @@ public class CSVParserTest {
 
 
     @Test()
-    public void testInvalidLineFieldLength() throws CsvRequiredFieldEmptyException {
+    public void testInvalidLineFieldLength() throws CsvRequiredFieldEmptyException, IOException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -163,7 +168,7 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testMissingRequiredField() throws CsvRequiredFieldEmptyException {
+    public void testMissingRequiredField() throws CsvRequiredFieldEmptyException, IOException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -175,7 +180,7 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidLineDelimiter() throws CsvRequiredFieldEmptyException {
+    public void testInvalidLineDelimiter() throws CsvRequiredFieldEmptyException, IOException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -187,7 +192,7 @@ public class CSVParserTest {
     }
 
     @Test()
-    public void testInvalidTypeConversion() throws CsvRequiredFieldEmptyException {
+    public void testInvalidTypeConversion() throws CsvRequiredFieldEmptyException, IOException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -198,8 +203,8 @@ public class CSVParserTest {
     }
 
 
-    private InputStreamReader readTestFile(String filename) {
-        return new InputStreamReader(Objects.requireNonNull(readTestFileInputStream(filename)));
+    private InputStream readTestFile(String filename) {
+        return Objects.requireNonNull(readTestFileInputStream(filename));
     }
 
     static InputStream readTestFileInputStream(String filename) {

@@ -81,7 +81,7 @@ public class ImportHandler {
      * @throws InvalidArgumentException in case further processing of the csv file is not possible.
      * Throwing the exception means no data has been processed.
      */
-    public Result handle(MultipartFormDataInput input) throws CsvRequiredFieldEmptyException {
+    public Result handle(MultipartFormDataInput input) throws CsvRequiredFieldEmptyException, IOException {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
 
         //only get file parts
@@ -98,13 +98,13 @@ public class ImportHandler {
 
         InputPart filePart = fileParts.get(0);
 
-        Reader fileReader = getFileReader(filePart);
+        InputStream fileInputStream = getInputStream(filePart);
         logger.debug("Got reader from first file part");
 
         UUID importID = UUID.randomUUID();
         logger.debug("Created ImportID with UUID {}", importID);
 
-        List<ImportEntryResult> results = this.csvParser.parse(fileReader)
+        List<ImportEntryResult> results = this.csvParser.parse(fileInputStream)
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
                 .map(Mapper::decode) // add more information
@@ -182,20 +182,15 @@ public class ImportHandler {
      * For efficient reading a BufferedReader is used.
      *
      * @param file uploaded be the user.
-     * @return Reader (= BufferedReader)
+     * @return InputStream - from file request
      * @throws InvalidArgumentException
      */
-    private Reader getFileReader(@NotNull InputPart file) throws InvalidArgumentException {
-        BufferedReader inputReader;
-
+    private InputStream getInputStream(@NotNull InputPart file) {
         try {
-            InputStream inputStream = file.getBody(InputStream.class, null);
-            inputReader = new BufferedReader(new InputStreamReader(inputStream));
-
-            return inputReader;
+            return file.getBody(InputStream.class, null);
         } catch (IOException e) {
             logger.error(e.toString());
-            throw new InvalidArgumentException("unable to parse file");
+            throw new InvalidArgumentException("unable to get body from file");
         }
     }
 
