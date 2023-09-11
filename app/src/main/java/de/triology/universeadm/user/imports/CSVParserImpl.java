@@ -1,16 +1,19 @@
 package de.triology.universeadm.user.imports;
 
+import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.*;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.io.input.TeeInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -20,20 +23,26 @@ import java.util.stream.Stream;
 public class CSVParserImpl implements CSVParser {
 
     private CsvToBean<CSVUserDTO> csv2bean;
-
+    private final AtomicReference<String[]> header = new AtomicReference<>();
     private static final Logger logger =
             LoggerFactory.getLogger(CSVParserImpl.class);
 
 
-    public Stream<CSVUserDTO> parse(@NotNull Reader reader) throws CsvRequiredFieldEmptyException {
+    public Stream<CSVUserDTO> parse(@NotNull InputStream fileStream) throws CsvRequiredFieldEmptyException, IOException {
 
-        CsvToBean<CSVUserDTO> beans = new CsvToBeanBuilder<CSVUserDTO>(new CsvLineNumberReader(reader))
+        PipedInputStream headerIn = new PipedInputStream();
+        TeeInputStream contentIn = new TeeInputStream(fileStream, new PipedOutputStream(headerIn));
+
+        BufferedReader contentReader = new BufferedReader(new InputStreamReader(contentIn));
+
+        CsvToBean<CSVUserDTO> beans = new CsvToBeanBuilder<CSVUserDTO>(new CsvLineNumberReader(contentReader))
                 .withType(CSVUserDTO.class)
                 .withIgnoreEmptyLine(true)
                 .withThrowExceptions(false)
                 .build();
 
         this.csv2bean = beans;
+        this.setHeader(headerIn);
 
         logger.debug("Build CsvToBean instance for CSVUserDTO");
 
@@ -80,7 +89,9 @@ public class CSVParserImpl implements CSVParser {
                         .withLineNumber(e.getLineNumber())
                         .withErrorMessage(e.getMessage());
 
-        if (FieldUtils.getAllFields(CSVUserDTO.class).length != e.getLine().length) {
+        Optional<String[]> optHeader = Optional.ofNullable(this.header.get());
+
+        if (!optHeader.isPresent() || (optHeader.get().length != e.getLine().length)) {
             return createImportBuilder
                     .apply(ImportError.Code.FIELD_LENGTH_ERROR)
                     .withLineNumber(e.getLineNumber())
@@ -121,6 +132,23 @@ public class CSVParserImpl implements CSVParser {
         return createImportBuilder
                 .apply(ImportError.Code.PARSING_ERROR)
                 .build();
+    }
+
+    private void setHeader(InputStream in) {
+        Executors.newCachedThreadPool().execute(() -> {
+            try {
+                BufferedReader headerReader = new BufferedReader(new InputStreamReader(in));
+                CSVReader csvReader = new CSVReader(headerReader);
+                String[] header = csvReader.readNext();
+                headerReader.close();
+
+                this.header.set(header);
+
+                logger.debug("Read header with columns {}", Arrays.toString(this.header.get()));
+            } catch (CsvValidationException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 }

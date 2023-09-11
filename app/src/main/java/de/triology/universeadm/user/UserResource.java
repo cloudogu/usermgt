@@ -203,8 +203,8 @@ public class UserResource extends AbstractManagerResource<User> {
                     .entity("Missing privileges to use import")
                     .build();
 
-        } catch (RuntimeException e) {
-            logger.error("Unexpected internal RuntimeException", e);
+        } catch (RuntimeException | IOException e) {
+            logger.error("Unexpected internal exception", e);
 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
