@@ -144,6 +144,31 @@
     "usersImport": "User import",
     "usersNew": "New user"
   },
+  "summaries": {
+    "delete": {
+      "error": "The import overview could not be cleared.",
+      "success": "The import overview was successfully deleted."
+    },
+    "result": {
+      "created": "New",
+      "errors": "Skipped",
+      "updated": "Updated"
+    },
+    "table": {
+      "function": {
+        "delete": "Delete",
+        "details": "Details",
+        "download": "Download"
+      },
+      "functions": "Functions",
+      "headline": {
+        "date": "Date",
+        "functions": "Functions",
+        "name": "Name of the CSV-File",
+        "result": "Result"
+      }
+    }
+  },
   "users": {
     "confirmation": {
       "message": "Delete user {{username}}?",
@@ -184,19 +209,45 @@
     }
   },
   "usersImport": {
-    "infobox": "Users can be imported on this page. These must be created in a CSV file to be uploaded here according to a certain pattern. Further information: https://docs.cloudogu.com/de/usermanual/usermanagement/",
     "buttons": {
-      "upload": "Upload",
-      "reset": "Reset"
+      "reset": "Reset",
+      "upload": "Upload"
     },
     "headlines": {
-      "importSuccess": "Import abgeschlossen",
       "importErrors": "Fehler",
+      "importSuccess": "Import abgeschlossen",
       "table": "Content of the CSV file"
     },
+    "infobox": "Users can be imported on this page. These must be created in a CSV file to be uploaded here according to a certain pattern. Further information: https://docs.cloudogu.com/de/usermanual/usermanagement/",
     "notification": {
       "genericError": "Could not import users from '{{file}}' file.",
       "invalidFile": "The file '{{file}}' is not a valid csv file."
+    }
+  },
+  "usersImportResult": {
+    "error": "No import results found.",
+    "msg": {
+      "code-100": "The format of the line could not be assigned.",
+      "code-101": "The following columns had an invalid data type: '{{columns}}'.",
+      "code-102": "The following columns were not included: '{{columns}}'.",
+      "code-103": "The line could not be identified clearly",
+      "code-104": "The number of columns does not match the number of column headers.",
+      "code-200": "General error when processing the line",
+      "code-201": "The following columns contained a value that is marked as unique and was already assigned: '{{columns}}'.",
+      "code-202": "The following columns do not match the default format '{{columns}}'.",
+      "code-204": "The following columns are required but were empty: '{{columns}}'.",
+      "code-300": "General internal server error",
+      "code-301": "Server error writing the result to the file system"
+    },
+    "result": {
+      "failure": "Import failed!",
+      "success": "Import successfully completed!",
+      "successWithFailures": "Import completed with errors!"
+    },
+    "rows": {
+      "created": "Created accounts",
+      "skipped": "Skipped data rows",
+      "updated": "Updated accounts"
     }
   }
 }

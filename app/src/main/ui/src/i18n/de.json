@@ -139,12 +139,37 @@
     "groups": "Gruppen",
     "groupsEdit": "Gruppe bearbeiten",
     "groupsNew": "Neue Gruppe",
+    "summaries": "Importübersichten",
     "users": "Nutzer",
     "usersEdit": "Nutzer bearbeiten",
     "usersImport": "Nutzerimport",
     "usersImportResult": "Nutzerimport",
-    "summaries": "Importübersichten",
     "usersNew": "Nutzer anlegen"
+  },
+  "summaries": {
+    "delete": {
+      "error": "Die Importübersicht konnte nicht gelöscht werden.",
+      "success": "Die Importübersicht wurde erfolgreich gelöscht."
+    },
+    "result": {
+      "created": "Neu",
+      "errors": "Übersprungen",
+      "updated": "Aktualisiert"
+    },
+    "table": {
+      "function": {
+        "delete": "Löschen",
+        "details": "Details",
+        "download": "Herunterladen"
+      },
+      "functions": "Funktionen",
+      "headline": {
+        "date": "Datum",
+        "functions": "Funktionen",
+        "name": "Name der CSV-Datei",
+        "result": "Ergebnis"
+      }
+    }
   },
   "users": {
     "confirmation": {
@@ -187,32 +212,22 @@
     }
   },
   "usersImport": {
-    "infobox": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden. Weitere Informationen dazu: https://docs.cloudogu.com/de/usermanual/usermanagement/",
     "buttons": {
-      "upload": "Importieren",
-      "reset": "Abbrechen"
+      "reset": "Abbrechen",
+      "upload": "Importieren"
     },
     "headlines": {
-      "importSuccess": "Import abgeschlossen",
       "importErrors": "Fehler",
+      "importSuccess": "Import abgeschlossen",
       "table": "Inhalt der ausgewählten Datei"
     },
+    "infobox": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden. Weitere Informationen dazu: https://docs.cloudogu.com/de/usermanual/usermanagement/",
     "notification": {
       "genericError": "Die Nutzer aus der Datei '{{file}}' konnten nicht importiert werden.",
       "invalidFile": "Die Datei '{{file}}' ist keine gültige CSV-Datei."
     }
   },
   "usersImportResult": {
-    "rows": {
-      "created": "Erstellte Nutzerkonten",
-      "updated": "Aktualisierte Nutzerkonten",
-      "skipped": "Übersprungene Datenzeilen"
-    },
-    "result":{
-      "success": "Import erfolgreich abgeschlossen!",
-      "successWithFailures": "Import mit Fehlern abgeschlossen!",
-      "failure": "Import fehlgeschlagen!"
-    },
     "error": "Keine Import-Ergebnisse gefunden.",
     "msg": {
       "code-100": "Das Format der Zeile konnte nicht zugeordnet werden.",
@@ -226,31 +241,16 @@
       "code-204": "Folgende Spalten werden benötigt, waren aber leer: '{{columns}}'",
       "code-300": "Allgemeiner interner Server-Fehler",
       "code-301": "Serverfehler beim Schreiben des Ergebnisses ins Dateisystem"
-    }
-  },
-  "summaries": {
-    "delete": {
-      "success": "Die Importübersicht wurde erfolgreich gelöscht.",
-      "error": "Die Importübersicht konnte nicht gelöscht werden."
-    },
-    "table": {
-      "headline": {
-        "name": "Name der CSV-Datei",
-        "date": "Datum",
-        "result": "Ergebnis",
-        "functions": "Funktionen"
-      },
-      "function": {
-        "download": "Herunterladen",
-        "details": "Details",
-        "delete": "Löschen"
-      },
-      "functions": "Funktionen"
     },
     "result": {
-      "created": "Neu",
-      "updated": "Aktualisiert",
-      "errors": "Übersprungen"
+      "failure": "Import fehlgeschlagen!",
+      "success": "Import erfolgreich abgeschlossen!",
+      "successWithFailures": "Import mit Fehlern abgeschlossen!"
+    },
+    "rows": {
+      "created": "Erstellte Nutzerkonten",
+      "skipped": "Übersprungene Datenzeilen",
+      "updated": "Aktualisierte Nutzerkonten"
     }
   }
 }
