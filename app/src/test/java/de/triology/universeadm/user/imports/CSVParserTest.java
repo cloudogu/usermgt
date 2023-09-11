@@ -216,6 +216,26 @@ public class CSVParserTest {
         assertEquals(1, parser.getErrors().count());
     }
 
+    @Test()
+    public void testFromIntegrationTests() throws CsvRequiredFieldEmptyException, IOException {
+
+        List<CSVUserDTO> expUsers = Lists.newArrayList(
+                CSVUsers.createDent(),
+                CSVUsers.createTrillian()
+        );
+
+        CSVParser parser = new CSVParserImpl();
+
+        List<CSVUserDTO> userInputList = parser
+                .parse(readTestFile("IntegrationTestFile.csv"))
+                .collect(Collectors.toList());
+
+        List<ImportEntryResult> errors = parser.getErrors().collect(Collectors.toList());
+
+        assertEquals(5, userInputList.size());
+        assertEquals(5, errors.size());
+    }
+
 
     private InputStream readTestFile(String filename) {
         return Objects.requireNonNull(readTestFileInputStream(filename));

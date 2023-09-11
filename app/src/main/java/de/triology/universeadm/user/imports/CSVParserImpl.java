@@ -5,6 +5,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.*;
 import org.apache.commons.io.input.TeeInputStream;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,9 +141,12 @@ public class CSVParserImpl implements CSVParser {
                 BufferedReader headerReader = new BufferedReader(new InputStreamReader(in));
                 CSVReader csvReader = new CSVReader(headerReader);
                 String[] header = csvReader.readNext();
+                // Append LineNumber column to header of CSV file
+                String[] headerWithLineColumn = ArrayUtils.add(header, CsvLineNumberReader.LINE_COLUMN);
+
                 headerReader.close();
 
-                this.header.set(header);
+                this.header.set(headerWithLineColumn);
 
                 logger.debug("Read header with columns {}", Arrays.toString(this.header.get()));
             } catch (CsvValidationException | IOException e) {
