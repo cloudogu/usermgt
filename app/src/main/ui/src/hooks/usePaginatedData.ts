@@ -68,7 +68,7 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
     const [opts, setOpts] = useState<QueryOptions>({
         start: defaultStart,
         limit: defaultPageSize,
-        query: defaultSearchString
+        query: defaultSearchString,
     });
     const page = Number(searchParams.get(PAGE_QUERY_PARAM) ?? defaultStart);
     const searchQuery = searchParams.get(SEARCH_QUERY_PARAM) ?? defaultSearchString;

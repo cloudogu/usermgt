@@ -1,11 +1,12 @@
-import {createPaginationData, defaultPaginationData} from "@cloudogu/ces-theme-tailwind";
+import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
+import {defaultPaginationData} from "@cloudogu/ces-theme-tailwind";
+import type {AxiosError} from "axios";
 import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import {emptyUser} from "./Account";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
-import type {AxiosError} from "axios";
+import {RefetchResponse} from "../hooks/usePaginatedData";
 
 export interface UsersResponse {
     entries: User[];
@@ -48,7 +49,7 @@ export function isUsersConstraintsError(error: UsersConstraintsError | Error): e
 export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPaginationData};
 
 export const UsersService = {
-    async find(signal?: AbortSignal, opts?: QueryOptions): Promise<UsersModel> {
+    async find(signal?: AbortSignal, opts?: QueryOptions): Promise<RefetchResponse<User[]>> {
         const usersResponse = await Axios.get<UsersResponse>("/users", {
             params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
@@ -57,8 +58,14 @@ export const UsersService = {
             throw new Error("failed to load user data: " + usersResponse.status);
         }
         const usersData = usersResponse.data;
-        const paginationModel = createPaginationData(usersData.start, usersData.limit, usersData.totalEntries);
-        return {users: usersData.entries, pagination: paginationModel};
+        return {
+            data: usersData.entries,
+            pagination: {
+                start: usersData.start,
+                limit: usersData.limit,
+                totalEntries: usersData.totalEntries,
+            }
+        };
     },
     async get(signal?: AbortSignal, username?: string): Promise<User> {
         if (!username) {
