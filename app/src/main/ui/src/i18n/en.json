@@ -184,7 +184,7 @@
     }
   },
   "usersImport": {
-    "infobox": "Users can be imported on this page. These must be created in a CSV file to be uploaded here according to a certain pattern. Further information: https://docs.cloudogu.com",
+    "infobox": "Users can be imported on this page. These must be created in a CSV file to be uploaded here according to a certain pattern. Further information: https://docs.cloudogu.com/de/usermanual/usermanagement/",
     "buttons": {
       "upload": "Upload",
       "reset": "Reset"

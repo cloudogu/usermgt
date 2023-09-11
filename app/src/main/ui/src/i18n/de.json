@@ -187,7 +187,7 @@
     }
   },
   "usersImport": {
-    "infobox": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden. Weitere Informationen dazu: https://docs.cloudogu.com",
+    "infobox": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden. Weitere Informationen dazu: https://docs.cloudogu.com/de/usermanual/usermanagement/",
     "buttons": {
       "upload": "Importieren",
       "reset": "Abbrechen"
@@ -219,6 +219,7 @@
       "code-101": "Folgende Spalten hatten einen ungültigen Datentypen: '{{columns}}'",
       "code-102": "Folgende Spalten waren nicht enthalten: '{{columns}}'",
       "code-103": "Die Zeile konnte nicht eindeutig identifiziert werden",
+      "code-104": "Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spaltenüberschriften überein.",
       "code-200": "Allgemeiner Fehler beim Verarbeiten der Zeile",
       "code-201": "Folgende Spalten enthielten einen Wert, der als einzigartig gekennzeichnet ist und bereits vergeben war: '{{columns}}'",
       "code-202": "Folgende Spalten entsprechen nicht dem vorgegebenen Format '{{columns}}'",
