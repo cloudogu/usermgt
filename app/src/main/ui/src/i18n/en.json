@@ -139,9 +139,11 @@
     "groups": "Groups",
     "groupsEdit": "Edit group",
     "groupsNew": "New Group",
+    "summaries": "Importoverviews",
     "users": "Users",
     "usersEdit": "Edit user",
     "usersImport": "User import",
+    "usersImportResult": "Userimport",
     "usersNew": "New user"
   },
   "summaries": {
@@ -198,6 +200,7 @@
     },
     "table": {
       "actions": {
+        "add": "Add user",
         "delete": "Delete user",
         "deleteAria": "delete",
         "edit": "Edit user",
