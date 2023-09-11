@@ -309,14 +309,14 @@ Vergangene Importe werden im Dateisystem gespeichert, damit diese erneut abgeruf
 Dafür wird die Importübersicht verwendet. um diese aufzurufen, klicken Sie in der Navigationsleiste auf den Eintrag
 'Importübersichten'. Dort werden alle vergangenen Importe mit dem Namen der CSV-Datei sowie dem genauen Datum tabellarisch dargestellt.
 
-![Importhistorie](figures/usermanagement/ImportSummaries_de.png)
+![Importhistorie](figures/usermanagement/UserImportSummaries_de.png)
 
 Durch einen Klick auf das Auswahlfeld 'Funktionen' der jeweiligen Zeile öffnete sich ein kleines Untermenü. Dort können
 für die jeweilige Zeile bestimmte Funktionen ausgeführt werden.
 Dort kann entweder direkt die jeweilige Übersicht heruntergeladen oder aus dem System gelöscht werden.
 Außerdem kann über einen Klick auf 'Details' Importübersicht detailliert in der Oberfläche angezeigt werden.
 
-![Importhistorie](figures/usermanagement/ImportSummariesFunctions_de.png)
+![Importhistorie Funktionen](figures/usermanagement/UserImportSummariesFunctions_de.png)
 
 
 
