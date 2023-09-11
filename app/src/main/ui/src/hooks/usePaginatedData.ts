@@ -1,8 +1,7 @@
-
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {useAPI} from "./useAPI";
-import type {QueryOptions, AbortableCallbackWithArgs} from "./useAPI";
+import type {QueryOptions} from "./useAPI";
 
 const PAGE_QUERY_PARAM = "p";
 const SEARCH_QUERY_PARAM = "q";
@@ -58,7 +57,10 @@ export interface RefetchResponse<T> {
     };
 }
 
-export function usePaginatedData<T>(refetchFunction: AbortableCallbackWithArgs<RefetchResponse<T>, QueryOptions>, options?: UsePaginatedDataOptions): PaginatedData<T> {
+// The same as AbortableCallbackWithArgs<RefetchResponse<T>, QueryOptions> but easier to read.
+export type PaginatedDataFetchFunction<T> = (_signal: AbortSignal, _args: QueryOptions) => Promise<RefetchResponse<T>>
+
+export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<T>, options?: UsePaginatedDataOptions): PaginatedData<T> {
     const [searchParams, setSearchParams] = useSearchParams();
     const defaultStart = calcDefaultStart(options?.start);
     const defaultPageSize = calcDefaultPageSize(options?.pageSize);
@@ -71,7 +73,7 @@ export function usePaginatedData<T>(refetchFunction: AbortableCallbackWithArgs<R
     const page = Number(searchParams.get(PAGE_QUERY_PARAM) ?? defaultStart);
     const searchQuery = searchParams.get(SEARCH_QUERY_PARAM) ?? defaultSearchString;
 
-    const {data, isLoading, error} = useAPI<RefetchResponse<T>, QueryOptions>(refetchFunction, opts);
+    const {data, isLoading, error} = useAPI<RefetchResponse<T>, QueryOptions>(refetchFunction as any, opts);
 
     const setPage = function (page: number) {
         setSearchParams(current => {

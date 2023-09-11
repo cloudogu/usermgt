@@ -1,14 +1,9 @@
-import {createPaginationData} from "@cloudogu/ces-theme-tailwind";
-import { isAxiosError} from "axios";
+import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {QueryOptions} from "../hooks/useAPI";
-import type { PagedModel} from "@cloudogu/ces-theme-tailwind";
-import type {AxiosError,AxiosResponse} from "axios";
-
-export type GroupsModel = PagedModel & {
-    groups: Group[];
-}
+import type {RefetchResponse} from "../hooks/usePaginatedData";
+import type {AxiosError, AxiosResponse} from "axios";
 
 interface GroupsResponse {
     entries: Group[];
@@ -27,7 +22,7 @@ export type Group = {
 export type UndeletableGroupsResponse = string[];
 
 export const GroupsService = {
-    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<GroupsModel> {
+    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<RefetchResponse<Group[]>> {
         const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
             params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
@@ -45,15 +40,21 @@ export const GroupsService = {
         const groupsData = groupsResponse.data;
         const undeletableGroupsData = undeletableGroupsResponse.data;
         const groups = mapSystemGroups(groupsData.entries, undeletableGroupsData);
-        const paginationModel = createPaginationData(groupsData.start, groupsData.limit, groupsData.totalEntries);
 
-        return {groups: groups, pagination: paginationModel};
+        return {
+            data: groups,
+            pagination: {
+                start: groupsData.start ?? 0,
+                limit: groupsData.limit ?? 0,
+                totalEntries: groupsData.totalEntries ?? 0,
+            },
+        };
     },
     async get(signal?: AbortSignal, groupName?: string): Promise<Group> {
         if (!groupName) {
             throw new Error("the group name must not be empty");
         }
-        const groupResponse:AxiosResponse<any> = await Axios.get<Group>(`/groups/${groupName}`, {
+        const groupResponse: AxiosResponse<any> = await Axios.get<Group>(`/groups/${groupName}`, {
             signal: signal
         } as any);
         if (groupResponse.status < 200 || groupResponse.status > 299) {
