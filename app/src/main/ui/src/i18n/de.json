@@ -228,6 +228,7 @@
     }
   },
   "usersImportResult": {
+    "download": "Importübersicht herunterladen",
     "error": "Keine Import-Ergebnisse gefunden.",
     "msg": {
       "code-100": "Das Format der Zeile konnte nicht zugeordnet werden.",

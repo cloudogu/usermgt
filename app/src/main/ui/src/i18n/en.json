@@ -225,6 +225,7 @@
     }
   },
   "usersImportResult": {
+    "download": "Download import overview",
     "error": "No import results found.",
     "msg": {
       "code-100": "The format of the line could not be assigned.",
