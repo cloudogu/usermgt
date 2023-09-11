@@ -230,6 +230,11 @@
             <artifactId>opencsv</artifactId>
             <version>5.8</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
         <!--
         use provided scope to create a global exclude
         -->

@@ -21,7 +21,6 @@ import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -30,9 +29,9 @@ import java.util.stream.Stream;
  * It uses the UserManager to retrieve and store users during the import.
  * ImportErrors that have been occurred during the import are part of the Result.
  */
-public class CSVHandler {
+public class ImportHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(CSVHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportHandler.class);
     private static final String PART_NAME = "file";
 
     /**
@@ -46,15 +45,28 @@ public class CSVHandler {
     private final CSVParser csvParser;
 
     /**
+     * ResultRepository persists the result of the csv import.
+     */
+    private final ResultRepository resultRepository;
+
+    /**
+     * ResultRepository get the summaries of the csv imports.
+     */
+    private final SummaryRepository summaryRepository;
+
+    /**
      * Constructs the CSVHandler.
      *
-     * @param userManager - injected
-     * @param csvParser - injuected
+     * @param userManager      - injected
+     * @param csvParser        - injected
+     * @param resultRepository - injected
      */
     @Inject
-    public CSVHandler(UserManager userManager, CSVParser csvParser) {
+    public ImportHandler(UserManager userManager, CSVParser csvParser, ResultRepository resultRepository, SummaryRepository summaryRepository) {
         this.userManager = userManager;
         this.csvParser = csvParser;
+        this.resultRepository = resultRepository;
+        this.summaryRepository = summaryRepository;
     }
 
     /**
@@ -69,7 +81,7 @@ public class CSVHandler {
      * @throws InvalidArgumentException in case further processing of the csv file is not possible.
      * Throwing the exception means no data has been processed.
      */
-    public Result handle(MultipartFormDataInput input) throws CsvRequiredFieldEmptyException {
+    public Result handle(MultipartFormDataInput input) throws CsvRequiredFieldEmptyException, IOException {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
 
         //only get file parts
@@ -84,10 +96,15 @@ public class CSVHandler {
         this.validateFile(fileParts);
         logger.debug("Validated file parts in MultipartFormData");
 
-        Reader fileReader = getFileReader(fileParts.get(0));
+        InputPart filePart = fileParts.get(0);
+
+        InputStream fileInputStream = getInputStream(filePart);
         logger.debug("Got reader from first file part");
 
-        List<ImportEntryResult> results = this.csvParser.parse(fileReader)
+        UUID importID = UUID.randomUUID();
+        logger.debug("Created ImportID with UUID {}", importID);
+
+        List<ImportEntryResult> results = this.csvParser.parse(fileInputStream)
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
                 .map(Mapper::decode) // add more information
@@ -96,12 +113,18 @@ public class CSVHandler {
 
         results.addAll(csvParser.getErrors().collect(Collectors.toList()));
         Result finalResult = results.stream().reduce(
-                new Result(),
+                new Result(importID, this.getFileName(filePart)),
                 this::accumulateResultType,
                 this::combineAccumulators
         );
 
         logger.debug("Generated CSV import result: {}", finalResult);
+
+        Optional<ImportError> optWriteError = this.writeResult(finalResult);
+        optWriteError.ifPresent(importError -> {
+            logger.debug("Received WriteError for result - add Error to result and return it");
+            finalResult.getErrors().add(importError);
+        });
 
         return finalResult;
     }
@@ -159,20 +182,15 @@ public class CSVHandler {
      * For efficient reading a BufferedReader is used.
      *
      * @param file uploaded be the user.
-     * @return Reader (= BufferedReader)
+     * @return InputStream - from file request
      * @throws InvalidArgumentException
      */
-    private Reader getFileReader(@NotNull InputPart file) throws InvalidArgumentException {
-        BufferedReader inputReader;
-
+    private InputStream getInputStream(@NotNull InputPart file) {
         try {
-            InputStream inputStream = file.getBody(InputStream.class, null);
-            inputReader = new BufferedReader(new InputStreamReader(inputStream));
-
-            return inputReader;
+            return file.getBody(InputStream.class, null);
         } catch (IOException e) {
             logger.error(e.toString());
-            throw new InvalidArgumentException("unable to parse file");
+            throw new InvalidArgumentException("unable to get body from file");
         }
     }
 
@@ -284,8 +302,43 @@ public class CSVHandler {
         partialAcc.getUpdated().addAll(partialAcc2.getUpdated());
         partialAcc.getErrors().addAll(partialAcc2.getErrors());
 
-        return new Result(partialAcc.getCreated(), partialAcc.getUpdated(), partialAcc.getErrors());
+        return new Result(partialAcc.getImportID(), partialAcc.getFilename(), partialAcc.getCreated(), partialAcc.getUpdated(), partialAcc.getErrors());
     }
 
+    private Optional<ImportError> writeResult(Result result) {
+        try {
+            this.resultRepository.write(result);
+        } catch (IOException e) {
+            logger.warn("Could not write Result", e);
+
+            return Optional.of(new ImportError.Builder(ImportError.Code.WRITE_RESULT_ERROR)
+                    .withErrorMessage("Unable to save result to repository")
+                    .build());
+        }
+
+        return Optional.empty();
+    }
+
+    public Result getResult(UUID importID) throws FileNotFoundException {
+       return this.resultRepository.read(importID);
+    }
+
+    public Pair<List<Result.Summary>, Integer> getSummaries(int start, int limit) throws IOException {
+        List<Result.Summary> allSummaries = this.summaryRepository.getSummaries();
+
+        int numberSkipEntries = (start*limit) - limit;
+
+        List<Result.Summary> paginatedList = allSummaries.stream()
+                .sorted(Comparator.comparingLong(Result.Summary::getTimestamp).reversed())
+                .skip(numberSkipEntries)
+                .limit(limit)
+                .collect(Collectors.toList());
+
+        return Pair.of(paginatedList, allSummaries.size());
+    }
+
+    public boolean deleteResult(UUID importID) throws IOException {
+        return this.resultRepository.delete(importID);
+    }
 
 }

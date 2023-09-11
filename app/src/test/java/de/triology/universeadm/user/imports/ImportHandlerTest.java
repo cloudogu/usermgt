@@ -1,19 +1,20 @@
 package de.triology.universeadm.user.imports;
 
-
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
 import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.junit.Assert;
 import org.junit.Test;
 import org.opensaml.artifact.InvalidArgumentException;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -21,14 +22,17 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class CSVHandlerTest {
+public class ImportHandlerTest {
 
     private static final String VALID_FILENAME = "ImportUsers.csv";
 
+    private final SummaryRepository summaryRepositoryMock = mock(SummaryRepository.class);
+
     @Test(expected = InvalidArgumentException.class)
-    public void testMissingFileParts() throws CsvRequiredFieldEmptyException {
+    public void testMissingFileParts() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = Collections.emptyMap();
 
         CSVParser parser = mock(CSVParser.class);
@@ -36,15 +40,16 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository,summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void testEmptyFileParts() throws CsvRequiredFieldEmptyException {
+    public void testEmptyFileParts() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         CSVParser parser = mock(CSVParser.class);
@@ -54,15 +59,16 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
-    public void testMultipleFileParts() throws CsvRequiredFieldEmptyException {
+    public void testMultipleFileParts() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         inputParts.put("file", Arrays.asList(mock(InputPart.class), mock(InputPart.class)));
@@ -72,15 +78,16 @@ public class CSVHandlerTest {
         CSVParser parser = mock(CSVParser.class);
         when(parser.parse(any())).thenReturn(createMockStream(2));
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void testInvalidFileExtension() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         CSVParser parser = mock(CSVParser.class);
@@ -90,15 +97,16 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test(expected = InvalidArgumentException.class)
     public void testMissingFileName() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         CSVParser parser = mock(CSVParser.class);
@@ -108,15 +116,16 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test
     public void testInvalidCSVHeader() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.INVALID_CSV_HEADER)));
@@ -127,9 +136,9 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(Stream.empty());
         when(parser.getErrors()).thenReturn(createMockErrorStream(1));
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
         assertEquals(1, result.getErrors().size());
     }
 
@@ -147,6 +156,7 @@ public class CSVHandlerTest {
     public void testMissingPermissions() throws Exception {
         UserManager userManager = createUserMangerMock(UserManagerCase.MISSING_PERMISSIONS);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
@@ -157,15 +167,16 @@ public class CSVHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        csvHandler.handle(input);
+        importHandler.handle(input);
     }
 
     @Test()
     public void testImportUsersCreate() throws Exception {
         UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
@@ -176,14 +187,14 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, atLeast(1)).create(any());
         verify(userManager, never()).modify(any());
 
-        assertSummary(2L, 0L, 0L, result);
+        assertSummary(2L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
         assertTrue(errors.isEmpty());
@@ -193,6 +204,7 @@ public class CSVHandlerTest {
     public void testImportUsersCreateModify() throws Exception {
         UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE_MODIFY);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
@@ -203,14 +215,14 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, atLeast(1)).create(any());
         verify(userManager, atLeast(1)).modify(any());
 
-        assertSummary(1L, 1L, 0L, result);
+        assertSummary(1L, 1L, result);
 
         List<ImportError> errors = result.getErrors();
         assertTrue(errors.isEmpty());
@@ -220,6 +232,7 @@ public class CSVHandlerTest {
     public void testImportUsersCreateValidationException() throws Exception {
         UserManager userManager = createUserMangerMock(UserManagerCase.VALIDATION_EXCEPTION_CREATE);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
@@ -230,14 +243,14 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, times(2)).create(any());
         verify(userManager, never()).modify(any());
 
-        assertSummary(0L, 0L, 2L, result);
+        assertSummary(0L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
         assertEquals(2, errors.size());
@@ -253,6 +266,7 @@ public class CSVHandlerTest {
     public void testImportUsersParsingError() throws Exception {
         UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
 
         inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID_ROW_PARSING_ERROR)));
@@ -263,14 +277,14 @@ public class CSVHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(1));
         when(parser.getErrors()).thenReturn(createMockErrorStream(2L));
 
-        CSVHandler csvHandler = new CSVHandler(userManager, parser);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
 
-        Result result = csvHandler.handle(input);
+        Result result = importHandler.handle(input);
 
         verify(userManager, times(1)).create(any());
         verify(userManager, never()).modify(any());
 
-        assertSummary(1L, 0L, 1L, result);
+        assertSummary(1L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
         assertEquals(1, errors.size());
@@ -278,6 +292,77 @@ public class CSVHandlerTest {
         assertEquals(2, errors.get(0).getLineNumber());
         assertEquals(ImportError.Code.PARSING_ERROR.value, errors.get(0).getErrorCode());
     }
+
+    @Test()
+    public void testWriteResultError() throws Exception {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.THROW_IOEXCEPTION_WRITE);
+        Map<String, List<InputPart>> inputParts = new HashMap<>();
+
+        inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
+
+        when(input.getFormDataMap()).thenReturn(inputParts);
+
+        CSVParser parser = mock(CSVParser.class);
+        when(parser.parse(any())).thenReturn(createMockStream(2));
+        when(parser.getErrors()).thenReturn(Stream.empty());
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+
+        Result result = importHandler.handle(input);
+
+        verify(userManager, atLeast(1)).create(any());
+        verify(userManager, never()).modify(any());
+
+        assertSummary(2L, 0L, result);
+
+        List<ImportError> errors = result.getErrors();
+        assertEquals(1, errors.size());
+
+        assertEquals(ImportError.Code.WRITE_RESULT_ERROR.value, errors.get(0).getErrorCode());
+    }
+
+    @Test()
+    public void testGetResult() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
+        CSVParser parser = mock(CSVParser.class);
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+
+        Result res = importHandler.getResult(UUID.randomUUID());
+
+        assertNotNull(res);
+    }
+
+    @Test
+    public void getSummaries() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
+        CSVParser parser = mock(CSVParser.class);
+
+        SummaryRepository sRepo = mock(SummaryRepository.class);
+        when(sRepo.getSummaries()).thenReturn(Collections.emptyList());
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+
+        Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 0);
+
+        assertNotNull(res);
+    }
+
+    @Test()
+    public void testDeleteResult() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_DELETE);
+        CSVParser parser = mock(CSVParser.class);
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+
+        assertTrue(importHandler.deleteResult(UUID.randomUUID()));
+    }
+
 
     private enum InputPartCase {
         VALID,
@@ -360,7 +445,7 @@ public class CSVHandlerTest {
         return manager;
     }
 
-    private void assertSummary(Long expCreated, Long expUpdated, Long expSkipped, Result result) {
+    private void assertSummary(Long expCreated, Long expUpdated, Result result) {
         Long created = (long) result.getCreated().size();
         assertNotNull(created);
         assertEquals(expCreated, created);
@@ -368,10 +453,6 @@ public class CSVHandlerTest {
         Long updated = (long) result.getUpdated().size();
         assertNotNull(updated);
         assertEquals(expUpdated, updated);
-
-        Long skipped = (long) result.getErrors().size();
-        assertNotNull(skipped);
-        assertEquals(expSkipped, skipped);
     }
 
     private Stream<CSVUserDTO> createMockStream(int count) {
@@ -387,4 +468,31 @@ public class CSVHandlerTest {
         return users.stream();
     }
 
+    private enum ResultRepositoryCase {
+        VALID_WRITE,
+        VALID_READ,
+        VALID_DELETE,
+        THROW_IOEXCEPTION_WRITE
+    }
+
+    private ResultRepository createResultRepositoryMock(ResultRepositoryCase c) throws IOException {
+        ResultRepository repo = mock(ResultRepository.class);
+
+        switch (c) {
+            case VALID_WRITE:
+                doNothing().when(repo).write(any());
+                break;
+            case VALID_READ:
+                when(repo.read(any())).thenReturn(new Result(UUID.randomUUID(), "test.csv"));
+                break;
+            case VALID_DELETE:
+                when(repo.delete(any())).thenReturn(true);
+                break;
+            case THROW_IOEXCEPTION_WRITE:
+                doThrow(new IOException("test IO Exception")).when(repo).write(any());
+            default:
+        }
+
+        return repo;
+    }
 }

@@ -2,58 +2,53 @@
 
 ## Call and CSV file default
 
-Users can be imported via the endpoint `/users/import`.
-CSV is used as import format. The header of the file must define at least **6** columns.
-Recommended is:
-``csv
-Username;FirstName;Surname;DisplayName;Email;Groups
-```
-This is the order in which the values are read. Only the order is important, the values in the first 
-first column can be chosen freely. 
-Therefore these columns could also be in German, for example:
-``csv
-user name;first name;last name;display title;mail;group
+Users can be imported via the `/users/import` endpoint. CSV according to [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180) 
+is used as import format. The header of the file must define **7** columns:
+
+```csv
+username,displayname,givenname,surname,mail,pwdReset,external
 ```
 
-The authentication runs over the account of the logged in user. If the user has no manager rights, this endpoint cannot be called by the user.
-endpoint cannot be called by the user. Duplicate entries are filtered out and the protocol can be used to detect
-can be determined if an entry is incorrect. Groups are only assigned if they already exist in the system.
-No new groups will be created automatically during this process.
+The order of the columns can vary, but the names of the columns must be kept.
+
+Authentication is performed via the account of the logged-in user. If the user does not have admin rights, the
+endpoint cannot be called by the user. Duplicate entries do not affect the result of the import,
+but will be processed twice. The result of the import can be used to determine which entry is incorrect.
+No groups are currently created or assigned via the import.
 
 ## How the import works.
 
 * Any number of users can be created via the import.
-* Via the import a group can **not** be created.
-* Via the import, a new or existing user can be assigned to a group.
-  * To add an existing user to a group/, only the user name and the groups must be written in the line
-    line.
-  * Example: `Tester3;;;;G1,G2,G3,G4`
+* If the user already exists, the values in the CSV are used for updating the user.
+* Currently, each user created is considered as external user.
+* Via the import **no** group can be created or assigned.
 
-## Reason for necessity
+## Result
+A result entry is created for the import. This result can be found in the `importHistory` volume under
+`/var/lib/usermgt/importHistory`. The result contains a summary of the users that were created or modified. 
+Furthermore, the result contains possible errors that occurred during the import. Per entry e error code is given:
 
-If there are several new employees or the CES is initially set up in a company, several user accounts must be created.
-user accounts need to be created. To save the administrators, respectively the managers of the CES, the effort of manual
-manual creation. The users can be listed compactly and efficiently via the import and in after a short moment all users are created.
+| Code  | Error description                                                             |
+|-------|-------------------------------------------------------------------------------|
+| 100   | General error that occurred while parsing the CSV file                        |
+| 101   | Value from column could not be transferred to data type, e.g. "10" as Boolean |
+| 102   | A column entry is missing in the header                                       |
+| 103   | The value of the column could not be assigned to the user                     |
+| 104   | The number of columns of a row do not match those of the header               |
+| 200   | General error while validating the line                                       |
+| 201   | The username is already used                                                  |
+| 202   | The format of the value does not match the required format                    |
+| 204   | Required value is not set                                                     |
+| 300   | Internal server error                                                         |
+| 301   | An error occurred while writing the result                                    |
 
-## Protocol
-
-A protocol entry is created for the import. This protocol is stored in the volume user-import-protocol under
-`/var/lib/usermgt/protocol/user-import-protocol`. For each user and for each group assignment a
-entry is created about the status of the process. The status can be successful, incomplete or already exists.
-
-## Email
-
-For every created user a mail with his user data will be sent to him. In the configuration file of the UserMgt
-the `host` and `port` can be defined. To customize the subject and content of the auto generated emails you can set the 
-configuration keys `import/mail/subject` and `import/mail/content`.
+In addition to the volume, summaries of the imports can be accessed via the `/users/import/summaries` endpoint.
+Individual results are available via the endpoint `/users/import/{importID}` and can be downloaded via 
+`/users/import/{importID}/download`.
 
 ## Fully usable CSV file
-`csv
-Username;FirstName;Surname;DisplayName;Email;Groups
-Tester1;Tes;Ter;Tester1;test1@test.com;G1,G2   
-Tester2;Tes;Ter2;Tester2;test2@test.com;G2,G3
-Tester3;Tes;Ter3;Tester3;test3@test.com;G1,G3
-Tester4;Tes;Ter4;Tester4;test4@test.com;G4,G1
+```csv
+username,displayname,givenname,surname,mail,pwdReset,external
+dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,false,true
+trillian,Tricia McMillan,Tricia,McMillan,tricia.mcmillan@hitchhiker.com,false,true
 ```
-
-Translated with www.DeepL.com/Translator (free version)

@@ -3,56 +3,54 @@
 ## Aufruf und CSV-Datei Vorgabe
 
 Über den Endpunkt `/users/import` können Benutzer importiert werden.
-Als Import-Format wird CSV verwendet. Der Header der Datei muss mindestens **6** Spalten definieren.
-Empfehlenswert ist: 
-```csv
-Username;FirstName;Surname;DisplayName;Email;Groups
-```
-Dies ist die Reihenfolge, in welcher die Werte eingelesen werden. Dabei ist nur die Reihenfolge wichtig, die Werte in der 
-ersten Spalte können frei gewählt werden. 
-Daher könnten diese Spalten auch in Deutsch sein, zum Beispiel:
-```csv
-Nutzername;Vorname;Nachname;Anzeigetitel;Mail;Gruppen
-```
+Als Import-Format wird CSV nach [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180) verwendet. Der Header der Datei muss
+**7** Spalten definieren:
 
-Die Authentifizierung läuft über den Account des eingeloggten Benutzers. Hat dieser keine Manager-Rechte, so kann dieser 
-Endpunkt von dem Nutzer nicht aufgerufen werden. Doppelte Einträge werden herausgefiltert und über das Protocol kann 
-festgestellt werden, wenn ein Eintrag fehlerhaft ist. Gruppen werden nur zugeordnet, wenn sie bereits im System existieren.
-Es werden dabei keine neuen Gruppen automatisch angelegt.
- 
+```csv
+username,displayname,givenname,surname,mail,pwdReset,external
+```
+Die Reihenfolge der Spalten kann variieren, jedoch müssen die Namen der Spalten beibehalten werden. 
+
+Die Authentifizierung erfolgt über den Account des eingeloggten Benutzers. Hat dieser keine Admin-Rechte, kann der 
+Endpunkt von dem Nutzer nicht aufgerufen werden. Doppelte Einträge haben keinen Einfluss auf das Ergebnis des Imports, 
+werden jedoch zweifach verarbeitet. Über das Ergebnis des Imports kann festgestellt werden, welcher Eintrag fehlerhaft ist. 
+Über den Import werden aktuell keine Gruppen erstellt oder zugeordnet.
+
 ## Wie der Import funktioniert.
 
 * Über den Import können beliebig viele Nutzer angelegt werden.
-* Über den Import kann **nicht** eine Gruppe angelegt werden.
-* Über den Import kann ein neuer oder bestehender Nutzer einer Gruppe zugewiesen werden.
-  * Um einen bestehenden Nutzer einer Gruppe hinzuzufügen, muss nur der Nutzername und die Gruppen in die Zeile 
-  geschrieben werden.
-  * Beispiel: `Tester3;;;;G1,G2,G3,G4`
+* Existiert der Nutzer bereits, werden die Werte in der CSV zum Update verwendet.
+* Aktuell wird jeder angelegte Nutzer als externer Nutzer angesehen.
+* Über den Import kann **keine** Gruppe erstellt oder zugeordnet werden.
 
-## Grund der Notwendigkeit
+## Ergebnis
 
-Wenn es mehrere neue Mitarbeiter gibt oder das CES in einem Unternehmen initial aufgesetzt wird, müssen mehrere 
-Nutzeraccounts erstellt werden. Um den Administratoren, beziehungsweise den Managern des CES den Aufwand der manuellen 
-Anlegung zu ersparen. Über den Import können die Nutzer kompakt und effizient aufgelistet werden und in wenigen Sekunden 
-werden alle Nutzer angelegt.
+Für den Import wird ein Ergebnis-Eintrag angelegt. Dieses Ergebnis ist im Volume `importHistory` unter
+`/var/lib/usermgt/importHistory` zu finden. Das Ergebnis enthält eine Zusammenfassung über die Nutzer, die angelegt 
+oder modifiziert wurden. Ferner enthält das Ergebnis mögliche Fehler, die während des Imports aufgetreten sind. Pro 
+Eintrag wird ein Fehlercode ausgegeben:
 
-## Protocol
+| Code | Fehlerbeschreibung                                                                        |
+|------|-------------------------------------------------------------------------------------------|
+| 100  | Allgemeiner Fehler, der beim Parsing der CSV Datei aufgetreten ist                        |
+| 101  | Wert aus der Spalte, konnte nicht auf Datentypen übertragen werden, z.b. "10" als Boolean |
+| 102  | Es fehlt ein Spalteneintrag in der Kopfzeile                                              |
+| 103  | Der Wert der Spalte konnte dem User nicht zugewiesen werden                               |
+| 104  | Die Anzahl der Spalten einer Zeilen passen nicht mit denen der Kopfzeile überein          |
+| 200  | Allgemeiner Fehler bei der Validierung der Zeile                                          |
+| 201  | Der Username ist bereits vergeben                                                         |
+| 202  | Das Format des Wertes stimmt nicht mit dem geforderten Format überein                     |
+| 204  | Erforderlicher Wert ist nicht gesetzt                                                     |
+| 300  | Interner Server Fehler                                                                    |
+| 301  | Beim Schreiben des Ergebnisses ist ein Fehler aufgetreten                                 |
 
-Für den Import wird ein Protocol-Eintrag angelegt. Dieses Protokoll ist im Volume user-import-protocol unter
-`/var/lib/usermgt/protocol/user-import-protocol` zu finden. Für jeden Nutzer und für jede Gruppenzuweisung wird ein 
-Eintrag über den Status der Durchführung erstellt. Der Status kann erfolgreich, fehlerhaft oder existiert bereits sein.
-
-## Email
-
-Für jeden erstellten Nutzer wird diesem eine Mail mit seinen Nutzerdaten verschickt. In der Konfigurationsdatei des UserMgt
-kann der `Host` und `Port` definiert werden. Über die Konfigurationsschlüssel `import/mail/subject` und `import/mail/content`
-können weitere Einstellungen vorgenommen werden.
+Neben dem Volume können Zusammenfassungen der Imports über den Endpunkt `/users/import/summaries` abgerufen werden.
+Einzelne Ergebnisse sind über den Endpunkt `/users/import/{importID}` verfügbar können über `/users/import/{importID}/download`
+heruntergeladen werden.
 
 ## Vollständig nutzbare CSV-Datei
 ```csv
-Username;FirstName;Surname;DisplayName;Email;Groups
-Tester1;Tes;Ter;Tester1;test1@test.com;G1,G2   
-Tester2;Tes;Ter2;Tester2;test2@test.com;G2,G3
-Tester3;Tes;Ter3;Tester3;test3@test.com;G1,G3
-Tester4;Tes;Ter4;Tester4;test4@test.com;G4,G1
+username,displayname,givenname,surname,mail,pwdReset,external
+dent,Arthur Dent,Arthur,Dent,arthur.dent@hitchhiker.com,false,true
+trillian,Tricia McMillan,Tricia,McMillan,tricia.mcmillan@hitchhiker.com,false,true
 ```

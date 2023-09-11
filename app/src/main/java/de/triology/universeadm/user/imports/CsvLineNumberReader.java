@@ -14,6 +14,9 @@ import java.io.Reader;
  * @see <a href="https://stackoverflow.com/questions/12357163/opencsv-find-out-line-number">stack overflow</a>
  */
 public class CsvLineNumberReader extends CSVReader {
+
+    public static final String LINE_COLUMN = "LINE_NUMBER";
+
     public CsvLineNumberReader(Reader reader) {
         super(reader);
     }
@@ -29,7 +32,7 @@ public class CsvLineNumberReader extends CSVReader {
     public String[] readNextSilently() throws IOException {
         String[] nextLine = super.readNextSilently();
         return nextLine == null ? null :
-                ArrayUtils.add(nextLine, "LINE_NUMBER");
+                ArrayUtils.add(nextLine, LINE_COLUMN);
     }
 
 }
