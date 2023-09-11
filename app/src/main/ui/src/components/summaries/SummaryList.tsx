@@ -61,21 +61,13 @@ export default function SummaryList(
                                 {t("summaries.result.errors")}: {s.summary.skipped}
                             </Table.Body.Td>
                             <Table.Body.Td className={"flex flex-row"}>
-                                <DropdownMenu
-                                    aria-label={t("summaries.aria.label.dropdown")}
-                                    aria-description={t("summaries.aria.description.dropdown")}
-                                >
-                                    <DropdownMenu.Button
-                                        aria-label={t("summaries.aria.label.dropdownOpen")}
-                                        aria-description={t("summaries.aria.description.dropdownOpen")}
-                                    >
+                                <DropdownMenu>
+                                    <DropdownMenu.Button>
                                         {t("summaries.table.functions")}
                                         <DropdownMenu.Button.Arrow/>
                                     </DropdownMenu.Button>
                                     <DropdownMenu.Items>
                                         <DropdownMenu.Items.LinkItem
-                                            aria-label={t("summaries.aria.label.dropdownDownload")}
-                                            aria-description={t("summaries.aria.description.dropdownDownload")}
                                             href={`/usermgt/api/users/import/${s.importID}/download`}
                                             className={"flex flex-row"}
                                         >
@@ -84,8 +76,6 @@ export default function SummaryList(
                                             </TextWithIcon>
                                         </DropdownMenu.Items.LinkItem>
                                         <DropdownMenu.Items.RouterLinkItem
-                                            aria-label={t("summaries.aria.label.dropdownDetails")}
-                                            aria-description={t("summaries.aria.description.dropdownDetails")}
                                             to={`/users/import/${s.importID}`}
                                             className={"flex"}
                                             state={{}}>
@@ -94,8 +84,6 @@ export default function SummaryList(
                                             </TextWithIcon>
                                         </DropdownMenu.Items.RouterLinkItem>
                                         <DropdownMenu.Items.ButtonItem
-                                            aria-label={t("summaries.aria.label.dropdownDelete")}
-                                            aria-description={t("summaries.aria.description.dropdownDelete")}
                                             className={"flex flex-row"}
                                             onClick={
                                                 () => ImportUsersService.deleteSummary(s)
