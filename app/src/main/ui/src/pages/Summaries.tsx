@@ -6,9 +6,10 @@ import {usePaginatedData} from "../hooks/usePaginatedData";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {ImportSummary} from "../services/ImportUsers";
+import useSummaries from "../hooks/useSummaries";
 
 const Summaries = (props: { title: string }) => {
-    const {data, setPage, refetch} = usePaginatedData<ImportSummary[]>(ImportUsersService.listSummaries, {pageSize: 10});
+    const {data, setPage, refetch} = useSummaries();
     const {notification, notify} = useAlertNotification();
     useSetPageTitle(props.title);
 
