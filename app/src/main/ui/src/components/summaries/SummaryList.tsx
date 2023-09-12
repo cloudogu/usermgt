@@ -103,7 +103,7 @@ export default function SummaryList(
                     ))
                 }
             </Table.ConditionalBody>
-            <Table.ConditionalFoot show={pageCount > 1}>
+            <Table.ConditionalFoot show={!isLoading && pageCount > 1}>
                 <Table.Foot.Pagination pageCount={pageCount} currentPage={currentPage} onPageChange={onPageChange}/>
             </Table.ConditionalFoot>
         </Table>

@@ -116,7 +116,7 @@ export default function Users(props: { title: string }) {
             <Table.ConditionalBody show={!isLoading}>
                 {(users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog, backUrlParams()))}
             </Table.ConditionalBody>
-            <Table.ConditionalFoot show={!isLoading && (users?.length ?? 0) > 0}>
+            <Table.ConditionalFoot show={!isLoading && (pageCount ?? 1) > 1}>
                 <Table.Foot.Pagination
                     data-testid="users-footer"
                     className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
