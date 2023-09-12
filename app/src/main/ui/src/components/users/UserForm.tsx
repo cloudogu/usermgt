@@ -64,7 +64,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 exclude: handler.values.memberOf ?? [],
             }
         );
-        return groupsData.groups.map(x => x.name);
+        return groupsData.data.map(x => x.name);
     };
 
     const renderGroupsList = (readonly = false, pageSize = 5) => (

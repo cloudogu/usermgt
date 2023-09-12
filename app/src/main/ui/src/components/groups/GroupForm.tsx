@@ -46,7 +46,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
 
     const loadMembers = async (searchValue: string): Promise<string[]> => {
         const userData = await UsersService.find(undefined, {start: 0, limit: MAX_SEARCH_RESULTS, query: searchValue, exclude: handler.values.members});
-        return userData.users.map(x => x.username);
+        return userData.data.map(x => x.username);
     };
 
     return <>
