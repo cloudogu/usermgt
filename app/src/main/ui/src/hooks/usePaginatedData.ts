@@ -106,7 +106,7 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
             error: error,
             isLoading: isLoading,
             pageCount: Math.ceil((data?.pagination?.totalEntries ?? defaultPageSize) / defaultPageSize),
-            currentPage: Math.max(page-1, 1),
+            currentPage: Math.max(page, 1),
         },
         setPage: setPage,
         setSearchString: setSearchString,
