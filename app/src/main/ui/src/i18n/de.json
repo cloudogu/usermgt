@@ -221,7 +221,11 @@
       "importSuccess": "Import abgeschlossen",
       "table": "Inhalt der ausgewählten Datei"
     },
-    "infobox": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden. Weitere Informationen dazu: https://docs.cloudogu.com/de/usermanual/usermanagement/",
+    "info": {
+      "docsLink": "https://docs.cloudogu.com/de/usermanual/usermanagement/",
+      "further": "Weitere Informationen dazu: ",
+      "text": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden."
+    },
     "notification": {
       "genericError": "Die Nutzer aus der Datei '{{file}}' konnten nicht importiert werden.",
       "invalidFile": "Die Datei '{{file}}' ist keine gültige CSV-Datei."

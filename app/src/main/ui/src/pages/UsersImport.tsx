@@ -1,6 +1,15 @@
-import {Button, Form, H1, H3, LoadingIcon, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {
+    Button,
+    Form,
+    H1,
+    H3,
+    Href,
+    LoadingIcon,
+    useAlertNotification,
+    useFormHandler
+} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
-import {Navigate} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
 import UsersImportTable from "../components/usersImport/UsersImportTable";
@@ -51,7 +60,8 @@ const UsersImport = (props: { title: string }) => {
         </div>
         <div>
             {notification}
-            <p className={"mt-4"}>{t("usersImport.infobox")}</p>
+            <p className={"mt-4"}>{t("usersImport.info.text")}</p>
+            <p className={"mt-1"}>{t("usersImport.info.further")}<Href>{t("usersImport.info.docsLink")}</Href></p>
             <Form handler={handler}>
                 <Form.HandledFileInput
                     className={"mt-8"}
