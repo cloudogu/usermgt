@@ -96,7 +96,7 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
 
     useEffect(() => {
         if (opts.start !== page-1) {
-            setOpts({...opts, start: page-1, query: searchQuery});
+            setOpts({...opts, start: Math.max(page-1, 0), query: searchQuery});
         }
     }, [searchParams]);
 
