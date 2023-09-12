@@ -9,7 +9,7 @@ import {
     useFormHandler
 } from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
-import {Link, Navigate} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
 import UsersImportTable from "../components/usersImport/UsersImportTable";
