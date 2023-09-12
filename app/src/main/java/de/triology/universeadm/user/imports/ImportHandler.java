@@ -326,7 +326,7 @@ public class ImportHandler {
     public Pair<List<Result.Summary>, Integer> getSummaries(int start, int limit) throws IOException {
         List<Result.Summary> allSummaries = this.summaryRepository.getSummaries();
 
-        int numberSkipEntries = (start*limit) - limit;
+        int numberSkipEntries = start*limit;
 
         List<Result.Summary> paginatedList = allSummaries.stream()
                 .sorted(Comparator.comparingLong(Result.Summary::getTimestamp).reversed())
