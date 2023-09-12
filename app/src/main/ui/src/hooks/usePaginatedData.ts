@@ -6,10 +6,10 @@ import type {QueryOptions} from "./useAPI";
 const PAGE_QUERY_PARAM = "p";
 const SEARCH_QUERY_PARAM = "q";
 const DEFAULT_PAGE_SIZE = 20;
-const DEFAULT_START = 1;
+const DEFAULT_START = 0;
 
 function getPositiveNumberOrFallback(num: number | undefined, fallback: number) {
-    if (num === undefined || num <= 0) {
+    if (num === undefined || num < 0) {
         return fallback;
     }
     return num;
@@ -96,7 +96,7 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
 
     useEffect(() => {
         if (opts.start !== page) {
-            setOpts({...opts, start: page, query: searchQuery});
+            setOpts({...opts, start: page-1, query: searchQuery});
         }
     }, [searchParams]);
 
@@ -106,7 +106,7 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
             error: error,
             isLoading: isLoading,
             pageCount: Math.ceil((data?.pagination?.totalEntries ?? defaultPageSize) / defaultPageSize),
-            currentPage: page,
+            currentPage: Math.max(page-1, 1),
         },
         setPage: setPage,
         setSearchString: setSearchString,

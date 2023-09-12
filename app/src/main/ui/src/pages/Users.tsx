@@ -122,7 +122,8 @@ export default function Users(props: { title: string }) {
                     className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
                     currentPage={currentPage ?? 1}
                     pageCount={pageCount ?? 1}
-                    onPageChange={changePage}/>
+                    onPageChange={changePage}
+                />
             </Table.ConditionalFoot>
         </Table>
     </>;
