@@ -61,7 +61,7 @@ const UsersImport = (props: { title: string }) => {
         <div>
             {notification}
             <p className={"mt-4"}>{t("usersImport.info.text")}</p>
-            <p className={"mt-1"}>{t("usersImport.info.further")}<Href>{t("usersImport.info.docsLink")}</Href></p>
+            <p className={"mt-1"}>{t("usersImport.info.further")}<Href href={t("usersImport.info.docsLink")}>{t("usersImport.info.docsLink")}</Href></p>
             <Form handler={handler}>
                 <Form.HandledFileInput
                     className={"mt-8"}
