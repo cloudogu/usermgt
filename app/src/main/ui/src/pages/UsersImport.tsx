@@ -1,3 +1,4 @@
+import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 import {
     Button,
     Form,
@@ -16,9 +17,8 @@ import UsersImportTable from "../components/usersImport/UsersImportTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
-import { ImportUsersService} from "../services/ImportUsers";
 import type {ImportUsersResponse} from "../services/ImportUsers";
-import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import {ImportUsersService} from "../services/ImportUsers";
 
 type ImportUsersUploadModel = {
     file?: FileList;
@@ -61,7 +61,10 @@ const UsersImport = (props: { title: string }) => {
         <div>
             {notification}
             <p className={"mt-4"}>{t("usersImport.info.text")}</p>
-            <p className={"mt-1"}>{t("usersImport.info.further")}<Href href={t("usersImport.info.docsLink")}>{t("usersImport.info.docsLink")}</Href></p>
+            <p className={"mt-1"}>
+                {t("usersImport.info.further")}
+                <Href href={t("usersImport.info.docsLink")}>{t("usersImport.info.docsLink")}</Href>
+            l</p>
             <Form handler={handler}>
                 <Form.HandledFileInput
                     className={"mt-8"}
@@ -102,7 +105,8 @@ const UsersImport = (props: { title: string }) => {
                     </Button>
                 </div>
             </Form>
-            {(uploadResult && !loading) && <Navigate to={`/users/import/${uploadResult.importID}`} state={{result: uploadResult}}/>}
+            {(uploadResult && !loading) &&
+                <Navigate to={`/users/import/${uploadResult.importID}`} state={{result: uploadResult}}/>}
             {loading &&
                 <div className={"w-full flex flex-row justify-center mt-16"}><LoadingIcon className={"w-64 h-64"}/>
                 </div>}
