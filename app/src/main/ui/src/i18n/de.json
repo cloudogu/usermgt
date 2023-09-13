@@ -261,6 +261,15 @@
       "errors": {
         "error": "Fehler",
         "line": "Zeile"
+      },
+      "success": {
+        "displayname": "Anzeigename",
+        "external": "Extern",
+        "givenName": "Vorname",
+        "mail": "Email",
+        "name": "Nachname",
+        "passwordReset": "Passwort temporär",
+        "username": "Nutzername"
       }
     }
   }

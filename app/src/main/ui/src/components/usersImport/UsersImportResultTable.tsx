@@ -4,6 +4,7 @@ import React from "react";
 import type {ImportedUser} from "../../services/ImportUsers";
 import type {ComponentPropsWithoutRef} from "react";
 import {User} from "../../services/Users";
+import {t} from "../../helpers/i18nHelpers";
 
 export interface UsersImportResultTableProps extends Omit<ComponentPropsWithoutRef<"table">, "content"> {
     content: ImportedUser[];
@@ -29,13 +30,13 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                 <Table.Head.Tr>
                     {
                         [
-                            "Nutzername",
-                            "Vorname",
-                            "Nachname",
-                            "Anzeigename",
-                            "Email",
-                            "Extern",
-                            "Passwort temporär"
+                            t("usersImportResult.table.success.username"),
+                            t("usersImportResult.table.success.givenname"),
+                            t("usersImportResult.table.success.name"),
+                            t("usersImportResult.table.success.displayName"),
+                            t("usersImportResult.table.success.mail"),
+                            t("usersImportResult.table.success.external"),
+                            t("usersImportResult.table.success.passwordReset"),
                         ].map((k, i) =>
                             <Table.Head.Th key={k} className={`${columnWidths[i]} break-all`}>
                                 {k}

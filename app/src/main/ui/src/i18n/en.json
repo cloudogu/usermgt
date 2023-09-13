@@ -261,6 +261,15 @@
       "errors": {
         "error": "Error",
         "line": "Line"
+      },
+      "success": {
+        "displayname": "Display name",
+        "external": "External",
+        "givenname": "Given name",
+        "mail": "Mail",
+        "name": "Name",
+        "pwdReset": "Temporary password",
+        "username": "Username"
       }
     }
   }
