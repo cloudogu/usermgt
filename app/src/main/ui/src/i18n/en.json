@@ -266,10 +266,10 @@
         "displayname": "Display name",
         "external": "External",
         "false": "No",
-        "givenname": "Given name",
+        "givenName": "Given name",
         "mail": "Mail",
         "name": "Name",
-        "pwdReset": "Temporary password",
+        "passwordReset": "Temporary password",
         "true": "Yes",
         "username": "Username"
       }
