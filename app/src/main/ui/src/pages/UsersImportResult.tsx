@@ -89,7 +89,7 @@ const UsersImportResult = (props: { title: string }) => {
                 </Details>
 
                 <Paragraph className={"mt-6"}>
-                    <Href href={`/usermgt/api/users/import/${summary.importID}/download`}>{t("usersImportResult.download")}</Href>
+                    <Href href={ImportUsersService.createDownloadLink(summary)}>{t("usersImportResult.download")}</Href>
                 </Paragraph>
             </>
         }

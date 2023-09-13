@@ -76,6 +76,9 @@ export const ImportUsersService = {
     async deleteSummary(summary: ImportSummary): Promise<void> {
         return Axios.delete(`/users/import/${summary.importID}`, {});
     },
+    createDownloadLink(summary: ImportSummary | ImportUsersResponse): string {
+        return `/usermgt/api/users/import/${summary.importID}/download`;
+    },
     async getImportDetails(id: string, signal?: AbortSignal): Promise<AxiosResponse<ImportUsersResponse>> {
         const result = await Axios.get<ImportUsersResponseDto>(`/users/import/${id}`, {
             headers: {

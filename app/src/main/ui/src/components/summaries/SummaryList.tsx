@@ -68,7 +68,7 @@ export default function SummaryList(
                                     </DropdownMenu.Button>
                                     <DropdownMenu.Items>
                                         <DropdownMenu.Items.LinkItem
-                                            href={`/usermgt/api/users/import/${s.importID}/download`}
+                                            href={ImportUsersService.createDownloadLink(s)}
                                             className={"flex flex-row"}
                                         >
                                             <TextWithIcon icon={<CesIcons.DownloadSimple weight={"bold"}/>}>
