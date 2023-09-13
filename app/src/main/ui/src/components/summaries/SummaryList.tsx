@@ -47,8 +47,8 @@ export default function SummaryList(
             </Table.Head>
             <Table.ConditionalBody show={!isLoading}>
                 {
-                    summaries.map((s, i) => (
-                        <Table.Body.Tr key={i}>
+                    summaries.map((s) => (
+                        <Table.Body.Tr key={s.importID}>
                             <Table.Body.Td>
                                 {s.filename}
                             </Table.Body.Td>
