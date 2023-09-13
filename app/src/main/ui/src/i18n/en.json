@@ -265,10 +265,12 @@
       "success": {
         "displayname": "Display name",
         "external": "External",
+        "false": "No",
         "givenname": "Given name",
         "mail": "Mail",
         "name": "Name",
         "pwdReset": "Temporary password",
+        "true": "Yes",
         "username": "Username"
       }
     }

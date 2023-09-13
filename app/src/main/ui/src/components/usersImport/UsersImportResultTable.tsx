@@ -66,7 +66,7 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                                             const isString = !isBoolean;
                                             return (
                                                 <Table.Body.Td key={h} className={`${columnWidths[i]} break-all`}>
-                                                    {isBoolean && ((user[h] as boolean) ? "Ja" : "Nein")}
+                                                    {isBoolean && ((user[h] as boolean) ? t("usersImportResult.table.success.true") : t("usersImportResult.table.success.false"))}
                                                     {isString && user[h]}
                                                 </Table.Body.Td>
                                             );

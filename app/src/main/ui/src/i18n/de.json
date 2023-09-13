@@ -265,10 +265,12 @@
       "success": {
         "displayname": "Anzeigename",
         "external": "Extern",
+        "false": "Nein",
         "givenName": "Vorname",
         "mail": "Email",
         "name": "Nachname",
         "passwordReset": "Passwort temporär",
+        "true": "Ja",
         "username": "Nutzername"
       }
     }
