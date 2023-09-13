@@ -1,5 +1,6 @@
 import {CesIcons, DropdownMenu, Table, TextWithIcon} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
+import {useTranslation} from "react-i18next";
 import {t} from "../../helpers/i18nHelpers";
 import {ImportUsersService} from "../../services/ImportUsers";
 import type {ImportSummary} from "../../services/ImportUsers";
@@ -25,7 +26,7 @@ export default function SummaryList(
         isLoading,
         refetch,
     }: SummaryListProps) {
-    const language = navigator?.language ?? "de-DE";
+    const { i18n: {language} } = useTranslation();
 
     return (
         <Table>
