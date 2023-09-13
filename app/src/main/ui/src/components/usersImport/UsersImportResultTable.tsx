@@ -31,7 +31,7 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                     {
                         [
                             t("usersImportResult.table.success.username"),
-                            t("usersImportResult.table.success.givenname"),
+                            t("usersImportResult.table.success.givenName"),
                             t("usersImportResult.table.success.name"),
                             t("usersImportResult.table.success.displayName"),
                             t("usersImportResult.table.success.mail"),

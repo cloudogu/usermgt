@@ -263,7 +263,7 @@
         "line": "Line"
       },
       "success": {
-        "displayname": "Display name",
+        "displayName": "Display name",
         "external": "External",
         "false": "No",
         "givenName": "Given name",

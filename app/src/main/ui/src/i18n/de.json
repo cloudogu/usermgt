@@ -263,7 +263,7 @@
         "line": "Zeile"
       },
       "success": {
-        "displayname": "Anzeigename",
+        "displayName": "Anzeigename",
         "external": "Extern",
         "false": "Nein",
         "givenName": "Vorname",
