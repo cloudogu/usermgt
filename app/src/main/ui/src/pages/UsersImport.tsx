@@ -2,7 +2,7 @@ import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 import {
     Button,
     Form,
-    H1,
+    H1, H2,
     H3,
     Href,
     LoadingIcon,
@@ -78,7 +78,7 @@ const UsersImport = (props: { title: string }) => {
 
                 {(file !== undefined && !loading) &&
                     <>
-                        <H3 className={"mt-12"}>{t("usersImport.headlines.table")}</H3>
+                        <H2 className={"mt-12"}>{t("usersImport.headlines.table")}</H2>
                         <UsersImportTable header={file.header} rows={file.rows}/>
                     </>
                 }
