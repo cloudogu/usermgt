@@ -2,18 +2,18 @@ ARG TOMCAT_MAJOR_VERSION=8
 ARG TOMCAT_VERSION=8.5.88
 ARG TOMCAT_TARGZ_SHA512=c31c794092b160c5b0099f4dfb5cf17d711d93ae68a60e414691dba65ad80c78a5fb602c7010d1226dae424b83921e440bd858b3eb0ef90b7932316d3ab44c1f
 
-FROM timbru31/java-node:8-jdk-18 as builder
-COPY app/pom.xml /usermgt/pom.xml
-COPY app/mvnw /usermgt/mvnw
-COPY app/.mvn /usermgt/.mvn
+FROM timbru31/java-node:11-jdk-18 as builder
+COPY app/build.gradle.kts /usermgt/build.gradle.kts
+COPY app/settings.gradle.kts /usermgt/settings.gradle.kts
+COPY app/gradle.properties /usermgt/gradle.properties
+COPY app/gradle /usermgt/gradle
+COPY app/gradlew /usermgt/gradlew
+COPY app/.gradle /usermgt/.gradle
 RUN set -x \
     && cd /usermgt \
-    && ./mvnw dependency:resolve-plugins dependency:resolve
+    && ./gradlew --refresh-dependencies clean build
 
 COPY app/ /usermgt
-RUN set -x \
-     && cd /usermgt \
-     && ./mvnw package
 
 FROM registry.cloudogu.com/official/base:3.17.3-2 as tomcat
 
@@ -32,8 +32,7 @@ RUN apk update && apk add wget && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.
   && tar xf "apache-tomcat-${TOMCAT_VERSION}.tar" -C /opt \
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
-
-FROM registry.cloudogu.com/official/java:8u362-1
+FROM registry.cloudogu.com/official/java:11.0.19-1
 
 ARG TOMCAT_VERSION
 
@@ -48,7 +47,7 @@ ENV SERVICE_TAGS=webapp \
     # home directory
     UNIVERSEADM_HOME=/var/lib/usermgt/conf
 
-COPY --from=builder /usermgt/target/usermgt-*.war /usermgt.war
+COPY --from=builder /usermgt/build/libs/usermgt-*.war /usermgt.war
 
 # create user
 RUN set -o errexit \

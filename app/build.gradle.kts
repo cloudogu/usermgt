@@ -15,7 +15,8 @@ plugins {
     id("org.siouan.frontend-jdk11")
     id("project-report")
     eclipse
-    kotlin("jvm")
+    id("com.github.spotbugs") apply(false)
+    id("ca.cutterslade.analyze") apply(false)
 }
 
 buildscript {
@@ -23,7 +24,7 @@ buildscript {
         set("powermockVersion", "1.5.3")
         set("slf4jVersion", "1.7.36")
         set("resteasyVersion", "3.15.6.Final")
-        set("guiceVersion", "3.0")
+        set("guiceVersion", "4.2.3")
         set("shiroVersion", "1.12.0")
         set("legmanVersion", "1.6.2")
         set("jacocoVersion", "0.8.10")
@@ -39,12 +40,12 @@ repositories {
     }
 
     maven {
-        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        url = uri("http://packages.scm-manager.org/nexus/content/groups/public")
+        isAllowInsecureProtocol = true
     }
 
     maven {
-        url = uri("http://packages.scm-manager.org/nexus/content/groups/public")
-        isAllowInsecureProtocol = true
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 
@@ -56,6 +57,8 @@ dependencies {
     implementation("org.apache.shiro:shiro-core:${project.extra.get("shiroVersion")}")
     implementation("org.apache.shiro:shiro-web:${project.extra.get("shiroVersion")}")
     implementation("org.apache.shiro:shiro-guice:${project.extra.get("shiroVersion")}")
+    implementation("io.buji:buji-pac4j:8.0.0")
+    implementation("org.pac4j:pac4j-javaee:5.4.3")
     implementation("org.apache.shiro:shiro-cas:${project.extra.get("shiroVersion")}") // TODO replace with pack4j
     implementation("commons-codec:commons-codec:1.15")
     implementation("org.opensaml:opensaml:1.1")
@@ -114,8 +117,7 @@ java {
 
 tasks.compileJava {
     // replaces animal sniffer plugin
-    options.compilerArgs.addAll(mutableListOf("--release",  JavaVersion.VERSION_11.toString()));
-    //    options.compilerArgs.addAll(mutableListOf("-Xlint:", "unchecked"));
+    options.compilerArgs.addAll(mutableListOf("--release",  JavaVersion.VERSION_11.toString(), "-Xlint:unchecked"));
 }
 
 tasks.withType(JavaCompile::class) {
@@ -154,13 +156,6 @@ jacoco {
 tasks.jacocoTestReport {
     dependsOn(tasks.named("test"))
 }
-
-// no need for copy target/classes/static ?
-//tasks.processResources {
-//    from("${project.buildDir}/classes/static") {
-//        project.extra.get("frontendPath")?.let { into("$it/dist") }
-//    }
-//}
 
 frontend {
     packageJsonDirectory.set(project.extra.get("frontendPath")?.let { file(it) })
