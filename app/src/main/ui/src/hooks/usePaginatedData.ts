@@ -94,19 +94,26 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
         setOpts({...opts});
     };
 
+    const pageCount = Math.ceil((data?.pagination?.totalEntries ?? defaultPageSize) / defaultPageSize);
+    const currentPage = Math.max(page, 1);
+
     useEffect(() => {
-        if (opts.start !== page-1 || opts.query !== searchQuery) {
-            setOpts({...opts, start: Math.max(page-1, 0), query: searchQuery});
+        if (opts.start !== page - 1 || opts.query !== searchQuery) {
+            setOpts({...opts, start: Math.max(page - 1, 0), query: searchQuery});
+        }
+        if (currentPage > pageCount) {
+            setOpts({...opts, start: Math.max(pageCount - 1, 0)});
         }
     }, [searchParams]);
+
 
     return {
         data: {
             value: data?.data,
             error: error,
             isLoading: isLoading,
-            pageCount: Math.ceil((data?.pagination?.totalEntries ?? defaultPageSize) / defaultPageSize),
-            currentPage: Math.max(page, 1),
+            pageCount: pageCount,
+            currentPage: currentPage,
         },
         setPage: setPage,
         setSearchString: setSearchString,

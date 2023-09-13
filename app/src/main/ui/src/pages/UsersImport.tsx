@@ -64,7 +64,7 @@ const UsersImport = (props: { title: string }) => {
             <p className={"mt-1"}>
                 {t("usersImport.info.further")}
                 <Href href={t("usersImport.info.docsLink")}>{t("usersImport.info.docsLink")}</Href>
-            l</p>
+            </p>
             <Form handler={handler}>
                 <Form.HandledFileInput
                     className={"mt-8"}
