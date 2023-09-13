@@ -18,10 +18,10 @@ export default function UsersImportErrorTable({content, ...props}: UsersImportEr
             <Table.Head>
                 <Table.Head.Tr>
                     <Table.Head.Th>
-                        Zeile
+                        {t("usersImportResult.table.errors.line")}
                     </Table.Head.Th>
                     <Table.Head.Th>
-                        Fehler
+                        {t("usersImportResult.table.errors.error")}
                     </Table.Head.Th>
                 </Table.Head.Tr>
             </Table.Head>

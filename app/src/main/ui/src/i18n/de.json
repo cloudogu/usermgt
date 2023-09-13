@@ -256,6 +256,12 @@
       "created": "Erstellte Nutzerkonten",
       "skipped": "Übersprungene Datenzeilen",
       "updated": "Aktualisierte Nutzerkonten"
+    },
+    "table": {
+      "errors": {
+        "error": "Fehler",
+        "line": "Zeile"
+      }
     }
   }
 }

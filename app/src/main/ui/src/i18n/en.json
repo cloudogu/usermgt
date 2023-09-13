@@ -256,6 +256,12 @@
       "created": "Created accounts",
       "skipped": "Skipped data rows",
       "updated": "Updated accounts"
+    },
+    "table": {
+      "errors": {
+        "error": "Error",
+        "line": "Line"
+      }
     }
   }
 }
