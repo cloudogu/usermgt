@@ -2,10 +2,10 @@ import {H1, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import SummaryList from "../components/summaries/SummaryList";
 import {t} from "../helpers/i18nHelpers";
-import {usePaginatedData} from "../hooks/usePaginatedData";
+
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import {ImportUsersService} from "../services/ImportUsers";
-import type {ImportSummary} from "../services/ImportUsers";
+
+
 import useSummaries from "../hooks/useSummaries";
 
 const Summaries = (props: { title: string }) => {

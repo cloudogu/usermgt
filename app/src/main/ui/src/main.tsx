@@ -14,6 +14,7 @@ import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
+import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
 import UsersImport from "./pages/UsersImport";
 import UsersImportResult from "./pages/UsersImportResult";
@@ -21,7 +22,6 @@ import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
-import Summaries from "./pages/Summaries";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 

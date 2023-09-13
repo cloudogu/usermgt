@@ -1,10 +1,10 @@
 import {Table} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 
+
+import {t} from "../../helpers/i18nHelpers";
 import type {ImportedUser} from "../../services/ImportUsers";
 import type {ComponentPropsWithoutRef} from "react";
-import {User} from "../../services/Users";
-import {t} from "../../helpers/i18nHelpers";
 
 export interface UsersImportResultTableProps extends Omit<ComponentPropsWithoutRef<"table">, "content"> {
     content: ImportedUser[];

@@ -109,7 +109,6 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
         }
     });
 
-
     return {
         data: {
             value: data?.data,

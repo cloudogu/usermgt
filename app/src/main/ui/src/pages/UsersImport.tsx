@@ -1,9 +1,8 @@
-import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 import {
     Button,
     Form,
     H1, H2,
-    H3,
+    
     Href,
     LoadingIcon,
     useAlertNotification,
@@ -17,8 +16,9 @@ import UsersImportTable from "../components/usersImport/UsersImportTable";
 import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
-import type {ImportUsersResponse} from "../services/ImportUsers";
 import {ImportUsersService} from "../services/ImportUsers";
+import type {ImportUsersResponse} from "../services/ImportUsers";
+import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
 type ImportUsersUploadModel = {
     file?: FileList;
