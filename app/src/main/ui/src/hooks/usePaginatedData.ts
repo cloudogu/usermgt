@@ -101,10 +101,13 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
         if (opts.start !== page - 1 || opts.query !== searchQuery) {
             setOpts({...opts, start: Math.max(page - 1, 0), query: searchQuery});
         }
-        if (currentPage > pageCount) {
-            setOpts({...opts, start: Math.max(pageCount - 1, 0)});
-        }
     }, [searchParams]);
+
+    useEffect(() => {
+        if (data !== undefined && currentPage > pageCount){
+            setPage(pageCount);
+        }
+    });
 
 
     return {
