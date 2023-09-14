@@ -225,10 +225,10 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
-"@cloudogu/ces-theme-tailwind@0.1.29":
-  version "0.1.29"
-  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.1.29.tgz#78fbc28b56787b9cb972427f735015f5391ed5b1"
-  integrity sha512-UGW9DK+W7Z0XRqkp/tEaN3NuI+V5sVxeHRDIW3ElxYhAdflta7Gvi1tk2AZ0mBhiT//X2YJT2yVUVXL/fb/WRg==
+"@cloudogu/ces-theme-tailwind@0.2.0":
+  version "0.2.0"
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.2.0.tgz#45f90ccf7cef197943cdefb02ea3d3508a0929f9"
+  integrity sha512-bW9lFYgOlatDbe9IwnFHxgfulB6Iyu8nkZ/Mg7yyByK4MLOj//BP7aY4EBUbwJ847c3EUZl39QLksXTfuKevlA==
   dependencies:
     "@headlessui/react" "^1.7.17"
     "@heroicons/react" "^2.0.13"
