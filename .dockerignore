@@ -322,3 +322,5 @@ sketch
 .run
 .run/**
 **.run.xml
+
+**/node_modules/**
