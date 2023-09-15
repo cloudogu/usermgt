@@ -9,5 +9,9 @@
     "esbuild": "^0.17.17",
     "mocha-junit-reporter": "^2.2.0",
     "mocha": "^10.2.0"
+  },
+
+  "scripts": {
+    "updateTests": "mkdir -p cypress/e2e/dogu_integration_test_lib && cp -r node_modules/@cloudogu/dogu-integration-test-library/lib/integration/* cypress/e2e/dogu_integration_test_lib"
   }
 }
