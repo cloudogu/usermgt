@@ -1,5 +1,15 @@
-import {Button, Form, H1, H3, LoadingIcon, useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {
+    Button,
+    Form,
+    H1, H2,
+    
+    Href,
+    LoadingIcon,
+    useAlertNotification,
+    useFormHandler
+} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
+import {Navigate} from "react-router-dom";
 import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
 import UsersImportTable from "../components/usersImport/UsersImportTable";
@@ -7,22 +17,13 @@ import {t} from "../helpers/i18nHelpers";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
+import type {ImportUsersResponse} from "../services/ImportUsers";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
 type ImportUsersUploadModel = {
     file?: FileList;
     dryrun: boolean;
 };
-
-export interface ImportUsersResponse {
-    summary: {
-        CREATED: number;
-        UPDATED: number;
-        SKIPPED: number;
-    },
-    errors: string[];
-}
-
 const UsersImport = (props: { title: string }) => {
     useSetPageTitle(props.title);
     const {notification, notify} = useAlertNotification();
@@ -35,7 +36,7 @@ const UsersImport = (props: { title: string }) => {
             if (values.file?.length ?? 0 > 0) {
                 const file = values.file?.item(0) as File;
                 setLoading(true);
-                ImportUsersService.save(file)
+                ImportUsersService.importCsv(file)
                     .then(response => {
                         setUploadResult(response.data);
                     })
@@ -59,7 +60,11 @@ const UsersImport = (props: { title: string }) => {
         </div>
         <div>
             {notification}
-            <p className={"mt-4"}>{t("usersImport.infobox")}</p>
+            <p className={"mt-4"}>{t("usersImport.info.text")}</p>
+            <p className={"mt-1"}>
+                {t("usersImport.info.further")}
+                <Href href={t("usersImport.info.docsLink")}>{t("usersImport.info.docsLink")}</Href>
+            </p>
             <Form handler={handler}>
                 <Form.HandledFileInput
                     className={"mt-8"}
@@ -73,7 +78,7 @@ const UsersImport = (props: { title: string }) => {
 
                 {(file !== undefined && !loading) &&
                     <>
-                        <H3 className={"mt-12"}>{t("usersImport.headlines.table")}</H3>
+                        <H2 className={"mt-12"}>{t("usersImport.headlines.table")}</H2>
                         <UsersImportTable header={file.header} rows={file.rows}/>
                     </>
                 }
@@ -100,26 +105,14 @@ const UsersImport = (props: { title: string }) => {
                     </Button>
                 </div>
             </Form>
-            {(uploadResult && !loading) && renderResult(uploadResult)}
-            {loading && <div className={"w-full flex flex-row justify-center mt-16"}><LoadingIcon className={"w-64 h-64"}/></div>}
+            {(uploadResult && !loading) &&
+                <Navigate to={`/users/import/${uploadResult.importID}`} state={{result: uploadResult}}/>}
+            {loading &&
+                <div className={"w-full flex flex-row justify-center mt-16"}><LoadingIcon className={"w-64 h-64"}/>
+                </div>}
         </div>
     </>;
 };
 
-function renderResult(uploadResult: ImportUsersResponse) {
-    return <>
-        <H3>{t("usersImport.headlines.importSuccess")}</H3>
-        <p>{`Erstellt: ${uploadResult.summary.CREATED}`}</p>
-        <p>{`Aktualisiert: ${uploadResult.summary.UPDATED}`}</p>
-        <p>{`Übersprungen: ${uploadResult.summary.SKIPPED}`}</p>
-        {uploadResult.errors && uploadResult.errors.length > 0 && <>
-            <H3>{t("usersImport.headlines.importErrors")}</H3>
-            <ul>
-                {uploadResult.errors.map(err => <li key={err}>err</li>)}
-            </ul>
-        </>
-        }
-    </>;
-}
 
 export default UsersImport;

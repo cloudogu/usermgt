@@ -3,7 +3,7 @@ import React, {createContext, useContext} from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import {useTranslation} from "react-i18next";
-import {Outlet, useLocation, createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
+import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from "react-router-dom";
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
@@ -14,8 +14,10 @@ import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
+import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
 import UsersImport from "./pages/UsersImport";
+import UsersImportResult from "./pages/UsersImportResult";
 import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
@@ -36,12 +38,12 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
 const router = createBrowserRouter([
     {
         path: "",
-        element: <React.StrictMode><ApplicationContainer children={<Outlet />} /></React.StrictMode>,
-        errorElement: <React.StrictMode><ApplicationContainer children={<ErrorPage />} /></React.StrictMode>,
+        element: <React.StrictMode><ApplicationContainer children={<Outlet/>}/></React.StrictMode>,
+        errorElement: <React.StrictMode><ApplicationContainer children={<ErrorPage/>}/></React.StrictMode>,
         children: [
             {
                 path: "",
-                element: <Navigate to="/account" replace />,
+                element: <Navigate to="/account" replace/>,
             },
             {
                 path: "account",
@@ -54,6 +56,14 @@ const router = createBrowserRouter([
             {
                 path: "users/import",
                 element: <UsersImport title={t("pages.usersImport") + " | User Management"}/>,
+            },
+            {
+                path: "users/import/:id",
+                element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
+            },
+            {
+                path: "summaries",
+                element: <Summaries title={t("pages.summaries") + " | User Management"}/>,
             },
             {
                 path: "users/:username/edit",
@@ -79,13 +89,14 @@ const router = createBrowserRouter([
     },
 ], {basename: contextPath});
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router} />);
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router}/>);
 
 export type ApplicationContainerProps = {
     children: JSX.Element;
 }
+
 function ApplicationContainer({children}: ApplicationContainerProps) {
-    const {user:casUser} = useCasUser();
+    const {user: casUser} = useCasUser();
     return <ApplicationContext.Provider value={{casUser: casUser}}>
         <Nav/>
         <Main>
@@ -116,13 +127,17 @@ function Nav() {
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.users")}
                             </Navbar.ListItem>
+                            <Navbar.ListItem path={"/groups"}>
+                                <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
+                                {t("pages.groups")}
+                            </Navbar.ListItem>
                             <Navbar.ListItem path={"/users/import"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.usersImport")}
                             </Navbar.ListItem>
-                            <Navbar.ListItem path={"/groups"}>
-                                <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
-                                {t("pages.groups")}
+                            <Navbar.ListItem path={"/summaries"}>
+                                <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
+                                {t("pages.summaries")}
                             </Navbar.ListItem>
                         </> :
                         <></>

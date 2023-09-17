@@ -17,7 +17,7 @@
     "comma-separated-values": "^3.6.4",
     "dynamic-class-list": "^2.0.2",
     "formik": "^2.2.9",
-    "heroicons": "^2.0.13",
+    "heroicons": "^2.0.14",
     "hoist-non-react-statics": "^3.3.2",
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
@@ -30,7 +30,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@cloudogu/ces-theme-tailwind": "0.1.11",
+    "@cloudogu/ces-theme-tailwind": "0.2.0",
     "@mertasan/tailwindcss-variables": "^2.5.1",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.26",

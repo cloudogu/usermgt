@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added feature to import users via CSV (#89)
+
+### Changed
+- Updated ces-theme-tailwind to 0.2.0 (#89)
+
+### Fixed
+- When generating the new .npmrc, the old is now actually removed
 
 ## [v1.10.1-1] - 2023-05-02
 ### Changed

@@ -10,7 +10,7 @@ export default function UsersImportTable(file: { header: string[], rows: string[
     const entries = file.rows.filter((_, index) => index >= startIndex && index < endIndex);
 
     return (
-        <Table className="my-4 text-sm" data-testid="users-table">
+        <Table className="my-4 text-sm min-w-[900px]" data-testid="users-table">
             <Table.Head>
                 <Table.Head.Tr className={"uppercase"}>
                     {file.header.map((elem, i) => <Table.Head.Th

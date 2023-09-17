@@ -247,3 +247,79 @@ Möchten Sie als Administrator:in eine neue Gruppe anlegen und diese in untersch
  ![Vorgehen bei Rechtekonfiguration](figures/usermanagement/CES_UserManagement_example_de.png)
 
 Mit Hilfe eines Testaccounts können Sie sich in die Dogus einloggen, in denen Sie die neu angelegte Gruppe konfigurieren wollen. Nachdem Sie die Gruppe mit Ihrem Account im Dogu konfiguriert haben, können Sie den Testaccount zusätzlich zum Testen der Konfiguration verwenden.
+
+## Nutzerimport
+
+### Importieren neuer Nutzerkonten
+
+Über das User Management besteht die Möglichkeit, beliebig viele Nutzerkonten in nur einem Schritt über die Oberfläche zu importieren. 
+Dafür muss eine CSV-Datei angelegt werden, die alle zu importierenden Konten enthält.
+
+Als Import-Format wird CSV nach [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180) verwendet. Der Header der Datei muss
+**7** Spalten definieren:
+
+```csv
+username,displayname,givenname,surname,mail,pwdReset,external
+```
+Die Reihenfolge der Spalten kann variieren, jedoch müssen die Namen der Spalten beibehalten werden. 
+
+Ein Beispiel für eine funktionierende CSV-Datei:
+```
+displayname,external,mail,pwdreset,surname,username,givenname
+Max Mustermann,TRUE,max@mustermann.de,TRUE,Mustermann,mmustermann,Max
+Maria Musterfrau,TRUE,maria@musterfrau.de,TRUE,Musterfrau,mmusterfrau,Maria
+Mark Muster,TRUE,mark@muster.de,TRUE,Muster,mmuster,Mark
+Claus,TRUE,claus@c.de,TRUE,Claus,,Claus
+Claus,TRUE,max@mustermann.de,TRUE,Claus,Claus,Carl
+Mark Muster,TRUE,mark@muster.de,TRUE,Muster,mmuster,Mark
+```
+
+Um diese Datei nun zu importieren, muss über die Navigationsleiste im User Management zu dem Punkt 'Nutzerimport' navigiert werden.
+Die Seite sollte dann wie folgt aussehen:
+
+![Nutzerimport leere Seite](figures/usermanagement/UserImportPageEmpty_de.png)
+
+In dem dort zu sehenden Datei-Eingabefeld muss die zuvor erstellte CSV-Datei ausgewählt werden.
+Sofern eine CSV-Datei ausgewählt wurde, ändert sich die Ansicht der Seite und der Inhalt der CSV-Datei wird tabellarisch dargestellt.
+
+![Nutzerimport Datei ausgewaehlt](figures/usermanagement/UserImportFileSelected_de.png)
+
+Durch einen Klick auf 'Importieren' wird die CSV-Datei gesendet und die Nutzerkonten darin werden importiert.
+
+Anschließend wird die Ergebnisseite angezeigt. Dort ist zu sehen, ob der Import erfolgreich war.
+Es ist möglich, dass neue Nutzerkonten angelegt werden, vorhandene aktualisiert werden oder dass Zeilen aus der CSV-Datei
+übersprungen werden, weil sie ungültige Werte enthielten. Das kann zum Beispiel der Fall sein, wenn notwendige Spalten nicht vorhanden waren
+oder eine Bedingung wie eindeutige E-Mails nicht erfüllt war.
+
+Auf der Ergebnis-Seite werden die Ergebnisse wie folgt dargestellt:
+
+![Nutzerimport Ergebnisseite eingeklappt](figures/usermanagement/UserImportResultPageCollapsed_de.png)
+
+Durch einen Klick auf die jeweiligen Zeilen können mehr Details zu den hinzugefügten/aktualisierten Nutzerkonten sowie den
+übersprungenen Zeilen angezeigt werden.
+
+![Nutzerimport Ergebnisseite ausgeklappt](figures/usermanagement/UserImportResultPageUncollapsed_de.png)
+
+Außerdem kann durch das Klicken auf 'Importübersicht herunterladen' diese heruntergeladen werden.
+
+
+### Verwalten vergangener Importe
+
+Vergangene Importe werden im Dateisystem gespeichert, damit diese erneut abgerufen werden können.
+Dafür wird die Importübersicht verwendet. um diese aufzurufen, klicken Sie in der Navigationsleiste auf den Eintrag
+'Importübersichten'. Dort werden alle vergangenen Importe mit dem Namen der CSV-Datei sowie dem genauen Datum tabellarisch dargestellt.
+
+![Importhistorie](figures/usermanagement/UserImportSummaries_de.png)
+
+Durch einen Klick auf das Auswahlfeld 'Funktionen' der jeweiligen Zeile öffnete sich ein kleines Untermenü. Dort können
+für die jeweilige Zeile bestimmte Funktionen ausgeführt werden.
+Dort kann entweder direkt die jeweilige Übersicht heruntergeladen oder aus dem System gelöscht werden.
+Außerdem kann über einen Klick auf 'Details' Importübersicht detailliert in der Oberfläche angezeigt werden.
+
+![Importhistorie Funktionen](figures/usermanagement/UserImportSummariesFunctions_de.png)
+
+
+
+
+
+

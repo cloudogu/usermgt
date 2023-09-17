@@ -1,4 +1,11 @@
-import {Button, H1, MailHref, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
+import {
+    Button,
+    H1,
+    MailHref,
+    Searchbar,
+    Table,
+    useAlertNotification
+} from "@cloudogu/ces-theme-tailwind";
 import React, {useContext} from "react";
 import {Link, useLocation} from "react-router-dom";
 import {ConfirmationDialog} from "../components/ConfirmationDialog";
@@ -6,10 +13,9 @@ import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useConfirmation} from "../hooks/useConfirmation";
-import {useFilter} from "../hooks/useFilter";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import {useUsers} from "../hooks/useUsers";
+import useUsers from "../hooks/useUsers";
 import {ApplicationContext} from "../main";
 import {UsersService} from "../services/Users";
 import type {CasUser} from "../services/CasUser";
@@ -20,8 +26,13 @@ const FIRST_PAGE = 1;
 
 export default function Users(props: { title: string }) {
     const location = useLocation();
-    const {updateQuery, updatePage, refetch, opts} = useFilter();
-    const {users: usersModel, isLoading} = useUsers(opts);
+    const {
+        data: {value: users, isLoading, currentPage, pageCount},
+        setPage: updatePage,
+        setSearchString: updateQuery,
+        refetch,
+        opts,
+    } = useUsers();
     const {casUser} = useContext(ApplicationContext);
     const {notification, notify, clearNotification} = useAlertNotification();
     useNotificationAfterRedirect(notify);
@@ -43,8 +54,8 @@ export default function Users(props: { title: string }) {
         updateQuery(query);
     };
 
-    const reloadPage = () => (usersModel?.users.length ?? 0) === 1
-        && updatePage(Math.max((usersModel?.pagination.current ?? 2) - 1, FIRST_PAGE))
+    const reloadPage = () => (users?.length ?? 0) === 1
+        && updatePage(Math.max((currentPage ?? 2) - 1, FIRST_PAGE))
         || refetch();
 
     const openConfirmationDialog = (groupName: string): void => {
@@ -68,18 +79,24 @@ export default function Users(props: { title: string }) {
             <H1 className="uppercase">{t("pages.users")}</H1>
             <div className="flex flex-wrap justify-between py-1">
                 <Link to={"/users/new"}>
-                    <Button variant={"secondary"} className="mt-5 mb-2.5 mr-5"
+                    <Button
+                        variant={"secondary"}
+                        className="mt-5 mb-2.5 mr-5"
                         data-testid="user-create"
                         disabled={isLoading}>{t("users.create")}
                     </Button>
                 </Link>
-                <Searchbar placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
+                <Searchbar
+                    placeholder={"Filter"}
+                    clearOnSearch={false}
+                    onSearch={onSearch}
                     onClear={() => updateQuery("")} startValueSearch={opts.query}
                     data-testid="users-filter" className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
         {notification}
-        <ConfirmationDialog open={open ?? false}
+        <ConfirmationDialog
+            open={open ?? false}
             data-testid="user-delete-dialog"
             onClose={() => toggleModal(false)}
             onConfirm={async () => {
@@ -97,15 +114,16 @@ export default function Users(props: { title: string }) {
                 </Table.Head.Tr>
             </Table.Head>
             <Table.ConditionalBody show={!isLoading}>
-                {(usersModel.users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog, backUrlParams()))}
+                {(users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog, backUrlParams()))}
             </Table.ConditionalBody>
-            <Table.ConditionalFoot show={!isLoading && usersModel.users?.length > 0}>
+            <Table.ConditionalFoot show={!isLoading && (pageCount ?? 1) > 1}>
                 <Table.Foot.Pagination
                     data-testid="users-footer"
                     className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
-                    currentPage={usersModel.pagination.current ?? 1}
-                    pageCount={usersModel.pagination.pageCount ?? 1}
-                    onPageChange={changePage}/>
+                    currentPage={currentPage ?? 1}
+                    pageCount={pageCount ?? 1}
+                    onPageChange={changePage}
+                />
             </Table.ConditionalFoot>
         </Table>
     </>;
@@ -120,7 +138,9 @@ function createUsersRow(user: User, casUser: CasUser, onDelete: (_: string) => v
                 <MailHref mail={user.mail}/>
             </Table.Body.Td>
             <Table.Body.Td className="flex justify-center">
-                <EditLink to={`/users/${user?.username ?? ""}/edit?${backUrlParams}`} id={`${user?.username}-edit-link`} />
+                <EditLink
+                    to={`/users/${user?.username ?? ""}/edit?${backUrlParams}`}
+                    id={`${user?.username}-edit-link`}/>
                 <DeleteButton
                     id={`${user?.username}-delete-button`}
                     disabled={user.username === casUser.principal}
