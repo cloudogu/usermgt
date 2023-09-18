@@ -61,6 +61,12 @@ node('docker') {
                 archive '**/target/*.jar,**/target/*.zip'
             }
 
+            stage('ESLint') {
+                dir('src/main/ui'){
+                    sh "yarn lint"
+                }
+            }
+
             stage('Unit Test') {
                 mvn 'test jacoco:report'
             }
@@ -184,11 +190,11 @@ node('docker') {
 
         stage('Integration Tests - After Upgrade') {
          echo "run integration tests."
-         ecoSystem.runCypressIntegrationTests([
-                 cypressImage: "cypress/included:8.6.0",
-                 enableVideo: params.EnableVideoRecording,
-                 enableScreenshots    : params.EnableScreenshotRecording,
-         ])
+            ecoSystem.runCypressIntegrationTests([
+                    cypressImage: "cypress/included:12.9.0",
+                    enableVideo: params.EnableVideoRecording,
+                    enableScreenshots    : params.EnableScreenshotRecording,
+            ])
         }
       }
 

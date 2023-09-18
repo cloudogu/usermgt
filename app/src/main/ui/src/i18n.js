@@ -5,6 +5,7 @@ import {initReactI18next} from "react-i18next";
 import de from "./i18n/de.json";
 import en from "./i18n/en.json";
 
+// eslint-disable-next-line import/no-named-as-default-member
 i18n
     // detect user language
     // learn more: https://github.com/i18next/i18next-browser-languageDetector

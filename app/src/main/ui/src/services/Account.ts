@@ -1,6 +1,6 @@
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
-import {User} from "./Users";
+import type {User} from "./Users";
 
 
 export type ApiAccount = User;
@@ -18,6 +18,7 @@ export const emptyUser: User = {
     username: "",
     password: "",
     pwdReset: false,
+    external: false,
     memberOf: []
 };
 

@@ -1,0 +1,7 @@
+displayname,external,mail,pwdreset,surname,username,givenname
+Max Mustermann,TRUE,max@mustermann.de,TRUE,Mustermann,mmustermann,Max
+Maria Musterfrau,TRUE,maria@musterfrau.de,TRUE,Musterfrau,mmusterfrau,Maria
+Mark Muster,TRUE,mark@muster.de,TRUE,Muster,mmuster,Mark
+Claus,TRUE,claus@c.de,TRUE,Claus,,Claus
+Claus,TRUE,max@mustermann.de,TRUE,Claus,Claus,Carl
+Mark Muster,TRUE,mark@muster.de,TRUE,Muster,mmuster,Mark

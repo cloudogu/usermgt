@@ -87,9 +87,9 @@ public abstract class AbstractManagerResource<T> {
 
             uriBuilder.path(id);
             builder = Response.created(uriBuilder.build());
-        } catch (ConstraintViolationException e) {
+        } catch (UniqueConstraintViolationException e) {
             logger.warn("entity {} violates constraints", id);
-            builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
+            builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
         }
 
         return builder.build();
@@ -113,8 +113,8 @@ public abstract class AbstractManagerResource<T> {
             prepareForModify(id, object);
             manager.modify(object);
             builder = Response.noContent();
-        } catch (ConstraintViolationException e) {
-            builder = Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e));
+        } catch (UniqueConstraintViolationException e) {
+            builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
         } catch (EntityNotFoundException ex) {
             builder = Response.status(Response.Status.NOT_FOUND);
         }

@@ -21,7 +21,7 @@
     {
       "Type": "dogu",
       "Name": "ldap",
-      "Version": ">=2.4.58-2"
+      "Version": ">=2.6.2-5"
     },
     {
       "Type": "dogu",
@@ -41,8 +41,8 @@
       "NeedsBackup": false
     },
     {
-      "Name": "protocol",
-      "Path": "/var/lib/usermgt/protocol",
+      "Name": "importHistory",
+      "Path": "/var/lib/usermgt/importHistory",
       "Owner": "1000",
       "Group": "1000",
       "NeedsBackup": true

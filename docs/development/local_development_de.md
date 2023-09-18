@@ -30,6 +30,9 @@ yarn dev
 git apply docs/development/local_development_settings.patch
 ```
 
+Wenn ein anderer username/passwort als `admin:admin` im lokalen CES verwendet wird, 
+muss die Datei `app/src/main/ui/.env` noch entsprechend angepasst werden.
+
 ### Usermgt im CES neu bauen
 
 ```shell

@@ -41,6 +41,7 @@
       "confirmPassword": "Passwort bestätigen",
       "displayName": "Anzeigename",
       "email": "E-Mail",
+      "external": "Externer Account",
       "givenName": "Vorname",
       "mustChangePassword": "Nutzer muss sein Passwort beim nächsten Login ändern",
       "password": "Passwort",
@@ -138,9 +139,37 @@
     "groups": "Gruppen",
     "groupsEdit": "Gruppe bearbeiten",
     "groupsNew": "Neue Gruppe",
+    "summaries": "Importübersichten",
     "users": "Nutzer",
     "usersEdit": "Nutzer bearbeiten",
+    "usersImport": "Nutzerimport",
+    "usersImportResult": "Nutzerimport",
     "usersNew": "Nutzer anlegen"
+  },
+  "summaries": {
+    "delete": {
+      "error": "Die Importübersicht konnte nicht gelöscht werden.",
+      "success": "Die Importübersicht wurde erfolgreich gelöscht."
+    },
+    "result": {
+      "created": "Neu",
+      "errors": "Übersprungen",
+      "updated": "Aktualisiert"
+    },
+    "table": {
+      "function": {
+        "delete": "Löschen",
+        "details": "Details",
+        "download": "Herunterladen"
+      },
+      "functions": "Funktionen",
+      "headline": {
+        "date": "Datum",
+        "functions": "Funktionen",
+        "name": "Name der CSV-Datei",
+        "result": "Ergebnis"
+      }
+    }
   },
   "users": {
     "confirmation": {
@@ -180,6 +209,70 @@
       "displayName": "Anzeigename",
       "email": "E-Mail",
       "username": "Nutzername"
+    }
+  },
+  "usersImport": {
+    "buttons": {
+      "reset": "Abbrechen",
+      "upload": "Importieren"
+    },
+    "headlines": {
+      "importErrors": "Fehler",
+      "importSuccess": "Import abgeschlossen",
+      "table": "Inhalt der ausgewählten Datei"
+    },
+    "info": {
+      "docsLink": "https://docs.cloudogu.com/de/usermanual/usermanagement/",
+      "further": "Weitere Informationen dazu: ",
+      "text": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden."
+    },
+    "notification": {
+      "genericError": "Die Nutzer aus der Datei '{{file}}' konnten nicht importiert werden.",
+      "invalidFile": "Die Datei '{{file}}' ist keine gültige CSV-Datei."
+    }
+  },
+  "usersImportResult": {
+    "download": "Importübersicht herunterladen",
+    "error": "Keine Import-Ergebnisse gefunden.",
+    "msg": {
+      "code-100": "Das Format der Zeile konnte nicht zugeordnet werden.",
+      "code-101": "Folgende Spalten hatten einen ungültigen Datentypen: '{{columns}}'",
+      "code-102": "Folgende Spalten waren nicht enthalten: '{{columns}}'",
+      "code-103": "Die Zeile konnte nicht eindeutig identifiziert werden",
+      "code-104": "Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spaltenüberschriften überein.",
+      "code-200": "Allgemeiner Fehler beim Verarbeiten der Zeile",
+      "code-201": "Folgende Spalten enthielten einen Wert, der als einzigartig gekennzeichnet ist und bereits vergeben war: '{{columns}}'",
+      "code-202": "Folgende Spalten entsprechen nicht dem vorgegebenen Format '{{columns}}'",
+      "code-204": "Folgende Spalten werden benötigt, waren aber leer: '{{columns}}'",
+      "code-300": "Allgemeiner interner Server-Fehler",
+      "code-301": "Serverfehler beim Schreiben des Ergebnisses ins Dateisystem"
+    },
+    "result": {
+      "failure": "Import fehlgeschlagen!",
+      "success": "Import erfolgreich abgeschlossen!",
+      "successWithFailures": "Import mit Fehlern abgeschlossen!"
+    },
+    "rows": {
+      "created": "Erstellte Nutzerkonten",
+      "skipped": "Übersprungene Datenzeilen",
+      "updated": "Aktualisierte Nutzerkonten"
+    },
+    "table": {
+      "errors": {
+        "error": "Fehler",
+        "line": "Zeile"
+      },
+      "success": {
+        "displayName": "Anzeigename",
+        "external": "Extern",
+        "false": "Nein",
+        "givenName": "Vorname",
+        "mail": "Email",
+        "name": "Nachname",
+        "passwordReset": "Passwort temporär",
+        "true": "Ja",
+        "username": "Nutzername"
+      }
     }
   }
 }

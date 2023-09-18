@@ -84,12 +84,6 @@ Then("the password-confirm rules are displayed", function () {
     cy.get('div[data-testid="confirmPassword-input-error-errors"]').contains('Passwords must match.')
 });
 
-Then("the import finished with status code {int}", (statusCode) => {
-    cy.get("@responseStatus").then((status) => {
-       expect(status).to.eq(statusCode)
-    });
-})
-
 Then("the user {string} was created",function (username) {
     cy.api({
         method: "GET",
@@ -151,6 +145,7 @@ Then("the users-page contains at least {string} users", function (userCountNum: 
 
 Then("the users-page contains exactly {string} users", function (userCountNum: string) {
     const userCount = parseInt(userCountNum);
+    cy.get('.animate-spin').should('not.exist');
     cy.get('table[data-testid="users-table"] tbody tr').should('have.length', userCount);
 });
 
@@ -242,6 +237,7 @@ Then("the groups-page contains at least {string} groups", function (groupCountNu
 
 Then("the groups-page contains exactly {string} groups", function (groupCountNum: string) {
     const groupCount = parseInt(groupCountNum);
+    cy.get('.animate-spin').should('not.exist');
     cy.get('table[data-testid="groups-table"] tbody tr').should('have.length', groupCount);
 });
 

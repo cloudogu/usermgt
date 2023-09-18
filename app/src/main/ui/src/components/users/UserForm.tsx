@@ -25,7 +25,11 @@ export interface UserFormProps<T extends User> {
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
-    const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
+    const {
+        handler,
+        notification,
+        notify
+    } = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
     const {open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName} = useConfirmation();
 
     const addGroup = (groupName: string): void => {
@@ -60,7 +64,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 exclude: handler.values.memberOf ?? [],
             }
         );
-        return groupsData.groups.map(x => x.name);
+        return groupsData.data.map(x => x.name);
     };
 
     const renderGroupsList = (readonly = false, pageSize = 5) => (
@@ -89,36 +93,52 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             }}
             title={t("users.labels.removeGroup")}
             message={t("users.labels.removeGroupConfirmationMessage", {groupName: groupName})}/>
-        <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
+        <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")}/>
         <Form handler={handler}>
             {notification}
-            <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username" placeholder={t("users.placeholder.username")}>
+            <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}
+                data-testid="username" placeholder={t("users.placeholder.username")}>
                 {t("editUser.labels.username")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname" placeholder={t("users.placeholder.givenname")}>
+            <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname"
+                placeholder={t("users.placeholder.givenname")}>
                 {t("editUser.labels.givenName")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"surname"} data-testid="surname" placeholder={t("users.placeholder.surname")}>
+            <Form.ValidatedTextInput type={"text"} name={"surname"} data-testid="surname"
+                placeholder={t("users.placeholder.surname")}>
                 {t("editUser.labels.surname")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName" placeholder={t("users.placeholder.displayName")}>
+            <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName"
+                placeholder={t("users.placeholder.displayName")}>
                 {t("editUser.labels.displayName")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail" placeholder={t("users.placeholder.mail")}>
+            <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail"
+                placeholder={t("users.placeholder.mail")}>
                 {t("editUser.labels.email")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"password"} name={"password"} data-testid="password" placeholder={t("users.placeholder.password")}>
+            <Form.ValidatedTextInput type={"password"} name={"password"} data-testid="password"
+                placeholder={t("users.placeholder.password")}>
                 {t("editUser.labels.password")}
             </Form.ValidatedTextInput>
-            <Form.ValidatedTextInput type={"password"} name={"confirmPassword"} data-testid="confirmPassword" placeholder={t("users.placeholder.confirmPassword")}>
+            <Form.ValidatedTextInput type={"password"} name={"confirmPassword"} data-testid="confirmPassword"
+                placeholder={t("users.placeholder.confirmPassword")}>
                 {t("editUser.labels.confirmPassword")}
             </Form.ValidatedTextInput>
 
-            {props.passwordReset ?
-                <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
-                    {t("editUser.labels.mustChangePassword")}
-                </Form.ValidatedCheckboxLabelRight> : <></>
-            }
+            <>
+                {props.passwordReset &&
+                    <>
+                        <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
+                            {t("editUser.labels.mustChangePassword")}
+                        </Form.ValidatedCheckboxLabelRight>
+                        <div className={"invisible"}>
+                            <Form.ValidatedCheckboxLabelRight name={"external"} data-testid="external">
+                                {t("editUser.labels.external")}
+                            </Form.ValidatedCheckboxLabelRight>
+                        </div>
+                    </>
+                }
+            </>
 
             {props.groupsReadonly ? <></> :
                 <>
