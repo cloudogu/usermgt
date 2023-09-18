@@ -104,7 +104,7 @@ public class LDAPGroupManagerTest
     createGroupManager().create(Groups.createHeartOfGold());
   }
 
-  @Test(expected = ConstraintViolationException.class)
+  @Test(expected = UniqueConstraintViolationException.class)
   @LDAP(baseDN = BASEDN, ldif = LDIF_001)
   public void createTestWithConstraintViolation() throws LDAPException
   {

@@ -30,30 +30,33 @@
 
 
 <mapping>
-    
-  <objectClasses>
-    <objectClass>top</objectClass>
-    <objectClass>person</objectClass>
-    <objectClass>inetorgperson</objectClass>
-    <objectClass>organizationalperson</objectClass>
-  </objectClasses>
-  
-  <attributes>
-    <attribute ldap-name="uid" is-rdn="true" in-modify="false">username</attribute>
-    <attribute ldap-name="cn">displayName</attribute>
-    <attribute ldap-name="sn">surname</attribute>
-    <attribute>givenname</attribute>
-    <attribute>mail</attribute>
-    <attribute 
-      ldap-name="userPassword" 
-      in-read="false" 
-      in-modify="fals" 
-      in-create="false" 
-      in-search="false">
-      password
-    </attribute>
-    <attribute decoder="de.triology.universeadm.mapping.LDAPBooleanConverter"
-               encoder="de.triology.universeadm.mapping.LDAPBooleanConverter">pwdReset</attribute>
-  </attributes>
-  
+    <objectClasses>
+        <objectClass>top</objectClass>
+        <objectClass>person</objectClass>
+        <objectClass>inetorgperson</objectClass>
+        <objectClass>organizationalperson</objectClass>
+        <objectClass>cesperson</objectClass>
+    </objectClasses>
+
+    <attributes>
+        <attribute ldap-name="uid" is-rdn="true" in-modify="false">username</attribute>
+        <attribute ldap-name="cn">displayName</attribute>
+        <attribute ldap-name="sn">surname</attribute>
+        <attribute>givenname</attribute>
+        <attribute>mail</attribute>
+        <attribute
+                ldap-name="userPassword"
+                in-read="false"
+                in-modify="fals"
+                in-create="false"
+                in-search="false">
+            password
+        </attribute>
+        <attribute decoder="de.triology.universeadm.mapping.LDAPBooleanConverter"
+                   encoder="de.triology.universeadm.mapping.LDAPBooleanConverter">pwdReset
+        </attribute>
+        <attribute decoder="de.triology.universeadm.mapping.LDAPBooleanConverter"
+                   encoder="de.triology.universeadm.mapping.LDAPBooleanConverter">external
+        </attribute>
+    </attributes>
 </mapping>

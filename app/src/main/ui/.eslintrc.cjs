@@ -12,10 +12,10 @@ module.exports = {
     ],
     "overrides": [
         {
-            "files": ["src/components/*.tsx", "src/components/*.tsx"],
+            "files": ["src/components/*.tsx", "src/components/*.ts"],
             "excludedFiles": "*.spec.tsx",
             "rules": {
-                "quotes": ["error", "double"]
+                "quotes": ["error", "single"]
             }
         }
     ],
@@ -101,5 +101,6 @@ module.exports = {
         "react": {
             "version": "detect"
         }
-    }
+    },
+    "ignorePatterns": ["*.css", "*.svg"],
 };

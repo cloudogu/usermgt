@@ -117,8 +117,8 @@ public class AccountResource
     try {
       accountManager.modifyCurrentUser(user);
     }
-    catch (ConstraintViolationException e){
-      return Response.status(Response.Status.CONFLICT).entity(new ConstraintViolationResponse(e)).build();
+    catch (UniqueConstraintViolationException e){
+      return Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e)).build();
     }
     catch (IllegalArgumentException e) {
       return Response.status(Response.Status.BAD_REQUEST).entity(new DenyChangeUserResponse(e)).build();

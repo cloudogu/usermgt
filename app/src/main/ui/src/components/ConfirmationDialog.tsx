@@ -1,6 +1,6 @@
-import {Modal, H3, Button} from "@cloudogu/ces-theme-tailwind";
-import React, {useEffect, useRef, useState} from "react";
-import {t} from "../helpers/i18nHelpers";
+import {Modal, H3, Button} from '@cloudogu/ces-theme-tailwind';
+import React, {useEffect, useRef, useState} from 'react';
+import {t} from '../helpers/i18nHelpers';
 
 export type ConfirmationDialogProps = {
     open: boolean;
@@ -9,7 +9,7 @@ export type ConfirmationDialogProps = {
     onClose: () => void
     onConfirm: () => void
     className?: string;
-    "data-testid"?: string
+    'data-testid'?: string
 }
 
 export function ConfirmationDialog({
@@ -39,10 +39,10 @@ export function ConfirmationDialog({
                 <p className="break-all">{message}</p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant={"danger"} onClick={onClick} disabled={disable}
-                    className={"uppercase"}>{t("modal.confirm")}</Button>
-                <Button variant={"secondary"} onClick={onClose} disabled={disable} ref={buttonRef}
-                    className={"ml-5"}>{t("modal.cancel")}</Button>
+                <Button variant={'danger'} onClick={onClick} disabled={disable}
+                    className={'uppercase'}>{t('modal.confirm')}</Button>
+                <Button variant={'secondary'} onClick={onClose} disabled={disable} ref={buttonRef}
+                    className={'ml-5'}>{t('modal.cancel')}</Button>
             </Modal.Footer>
         </Modal>
     </>;

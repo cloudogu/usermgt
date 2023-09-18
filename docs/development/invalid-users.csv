@@ -1,0 +1,10 @@
+DISPLAYNAME,EXTERNAL,MAIL,PWDRESET,SURNAME,USERNAME,GIVENNAME
+created,TRUE,myadmin@test.de,TRUE,myadmin,myadmin,vorname
+updated,TRUE,myadmin@test.de,TRUE,myadmin,myadmin,vorname
+emptyboolean,,myadmin@test.de,,myadmin,myadmin,vorname
+usernametooshort,TRUE,myadmin2@test.de,TRUE,myadmin,a,vorname
+mailalreadytaken,TRUE,myadmin@test.de,TRUE,myadmin2,myadmin2,vorname2
+invalidbool,invalidbool,myadmin@test.de,invalidbool,myadmin,myadmin,vorname
+multipleerrors,invalidbool,myadmin@test.de,invalidbool,myadmin,myadmin5,vorname,morename
+toomanycolumns,TRUE,myadmin@test.de,TRUE,myadmin,myadmin,vorname,column
+notenoughcolumns,TRUE,myadmin@test.de,TRUE,myadmin,myadmin

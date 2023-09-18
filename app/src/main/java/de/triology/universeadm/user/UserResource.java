@@ -31,16 +31,29 @@ package de.triology.universeadm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.AbstractManagerResource;
-import de.triology.universeadm.csvimport.CSVImportManager;
+import de.triology.universeadm.PagedResultList;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
+import de.triology.universeadm.user.imports.*;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.shiro.authz.AuthorizationException;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.opensaml.artifact.InvalidArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 
 /**
  * TODO remove package cycle with group.
@@ -56,29 +69,14 @@ public class UserResource extends AbstractManagerResource<User> {
      * @param groupManager
      */
     @Inject
-    public UserResource(UserManager userManager, GroupManager groupManager, CSVImportManager csvImportManager) {
+    public UserResource(UserManager userManager, GroupManager groupManager, ImportHandler importHandler) {
         super(userManager);
         this.userManager = userManager;
         this.groupManager = groupManager;
-        this.csvImportManager = csvImportManager;
+        this.importHandler = importHandler;
     }
 
     //~--- methods --------------------------------------------------------------
-    @POST
-    @Path("/import")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response importUsers(InputStream inputStream) {
-        Response.ResponseBuilder builder;
-        try {
-            this.csvImportManager.importUsers(inputStream);
-            builder = Response.status(Response.Status.OK);
-        } catch (IOException e) {
-            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR);
-        } catch (IllegalArgumentException e) {
-            builder = Response.status(Response.Status.BAD_REQUEST);
-        }
-        return builder.build();
-    }
 
     /**
      * Method description
@@ -161,7 +159,164 @@ public class UserResource extends AbstractManagerResource<User> {
         return user.getUsername();
     }
 
+    //~--- import methods ----------------------------------------------------------
+
+    @POST
+    @Path("import")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response importUsers(MultipartFormDataInput input) {
+        logger.debug("Received csv import request.");
+
+        try {
+            Result result = this.importHandler.handle(input);
+            logger.debug("Successfully handled csv import {}", result);
+
+            return Response.status(Response.Status.OK).entity(result).build();
+        } catch (CsvRequiredFieldEmptyException e) {
+            List<String> affectedColumns = e.getDestinationFields().stream()
+                    .map(Field::getName)
+                    .collect(Collectors.toList());;
+
+            ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                    .withLineNumber(0)
+                    .withErrorMessage(e.getMessage())
+                    .withAffectedColumns(affectedColumns)
+                    .build();
+
+            logger.error("Invalid header when parsing csv file", e);
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        } catch (InvalidArgumentException e) {
+            logger.error("Bad input while handling csv user import", e);
+
+            ImportError error = new ImportError.Builder(ImportError.Code.MISSING_FIELD_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .build();
+
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        } catch (AuthorizationException e) {
+            logger.error("Missing privileges while handling csv user import");
+
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("Missing privileges to use import")
+                    .build();
+
+        } catch (RuntimeException | IOException e) {
+            logger.error("Unexpected internal exception", e);
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("import/{importID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getImportResult(@PathParam("importID") String importID) {
+        logger.debug("Received get request for import result with ID {}", importID);
+
+        try {
+            UUID importUUID = UUID.fromString(importID);
+            Result result = this.importHandler.getResult(importUUID);
+
+            return Response.status(Response.Status.OK).entity(result).build();
+        } catch (IllegalArgumentException e) {
+            logger.warn("GET request for import result with invalid UUID {}", importID, e);
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid UUIDv4 for importID")
+                    .build();
+        } catch (FileNotFoundException e) {
+            logger.warn("Could not find import result for ID {}", importID, e);
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("Requested result not available")
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("import/{importID}/download")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getImportResultBinary(@PathParam("importID") String importID) {
+        logger.debug("Received get request for downloading the import result with ID {}", importID);
+
+        Response response = this.getImportResult(importID);
+
+        if (response.getStatus() != Response.Status.OK.getStatusCode()){
+            return response;
+        }
+
+        String fileName = String.format("%s.json", importID);
+        response.getHeaders().putSingle("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
+
+        return response;
+    }
+
+    @DELETE
+    @Path("import/{importID}")
+    public Response deleteImportResult(@PathParam("importID") String importID) {
+        logger.debug("Received delete request for import result with ID {}", importID);
+
+        try {
+            UUID importUUID = UUID.fromString(importID);
+            boolean result = this.importHandler.deleteResult(importUUID);
+
+            if(result) {
+                logger.info("ImportFile with ID {} has been deleted.", importID);
+            } else {
+                logger.warn("Could not delete import file with ID {}, because it has not been found", importID);
+            }
+
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (IllegalArgumentException e) {
+            logger.warn("DELETE request for import result with invalid UUID {}", importID, e);
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid UUIDv4 for importID")
+                    .build();
+        } catch (IOException e) {
+            logger.error("Could not delete import file with ID {}", importID, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @GET
+    @Path("import/summaries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSummaries(@QueryParam("start") int start, @QueryParam("limit") int limit) {
+        logger.debug("Received request get all summaries");
+
+        if (start < 0) {
+            start = PAGING_DEFAULT_START;
+        }
+
+        if (limit <= 0 || limit > PAGING_MAXIMUM) {
+            limit = PAGING_DEFAULT_LIMIT;
+        }
+
+        try {
+            Pair<List<Result.Summary>, Integer> summaries = this.importHandler.getSummaries(start, limit);
+            PagedResultList<Result.Summary> result = new PagedResultList<>(summaries.getLeft(), start, limit, summaries.getRight());
+
+            return Response.status(Response.Status.OK).entity(result).build();
+        } catch (IOException e) {
+            logger.error("Unable to read summaries from system", e);
+
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Failure reading summaries")
+                    .build();
+        }
+    }
+
+
     //~--- fields ---------------------------------------------------------------
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(UserResource.class);
 
     /**
      * Field description
@@ -176,5 +331,5 @@ public class UserResource extends AbstractManagerResource<User> {
     /**
      * Field description
      */
-    private final CSVImportManager csvImportManager;
+    private final ImportHandler importHandler;
 }

@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.11.0-1] - 2023-09-18
+### Added
+- Added feature to import users via CSV (#89)
+
+### Changed
+- Updated ces-theme-tailwind to 0.2.0 (#89)
+
+### Fixed
+- When generating the new .npmrc, the old is now actually removed
+
 ## [v1.10.1-1] - 2023-05-02
 ### Changed
 - Update Java-Dependencies to remove CVEs (#87)

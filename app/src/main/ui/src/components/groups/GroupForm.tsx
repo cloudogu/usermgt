@@ -46,15 +46,15 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
 
     const loadMembers = async (searchValue: string): Promise<string[]> => {
         const userData = await UsersService.find(undefined, {start: 0, limit: MAX_SEARCH_RESULTS, query: searchValue, exclude: handler.values.members});
-        return userData.users.map(x => x.username);
+        return userData.data.map(x => x.username);
     };
 
     return <>
         <ConfirmationDialog open={open ?? false}
             data-testid="remove-member-dialog"
             onClose={() => toggleModal(false)}
-            onConfirm={async () => {
-                await onConfirmDeleteMember(username ?? "");
+            onConfirm={() => {
+                onConfirmDeleteMember(username ?? "");
             }}
             title={t("groups.labels.removeMember")}
             message={t("groups.labels.removeMemberConfirmationMessage", {username: username})}/>

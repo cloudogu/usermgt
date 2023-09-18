@@ -6,9 +6,9 @@ import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {useUser} from "../hooks/useUser";
+import {ApplicationContext} from "../main";
 import { UsersService} from "../services/Users";
 import type {User} from "../services/Users";
-import {ApplicationContext} from "../main";
 
 export default function EditUser(props: { title: string }) {
     useSetPageTitle(props.title);

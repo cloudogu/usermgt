@@ -8,25 +8,29 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "backend": "cd api-mock && json-server --watch db.json --p 8080 --routes routes.json"
+    "backend": "cd api-mock && json-server --watch db.json --p 8080 --routes routes.json",
+    "lint": "yarn eslint \"src/**\"",
+    "fix": "yarn eslint --fix \"src/**\""
   },
   "dependencies": {
     "axios": "^1.3.3",
+    "comma-separated-values": "^3.6.4",
     "dynamic-class-list": "^2.0.2",
     "formik": "^2.2.9",
-    "heroicons": "^2.0.13",
+    "heroicons": "^2.0.14",
     "hoist-non-react-statics": "^3.3.2",
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
-    "react-i18next": "^12.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.1.4",
     "react-query": "^3.39.2",
     "react-router-dom": "^6.8.2",
+    "tailwind-merge": "^1.14.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@cloudogu/ces-theme-tailwind": "^0.1.1",
+    "@cloudogu/ces-theme-tailwind": "0.2.0",
     "@mertasan/tailwindcss-variables": "^2.5.1",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.26",
