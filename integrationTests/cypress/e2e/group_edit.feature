@@ -7,7 +7,6 @@ Feature: Tests for editing new groups.
     And the user opens the groups page
     And the user sets the groups-filter to "testGroup_1"
 
-
   Scenario: a user who is manager wants to edit the description of a group
     Given the user clicks on the edit-group button for the group "testGroup_1"
     And the edit-group-page for group "testGroup_1" is shown
