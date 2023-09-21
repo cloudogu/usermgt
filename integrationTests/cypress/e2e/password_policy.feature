@@ -3,10 +3,10 @@ Feature: Tests for the verification of the password policy
   Background:
     Given the user "testuser" exists
     And the user is logged into the CES
-    When the user opens his own page in usermgt
+    And the user opens his own page in usermgt
 
   Scenario: a user deletes his password input is shown all password rules
-    Given the user deletes his password input
+    When the user deletes his password input
     Then the password entry is marked as invalid
     And all password rules are displayed
 
