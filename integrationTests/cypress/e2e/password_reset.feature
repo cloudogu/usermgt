@@ -1,11 +1,9 @@
 Feature: Tests for the functionality to prompt a user for a password change at the next login
 
-  @requires_new_user
   Background:
     Given the user "testuser" exists
     And the user is member of the admin user group
 
-  @requires_new_user
   Scenario: a newly created user with the password reset flag enabled logs himself in and must change his password
     When the user opens the users page
     And the user clicks on the create-user button
