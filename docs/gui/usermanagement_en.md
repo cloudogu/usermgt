@@ -250,8 +250,8 @@ With the help of a test account you can log into the Dogus where you want to con
 User Management provides the option of importing any number of user accounts in just one step via the interface.
 For this purpose, a CSV file must be created that contains all accounts to be imported.
 
-CSV according to [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180) is used as import format. The header of the file must
-**7** define columns:
+CSV according to [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180) is used as import format. The header of the file must be the following
+**7** defined columns:
 
 ```csv
 username,displayname,givenname,surname,mail,pwdReset,external
@@ -269,7 +269,7 @@ Claus,TRUE,max@mustermann.de,TRUE,Claus,Claus,Carl
 Mark Muster,TRUE,mark@muster.de,TRUE,Muster,mmuster,Mark
 ```
 
-To import this file now, you need to navigate to the 'User Import' item via the navigation bar in User Management.
+To import this file, you need to navigate to the 'User Import' item via the navigation bar in User Management.
 The page should then look like this:
 
 ![Userimport empty page](figures/usermanagement/UserImportPageEmpty_en.png)
@@ -279,35 +279,32 @@ If a CSV file was selected, the view of the page changes and the content of the 
 
 ![user import file selected](figures/usermanagement/UserImportFileSelected_en.png)
 
-By clicking on 'Import' the CSV file is sent and the user accounts in it are imported.
+By clicking on 'Import' the CSV file is sent and the user accounts are imported.
 
 Afterward the result page is displayed. There you can see if the import was successful.
-It is possible that new user accounts will be created, existing ones will be updated or lines from the CSV file will be
-because they contained invalid values. This can be the case, for example, if necessary columns were not present
-or a condition such as unique e-mails was not met.
+It is possible that new user accounts will be created, existing accounts will be updated or lines from the CSV file will be ignored
+because they contains invalid values. This can be the case, for example, if necessary columns were not present
+or a condition such as unique mails was not met.
 
 On the results page the results are displayed as follows:
 
 ![UserImport Results Page Collapsed](figures/usermanagement/UserImportResultPageCollapsed_en.png)
 
-By clicking on the respective rows, more details about the added/updated user accounts as well as the
+By clicking on the respective rows, more details about the added / updated user accounts as well as the
 skipped lines can be displayed.
 
 ![User import result page uncollapsed](figures/usermanagement/UserImportResultPageUncollapsed_en.png)
 
-Also, by clicking on 'Download Import Summary' it can be downloaded.
+Also, by clicking on 'Download Import Summary' the result can be downloaded.
 
 ### Managing past imports
 
-Past imports are stored in the file system so that they can be retrieved again.
-The import overview is used for this purpose. to call it up, click in the navigation bar on the entry
-'Import overviews'. There all past imports are displayed in tabular form with the name of the CSV file as well as the exact date.
+Past imports are stored in the file system that they can be retrieved again.
+The import overview is used for this purpose. Therefore, click in the navigation bar on the entry
+'Import overviews'. There, all past imports are displayed in tabular form with the name of the CSV file as well as the exact date.
 
 ![Import History](figures/usermanagement/UserImportSummaries_en.png)
 
-By clicking on the selection field 'Functions' of the respective line a small submenu opened. There you can
-for the respective line certain functions can be executed.
-There either the respective overview can be downloaded directly or deleted from the system.
-In addition, a click on 'Details' import overview can be displayed in detail in the interface.
+By clicking on the selection field 'Functions' of the respective line a small submenu opened. There you can download the respective overview directly, delete it from the system or display it in detail with a click on 'Details'.
 
 ![Import History Functions](figures/usermanagement/UserImportSummariesFunctions_en.png)

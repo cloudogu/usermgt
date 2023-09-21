@@ -282,13 +282,13 @@ Die Seite sollte dann wie folgt aussehen:
 In dem dort zu sehenden Datei-Eingabefeld muss die zuvor erstellte CSV-Datei ausgewählt werden.
 Sofern eine CSV-Datei ausgewählt wurde, ändert sich die Ansicht der Seite und der Inhalt der CSV-Datei wird tabellarisch dargestellt.
 
-![Nutzerimport Datei ausgewaehlt](figures/usermanagement/UserImportFileSelected_de.png)
+![Nutzerimport Datei ausgewählt](figures/usermanagement/UserImportFileSelected_de.png)
 
 Durch einen Klick auf 'Importieren' wird die CSV-Datei gesendet und die Nutzerkonten darin werden importiert.
 
 Anschließend wird die Ergebnisseite angezeigt. Dort ist zu sehen, ob der Import erfolgreich war.
-Es ist möglich, dass neue Nutzerkonten angelegt werden, vorhandene aktualisiert werden oder dass Zeilen aus der CSV-Datei
-übersprungen werden, weil sie ungültige Werte enthielten. Das kann zum Beispiel der Fall sein, wenn notwendige Spalten nicht vorhanden waren
+Es ist möglich, dass neue Nutzerkonten angelegt werden, vorhandene aktualisiert werden oder das Zeilen aus der CSV-Datei
+übersprungen werden, weil sie ungültige Werte enthalten. Das kann zum Beispiel der Fall sein, wenn notwendige Spalten nicht vorhanden waren
 oder eine Bedingung wie eindeutige E-Mails nicht erfüllt war.
 
 Auf der Ergebnis-Seite werden die Ergebnisse wie folgt dargestellt:
@@ -311,10 +311,7 @@ Dafür wird die Importübersicht verwendet. um diese aufzurufen, klicken Sie in 
 
 ![Importhistorie](figures/usermanagement/UserImportSummaries_de.png)
 
-Durch einen Klick auf das Auswahlfeld 'Funktionen' der jeweiligen Zeile öffnete sich ein kleines Untermenü. Dort können
-für die jeweilige Zeile bestimmte Funktionen ausgeführt werden.
-Dort kann entweder direkt die jeweilige Übersicht heruntergeladen oder aus dem System gelöscht werden.
-Außerdem kann über einen Klick auf 'Details' Importübersicht detailliert in der Oberfläche angezeigt werden.
+Durch einen Klick auf das Auswahlfeld 'Funktionen' der jeweiligen Zeile öffnete sich ein kleines Untermenü. Hier können Sie direkt die jeweilige Übersicht herunterladen, die Übersicht aus dem System löschen oder sich über einen Klick auf 'Details' die Importübersicht detailliert anzeigen lassen.
 
 ![Importhistorie Funktionen](figures/usermanagement/UserImportSummariesFunctions_de.png)
 
