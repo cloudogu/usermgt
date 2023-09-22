@@ -11,8 +11,9 @@ Feature: Tests for creating new groups.
     When the user fills the group-form for a group with the name "a"
     Then the group-name-field is marked as invalid
 
+  @clean_new_group
   Scenario: a user who is manager wants to create a new group with members
-    Given the user "testUser" exists
+    Given the user "testuser" exists
     When the user fills the group-form for a group with the name "testGroup_new"
     And the user adds the member "testuser" to the group
     And the user submits the group-form

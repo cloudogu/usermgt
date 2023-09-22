@@ -6,6 +6,7 @@ Feature: Tests that verify that an appropriate toast is shown when creating, edi
     And the user "manager" is member of the group "cesManager"
     And the user opens the groups page
 
+  @clean_new_group
   Scenario: toast on group creation is shown
     Given the user clicks on the create-group button
     And the new-group-page is shown
@@ -20,9 +21,9 @@ Feature: Tests that verify that an appropriate toast is shown when creating, edi
     And the user submits the group-form
     Then a success alert will be shown containing the text "The group was saved successfully."
 
+  @reduce_group_env
   Scenario: toast on group deletion is shown
-    Given "1" test-groups exist
-    And the user sets the groups-filter to "testGroup_1"
+    Given the user sets the groups-filter to "testGroup_1"
     When the user clicks on the delete-group button for the group "testGroup_1"
     And the user confirms the delete-group-confirmation-dialog
     Then a success alert will be shown containing the text "testGroup_1"

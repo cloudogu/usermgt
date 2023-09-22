@@ -1,4 +1,4 @@
-import { After } from "@badeball/cypress-cucumber-preprocessor";
+import {After, Before} from "@badeball/cypress-cucumber-preprocessor";
 
 After({tags: "@requires_new_user"}, () => {
     cy.logout();
@@ -12,9 +12,20 @@ After({tags: "@requires_new_user"}, () => {
     cy.clearCookies()
 });
 
-After(() => {
+
+After({tags: "@clean_after"}, () => {
     cy.usermgtCleanupTestUsers();
     cy.usermgtCleanupTestGroups();
 })
 
+After({tags: "@reduce_group_env"},() => {
+    Cypress.env("groups", Cypress.env("groups") - 1)
+})
+After({tags: "@reduce_user_env"},() => {
+    Cypress.env("users", Cypress.env("users") - 1)
+})
 
+cy.on('after:run', () => {
+    cy.usermgtCleanupTestUsers();
+    cy.usermgtCleanupTestGroups();
+})

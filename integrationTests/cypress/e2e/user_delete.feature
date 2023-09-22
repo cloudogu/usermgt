@@ -5,6 +5,7 @@ Feature: Tests for deleting users.
     And the user "manager" is member of the group "cesManager"
     And "1" test-users exist
 
+  @reduce_user_env
   Scenario: a user who is manager wants to delete a user
     When the user opens the users page
     And the user sets the users-filter to "testuser_1"
