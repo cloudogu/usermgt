@@ -26,9 +26,10 @@ Feature: Tests for editing new users.
     And the user clicks on the edit-user button for the user "testuser_1"
     Then a group named "testGroup_1" is assigned to the user
 
-  # TODO tests in this feature cause issues between each other, test isolation is broken which is bad.
   Scenario: a user who is manager wants to remove a group from a user
-    Given the user clicks on the edit-user button for the user "testuser_1"
+    Given the group "testGroup_1" exists
+    And the user "testuser_1" is member of the group "testGroup_1"
+    And the user clicks on the edit-user button for the user "testuser_1"
     And the edit-user-page for user "testuser_1" is shown
     When the user removes the group "testGroup_1" from the user
     And the user clicks save

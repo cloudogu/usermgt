@@ -8,6 +8,13 @@ Given("the user {string} exists", (username: string) => {
     });
 })
 
+Given("the group {string} exists", (testGroup: string) => {
+    cy.withUser("testuser").then(() => {
+        cy.usermgtTryDeleteGroup(testGroup);
+        cy.usermgtCreateGroup(testGroup, "")
+    });
+})
+
 Given("{string} test-users exist", (users: string) => {
     const userCount = parseInt(users);
     cy.withUser("testuser").then(userData => {

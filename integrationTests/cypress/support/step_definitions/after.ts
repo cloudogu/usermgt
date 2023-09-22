@@ -28,4 +28,6 @@ After({tags: "@reduce_user_env"},() => {
 cy.on('after:run', () => {
     cy.usermgtCleanupTestUsers();
     cy.usermgtCleanupTestGroups();
+    cy.usermgtTryDeleteUser("testuser_new");
+    cy.usermgtTryDeleteUser("newuser");
 })
