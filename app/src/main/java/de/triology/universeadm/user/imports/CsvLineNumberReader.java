@@ -6,6 +6,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.function.Consumer;
 
 /**
  * CsvLineNumberReader is an extension of the CSVReader
@@ -17,8 +18,11 @@ public class CsvLineNumberReader extends CSVReader {
 
     public static final String LINE_COLUMN = "LINE_NUMBER";
 
-    public CsvLineNumberReader(Reader reader) {
+    private final Consumer<String[]> headerCallback;
+
+    public CsvLineNumberReader(Reader reader, Consumer<String[]> headerCallback) {
         super(reader);
+        this.headerCallback = headerCallback;
     }
 
     @Override
@@ -31,8 +35,13 @@ public class CsvLineNumberReader extends CSVReader {
     @Override
     public String[] readNextSilently() throws IOException {
         String[] nextLine = super.readNextSilently();
-        return nextLine == null ? null :
-                ArrayUtils.add(nextLine, LINE_COLUMN);
+        nextLine = nextLine == null ? null : ArrayUtils.add(nextLine, LINE_COLUMN);
+
+        if (this.headerCallback != null) {
+            this.headerCallback.accept(nextLine);
+        }
+
+        return nextLine;
     }
 
 }
