@@ -42,7 +42,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testKeepSpaces() throws CsvRequiredFieldEmptyException, IOException {
+    public void testKeepSpaces() throws CsvRequiredFieldEmptyException {
 
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setSurname("     " +expUser.getSurname());
@@ -57,7 +57,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotes() throws CsvRequiredFieldEmptyException, IOException {
+    public void testDoubleQuotes() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> expUsers = Lists.newArrayList(
                 CSVUsers.createDent(),
                 CSVUsers.createTrillian()
@@ -75,7 +75,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testFieldLineBreaks() throws CsvRequiredFieldEmptyException, IOException {
+    public void testFieldLineBreaks() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("LineBreaks.csv"))
                 .collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testDoubleQuotesInField() throws CsvRequiredFieldEmptyException, IOException {
+    public void testDoubleQuotesInField() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("DoubleQuotesField.csv"))
                 .collect(Collectors.toList());
@@ -95,7 +95,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testUmlauts() throws CsvRequiredFieldEmptyException, IOException {
+    public void testUmlauts() throws CsvRequiredFieldEmptyException {
         List<CSVUserDTO> userInputList = new CSVParserImpl()
                 .parse(readTestFile("Umlauts.csv"))
                 .collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testEmptyGivenName() throws CsvRequiredFieldEmptyException, IOException, InterruptedException {
+    public void testEmptyGivenName() throws CsvRequiredFieldEmptyException {
         CSVUserDTO expUser = CSVUsers.createDent();
         expUser.setGivenname("");
 
@@ -117,7 +117,7 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testParseBoolean() throws CsvRequiredFieldEmptyException, IOException {
+    public void testParseBoolean() throws CsvRequiredFieldEmptyException {
         CSVUserDTO expUsers = CSVUsers.createDent();
 
         List<CSVUserDTO> userInputList = new CSVParserImpl()
@@ -132,7 +132,7 @@ public class CSVParserTest {
     }
 
     @Test(expected=CsvRequiredFieldEmptyException.class)
-    public void testInvalidHeader() throws CsvRequiredFieldEmptyException, IOException {
+    public void testInvalidHeader() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
@@ -143,7 +143,7 @@ public class CSVParserTest {
     }
 
     @Test(expected=CsvRequiredFieldEmptyException.class)
-    public void testInvalidFileType() throws CsvRequiredFieldEmptyException, IOException {
+    public void testInvalidFileType() throws CsvRequiredFieldEmptyException {
         CSVParserImpl parser = new CSVParserImpl();
 
         List<CSVUserDTO> userInputList = parser
