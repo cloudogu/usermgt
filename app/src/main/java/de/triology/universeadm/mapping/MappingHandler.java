@@ -30,17 +30,21 @@ package de.triology.universeadm.mapping;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.unboundid.asn1.ASN1OctetString;
 import com.unboundid.ldap.sdk.*;
 
 import static de.triology.universeadm.AbstractLDAPManager.EQUAL;
 import static de.triology.universeadm.AbstractLDAPManager.WILDCARD;
 
+import com.unboundid.ldap.sdk.controls.SimplePagedResultsControl;
 import de.triology.universeadm.*;
 import de.triology.universeadm.validation.Validator;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -177,14 +181,39 @@ public class MappingHandler<T extends Comparable<T>> {
     public List<T> getAll() {
         final List<T> entities = Lists.newArrayList();
 
-        try {
-            SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, mapper.getBaseFilter(), returningAttributes);
-            for (SearchResultEntry e : result.getSearchEntries()) {
-                consume(entities, e);
+        AtomicReference<ASN1OctetString> cookie = new AtomicReference<>(null);
+
+        int loop = 0;
+
+        do {
+            loop++;
+            logger.debug("Requesting {} page for user", loop);
+
+            SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, mapper.getBaseFilter(), returningAttributes);
+            //TODO: PageSize currently hard coded as default value for OpenLDAP
+            Control[] controls = { new SimplePagedResultsControl(500, cookie.get()) };
+            searchRequest.setControls(controls);
+
+            SearchResult result;
+
+            try {
+                result = strategy.get().search(searchRequest);
+                for (SearchResultEntry e : result.getSearchEntries()) {
+                    consume(entities, e);
+                }
+
+                logger.debug("Received {} entries for the {} page", result.getEntryCount(), loop);
+            } catch (LDAPSearchException ex) {
+                throw new EntityException("could not get all entities", ex);
             }
-        } catch (LDAPSearchException ex) {
-            throw new EntityException("could not get all entities", ex);
-        }
+
+            Arrays.stream(result.getResponseControls())
+                    .filter(control -> control instanceof SimplePagedResultsControl)
+                    .findFirst()
+                    .map(control -> (SimplePagedResultsControl) control)
+                    .ifPresent(simplePagedResultsControl -> cookie.set(simplePagedResultsControl.getCookie()));
+
+        } while (cookie.get() != null);
 
         Collections.sort(entities);
         return ImmutableList.copyOf(entities);
