@@ -150,7 +150,7 @@ const cleanupTestUsers = () => {
     }).then((response) => {
         expect(response.status).to.eq(200);
         // @ts-ignore
-        return response.body.entries.filter(el => el.displayName.startsWith("Tester") || el.username.startsWith("testUser"));
+        return response.body.entries.filter(el => el.displayName.startsWith("Tester") || el.username.startsWith("testUser")) || el.username.contains("new");
     }).then(testUsers => {
         testUsers.filter(testUser => {
             cy.usermgtDeleteUser(testUser.username);
