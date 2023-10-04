@@ -40,13 +40,11 @@ import com.unboundid.ldap.sdk.controls.SimplePagedResultsControl;
 import de.triology.universeadm.*;
 import de.triology.universeadm.validation.Validator;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,6 +182,7 @@ public class MappingHandler<T extends Comparable<T>> {
         AtomicReference<ASN1OctetString> cookie = new AtomicReference<>(null);
 
         int loop = 0;
+        boolean hasMoreToReturn = true;
 
         do {
             loop++;
@@ -191,7 +190,7 @@ public class MappingHandler<T extends Comparable<T>> {
 
             SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, mapper.getBaseFilter(), returningAttributes);
             //TODO: PageSize currently hard coded as default value for OpenLDAP
-            Control[] controls = { new SimplePagedResultsControl(500, cookie.get()) };
+            Control[] controls = {new SimplePagedResultsControl(500, cookie.get())};
             searchRequest.setControls(controls);
 
             SearchResult result;
@@ -207,13 +206,18 @@ public class MappingHandler<T extends Comparable<T>> {
                 throw new EntityException("could not get all entities", ex);
             }
 
-            Arrays.stream(result.getResponseControls())
+            final Optional<SimplePagedResultsControl> simplePagedResultsControl = Arrays.stream(result.getResponseControls())
                     .filter(control -> control instanceof SimplePagedResultsControl)
                     .findFirst()
-                    .map(control -> (SimplePagedResultsControl) control)
-                    .ifPresent(simplePagedResultsControl -> cookie.set(simplePagedResultsControl.getCookie()));
+                    .map(control -> (SimplePagedResultsControl) control);
 
-        } while (cookie.get() != null);
+
+            if (simplePagedResultsControl.isPresent()) {
+                cookie.set(simplePagedResultsControl.get().getCookie());
+                hasMoreToReturn = simplePagedResultsControl.get().moreResultsToReturn();
+            }
+
+        } while (hasMoreToReturn);
 
         Collections.sort(entities);
         return ImmutableList.copyOf(entities);
