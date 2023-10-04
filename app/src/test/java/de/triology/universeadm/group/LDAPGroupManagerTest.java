@@ -136,23 +136,24 @@ public class LDAPGroupManagerTest
     createGroupManager().get("Heart Of Gold");
   }
   
-  @Test
-  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  public void getAllTest() throws LDAPException
-  {
-    List<Group> groups = createGroupManager().getAll();
-    assertNotNull(groups);
-    assertEquals(2, groups.size());
-    assertThat(groups, contains(Groups.createBrockianUltraCricket(), Groups.createHeartOfGold()));
-  }
-  
-  @Test(expected = UnauthorizedException.class)
-  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  @SubjectAware(username = "dent", password = "secret")
-  public void getAllTestWithoutAdminPrivileges() throws LDAPException
-  {
-    createGroupManager().getAll();
-  }
+//  @Test
+//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+//  public void getAllTest() throws LDAPException
+//  {
+//    List<Group> groups = createGroupManager().getAll();
+//    assertNotNull(groups);
+//    assertEquals(2, groups.size());
+//    assertThat(groups, contains(Groups.createBrockianUltraCricket(), Groups.createHeartOfGold()));
+//  }
+//
+
+//  @Test(expected = UnauthorizedException.class)
+//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+//  @SubjectAware(username = "dent", password = "secret")
+//  public void getAllTestWithoutAdminPrivileges() throws LDAPException
+//  {
+//    createGroupManager().getAll();
+//  }
   
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)

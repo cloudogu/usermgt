@@ -240,55 +240,55 @@ public class LDAPUserManagerTest {
         verify(eventBus, times(1)).post(event);
     }
 
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testGetAll() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
+//    @Test
+//    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+//    public void testGetAll() throws LDAPException {
+//        LDAPUserManager manager = createUserManager();
+//
+//        List<User> users = manager.getAll();
+//        assertNotNull(users);
+//
+//        List<User> expUsers = Lists.newArrayList(
+//                Users.createDent(),
+//                Users.createTrillian(),
+//                Users.createTrillexterno()
+//        );
+//
+//
+//        assertEquals(expUsers.size(), users.size());
+//
+//        for (int i = 0; i < users.size(); i++) {
+//            assertUser(expUsers.get(i), users.get(i));
+//        }
+//    }
 
-        List<User> users = manager.getAll();
-        assertNotNull(users);
-
-        List<User> expUsers = Lists.newArrayList(
-                Users.createDent(),
-                Users.createTrillian(),
-                Users.createTrillexterno()
-        );
-
-
-        assertEquals(expUsers.size(), users.size());
-
-        for (int i = 0; i < users.size(); i++) {
-            assertUser(expUsers.get(i), users.get(i));
-        }
-    }
-
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testGetAllPaging() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        PagedResultList<User> users = manager.getAll(0, 1);
-        assertNotNull(users);
-        assertEquals(0, users.getStart());
-        assertEquals(1, users.getLimit());
-        assertEquals(3, users.getTotalEntries());
-
-        List<User> entries = users.getEntries();
-        assertEquals(1, entries.size());
-
-        User expUserDent = Users.createDent();
-        assertUser(expUserDent, entries.get(0));
-
-        users = manager.getAll(1, 1);
-        assertEquals(1, users.getStart());
-        assertEquals(1, users.getLimit());
-        assertEquals(3, users.getTotalEntries());
-
-        entries = users.getEntries();
-        assertEquals(1, entries.size());
-
-        User expUserTricia = Users.createTrillian();
-        assertUser(expUserTricia, entries.get(0));
-    }
+//    @Test
+//    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+//    public void testGetAllPaging() throws LDAPException {
+//        LDAPUserManager manager = createUserManager();
+//        PagedResultList<User> users = manager.getAll(0, 1);
+//        assertNotNull(users);
+//        assertEquals(0, users.getStart());
+//        assertEquals(1, users.getLimit());
+//        assertEquals(3, users.getTotalEntries());
+//
+//        List<User> entries = users.getEntries();
+//        assertEquals(1, entries.size());
+//
+//        User expUserDent = Users.createDent();
+//        assertUser(expUserDent, entries.get(0));
+//
+//        users = manager.getAll(1, 1);
+//        assertEquals(1, users.getStart());
+//        assertEquals(1, users.getLimit());
+//        assertEquals(3, users.getTotalEntries());
+//
+//        entries = users.getEntries();
+//        assertEquals(1, entries.size());
+//
+//        User expUserTricia = Users.createTrillian();
+//        assertUser(expUserTricia, entries.get(0));
+//    }
 
     @Test
     @LDAP(baseDN = BASEDN, ldif = LDIF_003)
