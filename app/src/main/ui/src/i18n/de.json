@@ -53,6 +53,9 @@
       "success": "Die Account Informationen wurden erfolgreich gespeichert."
     }
   },
+  "general": {
+    "applicationName": "User Management"
+  },
   "generic": {
     "errors": {
       "general": "Beim Laden der Seite ist ein Fehler aufgetreten.",
@@ -135,6 +138,10 @@
     }
   },
   "pages": {
+    "accessDenied": {
+      "text": "Sie haben keinen Zugriff auf diese Seite",
+      "title": "Zugriff verweigert"
+    },
     "account": "Account",
     "groups": "Gruppen",
     "groupsEdit": "Gruppe bearbeiten",

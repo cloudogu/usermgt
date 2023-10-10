@@ -4,13 +4,11 @@ import {GroupForm} from "../components/groups/GroupForm";
 import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
 import {useGroupValidationSchema} from "../hooks/useGroupValidationSchema";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import { GroupsService} from "../services/Groups";
 import type {Group} from "../services/Groups";
 import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
-export function NewGroup(props: { title: string }) {
-    useSetPageTitle(props.title);
+export function NewGroup() {
     const {notification, notify} = useAlertNotification();
     const {backURL} = useBackURL();
     const navigate = useNavigate();

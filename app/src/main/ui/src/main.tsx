@@ -22,6 +22,8 @@ import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
+import ProtectedResource from "./components/ProtectedResource";
+import TitledResource from "./components/TitledResource";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -43,47 +45,67 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <Navigate to="/account" replace/>,
+                element: <Navigate to="/account" replace/>
             },
             {
                 path: "account",
-                element: <Account title={t("pages.account") + " | User Management"}/>,
+                element: <TitledResource pageName={t("pages.account")}>
+                    <Account/>
+                </TitledResource>
             },
             {
                 path: "users",
-                element: <Users title={t("pages.users") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.users")}>
+                    <Users/>
+                </ProtectedResource>
             },
             {
                 path: "users/import",
-                element: <UsersImport title={t("pages.usersImport") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.usersImport")}>
+                    <UsersImport/>
+                </ProtectedResource>
             },
             {
                 path: "users/import/:id",
-                element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.usersImport")}>
+                    <UsersImportResult/>
+                </ProtectedResource>
             },
             {
                 path: "summaries",
-                element: <Summaries title={t("pages.summaries") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.summaries")}>
+                    <Summaries/>
+                </ProtectedResource>
             },
             {
                 path: "users/:username/edit",
-                element: <EditUser title={t("pages.usersEdit") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.usersEdit")}>
+                    <EditUser/>
+                </ProtectedResource>
             },
             {
                 path: "users/new",
-                element: <NewUser title={t("pages.usersNew") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.usersNew")}>
+                    <NewUser/>
+                </ProtectedResource>
             },
             {
                 path: "groups",
-                element: <Groups title={t("pages.groups") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.groups")}>
+                    <Groups/>
+                </ProtectedResource>
             },
             {
                 path: "groups/new",
-                element: <NewGroup title={t("pages.groupsNew") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.groupsNew")}>
+                    <NewGroup/>
+                </ProtectedResource>
             },
             {
                 path: "groups/:groupName/edit",
-                element: <EditGroup title={t("pages.groupsEdit") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.groupsEdit")}>
+                    <EditGroup/>
+                </ProtectedResource>
             },
         ],
     },
@@ -92,7 +114,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router}/>);
 
 export type ApplicationContainerProps = {
-    children: JSX.Element;
+    children: React.JSX.Element;
 }
 
 function ApplicationContainer({children}: ApplicationContainerProps) {

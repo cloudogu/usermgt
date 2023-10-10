@@ -53,6 +53,9 @@
       "success": "Account information saved successfully."
     }
   },
+  "general": {
+    "applicationName": "User Management"
+  },
   "generic": {
     "errors": {
       "general": "An error occurred while loading the page.",
@@ -135,6 +138,10 @@
     }
   },
   "pages": {
+    "accessDenied": {
+      "text": "You are not allowed to access this page",
+      "title": "Access denied"
+    },
     "account": "Account",
     "groups": "Groups",
     "groupsEdit": "Edit group",
