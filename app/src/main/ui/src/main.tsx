@@ -5,6 +5,8 @@ import "./index.css";
 import {useTranslation} from "react-i18next";
 import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from "react-router-dom";
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
+import ProtectedResource from "./components/ProtectedResource";
+import TitledResource from "./components/TitledResource";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import Account from "./pages/Account";
@@ -22,8 +24,6 @@ import type {CasUser} from "./services/CasUser";
 
 // import i18n (needs to be bundled)
 import "./i18n";
-import ProtectedResource from "./components/ProtectedResource";
-import TitledResource from "./components/TitledResource";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -33,7 +33,8 @@ type ApplicationContextProps = {
 export const ApplicationContext = createContext<ApplicationContextProps>({
     casUser: {
         principal: "default",
-        admin: false
+        admin: false,
+        loading: true
     },
 });
 
