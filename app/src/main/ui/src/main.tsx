@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from "react-router-dom";
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import ProtectedResource from "./components/ProtectedResource";
-import TitledResource from "./components/TitledResource";
+import TitledPage from "./components/TitledPage";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import Account from "./pages/Account";
@@ -50,9 +50,9 @@ const router = createBrowserRouter([
             },
             {
                 path: "account",
-                element: <TitledResource pageName={t("pages.account")}>
+                element: <TitledPage pageName={t("pages.account")}>
                     <Account/>
-                </TitledResource>
+                </TitledPage>
             },
             {
                 path: "users",
