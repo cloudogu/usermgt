@@ -9,7 +9,7 @@ export default function ProtectedResource(props: {pageName: string, children: Re
     const pageTitle = casUser?.admin ? props.pageName : `${t('pages.accessDenied.title')}: ${props.pageName}`;
     return <TitledPage pageName={pageTitle}>
         {!casUser.loading && !casUser.admin ?
-            <H1 className="uppercase text-label-danger-font">{t('pages.accessDenied.text')}</H1>
+            <H1 className="uppercase text-label-danger-font" data-testid="access-denied-message">{t('pages.accessDenied.text')}</H1>
             :
             <>
                 {props.children}

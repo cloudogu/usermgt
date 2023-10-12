@@ -48,6 +48,11 @@ Given("the user {string} is member of the group {string}", function (username, g
     })
 })
 
+Given("the user {string} with password {string} is logged in", function (username: string, password: string){
+    cy.clearAllCookies()
+    cy.login(username, password, 3);
+});
+
 /* GROUPS */
 
 Given("{string} test-groups exist", (groups: string) => {

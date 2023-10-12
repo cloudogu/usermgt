@@ -16,6 +16,7 @@ When("the user selects the {string} users-page", function (pageNum: string) {
     const page = parseInt(pageNum);
     cy.get(`button[data-testid="users-footer-pagination-li-${page}-btn"]`).click();
 })
+
 When("the user sets the users-filter to {string}", function (filter: string) {
     cy.get(`input[data-testid="users-filter-input"]`).clear().type(filter);
     cy.get(`button[data-testid="users-filter-button"]`).click();
@@ -137,6 +138,7 @@ When("the user selects the {string} groups-page", function (pageNum: string) {
     const page = parseInt(pageNum);
     cy.get(`button[data-testid="groups-footer-pagination-li-${page}-btn"]`).click();
 })
+
 When("the user sets the groups-filter to {string}", function (filter: string) {
     cy.get(`input[data-testid="groups-filter-input"]`).clear().type(filter);
     cy.get(`button[data-testid="groups-filter-button"]`).click();
@@ -193,4 +195,21 @@ When("the user confirms the delete-group-confirmation-dialog", function () {
     cy.get('@dialog').should('be.visible');
     cy.get('@dialog').find('h3').contains('Delete group');
     cy.get('@dialog').find('button:nth-of-type(1)').click();
+})
+
+/* IMPORT */
+
+When("the user opens the user import page", function () {
+    cy.visit('/usermgt/users/import')
+    cy.clickWarpMenuCheckboxIfPossible()
+})
+
+When("the user opens the user import summaries page", function () {
+    cy.visit('/usermgt/users/import')
+    cy.clickWarpMenuCheckboxIfPossible()
+})
+
+When("the user opens the user import summary details page", function (summaryId: string) {
+    cy.visit(`/usermgt/users/import/${summaryId}`)
+    cy.clickWarpMenuCheckboxIfPossible()
 })
