@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Import multiple user (>100) via csv (#101)
 - Users without manager group can access restricted areas (#105)
+- Pagination for users, groups and import summaries
 
 ## [v1.11.0-1] - 2023-09-18
 ### Added
