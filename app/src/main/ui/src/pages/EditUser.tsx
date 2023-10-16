@@ -18,7 +18,6 @@ export default function EditUser() {
 
     return <>
         <H1 className="uppercase">{t("pages.usersEdit")}</H1>
-        {!casUser.admin && <>Nothing to see here!</>}
         {casUser.admin && (isLoading ?
             <div className={"flex row justify-center w-[100%] mt-16"}>
                 <LoadingIcon className={"w-64 h-64"}/>
