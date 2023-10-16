@@ -3,15 +3,12 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {emptyUser} from "../services/Account";
 import {isUsersConstraintsError, UserConstraints, UsersService} from "../services/Users";
 import type {User, UsersConstraintsError} from "../services/Users";
 
-export default function NewUser(props: { title: string }) {
-    useSetPageTitle(props.title);
+export default function NewUser() {
     const navigate = useNavigate();
-
     return <>
         <H1 className="uppercase">{t("pages.usersNew")}</H1>
         <UserForm<User>

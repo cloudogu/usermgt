@@ -5,12 +5,11 @@ import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTab
 import UsersImportResultTable from "../components/usersImport/UsersImportResultTable";
 import {t} from "../helpers/i18nHelpers";
 import {useAPI} from "../hooks/useAPI";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {ImportUsersResponse} from "../services/ImportUsers";
 import type {Location} from "history";
 
-const UsersImportResult = (props: { title: string }) => {
+const UsersImportResult = () => {
     const navigate = useNavigate();
     const {state} = useLocation() as Location<{
         result?: ImportUsersResponse,
@@ -36,7 +35,6 @@ const UsersImportResult = (props: { title: string }) => {
     );
 
     const [error, setError] = useState(false);
-    useSetPageTitle(props.title);
     const summary = state?.result;
 
     const createdRows = summary?.created?.length ?? 0;

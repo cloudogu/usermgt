@@ -95,17 +95,17 @@ export function usePaginatedData<T>(refetchFunction: PaginatedDataFetchFunction<
     };
 
     const pageCount = Math.ceil((data?.pagination?.totalEntries ?? defaultPageSize) / defaultPageSize);
-    const currentPage = Math.max(page, 1);
+    const currentPage = Math.max(Math.min(page, pageCount), 1);
 
     useEffect(() => {
         if (opts.start !== page - 1 || opts.query !== searchQuery) {
-            setOpts({...opts, start: Math.max(page - 1, 0), query: searchQuery});
+            setOpts({...opts, start: Math.max((page - 1) * defaultPageSize, 0), query: searchQuery});
         }
     }, [searchParams]);
 
     useEffect(() => {
-        if (data !== undefined && currentPage > pageCount){
-            setPage(pageCount);
+        if (data !== undefined && page > currentPage || page < 1) {
+            setPage(currentPage);
         }
     });
 

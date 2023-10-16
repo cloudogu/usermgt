@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
  */
 @Path("users")
 public class UserResource extends AbstractManagerResource<User> {
+    final int PAGING_DEFAULT_SUMMARY_LIMIT = 10;
     /**
      * Constructs ...
      *
@@ -294,12 +295,14 @@ public class UserResource extends AbstractManagerResource<User> {
         }
 
         if (limit <= 0 || limit > PAGING_MAXIMUM) {
-            limit = PAGING_DEFAULT_LIMIT;
+            limit = PAGING_DEFAULT_SUMMARY_LIMIT;
         }
 
         try {
-            Pair<List<Result.Summary>, Integer> summaries = this.importHandler.getSummaries(start, limit);
-            PagedResultList<Result.Summary> result = new PagedResultList<>(summaries.getLeft(), start, limit, summaries.getRight());
+            Pair<List<Result.Summary>, Integer> summaryResult = this.importHandler.getSummaries(start, limit);
+            List<Result.Summary> summaries = summaryResult.getLeft();
+            int totalSummaryCount = summaryResult.getRight();
+            PagedResultList<Result.Summary> result = new PagedResultList<>(summaries, start, limit, totalSummaryCount);
 
             return Response.status(Response.Status.OK).entity(result).build();
         } catch (IOException e) {

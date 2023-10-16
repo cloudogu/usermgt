@@ -14,7 +14,6 @@ import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useConfirmation} from "../hooks/useConfirmation";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUsers from "../hooks/useUsers";
 import {ApplicationContext} from "../main";
 import {UsersService} from "../services/Users";
@@ -24,7 +23,8 @@ import type {User} from "../services/Users";
 const FIRST_PAGE = 1;
 
 
-export default function Users(props: { title: string }) {
+export default function Users() {
+    const {casUser} = useContext(ApplicationContext);
     const location = useLocation();
     const {
         data: {value: users, isLoading, currentPage, pageCount},
@@ -33,10 +33,8 @@ export default function Users(props: { title: string }) {
         refetch,
         opts,
     } = useUsers();
-    const {casUser} = useContext(ApplicationContext);
     const {notification, notify, clearNotification} = useAlertNotification();
     useNotificationAfterRedirect(notify);
-    useSetPageTitle(props.title);
     const {open, setOpen: toggleModal, targetName: username, setTargetName: setUsername} = useConfirmation();
     const backUrlParams = (): string => {
         const backURL = `/users${location.search}`;

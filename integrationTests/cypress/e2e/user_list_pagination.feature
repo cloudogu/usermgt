@@ -6,7 +6,7 @@ Feature: Tests for list of users.
     And "25" test-users exist
 
 
-  Scenario: a users enters the user-page
+  Scenario: a user enters the user-page
     When the user opens the users page
     Then the users-page is shown
 

@@ -2,7 +2,6 @@ import {
     Button,
     Form,
     H1, H2,
-    
     Href,
     LoadingIcon,
     useAlertNotification,
@@ -14,7 +13,6 @@ import {twMerge} from "tailwind-merge";
 import * as Yup from "yup";
 import UsersImportTable from "../components/usersImport/UsersImportTable";
 import {t} from "../helpers/i18nHelpers";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {ImportUsersResponse} from "../services/ImportUsers";
@@ -24,8 +22,7 @@ type ImportUsersUploadModel = {
     file?: FileList;
     dryrun: boolean;
 };
-const UsersImport = (props: { title: string }) => {
-    useSetPageTitle(props.title);
+const UsersImport = () => {
     const {notification, notify} = useAlertNotification();
     const [loading, setLoading] = useState(false);
     const handlerConfig: FormHandlerConfig<ImportUsersUploadModel> = {
@@ -75,14 +72,12 @@ const UsersImport = (props: { title: string }) => {
                         setUploadResult(undefined);
                     }}
                 />
-
                 {(file !== undefined && !loading) &&
                     <>
                         <H2 className={"mt-12"}>{t("usersImport.headlines.table")}</H2>
                         <UsersImportTable header={file.header} rows={file.rows}/>
                     </>
                 }
-
                 <div className={"flex flex-row"}>
                     <Button
                         disabled={(file?.size ?? 0) === 0}

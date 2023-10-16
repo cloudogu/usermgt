@@ -2,16 +2,11 @@ import {H1, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import SummaryList from "../components/summaries/SummaryList";
 import {t} from "../helpers/i18nHelpers";
-
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
-
-
 import useSummaries from "../hooks/useSummaries";
 
-const Summaries = (props: { title: string }) => {
+const Summaries = () => {
     const {data, setPage, refetch} = useSummaries();
     const {notification, notify} = useAlertNotification();
-    useSetPageTitle(props.title);
 
     return <>
         <div className="flex flex-wrap justify-between">

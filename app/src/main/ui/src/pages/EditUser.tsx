@@ -4,23 +4,21 @@ import {useNavigate, useParams} from "react-router-dom";
 import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {useUser} from "../hooks/useUser";
 import {ApplicationContext} from "../main";
-import { UsersService} from "../services/Users";
+import {UsersService} from "../services/Users";
 import type {User} from "../services/Users";
 
-export default function EditUser(props: { title: string }) {
-    useSetPageTitle(props.title);
+export default function EditUser() {
+    const {casUser} = useContext(ApplicationContext);
     const {username} = useParams();
     const {user, isLoading} = useUser(username);
     const navigate = useNavigate();
     const {backURL} = useBackURL();
-    const {casUser} = useContext(ApplicationContext);
 
     return <>
         <H1 className="uppercase">{t("pages.usersEdit")}</H1>
-        {isLoading ?
+        {casUser.admin && (isLoading ?
             <div className={"flex row justify-center w-[100%] mt-16"}>
                 <LoadingIcon className={"w-64 h-64"}/>
             </div>
@@ -42,7 +40,8 @@ export default function EditUser(props: { title: string }) {
                             });
                         }).catch((error: Error) => {
                             notify(error.message, "danger");
-                        })}
+                        })
+                }
                 additionalButtons={
                     <Button variant={"secondary"} type={"button"} className={"ml-4"}
                         data-testid="back-button"
@@ -50,7 +49,7 @@ export default function EditUser(props: { title: string }) {
                         {t("editGroup.buttons.back")}
                     </Button>
                 }
-            />
+            />)
         }
     </>;
 }

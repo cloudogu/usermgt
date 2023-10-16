@@ -337,7 +337,7 @@ public class ImportHandlerTest {
     }
 
     @Test
-    public void getSummaries() throws IOException {
+    public void testGetSummariesReturnsEmptyList() throws IOException {
         UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
         CSVParser parser = mock(CSVParser.class);
@@ -345,11 +345,61 @@ public class ImportHandlerTest {
         SummaryRepository sRepo = mock(SummaryRepository.class);
         when(sRepo.getSummaries()).thenReturn(Collections.emptyList());
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo);
 
-        Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 0);
+        Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 10);
 
         assertNotNull(res);
+        assertEmpty(res.getLeft());
+        assertEquals(0, (long)res.getRight());
+    }
+
+    @Test
+    public void testGetSummariesReturnsFourElements() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
+        CSVParser parser = mock(CSVParser.class);
+
+        SummaryRepository sRepo = mock(SummaryRepository.class);
+        List<Result.Summary> sums = generateSummaries(4);
+        when(sRepo.getSummaries()).thenReturn(sums);
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo);
+
+        Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 10);
+
+        assertNotNull(res);
+        assertNotNull(res.getLeft());
+        assertEquals(4, (long)res.getRight());
+    }
+
+    @Test
+    public void testGetSummariesReturnsTwoElementsWithStart10() throws IOException {
+        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
+        CSVParser parser = mock(CSVParser.class);
+
+        SummaryRepository sRepo = mock(SummaryRepository.class);
+        List<Result.Summary> sums = generateSummaries(12);
+        when(sRepo.getSummaries()).thenReturn(sums);
+
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo);
+
+        Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(10, 10);
+
+        assertNotNull(res);
+        assertNotNull(res.getLeft());
+        assertEquals(2, res.getLeft().size());
+        assertEquals(12, (long)res.getRight());
+    }
+
+    private static List<Result.Summary> generateSummaries(int count) {
+        List<Result.Summary> sums = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            String testFileName = String.format("file%s.csv", i+1);
+            sums.add(new Result.Summary(UUID.randomUUID(), testFileName, 123, 123, 123, 0));
+        }
+        return sums;
     }
 
     @Test()
@@ -453,6 +503,11 @@ public class ImportHandlerTest {
         Long updated = (long) result.getUpdated().size();
         assertNotNull(updated);
         assertEquals(expUpdated, updated);
+    }
+
+    private static void assertEmpty(List collection) {
+        boolean isNullOrEmpty = collection == null || collection.isEmpty();
+        assertTrue(isNullOrEmpty);
     }
 
     private Stream<CSVUserDTO> createMockStream(int count) {
