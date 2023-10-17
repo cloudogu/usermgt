@@ -42,7 +42,7 @@
       "displayName": "Display Name",
       "email": "E-Mail",
       "external": "External account",
-      "givenName": "Given Name",
+      "givenName": "Given Name (optional)",
       "mustChangePassword": "The user must change the password at the next login",
       "password": "Password",
       "surname": "Surname",
