@@ -33,7 +33,7 @@ RUN apk update && apk add wget && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
 
-FROM registry.cloudogu.com/official/java:8u362-1
+FROM registry.cloudogu.com/official/java:8u372-1
 
 ARG TOMCAT_VERSION
 
