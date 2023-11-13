@@ -5,8 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Security
+- fixed CVE-2023-44483 and some others (#107)
+
 ### Changed
 - Pages only available to users with manager group will now show an error message if a normal user accesses the page (#105)
+- Updated Java base image, org.apache.santuario/xmlsec and com.google.guava/guava (#107)
 
 ### Fixed
 - Import multiple user (>100) via csv (#101)
