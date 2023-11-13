@@ -7,13 +7,12 @@ import {t} from "../helpers/i18nHelpers";
 import {useConfirmation} from "../hooks/useConfirmation";
 import useGroups from "../hooks/useGroups";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {GroupsService} from "../services/Groups";
 import type {Group} from "../services/Groups";
 
 const FIRST_PAGE = 1;
 
-export default function Groups(props: { title: string }) {
+export default function Groups() {
     const {
         data: {value: groups, isLoading, currentPage: current, pageCount},
         setPage,
@@ -26,7 +25,6 @@ export default function Groups(props: { title: string }) {
     const navigate = useNavigate();
     const {notification, notify, clearNotification} = useAlertNotification();
     useNotificationAfterRedirect(notify);
-    useSetPageTitle(props.title);
     const {open, setOpen: toggleModal, targetName: group, setTargetName: setGroup} = useConfirmation();
 
     const changePage = (selectedPage: number) => {

@@ -33,10 +33,13 @@ export default defineConfig({
             "MaxLoginRetries": 3,
             "AdminUsername":  "ces-admin",
             "AdminPassword":  "ecosystem2016",
-            "AdminGroup":  "CesAdministrators"
+            "AdminGroup":  "CesAdministrators",
+            "groups" : 0,
+            "users" : 0,
         },
         videoCompression: false,
+        experimentalRunAllSpecs: true,
         specPattern: ["cypress/e2e/**/*.feature"],
         setupNodeEvents,
-    },
+    }
 });

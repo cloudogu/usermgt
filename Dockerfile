@@ -33,12 +33,12 @@ RUN apk update && apk add wget && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
 
-FROM registry.cloudogu.com/official/java:8u362-1
+FROM registry.cloudogu.com/official/java:8u372-1
 
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.11.0-1" \
+   VERSION="1.12.0-1" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx

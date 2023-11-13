@@ -42,7 +42,7 @@
       "displayName": "Display Name",
       "email": "E-Mail",
       "external": "External account",
-      "givenName": "Given Name",
+      "givenName": "Given Name (optional)",
       "mustChangePassword": "The user must change the password at the next login",
       "password": "Password",
       "surname": "Surname",
@@ -52,6 +52,9 @@
       "error": "Account information could not be saved. Please try again later.",
       "success": "Account information saved successfully."
     }
+  },
+  "general": {
+    "applicationName": "User Management"
   },
   "generic": {
     "errors": {
@@ -135,6 +138,10 @@
     }
   },
   "pages": {
+    "accessDenied": {
+      "text": "You are not allowed to access this page",
+      "title": "Access denied"
+    },
     "account": "Account",
     "groups": "Groups",
     "groupsEdit": "Edit group",

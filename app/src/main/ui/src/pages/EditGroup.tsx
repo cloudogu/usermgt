@@ -6,13 +6,11 @@ import {GroupForm} from "../components/groups/GroupForm";
 import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
 import {useGroup} from "../hooks/useGroup";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import { GroupsService} from "../services/Groups";
 import type {Group} from "../services/Groups";
 import type { FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
 
-export function EditGroup(props: { title: string }) {
-    useSetPageTitle(props.title);
+export function EditGroup() {
     const {groupName} = useParams();
     const {group, isLoading} = useGroup(groupName);
     const {notification, notify} = useAlertNotification();
@@ -35,12 +33,11 @@ export function EditGroup(props: { title: string }) {
     return <>
         <H1>{t("pages.groupsEdit")}</H1>
         {notification}
-        {!isLoading ?
+        {!isLoading &&
             <GroupForm
                 group={group ?? {name: "", description: "", members: []}}
                 config={handlerConfig}
             />
-            : <></>
         }
     </>;
 }

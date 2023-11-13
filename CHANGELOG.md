@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.12.0-1] - 2023-11-13
+### Security
+- fixed CVE-2023-44483 and some others (#107)
+
+### Changed
+- Pages only available to users with manager group will now show an error message if a normal user accesses the page (#105)
+- Updated Java base image, org.apache.santuario/xmlsec and com.google.guava/guava (#107)
+
+### Fixed
+- Import multiple user (>100) via csv (#101)
+- Users without manager group can access restricted areas (#105)
+- Pagination for users, groups and import summaries
+
 ## [v1.11.0-1] - 2023-09-18
 ### Added
 - Added feature to import users via CSV (#89)

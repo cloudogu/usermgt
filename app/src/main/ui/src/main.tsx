@@ -5,6 +5,8 @@ import "./index.css";
 import {useTranslation} from "react-i18next";
 import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from "react-router-dom";
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
+import ProtectedResource from "./components/ProtectedResource";
+import TitledPage from "./components/TitledPage";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import Account from "./pages/Account";
@@ -31,7 +33,8 @@ type ApplicationContextProps = {
 export const ApplicationContext = createContext<ApplicationContextProps>({
     casUser: {
         principal: "default",
-        admin: false
+        admin: false,
+        loading: true
     },
 });
 
@@ -43,47 +46,67 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <Navigate to="/account" replace/>,
+                element: <Navigate to="/account" replace/>
             },
             {
                 path: "account",
-                element: <Account title={t("pages.account") + " | User Management"}/>,
+                element: <TitledPage pageName={t("pages.account")}>
+                    <Account/>
+                </TitledPage>
             },
             {
                 path: "users",
-                element: <Users title={t("pages.users") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.users")}>
+                    <Users/>
+                </ProtectedResource>
             },
             {
                 path: "users/import",
-                element: <UsersImport title={t("pages.usersImport") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.usersImport")}>
+                    <UsersImport/>
+                </ProtectedResource>
             },
             {
                 path: "users/import/:id",
-                element: <UsersImportResult title={t("pages.usersImport") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.usersImport")}>
+                    <UsersImportResult/>
+                </ProtectedResource>
             },
             {
                 path: "summaries",
-                element: <Summaries title={t("pages.summaries") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.summaries")}>
+                    <Summaries/>
+                </ProtectedResource>
             },
             {
                 path: "users/:username/edit",
-                element: <EditUser title={t("pages.usersEdit") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.usersEdit")}>
+                    <EditUser/>
+                </ProtectedResource>
             },
             {
                 path: "users/new",
-                element: <NewUser title={t("pages.usersNew") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.usersNew")}>
+                    <NewUser/>
+                </ProtectedResource>
             },
             {
                 path: "groups",
-                element: <Groups title={t("pages.groups") + " | User Management"}/>,
+                element: <ProtectedResource pageName={t("pages.groups")}>
+                    <Groups/>
+                </ProtectedResource>
             },
             {
                 path: "groups/new",
-                element: <NewGroup title={t("pages.groupsNew") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.groupsNew")}>
+                    <NewGroup/>
+                </ProtectedResource>
             },
             {
                 path: "groups/:groupName/edit",
-                element: <EditGroup title={t("pages.groupsEdit") + " | User Management"}/>
+                element: <ProtectedResource pageName={t("pages.groupsEdit")}>
+                    <EditGroup/>
+                </ProtectedResource>
             },
         ],
     },
@@ -92,7 +115,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<RouterProvider router={router}/>);
 
 export type ApplicationContainerProps = {
-    children: JSX.Element;
+    children: React.JSX.Element;
 }
 
 function ApplicationContainer({children}: ApplicationContainerProps) {

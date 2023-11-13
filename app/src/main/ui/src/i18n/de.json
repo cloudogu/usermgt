@@ -42,7 +42,7 @@
       "displayName": "Anzeigename",
       "email": "E-Mail",
       "external": "Externer Account",
-      "givenName": "Vorname",
+      "givenName": "Vorname (optional)",
       "mustChangePassword": "Nutzer muss sein Passwort beim nächsten Login ändern",
       "password": "Passwort",
       "surname": "Nachname",
@@ -52,6 +52,9 @@
       "error": "Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
       "success": "Die Account Informationen wurden erfolgreich gespeichert."
     }
+  },
+  "general": {
+    "applicationName": "User Management"
   },
   "generic": {
     "errors": {
@@ -135,6 +138,10 @@
     }
   },
   "pages": {
+    "accessDenied": {
+      "text": "Sie haben keinen Zugriff auf diese Seite",
+      "title": "Zugriff verweigert"
+    },
     "account": "Account",
     "groups": "Gruppen",
     "groupsEdit": "Gruppe bearbeiten",

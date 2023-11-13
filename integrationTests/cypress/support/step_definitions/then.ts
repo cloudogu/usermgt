@@ -2,9 +2,6 @@ import '@bahmutov/cy-api'
 import {Then} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 
-
-
-
 Then("the newly created user is asked to change his password", function () {
     cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
     cy.get('input[data-testid="password-input"]').should('be.visible')
@@ -19,7 +16,6 @@ Then("the password reset flag is unchecked", function () {
     cy.get('label[data-testid="pwdReset-label"]').should('be.visible')
     cy.get('input[data-testid="pwdReset-checkbox"]').should('not.be.checked')
 })
-
 
 Then("the user has no administrator privileges in the dogu", function () {
     //not possible for usermgt as there is no distinction between normal user and admin
@@ -285,4 +281,8 @@ Then("the edit-group-page for group {string} is shown", function (name: string) 
 Then("a success alert will be shown containing the text {string}", function (name: string) {
     cy.get('.border-alert-primary-inverse-border').should('be.visible');
     cy.get('.border-alert-primary-inverse-border').contains(name);
+});
+
+Then("an access denied message will be shown", function () {
+    cy.get('h1[data-testid="access-denied-message"]').should('be.visible');
 });
