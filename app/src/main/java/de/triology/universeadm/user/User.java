@@ -88,7 +88,7 @@ public class User implements Comparable<User>
     String surname, String mail, String password, boolean pwdReset, List<String> memberOf)
   {
     this.username = username;
-    this.displayName = displayName.isEmpty() ? String.format("%s %s", givenname, surname) : displayName;
+    this.displayName = displayName;
     this.givenname = givenname;
     this.surname = surname;
     this.mail = mail;
@@ -381,6 +381,7 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  @NotBlank
   private String displayName;
 
   /**
