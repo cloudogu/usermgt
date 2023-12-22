@@ -29,6 +29,7 @@
         "numeric": "The password must contain at least 1 number.",
         "special": "The password must contain at least 1 special character."
       },
+      "givenname": "Given name is required.",
       "surname": "Surname is required.",
       "username": {
         "invalid": "The username may only contain letters, numbers, hyphens, underscores, periods and @.",
@@ -42,7 +43,7 @@
       "displayName": "Display Name",
       "email": "E-Mail",
       "external": "External account",
-      "givenName": "Given Name (optional)",
+      "givenName": "Given Name",
       "mustChangePassword": "The user must change the password at the next login",
       "password": "Password",
       "surname": "Surname",
