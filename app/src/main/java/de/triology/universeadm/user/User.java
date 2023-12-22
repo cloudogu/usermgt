@@ -44,6 +44,7 @@ import org.hibernate.validator.constraints.Email;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -87,7 +88,7 @@ public class User implements Comparable<User>
     String surname, String mail, String password, boolean pwdReset, List<String> memberOf)
   {
     this.username = username;
-    this.displayName = displayName;
+    this.displayName = displayName.isEmpty() ? String.format("%s %s", givenname, surname) : displayName;
     this.givenname = givenname;
     this.surname = surname;
     this.mail = mail;
@@ -385,6 +386,7 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  @NotBlank
   private String givenname;
 
   /**
@@ -422,8 +424,7 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
-  @NotNull
-  @Size(min = 1)
+  @NotBlank
   private String surname;
 
   /**
