@@ -75,6 +75,12 @@ RUN chown -R tomcat:tomcat /opt/apache-tomcat \
     # fix permissions
     && chown -R tomcat:tomcat /opt/apache-tomcat
 
+# install dependencies for givenname migration 
+RUN apk add --no-cache \
+    xmlstarlet \
+    openldap-clients \
+    && rm -rf /var/cache/apk/*
+
 # copy required files
 COPY resources /
 

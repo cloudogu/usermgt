@@ -60,6 +60,9 @@ if ! doguctl healthy --wait --timeout 120 ldap; then
   exit 1
 fi
 
+# migrate entries with missing givenName attribute
+source /migration/givenName-migration.sh
+
 # start tomcat as user tomcat
 su - tomcat -c "exec /opt/apache-tomcat/bin/catalina.sh run"
 
