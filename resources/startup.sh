@@ -61,6 +61,7 @@ if ! doguctl healthy --wait --timeout 120 ldap; then
 fi
 
 # migrate entries with missing givenName attribute
+# shellcheck source-path=./resources
 source /migration/givenName-migration.sh
 
 # start tomcat as user tomcat
