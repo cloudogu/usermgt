@@ -105,18 +105,6 @@ public class CSVParserTest {
     }
 
     @Test
-    public void testEmptyGivenName() throws CsvRequiredFieldEmptyException {
-        CSVUserDTO expUser = CSVUsers.createDent();
-        expUser.setGivenname("");
-
-        List<CSVUserDTO> userInputList = new CSVParserImpl()
-                .parse(readTestFile("EmptyGivenName.csv"))
-                .collect(Collectors.toList());
-
-        assertEquals(expUser, userInputList.get(0));
-    }
-
-    @Test
     public void testParseBoolean() throws CsvRequiredFieldEmptyException {
         CSVUserDTO expUsers = CSVUsers.createDent();
 
@@ -163,22 +151,6 @@ public class CSVParserTest {
 
         assertEquals(3, userInputList.size());
         assertEquals(2, parser.getErrors().count());
-    }
-
-    @Test()
-    public void testEmptyGivenNameHeader() throws CsvRequiredFieldEmptyException, IOException {
-        CSVParserImpl parser = new CSVParserImpl();
-
-        List<CSVUserDTO> userInputList = parser
-                .parse(readTestFile("EmptyGivenNameHeader.csv"))
-                .collect(Collectors.toList());
-
-        assertTrue(userInputList.isEmpty());
-
-        List<ImportError> errors = parser.getErrors().map(ImportEntryResult::getImportError).collect(Collectors.toList());
-
-        assertEquals(1, errors.size());
-        assertEquals(ImportError.Code.FIELD_LENGTH_ERROR.value, errors.get(0).getErrorCode());
     }
 
     @Test()

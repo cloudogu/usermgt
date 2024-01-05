@@ -44,6 +44,7 @@ import org.hibernate.validator.constraints.Email;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -380,11 +381,13 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
+  @NotBlank
   private String displayName;
 
   /**
    * Field description
    */
+  @NotBlank
   private String givenname;
 
   /**
@@ -422,8 +425,7 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
-  @NotNull
-  @Size(min = 1)
+  @NotBlank
   private String surname;
 
   /**
