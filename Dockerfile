@@ -38,7 +38,7 @@ FROM registry.cloudogu.com/official/java:8u372-1
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.12.0-1" \
+   VERSION="1.12.1-1" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
@@ -74,6 +74,12 @@ RUN chown -R tomcat:tomcat /opt/apache-tomcat \
     && chmod +x WEB-INF/cipher.sh \
     # fix permissions
     && chown -R tomcat:tomcat /opt/apache-tomcat
+
+# install dependencies for givenname migration 
+RUN apk add --no-cache \
+    xmlstarlet \
+    openldap-clients \
+    && rm -rf /var/cache/apk/*
 
 # copy required files
 COPY resources /

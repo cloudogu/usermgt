@@ -18,7 +18,7 @@ public class CSVUserDTO extends CSVRecord {
     @CsvBindByName(required = true)
     private String displayname;
 
-    @CsvBindByName
+    @CsvBindByName(required = true)
     private String givenname;
 
     @CsvBindByName(required = true)

@@ -1,6 +1,5 @@
 import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
-import React from "react";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";

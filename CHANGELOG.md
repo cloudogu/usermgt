@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.12.1-1] - 2024-01-11
+### Changed
+- make givenname mandatory (#109)
+
 ## [v1.12.0-1] - 2023-11-13
 ### Security
 - fixed CVE-2023-44483 and some others (#107)

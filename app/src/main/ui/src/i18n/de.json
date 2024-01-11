@@ -29,6 +29,7 @@
         "numeric": "Das Passwort muss mindestens eine Zahl enthalten.",
         "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten."
       },
+      "givenname": "Vorname muss ausgefüllt sein.",
       "surname": "Nachname muss ausgefüllt sein.",
       "username": {
         "invalid": "Der Nutzername darf nur Buchstaben, Zahlen, Bindestriche, Unterstriche, Punkte und @ enthalten.",
@@ -42,7 +43,7 @@
       "displayName": "Anzeigename",
       "email": "E-Mail",
       "external": "Externer Account",
-      "givenName": "Vorname (optional)",
+      "givenName": "Vorname",
       "mustChangePassword": "Nutzer muss sein Passwort beim nächsten Login ändern",
       "password": "Passwort",
       "surname": "Nachname",
