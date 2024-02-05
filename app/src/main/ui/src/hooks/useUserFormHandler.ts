@@ -1,7 +1,7 @@
-import {useAlertNotification, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {useAlertNotification, useFormHandler} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {useValidationSchema} from "./useValidationSchema";
 import type {User} from "../services/Users";
-import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
+import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 export interface useUserFormHandlerResponse<T extends User> {
     handler: UseFormHandlerFunctions<T>;

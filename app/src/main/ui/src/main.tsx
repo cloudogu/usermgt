@@ -1,4 +1,4 @@
-import {Main, Navbar} from "@cloudogu/ces-theme-tailwind";
+import {Main, Navbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React, {createContext, useContext} from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";

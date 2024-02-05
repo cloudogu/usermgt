@@ -1,4 +1,4 @@
-import {Table} from "@cloudogu/ces-theme-tailwind";
+import {Table} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React from "react";
 import {t} from "../../helpers/i18nHelpers";
 import type {ImportError} from "../../services/ImportUsers";

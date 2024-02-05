@@ -1,4 +1,4 @@
-import {Button, H1, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1, Searchbar, Table, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {ConfirmationDialog} from "../components/ConfirmationDialog";

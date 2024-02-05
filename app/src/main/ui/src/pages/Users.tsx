@@ -1,3 +1,4 @@
+import {ActionTableFrontendPaginated, ActionTableRoot} from "@cloudogu/ces-theme-tailwind";
 import {
     Button,
     H1,
@@ -5,7 +6,7 @@ import {
     Searchbar,
     Table,
     useAlertNotification
-} from "@cloudogu/ces-theme-tailwind";
+} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React, {useContext} from "react";
 import {Link, useLocation} from "react-router-dom";
 import {ConfirmationDialog} from "../components/ConfirmationDialog";
@@ -102,28 +103,33 @@ export default function Users() {
             }}
             title={t("users.confirmation.title")}
             message={t("users.confirmation.message", {username: username})}/>
-        <Table className="my-4 text-sm" data-testid="users-table">
-            <Table.Head>
-                <Table.Head.Tr className={"uppercase"}>
-                    <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>
-                    <Table.Head.Th>{t("users.table.displayName")}</Table.Head.Th>
-                    <Table.Head.Th>{t("users.table.email")}</Table.Head.Th>
-                    <Table.Head.Th className="w-0"/>
-                </Table.Head.Tr>
-            </Table.Head>
-            <Table.ConditionalBody show={!isLoading}>
-                {(users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog, backUrlParams()))}
-            </Table.ConditionalBody>
-            <Table.ConditionalFoot show={!isLoading && (pageCount ?? 1) > 1}>
-                <Table.Foot.Pagination
-                    data-testid="users-footer"
-                    className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
-                    currentPage={currentPage ?? 1}
-                    pageCount={pageCount ?? 1}
-                    onPageChange={changePage}
-                />
-            </Table.ConditionalFoot>
-        </Table>
+        <ActionTableRoot isLoading={true}>
+            <ActionTableFrontendPaginated values={[]}>
+                {() => <ActionTableFrontendPaginated.SkeletonBody rows={20} columns={4} />}
+            </ActionTableFrontendPaginated>
+        </ActionTableRoot>
+        {/*<Table className="my-4 text-sm" data-testid="users-table">*/}
+        {/*    <Table.Head>*/}
+        {/*        <Table.Head.Tr className={"uppercase"}>*/}
+        {/*            <Table.Head.Th>{t("users.table.username")}</Table.Head.Th>*/}
+        {/*            <Table.Head.Th>{t("users.table.displayName")}</Table.Head.Th>*/}
+        {/*            <Table.Head.Th>{t("users.table.email")}</Table.Head.Th>*/}
+        {/*            <Table.Head.Th className="w-0"/>*/}
+        {/*        </Table.Head.Tr>*/}
+        {/*    </Table.Head>*/}
+        {/*    <Table.ConditionalBody show={!isLoading}>*/}
+        {/*        {(users ?? []).map(user => createUsersRow(user, casUser, openConfirmationDialog, backUrlParams()))}*/}
+        {/*    </Table.ConditionalBody>*/}
+        {/*    <Table.ConditionalFoot show={!isLoading && (pageCount ?? 1) > 1}>*/}
+        {/*        <Table.Foot.Pagination*/}
+        {/*            data-testid="users-footer"*/}
+        {/*            className={"fixed bottom-4 left-1/2 -translate-x-1/2"}*/}
+        {/*            currentPage={currentPage ?? 1}*/}
+        {/*            pageCount={pageCount ?? 1}*/}
+        {/*            onPageChange={changePage}*/}
+        {/*        />*/}
+        {/*    </Table.ConditionalFoot>*/}
+        {/*</Table>*/}
     </>;
 }
 
