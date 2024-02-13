@@ -1,3 +1,5 @@
+/* TODO: Replace this with just the import from ces-theme-tailwind as soon as any component is replaced */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
