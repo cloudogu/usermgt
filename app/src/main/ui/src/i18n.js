@@ -16,7 +16,7 @@ i18n
         fallbackLng: "en",
         debug: false,
         resources: {
-            de: {translation: {...de, }},
+            de: {translation: {...de, ...(i18n.getResourceBundle("de", "translation") || {})}},
             en: {translation: {...en, ...(i18n.getResourceBundle("en", "translation") || {})}},
         },
         interpolation: {
