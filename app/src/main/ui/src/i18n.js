@@ -5,22 +5,22 @@ import {initReactI18next} from "react-i18next";
 import de from "./i18n/de.json";
 import en from "./i18n/en.json";
 
+console.log(i18n);
+console.log(i18n.getResourceBundle);
+
 // eslint-disable-next-line import/no-named-as-default-member
 i18n
-    // detect user language
-    // learn more: https://github.com/i18next/i18next-browser-languageDetector
     .use(LanguageDetector)
-    // pass the i18n instance to react-i18next.
     .use(initReactI18next)
-    // init i18next
-    // for all options read: https://www.i18next.com/overview/configuration-options
     .init({
-        debug: true, fallbackLng: "en", interpolation: {
-            escapeValue: false, // not needed for react as it escapes by default
-        }, resources: {
-            en: {translation:{...(en)}},
-            de: {translation:{...(de)}},
+        fallbackLng: "en",
+        debug: false,
+        resources: {
+            de: {translation: {...de, }},
+            en: {translation: {...en, ...(i18n.getResourceBundle("en", "translation") || {})}},
+        },
+        interpolation: {
+            escapeValue: false,
         }
-    });
-
-export default i18n;
+    })
+    .then(/* ignored */);
