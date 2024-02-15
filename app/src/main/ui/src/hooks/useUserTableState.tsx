@@ -17,15 +17,12 @@ export const LINE_COUNT_OPTIONS = [
     100,
 ];
 
-export default function useUserTableState(options?: {
-    initialSearchQuery?: string;
-    defaultLinesPerPage?: number;
-    defaultStartPage?: number;
+export default function useUserTableState({initialSearchQuery, defaultStartPage, defaultLinesPerPage}: {
+    initialSearchQuery: string;
+    defaultLinesPerPage: number;
+    defaultStartPage: number;
 }): UseUsersHook {
-    const defaultLinesPerPage = options?.defaultLinesPerPage ?? 0;
-    const defaultStartPage = options?.defaultStartPage ?? 0;
-
-    const [searchQuery, setSearchQuery] = useState(options?.initialSearchQuery ?? "");
+    const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
     const [users, setUsers] = useState<User[]>([]);
     const [start, setStart] = useState(defaultStartPage);
     const [limit, setLimit] = useState(defaultLinesPerPage);
@@ -50,8 +47,8 @@ export default function useUserTableState(options?: {
     }, [searchQuery, start, limit]);
 
     const paginationControl = usePaginationControl({
-        defaultStartPage: options?.defaultStartPage ?? 0,
-        defaultLinesPerPage: options?.defaultLinesPerPage ?? 0,
+        defaultStartPage: defaultStartPage,
+        defaultLinesPerPage: defaultLinesPerPage,
         allLineCount: totalEntries,
         lineCountOptions: LINE_COUNT_OPTIONS,
         loadDataFunction: async (paginationState: PaginationState) => {
