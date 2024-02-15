@@ -1,11 +1,18 @@
 import {PencilIcon} from '@heroicons/react/24/outline';
+import type {ComponentPropsWithoutRef} from 'react';
 import React from 'react';
 import {Link} from 'react-router-dom';
-import type {ComponentPropsWithoutRef} from 'react';
+import {twMerge} from "tailwind-merge";
 
-export default function EditLink(props: ComponentPropsWithoutRef<typeof Link>){
+export default function EditLink(props: ComponentPropsWithoutRef<typeof Link>) {
     return (
-        <Link {...props} className={'text-text-primary hover:text-text-primary-hover disabled:text-text-primary-disabled disabled:cursor-not-allowed'}>
+        <Link {...props}
+              className={
+                  twMerge(
+                      'text-text-primary hover:text-text-primary-hover disabled:text-text-primary-disabled disabled:cursor-not-allowed',
+                      props.className
+                  )
+              }>
             <PencilIcon className={'w-6 h-6'}/>
         </Link>
     );

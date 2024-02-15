@@ -1,27 +1,19 @@
-import {
-    ActionTable,
-    ActionTableRoot,
-    ConfirmDialog,
-    translate,
-    useActionTableControl,
-    useActualLocation
-} from "@cloudogu/ces-theme-tailwind";
+import {ActionTable, ActionTableRoot, ConfirmDialog, translate, useActualLocation,} from "@cloudogu/ces-theme-tailwind";
 import {Button, H1, Searchbar, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
-import React, {useContext, useMemo} from "react";
-import {Link} from "react-router-dom";
+import React, {useContext, useEffect, useMemo} from "react";
+import {Link, useSearchParams} from "react-router-dom";
 import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
 import {ApplicationContext} from "../main";
-import type {User} from "../services/Users";
-
-// const FIRST_PAGE = 1;
-
+import useUserTableState, {LINE_COUNT_OPTIONS} from "../hooks/useUserTableState";
+import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "../hooks/usePaginatedData";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
     const location = useActualLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
     const {notification, notify, clearNotification} = useAlertNotification();
     useNotificationAfterRedirect(notify);
     const backUrlParams = useMemo((): string => {
@@ -31,46 +23,34 @@ export default function Users() {
         return params.toString();
     }, [location]);
 
-    const {users, isLoading, allLineCount, loadDataFunction, updateSearchQuery, searchQuery, onDelete} = {
-        users: [{
-            displayName: "usera1",
-            mail: "usera1",
-            username: "usera1",
-            external: true,
-            givenname: "usera1",
-            memberOf: [],
-            password: "usera1",
-            pwdReset: true,
-            surname: "usera1",
-        }] as User[],
-        isLoading: false,
-        allLineCount: 0,
-        loadDataFunction: async () => {
-            console.log("LOAD DATA...");
-        },
-        updateSearchQuery: (_: string) => {
-            console.log(`setSearchQuery: ${_}`);
-        },
-        searchQuery: "",
-        onDelete: async (_: string) => {
-            console.log(`delete: ${_}`);
-        },
-    };
+    const defaultLinesPerPage = useMemo(() => Number(searchParams.get(LINES_PER_PAGE_QUERY_PARAM) ?? 25), [JSON.stringify(searchParams.values)]);
+    const defaultStartPage = useMemo(() => Number(searchParams.get(PAGE_QUERY_PARAM) ?? 1), [JSON.stringify(searchParams.values)]);
+    const defaultSearchQuery = useMemo(() => searchParams.get(SEARCH_QUERY_PARAM) ?? "", [JSON.stringify(searchParams.values)]);
 
-    const actionTableControl = useActionTableControl({
-        isLoading: false,
-        paginationControl: {
-            defaultLinesPerPage: 15,
-            lineCountOptions: [
-                15,
-                30,
-                60,
-                {value: -1, text: t("general.all")},
-            ],
-            allLineCount: allLineCount,
-            loadDataFunction: loadDataFunction,
-        },
+    const {users, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = useUserTableState({
+        initialSearchQuery: defaultSearchQuery,
+        defaultLinesPerPage: defaultLinesPerPage,
+        defaultStartPage: defaultStartPage,
     });
+
+    useEffect(() => {
+        if (!LINE_COUNT_OPTIONS.includes(defaultLinesPerPage)) {
+            if (!searchParams.get(LINES_PER_PAGE_QUERY_PARAM)){
+                setSearchParams(current => {
+                    current.set(LINES_PER_PAGE_QUERY_PARAM, `${25}`);
+                    return current;
+                });
+            }
+        }
+        if (defaultStartPage !== paginationControl.page) {
+            if (!searchParams.get(LINES_PER_PAGE_QUERY_PARAM)){
+                setSearchParams(current => {
+                    current.set(LINES_PER_PAGE_QUERY_PARAM, `${paginationControl.page}`);
+                    return current;
+                });
+            }
+        }
+    }, [JSON.stringify(searchParams.values), paginationControl.page, setSearchParams]);
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -95,8 +75,8 @@ export default function Users() {
             </div>
         </div>
         {notification}
-        <ActionTableRoot {...actionTableControl}>
-            <ActionTable>
+        <ActionTableRoot paginationControl={paginationControl} isLoading={isLoading}>
+            <ActionTable className={"mt-default-2x"}>
                 <ActionTable.HeadWithOneRow>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.username")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.displayName")}</ActionTable.HeadWithOneRow.Column>
@@ -122,6 +102,7 @@ export default function Users() {
                                 </ActionTable.Body.Row.Column>
                                 <ActionTable.Body.Row.Column className="flex justify-center">
                                     <EditLink
+                                        className={"flex items-center"}
                                         to={`/users/${user?.username ?? ""}/edit?${backUrlParams}`}
                                         id={`${user?.username}-edit-link`}/>
                                     <ConfirmDialog
