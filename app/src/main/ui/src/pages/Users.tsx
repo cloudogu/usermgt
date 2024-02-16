@@ -1,7 +1,7 @@
 import {ActionTable, ActionTableRoot, ConfirmDialog, translate, useActualLocation,} from "@cloudogu/ces-theme-tailwind";
 import {Button, H1, Searchbar, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
-import React, {useContext, useEffect, useMemo} from "react";
-import {Link, useSearchParams} from "react-router-dom";
+import React, {useContext, useEffect, useMemo, useState} from "react";
+import {Link, useLocation, useSearchParams} from "react-router-dom";
 import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
@@ -9,11 +9,11 @@ import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirec
 import {ApplicationContext} from "../main";
 import useUserTableState, {LINE_COUNT_OPTIONS} from "../hooks/useUserTableState";
 import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "../hooks/usePaginatedData";
+import useSearchParamState from "../hooks/useSearchParamState";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
-    const location = useActualLocation();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
     const {notification, notify, clearNotification} = useAlertNotification();
     useNotificationAfterRedirect(notify);
     const backUrlParams = useMemo((): string => {
@@ -23,34 +23,9 @@ export default function Users() {
         return params.toString();
     }, [location]);
 
-    const defaultLinesPerPage = useMemo(() => Number(searchParams.get(LINES_PER_PAGE_QUERY_PARAM) ?? 25), [JSON.stringify(searchParams.values)]);
-    const defaultStartPage = useMemo(() => Number(searchParams.get(PAGE_QUERY_PARAM) ?? 1), [JSON.stringify(searchParams.values)]);
-    const defaultSearchQuery = useMemo(() => searchParams.get(SEARCH_QUERY_PARAM) ?? "", [JSON.stringify(searchParams.values)]);
+    const {users, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = useUserTableState();
 
-    const {users, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = useUserTableState({
-        initialSearchQuery: defaultSearchQuery,
-        defaultLinesPerPage: defaultLinesPerPage,
-        defaultStartPage: defaultStartPage,
-    });
-
-    useEffect(() => {
-        if (!LINE_COUNT_OPTIONS.includes(defaultLinesPerPage)) {
-            if (!searchParams.get(LINES_PER_PAGE_QUERY_PARAM)){
-                setSearchParams(current => {
-                    current.set(LINES_PER_PAGE_QUERY_PARAM, `${25}`);
-                    return current;
-                });
-            }
-        }
-        if (defaultStartPage !== paginationControl.page) {
-            if (!searchParams.get(LINES_PER_PAGE_QUERY_PARAM)){
-                setSearchParams(current => {
-                    current.set(LINES_PER_PAGE_QUERY_PARAM, `${paginationControl.page}`);
-                    return current;
-                });
-            }
-        }
-    }, [JSON.stringify(searchParams.values), paginationControl.page, setSearchParams]);
+    console.log("render");
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -125,6 +100,5 @@ export default function Users() {
                 }
             </ActionTable>
         </ActionTableRoot>
-
     </>;
 }

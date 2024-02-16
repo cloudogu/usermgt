@@ -5,9 +5,6 @@ import {initReactI18next} from "react-i18next";
 import de from "./i18n/de.json";
 import en from "./i18n/en.json";
 
-console.log(i18n);
-console.log(i18n.getResourceBundle);
-
 // eslint-disable-next-line import/no-named-as-default-member
 i18n
     .use(LanguageDetector)
@@ -16,8 +13,8 @@ i18n
         fallbackLng: "en",
         debug: false,
         resources: {
-            de: {translation: {...de, ...(i18n.getResourceBundle("de", "translation") || {})}},
-            en: {translation: {...en, ...(i18n.getResourceBundle("en", "translation") || {})}},
+            de: {translation: {...de, ...(i18n.getResourceBundle?.call(undefined, "de", "translation") || {})}},
+            en: {translation: {...en, ...(i18n.getResourceBundle?.call(undefined, "en", "translation") || {})}},
         },
         interpolation: {
             escapeValue: false,
