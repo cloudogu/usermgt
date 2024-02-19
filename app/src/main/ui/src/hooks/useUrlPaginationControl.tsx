@@ -1,5 +1,5 @@
-import {useCallback, useEffect} from "react";
-import {PaginationControlInput, PaginationState, usePaginationControl} from "@cloudogu/ces-theme-tailwind";
+import {useEffect} from "react";
+import {PaginationControlInput, usePaginationControl} from "@cloudogu/ces-theme-tailwind";
 import useNumberSearchParamState from "./useNumberSearchParamState";
 
 export type UrlPaginationControlInput = PaginationControlInput & {
@@ -22,7 +22,6 @@ export default function useUrlPaginationControl(
 
     const paginationControl = usePaginationControl({
         ...options,
-        loadDataFunction: loadDataFunction,
         defaultStartPage: page,
         lineCountOptions,
         defaultLinesPerPage: linesPerPage
@@ -30,22 +29,22 @@ export default function useUrlPaginationControl(
 
     useEffect(() => {
         if (page !== paginationControl.page) {
+            // page in paginationControl has changed and needs to change the query param
             setPage(paginationControl.page);
-            loadDataFunction?.call(undefined, paginationControl);
         }
-    }, [page, paginationControl.page]);
 
-    useEffect(() => {
         if (!lineCountOptions.includes(linesPerPage)) {
+            // Query-param tries to use not allowed value for linesPerPage => reset to default
             setLinesPerPage(defaultLinesPerPage);
-        } else if (!lineCountOptions.includes(paginationControl.linesPerPage)) {
-            paginationControl.setLinesPerPage(linesPerPage);
+            paginationControl.setLinesPerPage(defaultLinesPerPage);
         } else if (linesPerPage !== paginationControl.linesPerPage) {
+            // linesPerPage in paginationControl has changed and needs to change the query param
             setLinesPerPage(paginationControl.linesPerPage);
         } else {
+            // Everything is fine! Trigger load-function
             loadDataFunction?.call(undefined, paginationControl).then();
         }
-    }, [linesPerPage, paginationControl.linesPerPage]);
+    }, [linesPerPage, paginationControl.linesPerPage, page, paginationControl.page, paginationControl.allLineCount]);
 
     return {
         paginationControl: {
