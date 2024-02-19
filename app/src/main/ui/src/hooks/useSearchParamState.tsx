@@ -1,5 +1,6 @@
 import {useCallback, useEffect} from "react";
 import {useSearchParams} from "react-router-dom";
+import {LINES_PER_PAGE_QUERY_PARAM} from "./usePaginatedData";
 
 export default function useSearchParamState(urlParamName: string, defaultValue: string) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -16,9 +17,8 @@ export default function useSearchParamState(urlParamName: string, defaultValue: 
         }
     }, [state]);
 
-    return {
+    return [
         state,
         setState,
-        synchronized: searchParams.get(urlParamName) === state,
-    };
+    ] as const;
 }

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {type User, UsersService} from "../services/Users";
 import {PaginationState} from "@cloudogu/ces-theme-tailwind";
 import {SEARCH_QUERY_PARAM} from "./usePaginatedData";
@@ -15,6 +15,7 @@ export type UseUsersHook = {
 };
 
 export const LINE_COUNT_OPTIONS = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     25,
     50,
     100,
@@ -26,13 +27,9 @@ export default function useUserTableState(): UseUsersHook {
     const [users, setUsers] = useState<User[]>([]);
     const [allLineCount, setAllLineCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
-    const {
-        state: searchQuery,
-        setState: setSearchQuery,
-        synchronized: querySynced
-    } = useSearchParamState(SEARCH_QUERY_PARAM, "");
+    const [searchQuery, setSearchQuery] = useSearchParamState(SEARCH_QUERY_PARAM, "");
 
-    const {paginationControl, synchronized: paginationSynced} = useUrlPaginationControl({
+    const {paginationControl} = useUrlPaginationControl({
         defaultStartPage: DEFAULT_START_PAGE,
         defaultLinesPerPage: DEFAULT_LINES_PER_PAGE,
         pageQueryParam: "p",
@@ -40,33 +37,33 @@ export default function useUserTableState(): UseUsersHook {
         lineCountOptions: LINE_COUNT_OPTIONS,
         allLineCount: allLineCount,
         loadDataFunction: async (paginationState: PaginationState) => {
-            paginationControl.setLinesPerPage(paginationState.linesPerPage);
-            paginationControl.setPage(paginationState.page);
+            console.log(`i will load users now for page ${paginationState.page} with lpp=${paginationState.linesPerPage}`);
+            // paginationControl.setLinesPerPage(paginationState.linesPerPage);
+            // paginationControl.setPage(paginationState.page);
         },
     });
 
-    const synchronized = querySynced && paginationSynced;
 
-    useEffect(() => {
-        (async () => {
-            if (synchronized) {
-                console.log("BOOOOOM");
-                try {
-                    setIsLoading(true);
-                    const newUsers = await UsersService.find(undefined, {
-                        start: Math.max(paginationControl.currentStart - 1, 0), // Backend expects index 0, but start stats at 1
-                        query: searchQuery,
-                        exclude: [],
-                        limit: paginationControl.linesPerPage,
-                    });
-                    setUsers(newUsers.data);
-                    setAllLineCount(newUsers.pagination.totalEntries);
-                } finally {
-                    setIsLoading(false);
-                }
-            }
-        })()
-    }, [synchronized]);
+    // useEffect(() => {
+    //     (async () => {
+    //         if (synchronized) {
+    //             console.log("BOOOOOM");
+    //             try {
+    //                 setIsLoading(true);
+    //                 const newUsers = await UsersService.find(undefined, {
+    //                     start: Math.max(paginationControl.currentStart - 1, 0), // Backend expects index 0, but start stats at 1
+    //                     query: searchQuery,
+    //                     exclude: [],
+    //                     limit: paginationControl.linesPerPage,
+    //                 });
+    //                 setUsers(newUsers.data);
+    //                 setAllLineCount(newUsers.pagination.totalEntries);
+    //             } finally {
+    //                 setIsLoading(false);
+    //             }
+    //         }
+    //     })()
+    // }, [synchronized, paginationControl]);
 
     return {
         users,

@@ -1,5 +1,5 @@
-import {useEffect} from "react";
-import {PaginationControlInput, usePaginationControl} from "@cloudogu/ces-theme-tailwind";
+import {useCallback, useEffect} from "react";
+import {PaginationControlInput, PaginationState, usePaginationControl} from "@cloudogu/ces-theme-tailwind";
 import useNumberSearchParamState from "./useNumberSearchParamState";
 
 export type UrlPaginationControlInput = PaginationControlInput & {
@@ -10,38 +10,56 @@ export default function useUrlPaginationControl(
     {
         pageQueryParam = "p",
         linesPerPageQueryParam = "l",
+        loadDataFunction,
+        defaultStartPage = 1,
+        defaultLinesPerPage = 1,
+        lineCountOptions = [1],
         ...options
     }: UrlPaginationControlInput
 ) {
-    const defaultLinesPerPage = options.defaultLinesPerPage ?? 1;
-    const defaultLineCountOptions = options.lineCountOptions ?? [1];
-    const {
-        state: page,
-        setState: setPage,
-        synchronized: s1
-    } = useNumberSearchParamState(pageQueryParam, options.defaultStartPage ?? 1);
-    const {
-        state: linesPerPage,
-        setState: setLinesPerPage,
-        synchronized: s2
-    } = useNumberSearchParamState(linesPerPageQueryParam, defaultLinesPerPage);
+    const [page, setPage] = useNumberSearchParamState(pageQueryParam, defaultStartPage);
+    const [linesPerPage, setLinesPerPage] = useNumberSearchParamState(linesPerPageQueryParam, defaultLinesPerPage);
 
-    const paginationControl = usePaginationControl(options);
+    const paginationControl = usePaginationControl({
+        ...options,
+        loadDataFunction: loadDataFunction,
+        defaultStartPage: page,
+        lineCountOptions,
+        defaultLinesPerPage: linesPerPage
+    });
 
     useEffect(() => {
         if (page !== paginationControl.page) {
             setPage(paginationControl.page);
+            loadDataFunction?.call(undefined, paginationControl);
         }
     }, [page, paginationControl.page]);
 
     useEffect(() => {
-        if (!defaultLineCountOptions.includes(linesPerPage)) {
+        if (!lineCountOptions.includes(linesPerPage)) {
             setLinesPerPage(defaultLinesPerPage);
+        } else if (!lineCountOptions.includes(paginationControl.linesPerPage)) {
+            paginationControl.setLinesPerPage(linesPerPage);
+        } else if (linesPerPage !== paginationControl.linesPerPage) {
+            setLinesPerPage(paginationControl.linesPerPage);
+        } else {
+            loadDataFunction?.call(undefined, paginationControl).then();
         }
-    }, [linesPerPage]);
+    }, [linesPerPage, paginationControl.linesPerPage]);
 
     return {
-        paginationControl: {...paginationControl, setPage: setPage, setLinesPerPage: setLinesPerPage},
-        synchronized: s1 && s2 && page === paginationControl.page && defaultLineCountOptions.includes(linesPerPage),
+        paginationControl: {
+            ...paginationControl,
+            page: page,
+            linesPerPage: linesPerPage,
+            setPage: (v: number) => {
+                setPage(v);
+                paginationControl.setPage(v);
+            },
+            setLinesPerPage: (v: number) => {
+                setLinesPerPage(v);
+                paginationControl.setLinesPerPage(v);
+            },
+        },
     };
 }
