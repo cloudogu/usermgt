@@ -1,10 +1,7 @@
-import {useEffect, useMemo, useState} from "react";
+import {useState} from "react";
 import {type User, UsersService} from "../services/Users";
-import {PaginationState} from "@cloudogu/ces-theme-tailwind";
-import {PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "./usePaginatedData";
-import useSearchParamState from "./useSearchParamState";
-import useUrlPaginationControl from "./useUrlPaginationControl";
-import {useSearchParams} from "react-router-dom";
+import {PaginationState, useSearchParamState, useUrlPaginationControl} from "@cloudogu/ces-theme-tailwind";
+import {SEARCH_QUERY_PARAM} from "./usePaginatedData";
 
 export type UseUsersHook = {
     users: User[],

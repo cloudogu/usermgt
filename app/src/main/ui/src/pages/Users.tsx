@@ -1,15 +1,13 @@
-import {ActionTable, ActionTableRoot, ConfirmDialog, translate, useActualLocation,} from "@cloudogu/ces-theme-tailwind";
+import {ActionTable, ActionTableRoot, ConfirmDialog, translate,} from "@cloudogu/ces-theme-tailwind";
 import {Button, H1, Searchbar, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
-import React, {useContext, useEffect, useMemo, useState} from "react";
-import {Link, useLocation, useSearchParams} from "react-router-dom";
+import React, {useContext, useMemo} from "react";
+import {Link, useLocation} from "react-router-dom";
 import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
 import {ApplicationContext} from "../main";
-import useUserTableState, {LINE_COUNT_OPTIONS} from "../hooks/useUserTableState";
-import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "../hooks/usePaginatedData";
-import useSearchParamState from "../hooks/useSearchParamState";
+import useUserTableState from "../hooks/useUserTableState";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
