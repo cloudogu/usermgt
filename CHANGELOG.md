@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add ces-theme-tailwind in a second, higher, version (#111)
+
+### Changed
+- Change table in users page to the table in the new theme (#111) 
 
 ## [v1.12.1-1] - 2024-01-11
 ### Changed
