@@ -84,10 +84,11 @@ public interface Manager<T>
   /**
    * Method description
    *
-   *
+   * @param query
+   * 
    * @return
    */
-  public List<T> getAll();
+  public List<T> queryAll(String query);
 
   /**
    * Method description
@@ -96,27 +97,5 @@ public interface Manager<T>
    * 
    * @return
    */
-  public List<T> search(String query);
-
-  /**
-   * Method description
-   *
-   * @param query
-   * @param start
-   * @param limit
-   * 
-   * @return
-   */
-  public PagedResultList<T> search(String query, int start, int limit);
-  public PagedResultList<T> search(String query, int start, int limit, final List<String> exclude);
-
-  /**
-   * Method description
-   *
-   * @param start
-   * @param limit
-   * 
-   * @return
-   */
-  public PagedResultList<T> getAll(int start, int limit);
+  public PagedResultList<T> query(PaginationQuery query);
 }
