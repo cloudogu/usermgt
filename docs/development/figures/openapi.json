@@ -57,7 +57,59 @@
     },
     "/api/users": {
       "get": {
-        "description": "Get a list with all users.",
+        "description": "Get paginated user data",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number to retrieve"
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "required": false,
+            "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "sort_by",
+            "schema": {
+              "type": "string",
+              "default": "username"
+            },
+            "required": false,
+            "description": "Item used to sort the result"
+          },
+          {
+            "in": "query",
+            "name": "order_by",
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "enum": ["asc", "desc"]
+            },
+            "required": false,
+            "description": "Direction of sorting"
+          },
+          {
+            "in": "query",
+            "name": "context",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The context ID that may be used to help the server continue in the same result set for subsequent searches"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -66,9 +118,50 @@
                 "schema": {
                   "$ref": "#/components/schemas/inline_response_200_1"
                 },
-                "examples": {
-                  "0": {
-                    "value": "{\"entries\":[{\"displayName\":\"admin\",\"givenname\":\"admin\",\"mail\":\"admin@ces.local\",\"memberOf\":[\"admin2\",\"cesManager\"],\"password\":\"__dummypassword\",\"pwdReset\":false,\"surname\":\"admin\",\"username\":\"admin\"},{\"displayName\":\"admin2\",\"givenname\":\"admin2\",\"mail\":\"admin2@test.de\",\"memberOf\":[],\"password\":\"__dummypassword\",\"pwdReset\":true,\"surname\":\"admin2\",\"username\":\"admin2\"},{\"displayName\":\"test\",\"givenname\":\"test\",\"mail\":\"test@cloudogu.com\",\"memberOf\":[],\"password\":\"__dummypassword\",\"pwdReset\":false,\"surname\":\"test\",\"username\":\"testuser\"}],\"start\":0,\"limit\":20,\"totalEntries\":3}"
+                "example": {
+                  "meta": {
+                    "page": 3,
+                    "pageSize": 50,
+                    "totalPages": 13
+                  },
+                  "data": [
+                    {
+                      "displayName": "admin",
+                      "givenname": "admin",
+                      "mail": "admin@ces.local",
+                      "memberOf": ["admin2", "cesManager"],
+                      "password": "__dummypassword",
+                      "pwdReset": false,
+                      "surname": "admin",
+                      "username": "admin"
+                    },
+                    {
+                      "displayName": "admin2",
+                      "givenname": "admin2",
+                      "mail": "admin2@test.de",
+                      "memberOf": [],
+                      "password": "__dummypassword",
+                      "pwdReset": true,
+                      "surname": "admin2",
+                      "username": "admin2"
+                    },
+                    {
+                      "displayName": "test",
+                      "givenname": "test",
+                      "mail": "test@cloudogu.com",
+                      "memberOf": [],
+                      "password": "__dummypassword",
+                      "pwdReset": false,
+                      "surname": "test",
+                      "username": "testuser"
+                    }
+                  ],
+                  "links": {
+                    "self": "/api/v2/users?page=3&pageSize=50",
+                    "first": null,
+                    "prev": "/api/v2/users?page=2&pageSize=50",
+                    "next": "/api/v2/users?page=4&pageSize=50",
+                    "last": null
                   }
                 }
               }
@@ -641,35 +734,44 @@
           }
         }
       },
-      "inline_response_200_1_entries": {
+      "inline_response_200_1_data": {
         "type": "object",
         "properties": {
-          "password": {
-            "type": "string"
-          },
-          "pwdReset": {
-            "type": "boolean"
-          },
-          "mail": {
-            "type": "string"
-          },
           "displayName": {
-            "type": "string"
+            "type": "string",
+            "description": "Display name of the user"
           },
           "givenname": {
-            "type": "string"
+            "type": "string",
+            "description": "Given name of the user"
           },
-          "surname": {
-            "type": "string"
+          "mail": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address of the user"
           },
           "memberOf": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "List of groups the user belongs to"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user (dummy data)"
+          },
+          "pwdReset": {
+            "type": "boolean",
+            "description": "Indicates whether the user's password needs to be reset"
+          },
+          "surname": {
+            "type": "string",
+            "description": "Surname of the user"
           },
           "username": {
-            "type": "string"
+            "type": "string",
+            "description": "Username of the user"
           }
         },
         "example": null
@@ -727,20 +829,56 @@
       "inline_response_200_1": {
         "type": "object",
         "properties": {
-          "entries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/inline_response_200_1_entries"
+          "meta": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "integer",
+                "description": "Current page number"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of items per page"
+              },
+              "totalPages": {
+                "type": "integer",
+                "description": "Total number of pages"
+              }
             }
           },
-          "start": {
-            "type": "integer"
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_1_data"
+            }
           },
-          "limit": {
-            "type": "integer"
-          },
-          "totalEntries": {
-            "type": "integer"
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "description": "Link to the current page",
+                "example": "/api/v2/users?page=3&pageSize=50"
+              },
+              "first": {
+                "type": "string",
+                "nullable": true,
+                "description": "Link to the first page (null if unavailable)"
+              },
+              "prev": {
+                "type": "string",
+                "description": "Link to the previous page"
+              },
+              "next": {
+                "type": "string",
+                "description": "Link to the next page"
+              },
+              "last": {
+                "type": "string",
+                "nullable": true,
+                "description": "Link to the last page (null if unavailable)"
+              }
+            }
           }
         }
       },
