@@ -14,7 +14,7 @@ public class UniqueUsernameConstraint extends Constraint<User> {
 
   @Override
   public boolean violatedBy(final User user, final Category currentCategory) {
-    final List<User> results = this.mapping.search(user.getUsername());
+    final List<User> results = this.mapping.queryAll(user.getUsername());
 
     for (User u : results) {
       boolean isCreate = currentCategory == Category.CREATE;
