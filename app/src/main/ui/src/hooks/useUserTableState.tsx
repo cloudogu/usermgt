@@ -36,7 +36,6 @@ export default function useUserTableState(): UseUsersHook {
         lineCountOptions: LINE_COUNT_OPTIONS,
         allLineCount: allLineCount,
         loadDataFunction: async (paginationState: PaginationState) => {
-            console.log(`i will load users now for page ${paginationState.page} with lpp=${paginationState.linesPerPage} and alc: ${paginationControl.allLineCount}`);
             try {
                 setIsLoading(true);
                 const newUsers = await UsersService.find(undefined, {
