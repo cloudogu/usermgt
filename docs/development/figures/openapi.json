@@ -11,9 +11,60 @@
     }
   ],
   "paths": {
-    "/api/groups": {
+    "/api/v2/groups": {
       "get": {
-        "description": "Get a list with all groups.",
+        "description": "Get a list of paginated groups.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number to retrieve"
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "required": false,
+            "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "sort_by",
+            "schema": {
+              "type": "string",
+              "default": "username"
+            },
+            "required": false,
+            "description": "Item used to sort the result"
+          },
+          {
+            "in": "query",
+            "name": "reverse",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Reverse sorting order - false means ascending"
+          },
+          {
+            "in": "query",
+            "name": "context",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The context ID that may be used to help the server continue in the same result set for subsequent searches"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -22,9 +73,30 @@
                 "schema": {
                   "$ref": "#/components/schemas/inline_response_200"
                 },
-                "examples": {
-                  "0": {
-                    "value": "{\"entries\":[{\"description\":\"This group grants administrative rights to all development applications of cloudogu\",\"members\":[\"admin\",\"admin2\"],\"name\":\"admin2\"},{\"description\":\"Members of the cesManager group have full access to the cloudogu administration applications\",\"members\":[\"admin\"],\"name\":\"cesManager\"}],\"start\":0,\"limit\":20,\"totalEntries\":2}"
+                "example": {
+                  "meta": {
+                    "page": 3,
+                    "pageSize": 2,
+                    "totalPages": 13
+                  },
+                  "data": [
+                    {
+                      "description": "This group grants administrative rights to all development applications of cloudogu",
+                      "members": ["admin", "admin2"],
+                      "name": "admin2"
+                    },
+                    {
+                      "description": "Members of the cesManager group have full access to the cloudogu administration applications",
+                      "members": ["admin"],
+                      "name": "cesManager"
+                    }
+                  ],
+                  "links": {
+                    "self": "/api/v2/groups?page=3&pageSize=2",
+                    "first": null,
+                    "prev": "/api/v2/groups?page=2&pageSize=2",
+                    "next": "/api/v2/groups?page=4&pageSize=2",
+                    "last": null
                   }
                 }
               }
@@ -55,7 +127,7 @@
         }
       }
     },
-    "/api/users": {
+    "/api/v2/users": {
       "get": {
         "description": "Get paginated user data",
         "parameters": [
@@ -91,14 +163,13 @@
           },
           {
             "in": "query",
-            "name": "order_by",
+            "name": "reverse",
             "schema": {
-              "type": "string",
-              "default": "asc",
-              "enum": ["asc", "desc"]
+              "type": "boolean",
+              "default": false
             },
             "required": false,
-            "description": "Direction of sorting"
+            "description": "Reverse sorting order - false means ascending"
           },
           {
             "in": "query",
@@ -192,7 +263,7 @@
         }
       }
     },
-    "/api/users/import": {
+    "/api/v2/users/import": {
       "post": {
         "summary": "Import Users from CSV",
         "requestBody": {
@@ -248,7 +319,7 @@
         }
       }
     },
-    "/api/users/import/{importID}": {
+    "/api/v2/users/import/{importID}": {
       "get": {
         "summary": "Get Import Result",
         "parameters": [
@@ -324,7 +395,7 @@
         }
       }
     },
-    "/api/users/import/{importID}/download": {
+    "/api/v2/users/import/{importID}/download": {
       "get": {
         "summary": "Download Import Result",
         "description": "Downloads an import result in JSON format by its ID.",
@@ -368,7 +439,7 @@
         }
       }
     },
-    "/api/users/import/summaries": {
+    "/api/v2/users/import/summaries": {
       "get": {
         "summary": "Get summaries",
         "parameters": [
@@ -424,7 +495,7 @@
         }
       }
     },
-    "/api/groups/{groupname}/members/{username}": {
+    "/api/v2/groups/{groupname}/members/{username}": {
       "post": {
         "description": "Adds a user to a group. Fails if user is already member of the group.",
         "parameters": [
@@ -507,7 +578,7 @@
         }
       }
     },
-    "/api/account/passwordpolicy": {
+    "/api/v2/account/passwordpolicy": {
       "get": {
         "description": "Returns the configured password policy",
         "responses": {
@@ -529,7 +600,7 @@
         }
       }
     },
-    "/api/account/gui_config": {
+    "/api/v2/account/gui_config": {
       "get": {
         "description": "Returns the configured gui config.",
         "responses": {
@@ -554,7 +625,7 @@
         }
       }
     },
-    "/api/account": {
+    "/api/v2/account": {
       "get": {
         "description": "Returns the currently logged in account. Password will be replaced with _dummypassword.",
         "responses": {
@@ -598,7 +669,7 @@
         }
       }
     },
-    "/api/users/{username}/groups/{groupname}": {
+    "/api/v2/users/{username}/groups/{groupname}": {
       "post": {
         "description": "Adds a group member.",
         "parameters": [
@@ -667,7 +738,7 @@
         }
       }
     },
-    "/api/groups/mynewgroupname": {
+    "/api/v2/groups/mynewgroupname": {
       "delete": {
         "description": "Deletes a group",
         "responses": {
@@ -677,7 +748,7 @@
         }
       }
     },
-    "/api/groups/undeletable": {
+    "/api/v2/groups/undeletable": {
       "get": {
         "description": "Returns all undeletable system groups.",
         "responses": {
@@ -808,7 +879,7 @@
           }
         }
       },
-      "inline_response_200_entries": {
+      "inline_response_200_data": {
         "type": "object",
         "properties": {
           "members": {
@@ -885,20 +956,56 @@
       "inline_response_200": {
         "type": "object",
         "properties": {
-          "entries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/inline_response_200_entries"
+          "meta": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "integer",
+                "description": "Current page number"
+              },
+              "pageSize": {
+                "type": "integer",
+                "description": "Number of items per page"
+              },
+              "totalPages": {
+                "type": "integer",
+                "description": "Total number of pages"
+              }
             }
           },
-          "start": {
-            "type": "integer"
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_data"
+            }
           },
-          "limit": {
-            "type": "integer"
-          },
-          "totalEntries": {
-            "type": "integer"
+          "links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "string",
+                "description": "Link to the current page",
+                "example": "/api/v2/users?page=3&pageSize=50"
+              },
+              "first": {
+                "type": "string",
+                "nullable": true,
+                "description": "Link to the first page (null if unavailable)"
+              },
+              "prev": {
+                "type": "string",
+                "description": "Link to the previous page"
+              },
+              "next": {
+                "type": "string",
+                "description": "Link to the next page"
+              },
+              "last": {
+                "type": "string",
+                "nullable": true,
+                "description": "Link to the last page (null if unavailable)"
+              }
+            }
           }
         }
       },
