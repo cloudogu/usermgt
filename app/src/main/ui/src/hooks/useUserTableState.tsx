@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {type User, UsersService} from "../services/Users";
 import {PaginationState, useSearchParamState, useUrlPaginationControl} from "@cloudogu/ces-theme-tailwind";
-import {SEARCH_QUERY_PARAM} from "./usePaginatedData";
+import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "./usePaginatedData";
 
 export type UseUsersHook = {
     users: User[],
@@ -31,18 +31,18 @@ export default function useUserTableState(): UseUsersHook {
     const {paginationControl} = useUrlPaginationControl({
         defaultStartPage: DEFAULT_START_PAGE,
         defaultLinesPerPage: DEFAULT_LINES_PER_PAGE,
-        pageQueryParam: "p",
-        linesPerPageQueryParam: "l",
+        pageQueryParam: PAGE_QUERY_PARAM,
+        linesPerPageQueryParam: LINES_PER_PAGE_QUERY_PARAM,
         lineCountOptions: LINE_COUNT_OPTIONS,
         allLineCount: allLineCount,
         loadDataFunction: async (paginationState: PaginationState) => {
             try {
                 setIsLoading(true);
                 const newUsers = await UsersService.find(undefined, {
-                    start: Math.max(paginationControl.currentStart - 1, 0), // Backend expects index 0, but start stats at 1
+                    start: Math.max(paginationState.currentStart - 1, 0), // Backend expects index 0, but start stats at 1
                     query: searchQuery,
                     exclude: [],
-                    limit: paginationControl.linesPerPage,
+                    limit: paginationState.linesPerPage,
                 });
                 setUsers(newUsers.data);
                 setAllLineCount(newUsers.pagination.totalEntries);
