@@ -130,6 +130,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Checks if any constraints are violated.
    * If so, throws ConstraintViolationException containing all violations.
+   *
    * @param user
    * @param category
    * @throws UniqueConstraintViolationException
@@ -216,19 +217,6 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
     eventBus.post(new UserEvent(user, EventType.REMOVE));
   }
 
-  /**
-   * Method description
-   *
-   * @param query
-   * @return
-   */
-  @Override
-  public List<User> search(String query) {
-    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
-
-    return mapping.search(query);
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -255,14 +243,23 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   /**
    * Method description
    *
+   * @param query
    * @return
    */
   @Override
-  public List<User> getAll() {
-    logger.debug("get all users");
+  public List<User> queryAll(String query) {
+    logger.debug("query all users: {}", query);
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 
-    return mapping.getAll();
+    return mapping.queryAll(query);
+  }
+
+  @Override
+  public PagedResultList<User> query(PaginationQuery query) {
+    logger.debug("get paged users, query={} ", query);
+    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
+
+    return mapping.query(query);
   }
 
   //~--- inner classes --------------------------------------------------------
