@@ -23,8 +23,6 @@ export default function Users() {
 
     const {users, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = useUserTableState();
 
-    console.log("render");
-
     return <>
         <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.users")}</H1>
