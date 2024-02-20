@@ -28,6 +28,7 @@
 package de.triology.universeadm.mapping;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.unboundid.ldap.sdk.*;
@@ -35,6 +36,11 @@ import com.unboundid.ldap.sdk.*;
 import static de.triology.universeadm.AbstractLDAPManager.EQUAL;
 import static de.triology.universeadm.AbstractLDAPManager.WILDCARD;
 
+import com.unboundid.ldap.sdk.controls.ServerSideSortRequestControl;
+import com.unboundid.ldap.sdk.controls.SortKey;
+import com.unboundid.ldap.sdk.controls.VirtualListViewRequestControl;
+import com.unboundid.ldap.sdk.controls.VirtualListViewResponseControl;
+import com.unboundid.util.LDAPTestUtils;
 import de.triology.universeadm.*;
 import de.triology.universeadm.validation.Validator;
 
@@ -44,6 +50,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,20 +181,91 @@ public class MappingHandler<T extends Comparable<T>> {
         return entity;
     }
 
-    public List<T> getAll() {
+    public List<T> queryAll(String query) {
         final List<T> entities = Lists.newArrayList();
 
         try {
-            SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, mapper.getBaseFilter(), returningAttributes);
+            SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, createFilter(query), returningAttributes);
             for (SearchResultEntry e : result.getSearchEntries()) {
                 consume(entities, e);
             }
-        } catch (LDAPSearchException ex) {
+        } catch (LDAPException ex) {
             throw new EntityException("could not get all entities", ex);
         }
 
         Collections.sort(entities);
         return ImmutableList.copyOf(entities);
+    }
+
+    public PagedResultList<T> query(PaginationQuery query) {
+        final List<T> entities = Lists.newArrayList();
+
+        int vlvOffset = query.getOffset() + 1;
+        int vlvLimit = query.getLimit() - 1;
+        int vlvContentCount = 0;
+        com.unboundid.asn1.ASN1OctetString vlvContextID = null;
+
+        try {
+            SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, createFilter(query.getQuery(), query.getExcludes()), returningAttributes);
+            searchRequest.addControl(new ServerSideSortRequestControl(new SortKey("uid", "caseIgnoreOrderingMatch", false)));
+            searchRequest.addControl(new VirtualListViewRequestControl(vlvOffset, 0, vlvLimit, vlvContentCount, vlvContextID));
+
+            SearchResult result = strategy.get().search(searchRequest);
+            for (SearchResultEntry e : result.getSearchEntries()) {
+                consume(entities, e);
+            }
+
+            LDAPTestUtils.assertHasControl(result, VirtualListViewResponseControl.VIRTUAL_LIST_VIEW_RESPONSE_OID);
+            VirtualListViewResponseControl vlvResponseControl = VirtualListViewResponseControl.get(result);
+            vlvContentCount = vlvResponseControl.getContentCount();
+            vlvContextID = vlvResponseControl.getContextID();
+
+        } catch (LDAPException ex) {
+            throw new EntityException("could not query entities from LDAP", ex);
+        }
+
+
+        return new PagedResultList<T>(entities, query.getOffset(), query.getLimit(), vlvContentCount);
+    }
+
+    private Filter createFilter(String query) throws LDAPException {
+        return createFilter(query, null);
+    }
+
+    private Filter createFilter(String query, List<String> excludes) throws LDAPException {
+      List<Filter> additionalFilters = Lists.newArrayList();
+
+      if (!Strings.isNullOrEmpty(query)) {
+        if (!QUERY_PATTERN.matcher(query).matches()) {
+          throw new IllegalQueryException("query contain illegal characters");
+        }
+
+        String q = prepareQuery(query);
+        List<Filter> queryFilters = Lists.newArrayList();
+        for (String attribute : mapper.getSearchAttributes()) {
+          queryFilters.add(Filter.create(attribute.concat(EQUAL).concat(q)));
+        }
+        additionalFilters.add(Filter.createORFilter(queryFilters));
+      }
+
+
+      List<Filter> excludeFilters = Lists.newArrayList();
+      if (!CollectionUtils.isEmpty(excludes)) {
+        for (String exclude : excludes) {
+          excludeFilters.add(Filter.create(String.format("!(cn=%s)", exclude)));
+        }
+        additionalFilters.add(Filter.createANDFilter(excludeFilters));
+      }
+
+      Filter filter = mapper.getBaseFilter();
+      if (!additionalFilters.isEmpty()) {
+        additionalFilters.add(filter);
+        filter = Filter.createANDFilter(additionalFilters);
+      }
+
+        logger.debug("start entity search with filter {}", filter);
+
+        return filter;
     }
 
     private String prepareQuery(String query) {
@@ -205,36 +283,36 @@ public class MappingHandler<T extends Comparable<T>> {
         return q;
     }
 
-    public List<T> search(String query) {
-        if (!QUERY_PATTERN.matcher(query).matches()) {
-            throw new IllegalQueryException("query contain illegal characters");
-        }
-
-        String q = prepareQuery(query);
-
-        Filter base = mapper.getBaseFilter();
-
-        List<T> entities = Lists.newArrayList();
-        try {
-            List<Filter> or = Lists.newArrayList();
-            for (String attribute : mapper.getSearchAttributes()) {
-                or.add(Filter.create(attribute.concat(EQUAL).concat(q)));
-            }
-            Filter filter = Filter.createANDFilter(base, Filter.createORFilter(or));
-            logger.debug("start entity search with filter {}", filter);
-
-            SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, filter, returningAttributes);
-            for (SearchResultEntry e : result.getSearchEntries()) {
-                consume(entities, e);
-            }
-        } catch (LDAPException ex) {
-            throw new EntityException("could not search entities with query: ".concat(q), ex);
-        }
-
-        Collections.sort(entities);
-
-        return ImmutableList.copyOf(entities);
-    }
+//    public List<T> search(String query) {
+//        if (!QUERY_PATTERN.matcher(query).matches()) {
+//            throw new IllegalQueryException("query contain illegal characters");
+//        }
+//
+//        String q = prepareQuery(query);
+//
+//        Filter base = mapper.getBaseFilter();
+//
+//        List<T> entities = Lists.newArrayList();
+//        try {
+//            List<Filter> or = Lists.newArrayList();
+//            for (String attribute : mapper.getSearchAttributes()) {
+//                or.add(Filter.create(attribute.concat(EQUAL).concat(q)));
+//            }
+//            Filter filter = Filter.createANDFilter(base, Filter.createORFilter(or));
+//            logger.debug("start entity search with filter {}", filter);
+//
+//            SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, filter, returningAttributes);
+//            for (SearchResultEntry e : result.getSearchEntries()) {
+//                consume(entities, e);
+//            }
+//        } catch (LDAPException ex) {
+//            throw new EntityException("could not search entities with query: ".concat(q), ex);
+//        }
+//
+//        Collections.sort(entities);
+//
+//        return ImmutableList.copyOf(entities);
+//    }
 
     protected List<Modification> consume(T object, List<Modification> mods) {
         return mods;

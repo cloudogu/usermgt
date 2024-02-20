@@ -14,7 +14,7 @@ public class UniqueGroupNameConstraint extends Constraint<Group> {
 
   @Override
   public boolean violatedBy(final Group group, final Category currentCategory) {
-    final List<Group> results = this.mapping.search(group.getName());
+    final List<Group> results = this.mapping.queryAll(group.getName());
 
     for (Group grp : results) {
       boolean isCreate = currentCategory == Category.CREATE;
