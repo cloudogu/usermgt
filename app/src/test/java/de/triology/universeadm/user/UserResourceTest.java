@@ -144,21 +144,32 @@ public class UserResourceTest {
 
     @Test
     public void testGetAll() throws URISyntaxException, IOException {
-        MockHttpRequest request = MockHttpRequest.get("/users?start=0&limit=20");
+        MockHttpRequest request = MockHttpRequest.get("/users?page=1&page_size=20");
         MockHttpResponse response = Resources.dispatch(resource, request);
 
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
 
         JsonNode node = Resources.parseJson(response);
 
-        assertEquals(0, node.get("start").asInt());
-        assertEquals(20, node.get("limit").asInt());
-        assertEquals(1, node.get("totalEntries").asInt());
+        JsonNode meta = node.get("meta");
+        assertNotNull(meta);
+        assertEquals(1, meta.get("page").asInt());
+        assertEquals(20, meta.get("pageSize").asInt());
+        assertEquals(1, meta.get("totalPages").asInt());
+        assertEquals(1, meta.get("totalItems").asInt());
 
-        JsonNode entries = node.get("entries");
+        JsonNode links = node.get("links");
+        assertNotNull(links);
+        assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("self").getTextValue());
+        assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("first").getTextValue());
+        assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("prev").getTextValue());
+        assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("next").getTextValue());
+        assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("last").getTextValue());
 
-        assertTrue(entries.isArray());
-        assertEquals("dent", Iterables.get(entries, 0).path("username").asText());
+        JsonNode data = node.get("data");
+
+        assertTrue(data.isArray());
+        assertEquals("dent", Iterables.get(data, 0).path("username").asText());
     }
 
     @Test
@@ -341,8 +352,7 @@ public class UserResourceTest {
 
     @Before
     public void setUp() {
-      //FIXME tests
-//        this.userManager = mockUserManager();
+        this.userManager = mockUserManager();
         this.groupManager = mockGroupManager();
         this.importHandler = mock(ImportHandler.class);
 
@@ -359,22 +369,19 @@ public class UserResourceTest {
         return manager;
     }
 
-  //FIXME tests
+    private UserManager mockUserManager() {
+        UserManager manager = mock(UserManager.class);
+        User dent = Users.createDent();
 
-//    private UserManager mockUserManager() {
-//        UserManager manager = mock(UserManager.class);
-//        User dent = Users.createDent();
-//
-//        when(manager.get("dent")).thenReturn(dent);
-//
-//        List<User> all = ImmutableList.of(dent);
-//
-//        when(manager.getAll()).thenReturn(all);
-//        when(manager.getAll(0, 20)).thenReturn(new PagedResultList<>(all, 0, 20,
-//                1));
-//
-//        return manager;
-//    }
+        when(manager.get("dent")).thenReturn(dent);
+
+        List<User> all = ImmutableList.of(dent);
+
+        when(manager.queryAll(null)).thenReturn(all);
+        when(manager.query(new PaginationQuery(1, 20, null, null, null, "username", false))).thenReturn(new PaginationResult<>(all, 1, null));
+
+        return manager;
+    }
 
     @BeforeClass
     public static void beforeClass()

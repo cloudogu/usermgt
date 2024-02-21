@@ -1,5 +1,7 @@
 package de.triology.universeadm;
 
+import com.google.common.base.Strings;
+
 import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
@@ -32,12 +34,12 @@ public class PaginationResultResponse<T> {
     private final int page;
     private final int pageSize;
     private final int totalPages;
-    private final int totalEntries;
+    private final int totalItems;
 
     public MetaData(PaginationQuery query, PaginationResult<T> result) {
       this.page = query.getPage();
       this.pageSize = query.getPageSize();
-      this.totalEntries = result.getTotalEntries();
+      this.totalItems = result.getTotalEntries();
       this.totalPages = calculateTotalPages(result.getTotalEntries(), query.getPageSize());
     }
 
@@ -49,8 +51,8 @@ public class PaginationResultResponse<T> {
       return pageSize;
     }
 
-    public int getTotalEntries() {
-      return totalEntries;
+    public int getTotalItems() {
+      return totalItems;
     }
 
     public int getTotalPages() {
@@ -76,8 +78,11 @@ public class PaginationResultResponse<T> {
       int nextPage = currentPage >= lastPage ? lastPage : (currentPage + 1);
 
       UriBuilder builder = UriBuilder.fromUri(basePath)
-        .replaceQuery(query.createUriQuery())
-        .replaceQueryParam("context", context);
+        .replaceQuery(query.createUriQuery());
+
+      if (!Strings.isNullOrEmpty(context)) {
+        builder.replaceQueryParam("context", context);
+      }
 
       this.self  = builder.replaceQueryParam("page", currentPage).build().toString();
       this.first = builder.replaceQueryParam("page", PAGING_DEFAULT_PAGE).build().toString();
