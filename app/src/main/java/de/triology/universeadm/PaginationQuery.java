@@ -1,7 +1,9 @@
 package de.triology.universeadm;
 
 import com.google.common.base.Strings;
+import org.apache.commons.collections.CollectionUtils;
 
+import javax.ws.rs.core.UriBuilder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -10,23 +12,29 @@ import static de.triology.universeadm.AbstractManagerResource.*;
 
 public class PaginationQuery {
 
-  private final int offset;
-  private final int limit;
+  private final int page;
+  private final int pageSize;
   private final String query;
-  private final String contextId;
+  private final String context;
+  private final String sortBy;
+  private final boolean reverse;
   private final List<String> excludes;
 
-  public PaginationQuery(int offset, int limit, String query, String exclude, String contextId) {
-    if (offset < 0) {
-      offset = PAGING_DEFAULT_START;
+  public PaginationQuery(int page, int pageSize) {
+    this(page, pageSize, null, null, null, null, false);
+  }
+
+  public PaginationQuery(int page, int pageSize, String query, String context, String exclude, String sortBy, boolean reverse) {
+    if (page <= 0) {
+      page = PAGING_DEFAULT_PAGE;
     }
 
-    if (limit <= 0 || limit > PAGING_MAXIMUM) {
-      limit = PAGING_DEFAULT_LIMIT;
+    if (pageSize <= 0 || pageSize > PAGING_MAXIMUM_PAGE_SIZE) {
+      pageSize = PAGING_DEFAULT_PAGE_SIZE;
     }
 
-    this.offset = offset;
-    this.limit = limit;
+    this.page = page;
+    this.pageSize = pageSize;
     this.query = query;
 
     if (!Strings.isNullOrEmpty(exclude)) {
@@ -35,26 +43,69 @@ public class PaginationQuery {
       this.excludes = Collections.emptyList();
     }
 
-    this.contextId = contextId;
+    this.sortBy = sortBy;
+    this.reverse = reverse;
+
+    this.context = context;
+  }
+
+  public String createUriQuery() {
+    UriBuilder builder = UriBuilder.fromUri("")
+      .queryParam("page", page)
+      .queryParam("page_size", pageSize);
+
+    if (!Strings.isNullOrEmpty(query)) {
+      builder.queryParam("query", query);
+    }
+
+    if (!Strings.isNullOrEmpty(sortBy)) {
+      builder.queryParam("sort_by", sortBy);
+    }
+
+    if (reverse) {
+      builder.queryParam("reverse", true);
+    }
+
+    if (!Strings.isNullOrEmpty(context)) {
+      builder.queryParam("context", context);
+    }
+
+    if (CollectionUtils.isNotEmpty(excludes)) {
+      builder.queryParam("exclude", String.join(",", excludes));
+    }
+
+    return builder.build().getQuery();
+  }
+
+  public int getPage() {
+    return page;
+  }
+
+  public int getPageSize() {
+    return pageSize;
   }
 
   public int getOffset() {
-    return offset;
-  }
-
-  public int getLimit() {
-    return limit;
+    return (page - 1) * pageSize;
   }
 
   public String getQuery() {
     return query;
   }
 
-  public String getContextId() {
-    return contextId;
+  public String getContext() {
+    return context;
   }
 
   public List<String> getExcludes() {
     return excludes;
+  }
+
+  public String getSortBy() {
+    return sortBy;
+  }
+
+  public boolean isReverse() {
+    return reverse;
   }
 }

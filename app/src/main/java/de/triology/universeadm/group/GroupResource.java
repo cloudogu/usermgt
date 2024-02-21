@@ -45,7 +45,7 @@ import java.util.List;
 @Path("groups")
 public class GroupResource extends AbstractManagerResource<Group> {
 
-    private static final Logger logger = LoggerFactory.getLogger(GroupResource.class);
+  private static final Logger logger = LoggerFactory.getLogger(GroupResource.class);
 
     private final GroupManager groupManager;
     private final UserManager userManager;
@@ -64,6 +64,11 @@ public class GroupResource extends AbstractManagerResource<Group> {
     protected String getId(Group group) {
         return group.getName();
     }
+
+  @Override
+  protected String getDefaultSortAttribute() {
+    return "name";
+  }
 
     @Override
     protected void prepareForModify(String id, Group group) {

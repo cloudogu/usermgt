@@ -138,7 +138,7 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
     }
 
     @Override
-    public PagedResultList<Group> query(PaginationQuery query) {
+    public PaginationResult<Group> query(PaginationQuery query) {
       logger.debug("get paged groups, query={} ", query);
         SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 
