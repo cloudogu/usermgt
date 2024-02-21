@@ -142,7 +142,7 @@ https://tomcat.apache.org/security-8.html#Apache_Tomcat_8.x_vulnerabilities
 ## [v1.4.1-2] - 2020-12-15
 ### Added
 - Ability to set memory limit via `cesapp edit-config`
-- Ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the PlantUML process inside the container via `cesapp edit-conf` (#27)
+- Ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the Usermgt process inside the container via `cesapp edit-conf` (#27)
 
 ## [v1.4.1-1] - 2020-10-09
 ### Fixed
