@@ -31,11 +31,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.unboundid.asn1.ASN1Exception;
 import com.unboundid.ldap.sdk.*;
-
-import static de.triology.universeadm.AbstractLDAPManager.EQUAL;
-import static de.triology.universeadm.AbstractLDAPManager.WILDCARD;
-
 import com.unboundid.ldap.sdk.controls.ServerSideSortRequestControl;
 import com.unboundid.ldap.sdk.controls.SortKey;
 import com.unboundid.ldap.sdk.controls.VirtualListViewRequestControl;
@@ -43,16 +40,19 @@ import com.unboundid.ldap.sdk.controls.VirtualListViewResponseControl;
 import com.unboundid.util.LDAPTestUtils;
 import de.triology.universeadm.*;
 import de.triology.universeadm.validation.Validator;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static de.triology.universeadm.AbstractLDAPManager.EQUAL;
+import static de.triology.universeadm.AbstractLDAPManager.WILDCARD;
 
 /**
  * @param <T>
@@ -197,17 +197,17 @@ public class MappingHandler<T extends Comparable<T>> {
         return ImmutableList.copyOf(entities);
     }
 
-    public PagedResultList<T> query(PaginationQuery query) {
+    public PaginationResult<T> query(PaginationQuery query) {
         final List<T> entities = Lists.newArrayList();
 
         int vlvOffset = query.getOffset() + 1;
-        int vlvLimit = query.getLimit() - 1;
+        int vlvLimit = query.getPageSize() - 1;
         int vlvContentCount = 0;
-        com.unboundid.asn1.ASN1OctetString vlvContextID = null;
+        com.unboundid.asn1.ASN1OctetString vlvContextID = decodeContextId(query.getContext());
 
         try {
             SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, createFilter(query.getQuery(), query.getExcludes()), returningAttributes);
-            searchRequest.addControl(new ServerSideSortRequestControl(new SortKey("uid", "caseIgnoreOrderingMatch", false)));
+            searchRequest.addControl(createSortControl(query));
             searchRequest.addControl(new VirtualListViewRequestControl(vlvOffset, 0, vlvLimit, vlvContentCount, vlvContextID));
 
             SearchResult result = strategy.get().search(searchRequest);
@@ -225,10 +225,20 @@ public class MappingHandler<T extends Comparable<T>> {
         }
 
 
-        return new PagedResultList<T>(entities, query.getOffset(), query.getLimit(), vlvContentCount);
+        return new PaginationResult<T>(entities, vlvContentCount, encodeContextId(vlvContextID));
     }
 
-    private Filter createFilter(String query) throws LDAPException {
+  private ServerSideSortRequestControl createSortControl(PaginationQuery query) {
+    String sortAttribute = "cn";
+    MappingAttribute attribute = mapper.getAttribute(query.getSortBy());
+    if (attribute != null) {
+      sortAttribute = attribute.getLdapName();
+    }
+
+    return new ServerSideSortRequestControl(new SortKey(sortAttribute, "caseIgnoreOrderingMatch", query.isReverse()));
+  }
+
+  private Filter createFilter(String query) throws LDAPException {
         return createFilter(query, null);
     }
 
@@ -283,37 +293,6 @@ public class MappingHandler<T extends Comparable<T>> {
         return q;
     }
 
-//    public List<T> search(String query) {
-//        if (!QUERY_PATTERN.matcher(query).matches()) {
-//            throw new IllegalQueryException("query contain illegal characters");
-//        }
-//
-//        String q = prepareQuery(query);
-//
-//        Filter base = mapper.getBaseFilter();
-//
-//        List<T> entities = Lists.newArrayList();
-//        try {
-//            List<Filter> or = Lists.newArrayList();
-//            for (String attribute : mapper.getSearchAttributes()) {
-//                or.add(Filter.create(attribute.concat(EQUAL).concat(q)));
-//            }
-//            Filter filter = Filter.createANDFilter(base, Filter.createORFilter(or));
-//            logger.debug("start entity search with filter {}", filter);
-//
-//            SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, filter, returningAttributes);
-//            for (SearchResultEntry e : result.getSearchEntries()) {
-//                consume(entities, e);
-//            }
-//        } catch (LDAPException ex) {
-//            throw new EntityException("could not search entities with query: ".concat(q), ex);
-//        }
-//
-//        Collections.sort(entities);
-//
-//        return ImmutableList.copyOf(entities);
-//    }
-
     protected List<Modification> consume(T object, List<Modification> mods) {
         return mods;
     }
@@ -334,5 +313,21 @@ public class MappingHandler<T extends Comparable<T>> {
             logger.debug("consumer returned null for object {}", entry.getDN());
         }
     }
+
+    private static String encodeContextId(com.unboundid.asn1.ASN1OctetString contextId) {
+      return Base64.getEncoder().encodeToString(contextId.encode());
+    }
+
+  private static com.unboundid.asn1.ASN1OctetString decodeContextId(String contextId) {
+    if (Strings.isNullOrEmpty(contextId)) {
+      return null;
+    }
+    try {
+      return com.unboundid.asn1.ASN1OctetString.decode(Base64.getDecoder().decode(contextId)).decodeAsOctetString();
+    } catch (ASN1Exception e) {
+      logger.warn("error while decoding contextId.", e);
+      return null;
+    }
+  }
 
 }

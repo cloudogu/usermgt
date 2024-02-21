@@ -57,6 +57,18 @@
           },
           {
             "in": "query",
+            "name": "exclude",
+            "schema": {
+              "type": "string",
+              "default": false
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Exclude items from the query"
+          },
+          {
+            "in": "query",
             "name": "context",
             "schema": {
               "type": "string"
@@ -170,6 +182,18 @@
             },
             "required": false,
             "description": "Reverse sorting order - false means ascending"
+          },
+          {
+            "in": "query",
+            "name": "exclude",
+            "schema": {
+              "type": "string",
+              "default": false
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Exclude items from the query"
           },
           {
             "in": "query",
@@ -444,26 +468,24 @@
         "summary": "Get summaries",
         "parameters": [
           {
-            "name": "start",
             "in": "query",
-            "description": "Start index for pagination (default: 0)",
-            "required": false,
+            "name": "page",
             "schema": {
               "type": "integer",
-              "minimum": 0
-            }
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number to retrieve"
           },
           {
-            "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return per page (default: 10, maximum: 100)",
-            "required": false,
+            "name": "page_size",
             "schema": {
               "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 10
-            }
+              "default": 20
+            },
+            "required": false,
+            "description": "Number of items per page"
           }
         ],
         "responses": {
@@ -901,21 +923,7 @@
         "type": "object",
         "properties": {
           "meta": {
-            "type": "object",
-            "properties": {
-              "page": {
-                "type": "integer",
-                "description": "Current page number"
-              },
-              "pageSize": {
-                "type": "integer",
-                "description": "Number of items per page"
-              },
-              "totalPages": {
-                "type": "integer",
-                "description": "Total number of pages"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultMetaData"
           },
           "data": {
             "type": "array",
@@ -924,32 +932,7 @@
             }
           },
           "links": {
-            "type": "object",
-            "properties": {
-              "self": {
-                "type": "string",
-                "description": "Link to the current page",
-                "example": "/api/v2/users?page=3&pageSize=50"
-              },
-              "first": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the first page (null if unavailable)"
-              },
-              "prev": {
-                "type": "string",
-                "description": "Link to the previous page"
-              },
-              "next": {
-                "type": "string",
-                "description": "Link to the next page"
-              },
-              "last": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the last page (null if unavailable)"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultLinks"
           }
         }
       },
@@ -957,21 +940,7 @@
         "type": "object",
         "properties": {
           "meta": {
-            "type": "object",
-            "properties": {
-              "page": {
-                "type": "integer",
-                "description": "Current page number"
-              },
-              "pageSize": {
-                "type": "integer",
-                "description": "Number of items per page"
-              },
-              "totalPages": {
-                "type": "integer",
-                "description": "Total number of pages"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultMetaData"
           },
           "data": {
             "type": "array",
@@ -980,32 +949,7 @@
             }
           },
           "links": {
-            "type": "object",
-            "properties": {
-              "self": {
-                "type": "string",
-                "description": "Link to the current page",
-                "example": "/api/v2/users?page=3&pageSize=50"
-              },
-              "first": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the first page (null if unavailable)"
-              },
-              "prev": {
-                "type": "string",
-                "description": "Link to the previous page"
-              },
-              "next": {
-                "type": "string",
-                "description": "Link to the next page"
-              },
-              "last": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the last page (null if unavailable)"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultLinks"
           }
         }
       },
@@ -1155,20 +1099,17 @@
       "PagedResultListSummary": {
         "type": "object",
         "properties": {
-          "entries": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationResultMetaData"
+          },
+          "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ImportSummary"
             }
           },
-          "start": {
-            "type": "integer"
-          },
-          "limit": {
-            "type": "integer"
-          },
-          "totalEntries": {
-            "type": "integer"
+          "links": {
+            "$ref": "#/components/schemas/PaginationResultLinks"
           }
         }
       },
@@ -1194,6 +1135,55 @@
           "skipped": {
             "type": "integer",
             "description": "The number of rows skipped during the import."
+          }
+        }
+      },
+      "PaginationResultMetaData": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "description": "Current page number"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages"
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items"
+          }
+        }
+      },
+      "PaginationResultLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string",
+            "description": "Link to the current page",
+            "example": "/api/v2/users?page=3&pageSize=50"
+          },
+          "first": {
+            "type": "string",
+            "nullable": true,
+            "description": "Link to the first page (null if unavailable)"
+          },
+          "prev": {
+            "type": "string",
+            "description": "Link to the previous page"
+          },
+          "next": {
+            "type": "string",
+            "description": "Link to the next page"
+          },
+          "last": {
+            "type": "string",
+            "nullable": true,
+            "description": "Link to the last page (null if unavailable)"
           }
         }
       }
