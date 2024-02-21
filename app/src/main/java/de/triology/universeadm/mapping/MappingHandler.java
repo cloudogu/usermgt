@@ -315,6 +315,9 @@ public class MappingHandler<T extends Comparable<T>> {
     }
 
     private static String encodeContextId(com.unboundid.asn1.ASN1OctetString contextId) {
+      if (contextId == null) {
+        return null;
+      }
       return Base64.getEncoder().encodeToString(contextId.encode());
     }
 

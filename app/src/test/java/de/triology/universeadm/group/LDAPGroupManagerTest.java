@@ -136,25 +136,89 @@ public class LDAPGroupManagerTest
     createGroupManager().get("Heart Of Gold");
   }
 
-  //FIXME tests
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void queryAllTest() throws LDAPException
+  {
+    List<Group> groups = createGroupManager().queryAll(null);
+    assertNotNull(groups);
+    assertEquals(2, groups.size());
+    assertThat(groups, contains(Groups.createBrockianUltraCricket(), Groups.createHeartOfGold()));
+  }
 
-//  @Test
-//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-//  public void getAllTest() throws LDAPException
-//  {
-//    List<Group> groups = createGroupManager().getAll();
-//    assertNotNull(groups);
-//    assertEquals(2, groups.size());
-//    assertThat(groups, contains(Groups.createBrockianUltraCricket(), Groups.createHeartOfGold()));
-//  }
-//
-//  @Test(expected = UnauthorizedException.class)
-//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-//  @SubjectAware(username = "dent", password = "secret")
-//  public void getAllTestWithoutAdminPrivileges() throws LDAPException
-//  {
-//    createGroupManager().getAll();
-//  }
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @SubjectAware(username = "dent", password = "secret")
+  public void queryAllTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().queryAll(null);
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void queryAllTestWithQuery() throws LDAPException{
+    List<Group> groups = createGroupManager().queryAll("Heart");
+    assertThat(groups, contains(Groups.createHeartOfGold()));
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void queryAllTestNotFound() throws LDAPException{
+    List<Group> groups = createGroupManager().queryAll("Marvin");
+    assertThat(groups, empty());
+  }
+
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = IllegalQueryException.class)
+  public void queryAllTestIllegalCharacters() throws LDAPException{
+    createGroupManager().queryAll("Mar(v)in");
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void queryTest() throws LDAPException
+  {
+    PaginationResult<Group> result = createGroupManager().query(new PaginationQuery(1, 10));
+    assertNotNull(result);
+    assertEquals(2, result.getEntries().size());
+    assertEquals(2, result.getTotalEntries());
+    assertThat(result.getEntries(), contains(Groups.createBrockianUltraCricket(), Groups.createHeartOfGold()));
+  }
+
+  @Test(expected = UnauthorizedException.class)
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @SubjectAware(username = "dent", password = "secret")
+  public void queryTestWithoutAdminPrivileges() throws LDAPException
+  {
+    createGroupManager().query(new PaginationQuery(1, 10));
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void queryTestWithQuery() throws LDAPException{
+    PaginationQuery query = new PaginationQuery(1, 10, "Heart", null, null, null, false);
+    PaginationResult<Group> result  = createGroupManager().query(query);
+    assertEquals(1, result.getEntries().size());
+    assertEquals(1, result.getTotalEntries());
+    assertThat(result.getEntries(), contains(Groups.createHeartOfGold()));
+  }
+
+  @Test
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  public void queryTestNotFound() throws LDAPException{
+    PaginationQuery query = new PaginationQuery(1, 10, "Marvin", null, null, null, false);
+    PaginationResult<Group> result  = createGroupManager().query(query);
+    assertEquals(0, result.getEntries().size());
+    assertEquals(0, result.getTotalEntries());
+    assertThat(result.getEntries(), empty());
+  }
+
+  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+  @Test(expected = IllegalQueryException.class)
+  public void queryTestIllegalCharacters() throws LDAPException{
+    PaginationQuery query = new PaginationQuery(1, 10, "Mar(v)in", null, null, null, false);
+    createGroupManager().query(query);
+  }
 
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
@@ -207,36 +271,6 @@ public class LDAPGroupManagerTest
   {
     createGroupManager().modify(Groups.createHeartOfGold());
   }
-
-  //FIXME tests
-
-//  @Test
-//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-//  public void searchTest() throws LDAPException{
-//    List<Group> groups = createGroupManager().search("Heart");
-//    assertThat(groups, contains(Groups.createHeartOfGold()));
-//  }
-//
-//  @Test
-//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-//  public void searchTestNotFound() throws LDAPException{
-//    List<Group> groups = createGroupManager().search("Marvin");
-//    assertThat(groups, empty());
-//  }
-//
-//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-//  @Test(expected = IllegalQueryException.class)
-//  public void searchTestIllegalCharacters() throws LDAPException{
-//    createGroupManager().search("Mar(v)in");
-//  }
-//
-//  @Test(expected = UnauthorizedException.class)
-//  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-//  @SubjectAware(username = "dent", password = "secret")
-//  public void searchTestWithoutAdminPrivileges() throws LDAPException
-//  {
-//    createGroupManager().search("Heart");
-//  }
 
   private void assertEntry(Group group, Entry entry){
     assertEquals(group.getName(), entry.getAttributeValue("cn"));

@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static de.triology.universeadm.AbstractManagerResource.*;
 
@@ -108,4 +109,18 @@ public class PaginationQuery {
   public boolean isReverse() {
     return reverse;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    PaginationQuery that = (PaginationQuery) o;
+    return page == that.page && pageSize == that.pageSize && reverse == that.reverse && Objects.equals(query, that.query) && Objects.equals(context, that.context) && Objects.equals(sortBy, that.sortBy) && Objects.equals(excludes, that.excludes);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(page, pageSize, query, context, sortBy, reverse, excludes);
+  }
 }
+
