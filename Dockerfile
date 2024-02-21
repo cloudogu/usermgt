@@ -46,7 +46,8 @@ ENV SERVICE_TAGS=webapp \
     # tomcat version
     TOMCAT_VERSION=${TOMCAT_VERSION} \
     # home directory
-    UNIVERSEADM_HOME=/var/lib/usermgt/conf
+    UNIVERSEADM_HOME=/var/lib/usermgt/conf \
+    STARTUP_DIR=/
 
 COPY --from=builder /usermgt/target/usermgt-*.war /usermgt.war
 
