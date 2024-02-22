@@ -1,4 +1,4 @@
-import {Details, H1, Href, LoadingIcon, Paragraph} from "@cloudogu/ces-theme-tailwind";
+import {Details, H1, Href, LoadingIcon, Paragraph} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React, {useState} from "react";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import UsersImportErrorTable from "../components/usersImport/UsersImportErrorTable";

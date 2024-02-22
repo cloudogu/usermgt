@@ -1,4 +1,4 @@
-import {H1, H2} from "@cloudogu/ces-theme-tailwind";
+import {H1, H2} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {useRouteError, isRouteErrorResponse} from "react-router-dom";
 import {t} from "../helpers/i18nHelpers";
 

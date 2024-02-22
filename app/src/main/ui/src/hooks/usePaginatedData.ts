@@ -3,8 +3,9 @@ import {useSearchParams} from "react-router-dom";
 import {useAPI} from "./useAPI";
 import type {QueryOptions} from "./useAPI";
 
-const PAGE_QUERY_PARAM = "p";
-const SEARCH_QUERY_PARAM = "q";
+export const PAGE_QUERY_PARAM = "p";
+export const SEARCH_QUERY_PARAM = "q";
+export const LINES_PER_PAGE_QUERY_PARAM = "l";
 const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_START = 0;
 
@@ -48,13 +49,15 @@ export interface UsePaginatedDataOptions {
     searchString?: string;
 }
 
+export type PaginationResponse = {
+    start: number;
+    limit: number;
+    totalEntries: number;
+}
+
 export interface RefetchResponse<T> {
     data: T;
-    pagination: {
-        start: number;
-        limit: number;
-        totalEntries: number;
-    };
+    pagination: PaginationResponse;
 }
 
 // The same as AbortableCallbackWithArgs<RefetchResponse<T>, QueryOptions> but easier to read.

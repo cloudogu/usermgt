@@ -1,4 +1,4 @@
-import {H1, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
+import {H1, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import * as Yup from "yup";
@@ -8,7 +8,7 @@ import {useBackURL} from "../hooks/useBackURL";
 import {useGroup} from "../hooks/useGroup";
 import { GroupsService} from "../services/Groups";
 import type {Group} from "../services/Groups";
-import type { FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import type { FormHandlerConfig} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 export function EditGroup() {
     const {groupName} = useParams();

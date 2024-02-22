@@ -1,8 +1,14 @@
+import path from "path";
 import react from "@vitejs/plugin-react";
 import {defineConfig, loadEnv} from "vite";
 
 export default defineConfig(({command, mode}) => {
     const config = {
+        resolve: {
+            alias: [
+                {find: "@cloudogu/deprecated-ces-theme-tailwind", replacement: path.resolve(__dirname, "./node_modules/@cloudogu/deprecated/ces-theme-tailwind")},
+            ],
+        },
         plugins: [react()],
         assetsInclude: ["**/*.svg"],
         define: {
@@ -10,7 +16,7 @@ export default defineConfig(({command, mode}) => {
         },
         base: "/usermgt/",
         build: {
-            chunkSizeWarningLimit: 2048
+            chunkSizeWarningLimit: 2048,
         }
     };
 

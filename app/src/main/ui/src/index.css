@@ -1,7 +1,25 @@
+/* TODO: Replace this with just the import from ces-theme-tailwind as soon as any component is replaced */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html {
-    @apply overflow-y-scroll
+@layer components {
+    .ces-focused {
+        -webkit-box-shadow: 0 0 0 2px var(--colors-default-focus-inner), 0 0 0 4px var(--colors-default-focus-outer);
+        box-shadow: 0 0 0 2px var(--colors-default-focus-inner), 0 0 0 4px var(--colors-default-focus-outer);
+        z-index: 1;
+    }
+
+    .ces-font-sans {
+        font-family: Calibri, Gill Sans, Gill Sans MT, Liberation Sans, Carlito, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+    }
+
+    .ces-font-serif {
+        font-family: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, serif;
+    }
+
+    .ces-font-mono {
+        font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+    }
 }
