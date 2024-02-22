@@ -57,8 +57,8 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         const groupsData = await GroupsService.list(
             undefined,
             {
-                start: 0,
-                limit: MAX_SEARCH_RESULTS,
+                page: 1,
+                page_size: MAX_SEARCH_RESULTS,
                 query: searchValue,
                 exclude: handler.values.memberOf ?? [],
             }

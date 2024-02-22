@@ -1,25 +1,21 @@
-import {TrashIcon, PencilIcon} from '@heroicons/react/24/outline';
-import React from 'react';
+import {TrashIcon} from '@heroicons/react/24/outline';
+import React, {forwardRef} from 'react';
 import type {ComponentPropsWithoutRef} from 'react';
 
 type ButtonProps = ComponentPropsWithoutRef<'button'>
 
-export function DeleteButton(props: ButtonProps) {
-    return <IconButton {...props}>
+export const DeleteButton = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
+    <IconButton {...props} ref={ref}>
         <TrashIcon className={'w-6 h-6'}/>
-    </IconButton>;
-}
+    </IconButton>
+);
+DeleteButton.displayName = 'DeleteButton';
 
-export function EditButton(props: ButtonProps) {
-    return <IconButton {...props}>
-        <PencilIcon className={'w-6 h-6'}/>
-    </IconButton>;
-}
-
-function IconButton({children, ...props}: ButtonProps) {
-    return <button {...props}
+const IconButton = forwardRef<HTMLButtonElement, ButtonProps>(({children, ...props}, ref) =>
+    <button {...props} ref={ref}
         className={'enabled:text-text-primary enabled:hover:text-text-primary-hover text-text-primary-disabled disabled:cursor-not-allowed'}
     >
         {children}
-    </button>;
-}
+    </button>
+);
+IconButton.displayName = 'IconButton';
