@@ -6,13 +6,13 @@ import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
-import {ApplicationContext} from "../main";
 import useUserTableState from "../hooks/useUserTableState";
+import {ApplicationContext} from "../main";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
     const location = useLocation();
-    const {notification, notify, clearNotification} = useAlertNotification();
+    const {notification, notify } = useAlertNotification();
     useNotificationAfterRedirect(notify);
     const backUrlParams = useMemo((): string => {
         const backURL = `/users${location.search}`;

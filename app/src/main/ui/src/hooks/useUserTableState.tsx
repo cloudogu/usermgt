@@ -1,7 +1,8 @@
+import { useSearchParamState, useUrlPaginationControl} from "@cloudogu/ces-theme-tailwind";
 import {useState} from "react";
 import {type User, UsersService} from "../services/Users";
-import {PaginationState, useSearchParamState, useUrlPaginationControl} from "@cloudogu/ces-theme-tailwind";
 import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "./usePaginatedData";
+import type {PaginationState} from "@cloudogu/ces-theme-tailwind";
 
 export type UseUsersHook = {
     users: User[],
@@ -56,11 +57,9 @@ export default function useUserTableState(): UseUsersHook {
         users,
         isLoading: isLoading,
         paginationControl: paginationControl,
-        onDelete: async (name: string) => {
-            return UsersService
-                .delete(name)
-                .finally();
-        },
+        onDelete: async (name: string) => UsersService
+            .delete(name)
+            .finally(),
         searchQuery: searchQuery,
         updateSearchQuery: setSearchQuery,
     };
