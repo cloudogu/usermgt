@@ -288,8 +288,8 @@
 
 "@cloudogu/deprecated/ces-theme-tailwind@npm:@cloudogu/ces-theme-tailwind@0.2.0":
   version "0.2.0"
-  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.2.0.tgz#3816c7069a28316f5712f52aa56d13608a1e9184"
-  integrity sha512-g6PbdYEphxAbyiJUS1mfy3KBUwrT9jvqPxY6RDLEF7JwUfkfeQWe4e1sS9y7TIuBblPGDtxga5cnTUU/YHjMRQ==
+  resolved "https://ecosystem.cloudogu.com/nexus/repository/npm-releases/@cloudogu/ces-theme-tailwind/-/ces-theme-tailwind-0.2.0.tgz#6e213fcc4f54fef53b677a14a4c0f5c975834cc2"
+  integrity sha512-1vvVmZEG1Uqz12Yhx/xxPplYrG5tqU8BJDaeW/prcGylo1CXJIIq/hIJg/oVsUo9luDGJ7Orhea0FLS3QngoDg==
   dependencies:
     "@headlessui/react" "^1.7.17"
     "@heroicons/react" "^2.0.13"
