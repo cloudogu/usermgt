@@ -1,6 +1,6 @@
 ARG TOMCAT_MAJOR_VERSION=8
-ARG TOMCAT_VERSION=8.5.88
-ARG TOMCAT_TARGZ_SHA512=c31c794092b160c5b0099f4dfb5cf17d711d93ae68a60e414691dba65ad80c78a5fb602c7010d1226dae424b83921e440bd858b3eb0ef90b7932316d3ab44c1f
+ARG TOMCAT_VERSION=8.5.99
+ARG TOMCAT_TARGZ_SHA512=38f636039d00c66ff8f7347dfedcc1eef85b7ce25cf98dcc9192df07f85d4f6aec447922e0f934c1ab7d099ec484b2060aad4de496d5ca14637ac435cb55b7c0
 
 FROM timbru31/java-node:8-jdk-18 as builder
 COPY app/pom.xml /usermgt/pom.xml
@@ -25,7 +25,9 @@ ENV TOMCAT_MAJOR_VERSION=${TOMCAT_MAJOR_VERSION} \
     TOMCAT_VERSION=${TOMCAT_VERSION} \
     TOMCAT_TARGZ_SHA512=${TOMCAT_TARGZ_SHA512}
 
-RUN apk update && apk add wget && wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+RUN set -eux && \
+  apk update && apk add wget && \
+  wget -O  "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
   "http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
   && echo "${TOMCAT_TARGZ_SHA512} *apache-tomcat-${TOMCAT_VERSION}.tar.gz" | sha512sum -c - \
   && gunzip "apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
