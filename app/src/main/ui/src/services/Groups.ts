@@ -2,15 +2,10 @@ import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {RefetchResponse} from "../hooks/usePaginatedData";
+import type {PaginationResponse} from "../hooks/usePaginatedData";
 import type {AxiosError, AxiosResponse} from "axios";
 
-interface GroupsResponse {
-    entries: Group[];
-    start: number;
-    limit: number;
-    totalEntries: number;
-}
+export type GroupsResponse = PaginationResponse<Group>;
 
 export type Group = {
     name: string;
@@ -22,7 +17,7 @@ export type Group = {
 export type UndeletableGroupsResponse = string[];
 
 export const GroupsService = {
-    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<RefetchResponse<Group[]>> {
+    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<Group>> {
         const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
             params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
@@ -39,16 +34,9 @@ export const GroupsService = {
         }
         const groupsData = groupsResponse.data;
         const undeletableGroupsData = undeletableGroupsResponse.data;
-        const groups = mapSystemGroups(groupsData.entries, undeletableGroupsData);
+        groupsData.data = mapSystemGroups(groupsData.data, undeletableGroupsData);
 
-        return {
-            data: groups,
-            pagination: {
-                start: groupsData.start ?? 0,
-                limit: groupsData.limit ?? 0,
-                totalEntries: groupsData.totalEntries ?? 0,
-            },
-        };
+        return groupsData;
     },
     async get(signal?: AbortSignal, groupName?: string): Promise<Group> {
         if (!groupName) {

@@ -1,11 +1,11 @@
 import { useSearchParamState, useUrlPaginationControl} from "@cloudogu/ces-theme-tailwind";
 import {useState} from "react";
-import {type User, UsersService} from "../services/Users";
+import {type Group, GroupsService} from "../services/Groups";
 import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "./usePaginatedData";
 import type {PaginationState} from "@cloudogu/ces-theme-tailwind";
 
-export type UseUsersHook = {
-    users: User[],
+export type UseGroupsHook = {
+    groups: Group[],
     isLoading: boolean,
     paginationControl: PaginationState,
     updateSearchQuery: (_: string) => void,
@@ -22,8 +22,8 @@ export const LINE_COUNT_OPTIONS = [
 
 const DEFAULT_LINES_PER_PAGE = 25;
 const DEFAULT_START_PAGE = 1;
-export default function useUserTableState(): UseUsersHook {
-    const [users, setUsers] = useState<User[]>([]);
+export default function useGroupTableState(): UseGroupsHook {
+    const [groups, setGroups] = useState<Group[]>([]);
     // Start at a real high value to prevent the page to reset to 1 at the first request
     const [allLineCount, setAllLineCount] = useState(Number.MAX_SAFE_INTEGER);
     const [isLoading, setIsLoading] = useState(true);
@@ -39,14 +39,14 @@ export default function useUserTableState(): UseUsersHook {
         loadDataFunction: async (paginationState: PaginationState) => {
             try {
                 setIsLoading(true);
-                const newUsers = await UsersService.find(undefined, {
+                const newGroups = await GroupsService.list(undefined, {
                     page: paginationState.page,
                     query: searchQuery,
                     exclude: [],
                     page_size: paginationState.linesPerPage,
                 });
-                setUsers(newUsers.data);
-                setAllLineCount(newUsers.meta.totalItems);
+                setGroups(newGroups.data);
+                setAllLineCount(newGroups.meta.totalItems);
             } finally {
                 setIsLoading(false);
             }
@@ -54,10 +54,10 @@ export default function useUserTableState(): UseUsersHook {
     });
 
     return {
-        users,
+        groups,
         isLoading: isLoading,
         paginationControl: paginationControl,
-        onDelete: async (name: string) => UsersService
+        onDelete: async (name: string) => GroupsService
             .delete(name)
             .finally(),
         searchQuery: searchQuery,
