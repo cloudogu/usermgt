@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add ces-theme-tailwind in a second, higher, version (#111)
+- add Cloudogu logo for better container crash visibility
 
 ### Changed
 - Change table in users page to the table in the new theme (#111) 
+- no longer run as root but as unprivileged user
+- update Tomcat to the current version 8.5.99
 
 ## [v1.12.1-1] - 2024-01-11
 ### Changed
