@@ -84,7 +84,12 @@ createGuiConfiguration() {
 
 createTrustStore() {
   # this is used in the setenv.sh
-  create_truststore.sh > /dev/null
+  echo "creating truststore"
+  local exitCode=0
+  output=$(create_truststore.sh "${TRUSTSTORE}") || exitCode=$?
+  if [[ ${exitCode} -ne 0 ]]; then
+    echo "Error creating truststore: Exit code ${exitCode}: ${output}"
+  fi
 }
 
 waitForLDAPDogu() {
@@ -103,7 +108,7 @@ migrateLDAPEntries() {
 }
 
 startTomcat() {
-  su - tomcat -c "exec /opt/apache-tomcat/bin/catalina.sh run"
+  "${CATALINA_SH}" run
 }
 
 runMain() {
