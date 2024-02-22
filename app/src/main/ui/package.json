@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@cloudogu/deprecated/ces-theme-tailwind": "npm:@cloudogu/ces-theme-tailwind@0.2.0",
-    "@cloudogu/ces-theme-tailwind": "0.4.0-rc-6",
+    "@cloudogu/ces-theme-tailwind": "0.3.2",
     "@mertasan/tailwindcss-variables": "^2.5.1",
     "@types/node": "^15.12.4",
     "@types/react": "^18.0.21",
