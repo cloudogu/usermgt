@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Change table in users page to the table in the new theme (#111) 
+- Stream all log output to standard out, configure log level (#115)
+   - logfiles will neither reside inside the container file system nor a volume
+   - add dogu configuration key `logging/root` to control the output log level
 - no longer run as root but as unprivileged user
 - update Tomcat to the current version 8.5.99
 

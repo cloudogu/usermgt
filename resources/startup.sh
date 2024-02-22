@@ -73,6 +73,8 @@ renderTemplates() {
   doguctl template "/var/lib/usermgt/conf/ldap.xml.tpl" "/var/lib/usermgt/conf/ldap.xml"
   doguctl template "/var/lib/usermgt/conf/application-configuration.xml.tpl" "/var/lib/usermgt/conf/application-configuration.xml"
   doguctl template "/var/lib/usermgt/conf/password_policy.tpl" "${OPTIONAL_CONFIG_PATH}"
+
+  renderLoggingFiles
 }
 
 createGuiConfiguration() {
@@ -89,6 +91,7 @@ createTrustStore() {
   output=$(create_truststore.sh "${TRUSTSTORE}") || exitCode=$?
   if [[ ${exitCode} -ne 0 ]]; then
     echo "Error creating truststore: Exit code ${exitCode}: ${output}"
+    exit ${exitCode}
   fi
 }
 
