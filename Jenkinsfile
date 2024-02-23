@@ -55,6 +55,7 @@ node('docker') {
     }
 
     stage('Check markdown links') {
+        Markdown markdown = new Markdown(this, "3.11.2")
         markdown.check()
     }
 
