@@ -87,15 +87,15 @@ ENV SERVICE_TAGS=webapp \
     STARTUP_DIR=/
 
 RUN set -eux \
-    && apk update \
-    && apk upgrade \
-    && addgroup -S -g 1000 tomcat \
-    && adduser -S -h /opt/apache-tomcat -s /bin/bash -G tomcat -u 1000 tomcat \
+    apk update && \
+    apk upgrade && \
+    addgroup -S -g 1000 tomcat && \
+    adduser -S -h /opt/apache-tomcat -s /bin/bash -G tomcat -u 1000 tomcat && \
 # install dependencies for givenname migration
-    && apk add --no-cache \
+    apk add --no-cache \
           xmlstarlet \
-          openldap-clients \
-    && rm -rf /var/cache/apk/*
+          openldap-clients && \
+    rm -rf /var/cache/apk/*
 
 COPY --chown=1000:1000 --from=binaryConcentrator /opt/apache-tomcat /opt/apache-tomcat
 COPY --chown=1000:1000 resources /
