@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    - add dogu configuration key `logging/root` to control the output log level
 - no longer run as root but as unprivileged user
 - update Tomcat to the current version 8.5.99
+- update to Java OpenJDK 8.392
 
 ## [v1.12.1-1] - 2024-01-11
 ### Changed
