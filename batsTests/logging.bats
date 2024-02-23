@@ -24,70 +24,80 @@ teardown() {
   rm "${BATS_TMPDIR}/doguctl"
 }
 
-@test "mapDoguLogLevel() should set log level to INFO if INFO was configured" {
+@test "mapDoguLogLevels() should set log level to INFO if INFO was configured" {
   source /workspace/resources/logging.sh
   export CATALINA_LOGLEVEL=""
+  export LOGBACK_LEVEL=""
   mock_set_status "${doguctl}" 0
   mock_set_output "${doguctl}" "INFO" 1
 
-  mapDoguLogLevel
+  mapDoguLogLevels
 
   assert_success
   assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config --default WARN logging/root"
   assert_equal "${CATALINA_LOGLEVEL}" "INFO"
+  assert_equal "${LOGBACK_LEVEL}" "INFO"
 }
-@test "mapDoguLogLevel() should set log level to SEVERE if ERROR was configured" {
+@test "mapDoguLogLevels() should set log level to SEVERE if ERROR was configured" {
   source /workspace/resources/logging.sh
   export CATALINA_LOGLEVEL=""
+  export LOGBACK_LEVEL=""
   mock_set_status "${doguctl}" 0
   mock_set_output "${doguctl}" "ERROR" 1
 
-  mapDoguLogLevel
+  mapDoguLogLevels
 
   assert_success
   assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config --default WARN logging/root"
   assert_equal "${CATALINA_LOGLEVEL}" "SEVERE"
+  assert_equal "${LOGBACK_LEVEL}" "ERROR"
 }
-@test "mapDoguLogLevel() should set log level to FINE if DEBUG was configured" {
+@test "mapDoguLogLevels() should set log level to FINE if DEBUG was configured" {
   source /workspace/resources/logging.sh
   export CATALINA_LOGLEVEL=""
+  export LOGBACK_LEVEL=""
   mock_set_status "${doguctl}" 0
   mock_set_output "${doguctl}" "DEBUG" 1
 
-  mapDoguLogLevel
+  mapDoguLogLevels
 
   assert_success
   assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config --default WARN logging/root"
   assert_equal "${CATALINA_LOGLEVEL}" "FINE"
+  assert_equal "${LOGBACK_LEVEL}" "TRACE"
 }
-@test "mapDoguLogLevel() should set log level to WARNING if WARN was configured" {
+@test "mapDoguLogLevels() should set log level to WARNING if WARN was configured" {
   source /workspace/resources/logging.sh
   export CATALINA_LOGLEVEL=""
+  export LOGBACK_LEVEL=""
   mock_set_status "${doguctl}" 0
   mock_set_output "${doguctl}" "WARN" 1
 
-  mapDoguLogLevel
+  mapDoguLogLevels
 
   assert_success
   assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config --default WARN logging/root"
   assert_equal "${CATALINA_LOGLEVEL}" "WARNING"
+  assert_equal "${LOGBACK_LEVEL}" "WARN"
 }
-@test "mapDoguLogLevel() should set log level to WARNING if anything invalid was configured" {
+@test "mapDoguLogLevels() should set log level to WARNING if anything invalid was configured" {
   source /workspace/resources/logging.sh
   export CATALINA_LOGLEVEL=""
+  export LOGBACK_LEVEL=""
   mock_set_status "${doguctl}" 0
   mock_set_output "${doguctl}" "roflmao" 1
 
-  mapDoguLogLevel
+  mapDoguLogLevels
 
   assert_success
   assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config --default WARN logging/root"
   assert_equal "${CATALINA_LOGLEVEL}" "WARNING"
+  assert_equal "${LOGBACK_LEVEL}" "WARN"
 }
 
 @test "validateDoguLogLevel() should return on valid log levels" {
@@ -135,5 +145,18 @@ teardown() {
   assert_equal "$(mock_get_call_num "${doguctl}")" "2"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "template /opt/apache-tomcat/conf/logging.properties.tpl /opt/apache-tomcat/conf/logging.properties"
   assert_equal "$(mock_get_call_args "${doguctl}" "2")" "state LoggingTemplateError"
-  assert_line "Could not template /opt/apache-tomcat/conf/logging.properties.tpl file."
+  assert_line "Could not template log /opt/apache-tomcat/conf/logging.properties.tpl to path /opt/apache-tomcat/conf/logging.properties: exited with 1"
+}
+@test "renderLogbackXml() should fail on template error" {
+  source /workspace/resources/logging.sh
+  export DEFAULT_SLEEP_IN_SECS_BEFORE_ERROR=1
+  mock_set_status "${doguctl}" 1
+
+  run renderLogbackXml
+
+  assert_failure
+  assert_equal "$(mock_get_call_num "${doguctl}")" "2"
+  assert_equal "$(mock_get_call_args "${doguctl}" "1")" "template /opt/apache-tomcat/conf/logback.xml.tpl /opt/apache-tomcat/webapps/usermgt/WEB-INF/classes/logback.xml"
+  assert_equal "$(mock_get_call_args "${doguctl}" "2")" "state LoggingTemplateError"
+  assert_line "Could not template log /opt/apache-tomcat/conf/logback.xml.tpl to path /opt/apache-tomcat/webapps/usermgt/WEB-INF/classes/logback.xml: exited with 1"
 }
