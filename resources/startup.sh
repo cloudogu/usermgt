@@ -3,16 +3,14 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-# shellcheck disable=SC1091
-# shellcheck disable=SC1091
 sourcingExitCode=0
+# shellcheck disable=SC1090,SC1091
 source "${STARTUP_DIR}"/util.sh || sourcingExitCode=$?
 if [[ ${sourcingExitCode} -ne 0 ]]; then
   echo "ERROR: An error occurred while sourcing ${STARTUP_DIR}/util.sh."
 fi
 
-# shellcheck disable=SC1090
-# shellcheck disable=SC1091
+# shellcheck disable=SC1090,SC1091
 source "${STARTUP_DIR}"/logging.sh || sourcingExitCode=$?
 if [[ ${sourcingExitCode} -ne 0 ]]; then
   echo "ERROR: An error occurred while sourcing ${STARTUP_DIR}/logging.sh."
