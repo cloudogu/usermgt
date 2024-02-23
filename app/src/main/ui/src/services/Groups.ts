@@ -17,7 +17,7 @@ export type Group = {
 export type UndeletableGroupsResponse = string[];
 
 export const GroupsService = {
-    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<Group>> {
+    async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<Group>> {
         const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
             params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal

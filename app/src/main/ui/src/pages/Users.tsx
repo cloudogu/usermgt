@@ -6,8 +6,10 @@ import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
-import useUserTableState from "../hooks/useUserTableState";
+import usePaginationTableState from "../hooks/usePaginationTableState";
 import {ApplicationContext} from "../main";
+import {UsersService} from "../services/Users";
+import type {User} from "../services/Users";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
@@ -21,7 +23,7 @@ export default function Users() {
         return params.toString();
     }, [location]);
 
-    const {users, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = useUserTableState();
+    const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<User>(UsersService);
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -60,7 +62,7 @@ export default function Users() {
                 }
                 {!isLoading &&
                     <ActionTable.Body>
-                        {users.map(user => (
+                        {items.map(user => (
                             <ActionTable.Body.Row key={user.username}>
                                 <ActionTable.Body.Row.Column className="font-bold break-all">
                                     {user.username}

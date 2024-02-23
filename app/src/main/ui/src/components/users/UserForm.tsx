@@ -54,7 +54,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     };
 
     const queryGroups = async (searchValue: string): Promise<string[]> => {
-        const groupsData = await GroupsService.list(
+        const groupsData = await GroupsService.query(
             undefined,
             {
                 page: 1,
