@@ -5,8 +5,10 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
-import useGroupTableState from "../hooks/useGroupTableState";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
+import usePaginationTableState from "../hooks/usePaginationTableState";
+import {GroupsService} from "../services/Groups";
+import type {Group} from "../services/Groups";
 
 
 export default function Groups() {
@@ -21,7 +23,7 @@ export default function Groups() {
         return params.toString();
     }, [location]);
 
-    const {groups, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = useGroupTableState();
+    const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<Group>(GroupsService);
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -53,7 +55,7 @@ export default function Groups() {
                 }
                 {!isLoading &&
                     <ActionTable.Body>
-                        {groups.map(group => (
+                        {items.map(group => (
                             <ActionTable.Body.Row key={group.name}>
                                 <ActionTable.Body.Row.Column className="font-bold break-all">
                                     {group.name}

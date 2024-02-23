@@ -44,7 +44,7 @@ export function isUsersConstraintsError(error: UsersConstraintsError | Error): e
 export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPaginationData};
 
 export const UsersService = {
-    async find(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<User>> {
+    async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<User>> {
         const usersResponse = await Axios.get<UsersResponse>("/users", {
             params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
