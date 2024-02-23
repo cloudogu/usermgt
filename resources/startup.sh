@@ -4,19 +4,24 @@ set -o nounset
 set -o pipefail
 
 # shellcheck disable=SC1091
-source util.sh
-
+# shellcheck disable=SC1091
 sourcingExitCode=0
+source "${STARTUP_DIR}"/util.sh || sourcingExitCode=$?
+if [[ ${sourcingExitCode} -ne 0 ]]; then
+  echo "ERROR: An error occurred while sourcing ${STARTUP_DIR}/util.sh."
+fi
+
 # shellcheck disable=SC1090
 # shellcheck disable=SC1091
 source "${STARTUP_DIR}"/logging.sh || sourcingExitCode=$?
 if [[ ${sourcingExitCode} -ne 0 ]]; then
-  echo "ERROR: An error occurred while sourcing /logging.sh."
+  echo "ERROR: An error occurred while sourcing ${STARTUP_DIR}/logging.sh."
 fi
 
 PASSWORD_RESET_DEFAULT_VALUE_KEY="pwd_reset_selected_by_default"
 OPTIONAL_CONFIG_PATH="/var/lib/usermgt/conf/optional.conf"
 GUI_CONFIG_PATH="/var/lib/usermgt/conf/gui.conf"
+CIPHER_SH="/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh"
 
 printCloudoguLogo() {
   echo "                                     ./////,                    "
@@ -41,7 +46,7 @@ done
 }
 
 encryptLdapPassword() {
-  LDAP_BIND_PASSWORD="$(/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
+  LDAP_BIND_PASSWORD="$(${CIPHER_SH} encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
   export LDAP_BIND_PASSWORD
 }
 
