@@ -1,9 +1,9 @@
-import { useSearchParamState, useUrlPaginationControl} from "@cloudogu/ces-theme-tailwind";
-import {useState, useEffect} from "react";
+import type {PaginationControl} from "@cloudogu/ces-theme-tailwind";
+import {useNumberSearchParamState, useSearchParamState} from "@cloudogu/ces-theme-tailwind";
+import {useEffect, useState} from "react";
+import type {PaginationResponse} from "./usePaginatedData";
 import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, PaginationError, PaginationErrorCode, SEARCH_QUERY_PARAM} from "./usePaginatedData";
 import type {QueryOptions} from "./useAPI";
-import type {PaginationResponse} from "./usePaginatedData";
-import type {PaginationState, PaginationControl} from "@cloudogu/ces-theme-tailwind";
 
 export type UsePaginationHook<T> = {
     items: T[],
@@ -20,7 +20,6 @@ export interface PaginationDataService<T> {
 }
 
 export const LINE_COUNT_OPTIONS = [
-    10,
     25,
     50,
     100,
@@ -30,33 +29,44 @@ const DEFAULT_LINES_PER_PAGE = 25;
 const DEFAULT_START_PAGE = 1;
 export default function usePaginationTableState<T>(dataService: PaginationDataService<T>): UsePaginationHook<T> {
     const [items, setItems] = useState<T[]>([]);
-    const [context, setContext] = useState<string|undefined>();
-    // Start at a real high value to prevent the page to reset to 1 at the first request
-    const [allLineCount, setAllLineCount] = useState(Number.MAX_SAFE_INTEGER);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useSearchParamState(SEARCH_QUERY_PARAM, "");
+    const [page, setPage] = useNumberSearchParamState(PAGE_QUERY_PARAM, DEFAULT_START_PAGE);
+    const [linesPerPage, setLinesPerPage] = useNumberSearchParamState(LINES_PER_PAGE_QUERY_PARAM, DEFAULT_LINES_PER_PAGE);
+    const [maxPage, setMaxPage] = useState(0);
+    const [context, setContext] = useState<string | undefined>("");
+    const [allLineCount, setAllLineCount] = useState(0);
+    const [startItem, setStartItem] = useState(0);
+    const [endItem, setEndItem] = useState(0);
 
-    const loadDataFunction = async (paginationState: PaginationState) => {
+    const loadDataFunction = async () => {
+        if (!LINE_COUNT_OPTIONS.includes(linesPerPage)){
+            return;
+        }
+
         try {
             setIsLoading(true);
             const newItems = await dataService.query(undefined, {
-                page: paginationState.page,
+                page: page,
                 query: searchQuery,
                 exclude: [],
                 context: context,
-                page_size: paginationState.linesPerPage,
+                page_size: linesPerPage,
             });
 
             setItems(newItems.data);
             setContext(newItems.meta.context);
             setAllLineCount(newItems.meta.totalItems);
+            setMaxPage(newItems.meta.totalPages);
+            setStartItem(newItems.meta.startItem);
+            setEndItem(newItems.meta.endItem);
         } catch (err: any) {
             if (err.name === PaginationErrorCode.ERR_OUT_OF_RANGE) {
                 const meta = (err as PaginationError).errorResponse.meta;
                 if (meta.page < DEFAULT_START_PAGE) {
-                    paginationControl.setPage(DEFAULT_START_PAGE);
+                    setPage(DEFAULT_START_PAGE);
                 } else {
-                    paginationControl.setPage(meta.totalPages);
+                    setPage(meta.totalPages);
                 }
             }
         }
@@ -65,36 +75,42 @@ export default function usePaginationTableState<T>(dataService: PaginationDataSe
         }
     };
 
-    const {paginationControl} = useUrlPaginationControl({
-        defaultStartPage: DEFAULT_START_PAGE,
-        defaultLinesPerPage: DEFAULT_LINES_PER_PAGE,
-        pageQueryParam: PAGE_QUERY_PARAM,
-        linesPerPageQueryParam: LINES_PER_PAGE_QUERY_PARAM,
-        lineCountOptions: LINE_COUNT_OPTIONS,
-        allLineCount: allLineCount,
-        loadDataFunction: loadDataFunction,
-    });
+    useEffect(() => {
+        loadDataFunction().finally();
+    }, [page, linesPerPage, searchQuery]);
+
 
     useEffect(() => {
-        //reset page to default start page on query
-        // paginationControl.setPage(1);
-
-
-        // paginationControl.reload({
-        //     ...paginationControl,
-        //     page: 1,
-        // });
-    }, [searchQuery]);
+        if (!LINE_COUNT_OPTIONS.includes(linesPerPage)) {
+            // Query-param tries to use not allowed value for linesPerPage => reset to default
+            setLinesPerPage(DEFAULT_LINES_PER_PAGE);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [linesPerPage]);
 
     return {
         items,
         isLoading: isLoading,
-        paginationControl: paginationControl,
+        paginationControl: {
+            page: page,
+            setPage,
+            allLineCount: allLineCount,
+            setLinesPerPage,
+            linesPerPage,
+            currentStart: startItem,
+            currentEnd: endItem,
+            defaultLinesPerPage: DEFAULT_LINES_PER_PAGE,
+            lineCountOptions: LINE_COUNT_OPTIONS,
+            maxPage: maxPage,
+            defaultStartPage: 0,
+        },
         onDelete: async (name: string) => dataService
             .delete(name)
-            // reload data after delete
-            .finally(() => loadDataFunction(paginationControl)),
+            .finally(loadDataFunction),
         searchQuery: searchQuery,
-        updateSearchQuery: setSearchQuery,
+        updateSearchQuery: (newValue: string) => {
+            setPage(1);
+            setSearchQuery(newValue);
+        },
     };
 }

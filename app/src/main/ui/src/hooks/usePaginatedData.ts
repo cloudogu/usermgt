@@ -87,6 +87,8 @@ export type PaginationMetaData = {
   pageSize: number;
   totalPages: number;
   totalItems: number;
+  startItem: number;
+  endItem: number;
   context?: string;
 }
 
