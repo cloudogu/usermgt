@@ -255,7 +255,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
   }
 
   @Override
-  public PagedResultList<User> query(PaginationQuery query) {
+  public PaginationResult<User> query(PaginationQuery query) {
     logger.debug("get paged users, query={} ", query);
     SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 

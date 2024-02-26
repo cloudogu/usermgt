@@ -1,19 +1,14 @@
-import {defaultPaginationData} from "@cloudogu/ces-theme-tailwind";
+import {defaultPaginationData} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import {emptyUser} from "./Account";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {RefetchResponse} from "../hooks/usePaginatedData";
-import type {PagedModel} from "@cloudogu/ces-theme-tailwind";
+import type {PaginationResponse} from "../hooks/usePaginatedData";
+import type {PagedModel} from "@cloudogu/deprecated-ces-theme-tailwind";
 import type {AxiosError} from "axios";
 
-export interface UsersResponse {
-    entries: User[];
-    start: number;
-    limit: number;
-    totalEntries: number;
-}
+export type UsersResponse = PaginationResponse<User>
 
 export type User = {
     displayName: string,
@@ -49,7 +44,7 @@ export function isUsersConstraintsError(error: UsersConstraintsError | Error): e
 export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPaginationData};
 
 export const UsersService = {
-    async find(signal?: AbortSignal, opts?: QueryOptions): Promise<RefetchResponse<User[]>> {
+    async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<User>> {
         const usersResponse = await Axios.get<UsersResponse>("/users", {
             params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
@@ -57,15 +52,7 @@ export const UsersService = {
         if (usersResponse.status < 200 || usersResponse.status > 299) {
             throw new Error("failed to load user data: " + usersResponse.status);
         }
-        const usersData = usersResponse.data;
-        return {
-            data: usersData.entries,
-            pagination: {
-                start: usersData.start,
-                limit: usersData.limit,
-                totalEntries: usersData.totalEntries,
-            }
-        };
+        return usersResponse.data;
     },
     async get(signal?: AbortSignal, username?: string): Promise<User> {
         if (!username) {

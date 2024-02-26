@@ -2,8 +2,8 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Cloudogu User Management",
-    "description": "Api description for cloudogu User Management",
-    "version": "0.1"
+    "description": "API description for Cloudogu User Management",
+    "version": "2.0"
   },
   "servers": [
     {
@@ -11,125 +11,10 @@
     }
   ],
   "paths": {
-    "/api/v2/groups": {
-      "get": {
-        "description": "Get a list of paginated groups.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "default": 1
-            },
-            "required": false,
-            "description": "Page number to retrieve"
-          },
-          {
-            "in": "query",
-            "name": "page_size",
-            "schema": {
-              "type": "integer",
-              "default": 20
-            },
-            "required": false,
-            "description": "Number of items per page"
-          },
-          {
-            "in": "query",
-            "name": "sort_by",
-            "schema": {
-              "type": "string",
-              "default": "username"
-            },
-            "required": false,
-            "description": "Item used to sort the result"
-          },
-          {
-            "in": "query",
-            "name": "reverse",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            },
-            "required": false,
-            "description": "Reverse sorting order - false means ascending"
-          },
-          {
-            "in": "query",
-            "name": "context",
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "description": "The context ID that may be used to help the server continue in the same result set for subsequent searches"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/inline_response_200"
-                },
-                "example": {
-                  "meta": {
-                    "page": 3,
-                    "pageSize": 2,
-                    "totalPages": 13
-                  },
-                  "data": [
-                    {
-                      "description": "This group grants administrative rights to all development applications of cloudogu",
-                      "members": ["admin", "admin2"],
-                      "name": "admin2"
-                    },
-                    {
-                      "description": "Members of the cesManager group have full access to the cloudogu administration applications",
-                      "members": ["admin"],
-                      "name": "cesManager"
-                    }
-                  ],
-                  "links": {
-                    "self": "/api/v2/groups?page=3&pageSize=2",
-                    "first": null,
-                    "prev": "/api/v2/groups?page=2&pageSize=2",
-                    "next": "/api/v2/groups?page=4&pageSize=2",
-                    "last": null
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Create a new group",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/api_groups_body"
-              },
-              "examples": {
-                "0": {
-                  "value": "{\n    \"description\": \"mynewgroup description\",\n    \"members\": [\n        \"admin2\"\n    ],\n    \"name\": \"mynewgroupname\"\n}"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/api/v2/users": {
       "get": {
         "description": "Get paginated user data",
+        "tags": ["Users"],
         "parameters": [
           {
             "in": "query",
@@ -170,6 +55,18 @@
             },
             "required": false,
             "description": "Reverse sorting order - false means ascending"
+          },
+          {
+            "in": "query",
+            "name": "exclude",
+            "schema": {
+              "type": "string",
+              "default": false
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Exclude items from the query"
           },
           {
             "in": "query",
@@ -242,6 +139,7 @@
       },
       "post": {
         "description": "Create a new user",
+        "tags": ["Users"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -263,9 +161,345 @@
         }
       }
     },
+    "/api/v2/users/{username}/groups/{groupname}": {
+      "post": {
+        "description": "Adds a group member.",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "409": {
+            "description": "Error -> User is already member of the group"
+          }
+        }
+      },
+      "delete": {
+        "description": "Removes a member from a group.",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+
+    "/api/v2/groups": {
+      "get": {
+        "description": "Get a list of paginated groups.",
+        "tags": ["Groups"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number to retrieve"
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "required": false,
+            "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "sort_by",
+            "schema": {
+              "type": "string",
+              "default": "username"
+            },
+            "required": false,
+            "description": "Item used to sort the result"
+          },
+          {
+            "in": "query",
+            "name": "reverse",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Reverse sorting order - false means ascending"
+          },
+          {
+            "in": "query",
+            "name": "exclude",
+            "schema": {
+              "type": "string",
+              "default": false
+            },
+            "style": "form",
+            "explode": false,
+            "required": false,
+            "description": "Exclude items from the query"
+          },
+          {
+            "in": "query",
+            "name": "context",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The context ID that may be used to help the server continue in the same result set for subsequent searches"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                },
+                "example": {
+                  "meta": {
+                    "page": 3,
+                    "pageSize": 2,
+                    "totalPages": 13
+                  },
+                  "data": [
+                    {
+                      "description": "This group grants administrative rights to all development applications of cloudogu",
+                      "members": ["admin", "admin2"],
+                      "name": "admin2"
+                    },
+                    {
+                      "description": "Members of the cesManager group have full access to the cloudogu administration applications",
+                      "members": ["admin"],
+                      "name": "cesManager"
+                    }
+                  ],
+                  "links": {
+                    "self": "/api/v2/groups?page=3&pageSize=2",
+                    "first": null,
+                    "prev": "/api/v2/groups?page=2&pageSize=2",
+                    "next": "/api/v2/groups?page=4&pageSize=2",
+                    "last": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new group",
+        "tags": ["Groups"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/api_groups_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"description\": \"mynewgroup description\",\n    \"members\": [\n        \"admin2\"\n    ],\n    \"name\": \"mynewgroupname\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v2/groups/{groupname}": {
+      "delete": {
+        "description": "Deletes a group",
+        "tags": ["Groups"],
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v2/groups/{groupname}/members/{username}": {
+      "post": {
+        "description": "Adds a user to a group. Fails if user is already member of the group.",
+        "tags": ["Groups"],
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/members_username_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"displayName\": \"admin\",\n    \"givenname\": \"admin\",\n    \"mail\": \"admin@ces.local\",\n    \"memberOf\": [\n        \"admin2\",\n        \"cesManager\"\n    ],\n    \"password\": \"admin\",\n    \"pwdReset\": false,\n    \"surname\": \"admin\",\n    \"username\": \"admin\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "409": {
+            "description": "Error -> User is already part of the group."
+          }
+        }
+      },
+      "delete": {
+        "description": "Removes a user from a group.",
+        "tags": ["Groups"],
+        "parameters": [
+          {
+            "name": "groupname",
+            "in": "path",
+            "description": "Name of the group",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Name of the user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "success."
+          }
+        }
+      }
+    },
+    "/api/v2/groups/undeletable": {
+      "get": {
+        "description": "Returns all undeletable system groups.",
+        "tags": ["Groups"],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/api_groups_undeletable_body"
+                },
+                "examples": {
+                  "0": {
+                    "value": "[\"admin\",\"cesManager\"]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/api/v2/users/import": {
       "post": {
         "summary": "Import Users from CSV",
+        "tags": ["User-Import"],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -322,6 +556,7 @@
     "/api/v2/users/import/{importID}": {
       "get": {
         "summary": "Get Import Result",
+        "tags": ["User-Import"],
         "parameters": [
           {
             "name": "importID",
@@ -369,6 +604,7 @@
       },
       "delete": {
         "summary": "Delete Import Result",
+        "tags": ["User-Import"],
         "description": "Deletes an import result by its ID.",
         "parameters": [
           {
@@ -398,6 +634,7 @@
     "/api/v2/users/import/{importID}/download": {
       "get": {
         "summary": "Download Import Result",
+        "tags": ["User-Import"],
         "description": "Downloads an import result in JSON format by its ID.",
         "parameters": [
           {
@@ -442,28 +679,27 @@
     "/api/v2/users/import/summaries": {
       "get": {
         "summary": "Get summaries",
+        "tags": ["User-Import"],
         "parameters": [
           {
-            "name": "start",
             "in": "query",
-            "description": "Start index for pagination (default: 0)",
-            "required": false,
+            "name": "page",
             "schema": {
               "type": "integer",
-              "minimum": 0
-            }
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number to retrieve"
           },
           {
-            "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return per page (default: 10, maximum: 100)",
-            "required": false,
+            "name": "page_size",
             "schema": {
               "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 10
-            }
+              "default": 20
+            },
+            "required": false,
+            "description": "Number of items per page"
           }
         ],
         "responses": {
@@ -495,38 +731,37 @@
         }
       }
     },
-    "/api/v2/groups/{groupname}/members/{username}": {
-      "post": {
-        "description": "Adds a user to a group. Fails if user is already member of the group.",
-        "parameters": [
-          {
-            "name": "groupname",
-            "in": "path",
-            "description": "Name of the group",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "username",
-            "in": "path",
-            "description": "Name of the user",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
+
+    "/api/v2/account": {
+      "get": {
+        "description": "Returns the currently logged in account. Password will be replaced with _dummypassword.",
+        "tags": ["Account"],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/members_username_body"
+                },
+                "examples": {
+                  "0": {
+                    "value": "{\"displayName\":\"admin\",\"givenname\":\"admin\",\"mail\":\"admin@ces.local\",\"memberOf\":[\"admin2\",\"cesManager\"],\"password\":\"__dummypassword\",\"pwdReset\":false,\"surname\":\"admin\",\"username\":\"admin\"}"
+                  }
+                }
+              }
             }
           }
-        ],
+        }
+      },
+      "put": {
+        "description": "Creates a new account.",
+        "tags": ["Account"],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/members_username_body"
+                "$ref": "#/components/schemas/api_account_body"
               },
               "examples": {
                 "0": {
@@ -539,41 +774,6 @@
         "responses": {
           "204": {
             "description": "Success"
-          },
-          "409": {
-            "description": "Error -> User is already part of the group."
-          }
-        }
-      },
-      "delete": {
-        "description": "Removes a user from a group.",
-        "parameters": [
-          {
-            "name": "groupname",
-            "in": "path",
-            "description": "Name of the group",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "username",
-            "in": "path",
-            "description": "Name of the user",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "success."
           }
         }
       }
@@ -581,6 +781,7 @@
     "/api/v2/account/passwordpolicy": {
       "get": {
         "description": "Returns the configured password policy",
+        "tags": ["Account"],
         "responses": {
           "200": {
             "description": "Success",
@@ -603,6 +804,7 @@
     "/api/v2/account/gui_config": {
       "get": {
         "description": "Returns the configured gui config.",
+        "tags": ["Account"],
         "responses": {
           "200": {
             "description": "Returns the configured gui config.",
@@ -617,151 +819,6 @@
                   },
                   "1": {
                     "value": "{ \"pwdResetPreselected\": true}"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v2/account": {
-      "get": {
-        "description": "Returns the currently logged in account. Password will be replaced with _dummypassword.",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/members_username_body"
-                },
-                "examples": {
-                  "0": {
-                    "value": "{\"displayName\":\"admin\",\"givenname\":\"admin\",\"mail\":\"admin@ces.local\",\"memberOf\":[\"admin2\",\"cesManager\"],\"password\":\"__dummypassword\",\"pwdReset\":false,\"surname\":\"admin\",\"username\":\"admin\"}"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "description": "Creates a new account.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/api_account_body"
-              },
-              "examples": {
-                "0": {
-                  "value": "{\n    \"displayName\": \"admin\",\n    \"givenname\": \"admin\",\n    \"mail\": \"admin@ces.local\",\n    \"memberOf\": [\n        \"admin2\",\n        \"cesManager\"\n    ],\n    \"password\": \"admin\",\n    \"pwdReset\": false,\n    \"surname\": \"admin\",\n    \"username\": \"admin\"\n}"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v2/users/{username}/groups/{groupname}": {
-      "post": {
-        "description": "Adds a group member.",
-        "parameters": [
-          {
-            "name": "groupname",
-            "in": "path",
-            "description": "Name of the group",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "username",
-            "in": "path",
-            "description": "Name of the user",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "409": {
-            "description": "Error -> User is already member of the group"
-          }
-        }
-      },
-      "delete": {
-        "description": "Removes a member from a group.",
-        "parameters": [
-          {
-            "name": "groupname",
-            "in": "path",
-            "description": "Name of the group",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "username",
-            "in": "path",
-            "description": "Name of the user",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v2/groups/mynewgroupname": {
-      "delete": {
-        "description": "Deletes a group",
-        "responses": {
-          "204": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v2/groups/undeletable": {
-      "get": {
-        "description": "Returns all undeletable system groups.",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/api_groups_undeletable_body"
-                },
-                "examples": {
-                  "0": {
-                    "value": "[\"admin\",\"cesManager\"]"
                   }
                 }
               }
@@ -901,21 +958,7 @@
         "type": "object",
         "properties": {
           "meta": {
-            "type": "object",
-            "properties": {
-              "page": {
-                "type": "integer",
-                "description": "Current page number"
-              },
-              "pageSize": {
-                "type": "integer",
-                "description": "Number of items per page"
-              },
-              "totalPages": {
-                "type": "integer",
-                "description": "Total number of pages"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultMetaData"
           },
           "data": {
             "type": "array",
@@ -924,32 +967,7 @@
             }
           },
           "links": {
-            "type": "object",
-            "properties": {
-              "self": {
-                "type": "string",
-                "description": "Link to the current page",
-                "example": "/api/v2/users?page=3&pageSize=50"
-              },
-              "first": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the first page (null if unavailable)"
-              },
-              "prev": {
-                "type": "string",
-                "description": "Link to the previous page"
-              },
-              "next": {
-                "type": "string",
-                "description": "Link to the next page"
-              },
-              "last": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the last page (null if unavailable)"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultLinks"
           }
         }
       },
@@ -957,21 +975,7 @@
         "type": "object",
         "properties": {
           "meta": {
-            "type": "object",
-            "properties": {
-              "page": {
-                "type": "integer",
-                "description": "Current page number"
-              },
-              "pageSize": {
-                "type": "integer",
-                "description": "Number of items per page"
-              },
-              "totalPages": {
-                "type": "integer",
-                "description": "Total number of pages"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultMetaData"
           },
           "data": {
             "type": "array",
@@ -980,32 +984,7 @@
             }
           },
           "links": {
-            "type": "object",
-            "properties": {
-              "self": {
-                "type": "string",
-                "description": "Link to the current page",
-                "example": "/api/v2/users?page=3&pageSize=50"
-              },
-              "first": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the first page (null if unavailable)"
-              },
-              "prev": {
-                "type": "string",
-                "description": "Link to the previous page"
-              },
-              "next": {
-                "type": "string",
-                "description": "Link to the next page"
-              },
-              "last": {
-                "type": "string",
-                "nullable": true,
-                "description": "Link to the last page (null if unavailable)"
-              }
-            }
+            "$ref": "#/components/schemas/PaginationResultLinks"
           }
         }
       },
@@ -1155,20 +1134,17 @@
       "PagedResultListSummary": {
         "type": "object",
         "properties": {
-          "entries": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationResultMetaData"
+          },
+          "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ImportSummary"
             }
           },
-          "start": {
-            "type": "integer"
-          },
-          "limit": {
-            "type": "integer"
-          },
-          "totalEntries": {
-            "type": "integer"
+          "links": {
+            "$ref": "#/components/schemas/PaginationResultLinks"
           }
         }
       },
@@ -1194,6 +1170,55 @@
           "skipped": {
             "type": "integer",
             "description": "The number of rows skipped during the import."
+          }
+        }
+      },
+      "PaginationResultMetaData": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "description": "Current page number"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Number of items per page"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages"
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total number of items"
+          }
+        }
+      },
+      "PaginationResultLinks": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string",
+            "description": "Link to the current page",
+            "example": "/api/v2/users?page=3&pageSize=50"
+          },
+          "first": {
+            "type": "string",
+            "nullable": true,
+            "description": "Link to the first page (null if unavailable)"
+          },
+          "prev": {
+            "type": "string",
+            "description": "Link to the previous page"
+          },
+          "next": {
+            "type": "string",
+            "description": "Link to the next page"
+          },
+          "last": {
+            "type": "string",
+            "nullable": true,
+            "description": "Link to the last page (null if unavailable)"
           }
         }
       }

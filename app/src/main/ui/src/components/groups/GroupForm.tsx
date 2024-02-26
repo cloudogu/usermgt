@@ -1,4 +1,4 @@
-import {Button, Form, H2, ListWithSearchbar, useFormHandler} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H2, ListWithSearchbar, useFormHandler} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import React from "react";
 import {useNavigate} from "react-router-dom";
@@ -9,7 +9,7 @@ import {Prompt} from "../../hooks/usePrompt";
 import {UsersService} from "../../services/Users";
 import {ConfirmationDialog} from "../ConfirmationDialog";
 import type {Group} from "../../services/Groups";
-import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import type {FormHandlerConfig} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 type GroupFormProps<T> = {
     group: Group;
@@ -45,7 +45,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     };
 
     const loadMembers = async (searchValue: string): Promise<string[]> => {
-        const userData = await UsersService.find(undefined, {start: 0, limit: MAX_SEARCH_RESULTS, query: searchValue, exclude: handler.values.members});
+        const userData = await UsersService.query(undefined, {page: 1, page_size: MAX_SEARCH_RESULTS, query: searchValue, exclude: handler.values.members});
         return userData.data.map(x => x.username);
     };
 

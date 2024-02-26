@@ -1,4 +1,4 @@
-import {H1} from '@cloudogu/ces-theme-tailwind';
+import {H1} from '@cloudogu/deprecated-ces-theme-tailwind';
 import React, {useContext} from 'react';
 import {t} from '../helpers/i18nHelpers';
 import {ApplicationContext} from '../main';

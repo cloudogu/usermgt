@@ -1,4 +1,4 @@
-import {H1, LoadingIcon} from "@cloudogu/ces-theme-tailwind";
+import {H1, LoadingIcon} from "@cloudogu/deprecated-ces-theme-tailwind";
 import UserForm from "../components/users/UserForm";
 import {useAccount} from "../hooks/useAccount";
 import {AccountService} from "../services/Account";

@@ -4,7 +4,7 @@ import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {User} from "./Users";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {RefetchResponse} from "../hooks/usePaginatedData";
+import type {PaginationResponse} from "../hooks/usePaginatedData";
 import type {AxiosError, AxiosResponse} from "axios";
 
 export type ImportErrorCode = 100 | 101 | 102 | 103 | 104 | 200 | 201 | 202 | 204 | 300 | 301;
@@ -51,27 +51,19 @@ export interface ImportSummary extends Omit<ImportSummaryDto, "timestamp"> {
     timestamp: Date;
 }
 
-export type SummariesModel = {
-    entries: ImportSummaryDto[],
-    start: number,
-    limit: number,
-    totalEntries: number,
-};
+export type SummariesModel = PaginationResponse<ImportSummary>
+
 export const ImportUsersService = {
-    async listSummaries(signal?: AbortSignal, opts?: QueryOptions): Promise<RefetchResponse<ImportSummary[]>> {
+    async listSummaries(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<ImportSummary>> {
         const summariesResponse = await Axios.get<SummariesModel>("/users/import/summaries", {
             params: opts,
             signal: signal
         } as any);
 
-        return {
-            data: summariesResponse.data.entries.map(s => ({...s, timestamp: new Date(s.timestamp || 0)})),
-            pagination: {
-                start: summariesResponse.data.start,
-                limit: summariesResponse.data.limit,
-                totalEntries: summariesResponse.data.totalEntries,
-            }
-        };
+        const response = summariesResponse.data;
+        response.data = response.data.map(s => ({...s, timestamp: new Date(s.timestamp || 0)}));
+
+        return response;
     },
     async deleteSummary(summary: ImportSummary): Promise<void> {
         return Axios.delete(`/users/import/${summary.importID}`, {});

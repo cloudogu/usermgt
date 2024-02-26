@@ -6,7 +6,7 @@ import {
     LoadingIcon,
     useAlertNotification,
     useFormHandler
-} from "@cloudogu/ces-theme-tailwind";
+} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React, {useState} from "react";
 import {Navigate} from "react-router-dom";
 import {twMerge} from "tailwind-merge";
@@ -16,7 +16,7 @@ import {t} from "../helpers/i18nHelpers";
 import useUserImportCsv from "../hooks/useUserImportCsv";
 import {ImportUsersService} from "../services/ImportUsers";
 import type {ImportUsersResponse} from "../services/ImportUsers";
-import type {FormHandlerConfig} from "@cloudogu/ces-theme-tailwind";
+import type {FormHandlerConfig} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 type ImportUsersUploadModel = {
     file?: FileList;

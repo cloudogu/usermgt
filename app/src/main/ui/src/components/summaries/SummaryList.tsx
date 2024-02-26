@@ -1,10 +1,10 @@
-import {CesIcons, DropdownMenu, Table, TextWithIcon} from "@cloudogu/ces-theme-tailwind";
+import {CesIcons, DropdownMenu, Table, TextWithIcon} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {t} from "../../helpers/i18nHelpers";
 import {ImportUsersService} from "../../services/ImportUsers";
 import type {ImportSummary} from "../../services/ImportUsers";
-import type {NotifyFunction} from "@cloudogu/ces-theme-tailwind";
+import type {NotifyFunction} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 export interface SummaryListProps {
     summaries: ImportSummary[],

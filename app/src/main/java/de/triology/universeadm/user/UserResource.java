@@ -33,7 +33,9 @@ package de.triology.universeadm.user;
 import com.google.inject.Inject;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.AbstractManagerResource;
-import de.triology.universeadm.PagedResultList;
+import de.triology.universeadm.PaginationQuery;
+import de.triology.universeadm.PaginationResult;
+import de.triology.universeadm.PaginationResultResponse;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.user.imports.*;
@@ -160,6 +162,16 @@ public class UserResource extends AbstractManagerResource<User> {
         return user.getUsername();
     }
 
+    /**
+     * Method description
+     *
+     * @return
+     */
+    @Override
+    protected String getDefaultSortAttribute() {
+        return "username";
+    }
+
     //~--- import methods ----------------------------------------------------------
 
     @POST
@@ -284,36 +296,32 @@ public class UserResource extends AbstractManagerResource<User> {
     }
 
 
-    @GET
-    @Path("import/summaries")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getSummaries(@QueryParam("start") int start, @QueryParam("limit") int limit) {
-        logger.debug("Received request get all summaries");
+  @GET
+  @Path("import/summaries")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getSummaries(@QueryParam("page") int page, @QueryParam("page_size") int pageSize) {
+    logger.debug("Received request get all summaries");
 
-        if (start < 0) {
-            start = PAGING_DEFAULT_START;
-        }
+    try {
+      PaginationQuery query = new PaginationQuery(page, pageSize);
 
-        if (limit <= 0 || limit > PAGING_MAXIMUM) {
-            limit = PAGING_DEFAULT_SUMMARY_LIMIT;
-        }
+      Pair<List<Result.Summary>, Integer> summaryResult = this.importHandler.getSummaries(query.getOffset(), query.getPageSize());
+      List<Result.Summary> summaries = summaryResult.getLeft();
+      int totalSummaryCount = summaryResult.getRight();
+      PaginationResult<Result.Summary> result = new PaginationResult<>(summaries, totalSummaryCount, null);
 
-        try {
-            Pair<List<Result.Summary>, Integer> summaryResult = this.importHandler.getSummaries(start, limit);
-            List<Result.Summary> summaries = summaryResult.getLeft();
-            int totalSummaryCount = summaryResult.getRight();
-            PagedResultList<Result.Summary> result = new PagedResultList<>(summaries, start, limit, totalSummaryCount);
+      PaginationResultResponse<Result.Summary> response = new PaginationResultResponse<>(query, result, getCurrentPath());
 
-            return Response.status(Response.Status.OK).entity(result).build();
-        } catch (IOException e) {
-            logger.error("Unable to read summaries from system", e);
+      return Response.status(Response.Status.OK).entity(response).build();
+    } catch (IOException e) {
+      logger.error("Unable to read summaries from system", e);
 
-            return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Failure reading summaries")
-                    .build();
-        }
+      return Response
+        .status(Response.Status.INTERNAL_SERVER_ERROR)
+        .entity("Failure reading summaries")
+        .build();
     }
+  }
 
 
     //~--- fields ---------------------------------------------------------------

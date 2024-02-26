@@ -1,4 +1,4 @@
-import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/ces-theme-tailwind";
+import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
@@ -7,7 +7,7 @@ import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
 import type {User} from "../../services/Users";
-import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/ces-theme-tailwind";
+import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 const MAX_SEARCH_RESULTS = 10;
 
@@ -54,11 +54,11 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     };
 
     const queryGroups = async (searchValue: string): Promise<string[]> => {
-        const groupsData = await GroupsService.list(
+        const groupsData = await GroupsService.query(
             undefined,
             {
-                start: 0,
-                limit: MAX_SEARCH_RESULTS,
+                page: 1,
+                page_size: MAX_SEARCH_RESULTS,
                 query: searchValue,
                 exclude: handler.values.memberOf ?? [],
             }

@@ -1,4 +1,4 @@
-import {H1, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
+import {H1, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React from "react";
 import SummaryList from "../components/summaries/SummaryList";
 import {t} from "../helpers/i18nHelpers";

@@ -1,4 +1,4 @@
-import {Modal, H3, Button} from '@cloudogu/ces-theme-tailwind';
+import {Modal, H3, Button} from '@cloudogu/deprecated-ces-theme-tailwind';
 import React, {useEffect, useRef, useState} from 'react';
 import {t} from '../helpers/i18nHelpers';
 
