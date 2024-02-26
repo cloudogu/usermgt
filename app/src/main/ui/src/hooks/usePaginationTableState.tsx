@@ -1,14 +1,14 @@
 import { useSearchParamState, useUrlPaginationControl} from "@cloudogu/ces-theme-tailwind";
-import {useState} from "react";
-import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, SEARCH_QUERY_PARAM} from "./usePaginatedData";
+import {useState, useEffect} from "react";
+import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, PaginationError, PaginationErrorCode, SEARCH_QUERY_PARAM} from "./usePaginatedData";
 import type {QueryOptions} from "./useAPI";
 import type {PaginationResponse} from "./usePaginatedData";
-import type {PaginationState} from "@cloudogu/ces-theme-tailwind";
+import type {PaginationState, PaginationControl} from "@cloudogu/ces-theme-tailwind";
 
 export type UsePaginationHook<T> = {
     items: T[],
     isLoading: boolean,
-    paginationControl: PaginationState,
+    paginationControl: PaginationControl,
     updateSearchQuery: (_: string) => void,
     searchQuery: string,
     onDelete: (_: string) => Promise<void>
@@ -30,6 +30,7 @@ const DEFAULT_LINES_PER_PAGE = 25;
 const DEFAULT_START_PAGE = 1;
 export default function usePaginationTableState<T>(dataService: PaginationDataService<T>): UsePaginationHook<T> {
     const [items, setItems] = useState<T[]>([]);
+    const [context, setContext] = useState<string|undefined>();
     // Start at a real high value to prevent the page to reset to 1 at the first request
     const [allLineCount, setAllLineCount] = useState(Number.MAX_SAFE_INTEGER);
     const [isLoading, setIsLoading] = useState(true);
@@ -42,12 +43,24 @@ export default function usePaginationTableState<T>(dataService: PaginationDataSe
                 page: paginationState.page,
                 query: searchQuery,
                 exclude: [],
+                context: context,
                 page_size: paginationState.linesPerPage,
             });
 
             setItems(newItems.data);
+            setContext(newItems.meta.context);
             setAllLineCount(newItems.meta.totalItems);
-        } finally {
+        } catch (err: any) {
+            if (err.name === PaginationErrorCode.ERR_OUT_OF_RANGE) {
+                const meta = (err as PaginationError).errorResponse.meta;
+                if (meta.page < DEFAULT_START_PAGE) {
+                    paginationControl.setPage(DEFAULT_START_PAGE);
+                } else {
+                    paginationControl.setPage(meta.totalPages);
+                }
+            }
+        }
+        finally {
             setIsLoading(false);
         }
     };
@@ -61,6 +74,17 @@ export default function usePaginationTableState<T>(dataService: PaginationDataSe
         allLineCount: allLineCount,
         loadDataFunction: loadDataFunction,
     });
+
+    useEffect(() => {
+        //reset page to default start page on query
+        // paginationControl.setPage(1);
+
+
+        // paginationControl.reload({
+        //     ...paginationControl,
+        //     page: 1,
+        // });
+    }, [searchQuery]);
 
     return {
         items,

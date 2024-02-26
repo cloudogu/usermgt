@@ -27,7 +27,7 @@ public class PaginationQuery {
 
   public PaginationQuery(int page, int pageSize, String query, String context, String exclude, String sortBy, boolean reverse) {
     if (page <= 0) {
-      page = PAGING_DEFAULT_PAGE;
+      page = PAGING_MIN_PAGE;
     }
 
     if (pageSize <= 0 || pageSize > PAGING_MAXIMUM_PAGE_SIZE) {
@@ -48,6 +48,10 @@ public class PaginationQuery {
     this.reverse = reverse;
 
     this.context = context;
+  }
+
+  public static PaginationQuery fromQueryWithNewPage(PaginationQuery query, int newPage) {
+      return new PaginationQuery(newPage, query.getPageSize(), query.getQuery(), query.getContext(), String.join(",", query.getExcludes()), query.getSortBy(), query.isReverse());
   }
 
   public String createUriQuery() {

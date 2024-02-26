@@ -50,10 +50,36 @@ export interface UsePaginatedDataOptions {
     searchString?: string;
 }
 
+export class PaginationError implements Error {
+    message: string;
+    name: string;
+    errorResponse: PaginationErrorResponse;
+    constructor(errorResponse: PaginationErrorResponse) {
+        this.name = errorResponse.errorCode;
+        this.message = errorResponse.errorMsg;
+        this.errorResponse = errorResponse;
+    }
+}
+
+
+export const PaginationErrorCode = {
+    ERR_OUT_OF_RANGE: "ERR_OUT_OF_RANGE",
+} as const;
+
+// Convert object key in a type
+export type PaginationErrorCodeKeys = typeof PaginationErrorCode[keyof typeof PaginationErrorCode]
+
 export interface PaginationResponse<T> {
   data: T[];
   meta: PaginationMetaData;
   links: PaginationLinks;
+}
+
+export interface PaginationErrorResponse {
+    meta: PaginationMetaData;
+    links: PaginationLinks;
+    errorCode: string;
+    errorMsg: string;
 }
 
 export type PaginationMetaData = {
@@ -61,6 +87,7 @@ export type PaginationMetaData = {
   pageSize: number;
   totalPages: number;
   totalItems: number;
+  context?: string;
 }
 
 export interface PaginationLinks {

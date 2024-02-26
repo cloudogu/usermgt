@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import javax.ws.rs.core.UriBuilder;
 import java.util.List;
 
-import static de.triology.universeadm.AbstractManagerResource.PAGING_DEFAULT_PAGE;
+import static de.triology.universeadm.AbstractManagerResource.PAGING_MIN_PAGE;
 
 public class PaginationResultResponse<T> {
   private final List<T> data;
@@ -30,13 +30,13 @@ public class PaginationResultResponse<T> {
     return links;
   }
 
-  public class MetaData {
+  public static class MetaData {
     private final int page;
     private final int pageSize;
     private final int totalPages;
     private final int totalItems;
 
-    public MetaData(PaginationQuery query, PaginationResult<T> result) {
+    public MetaData(PaginationQuery query, PaginationResult<?> result) {
       this.page = query.getPage();
       this.pageSize = query.getPageSize();
       this.totalItems = result.getTotalEntries();
@@ -64,7 +64,7 @@ public class PaginationResultResponse<T> {
     return (int) Math.ceil((double) totalEntries / pageSize);
   }
 
-  public class Links {
+  public static class Links {
     private final String self;
     private final String first;
     private final String prev;
@@ -74,8 +74,8 @@ public class PaginationResultResponse<T> {
     public Links(PaginationQuery query, MetaData metaData, String context, String basePath) {
       int currentPage = query.getPage();
       int lastPage = metaData.getTotalPages();
-      int previousPage = currentPage <= PAGING_DEFAULT_PAGE ? PAGING_DEFAULT_PAGE : (currentPage - 1);
-      int nextPage = currentPage >= lastPage ? lastPage : (currentPage + 1);
+      int previousPage = (currentPage <= PAGING_MIN_PAGE || currentPage > lastPage) ? -1 : (currentPage - 1);
+      int nextPage = (currentPage >= lastPage || currentPage < PAGING_MIN_PAGE) ? -1 : (currentPage + 1);
 
       UriBuilder builder = UriBuilder.fromUri(basePath)
         .replaceQuery(query.createUriQuery());
@@ -85,9 +85,9 @@ public class PaginationResultResponse<T> {
       }
 
       this.self  = builder.replaceQueryParam("page", currentPage).build().toString();
-      this.first = builder.replaceQueryParam("page", PAGING_DEFAULT_PAGE).build().toString();
-      this.prev  = builder.replaceQueryParam("page", previousPage).build().toString();
-      this.next  = builder.replaceQueryParam("page", nextPage).build().toString();
+      this.first = builder.replaceQueryParam("page", PAGING_MIN_PAGE).build().toString();
+      this.prev  = previousPage < PAGING_MIN_PAGE ? null : builder.replaceQueryParam("page", previousPage).build().toString();
+      this.next  = nextPage < PAGING_MIN_PAGE ? null : builder.replaceQueryParam("page", nextPage).build().toString();
       this.last  = builder.replaceQueryParam("page", lastPage).build().toString();
     }
 

@@ -4,7 +4,7 @@ import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import {emptyUser} from "./Account";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {PaginationResponse} from "../hooks/usePaginatedData";
+import {PaginationError, PaginationErrorResponse, PaginationResponse} from "../hooks/usePaginatedData";
 import type {PagedModel} from "@cloudogu/deprecated-ces-theme-tailwind";
 import type {AxiosError} from "axios";
 
@@ -45,14 +45,19 @@ export const DefaultUsersModel: UsersModel = {users: [], pagination: defaultPagi
 
 export const UsersService = {
     async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<User>> {
-        const usersResponse = await Axios.get<UsersResponse>("/users", {
+        const usersResponse = await Axios.get<UsersResponse|PaginationErrorResponse>("/users", {
             params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
             signal: signal
         } as any);
         if (usersResponse.status < 200 || usersResponse.status > 299) {
+            if (usersResponse.status === 400) {
+                const errorResponse = usersResponse.data as PaginationErrorResponse;
+                throw new PaginationError(errorResponse);
+            }
+
             throw new Error("failed to load user data: " + usersResponse.status);
         }
-        return usersResponse.data;
+        return usersResponse.data as UsersResponse;
     },
     async get(signal?: AbortSignal, username?: string): Promise<User> {
         if (!username) {

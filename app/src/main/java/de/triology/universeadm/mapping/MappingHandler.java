@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 
 import static de.triology.universeadm.AbstractLDAPManager.EQUAL;
 import static de.triology.universeadm.AbstractLDAPManager.WILDCARD;
+import static de.triology.universeadm.AbstractManagerResource.PAGING_MIN_PAGE;
 
 /**
  * @param <T>
@@ -198,6 +199,22 @@ public class MappingHandler<T extends Comparable<T>> {
     }
 
     public PaginationResult<T> query(PaginationQuery query) {
+        try {
+            return doQuery(query);
+        } catch (LDAPSearchException ex) {
+            // retry query with page 1 to get totalEntries
+            try {
+                PaginationResult<T> result = doQuery(PaginationQuery.fromQueryWithNewPage(query, PAGING_MIN_PAGE));
+                throw new PaginationQueryOutOfRangeException(result);
+            } catch (LDAPException e) {
+                throw new EntityException("could not query entities from LDAP", ex);
+            }
+        } catch (LDAPException ex) {
+            throw new EntityException("could not query entities from LDAP", ex);
+        }
+    }
+
+    private PaginationResult<T> doQuery(PaginationQuery query) throws LDAPException {
         final List<T> entities = Lists.newArrayList();
 
         int vlvOffset = query.getOffset() + 1;
@@ -205,30 +222,24 @@ public class MappingHandler<T extends Comparable<T>> {
         int vlvContentCount = 0;
         com.unboundid.asn1.ASN1OctetString vlvContextID = decodeContextId(query.getContext());
 
-        try {
-            SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, createFilter(query.getQuery(), query.getExcludes()), returningAttributes);
-            searchRequest.addControl(createSortControl(query));
-            searchRequest.addControl(new VirtualListViewRequestControl(vlvOffset, 0, vlvLimit, vlvContentCount, vlvContextID));
+        SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, createFilter(query.getQuery(), query.getExcludes()), returningAttributes);
+        searchRequest.addControl(createSortControl(query));
+        searchRequest.addControl(new VirtualListViewRequestControl(vlvOffset, 0, vlvLimit, vlvContentCount, vlvContextID));
 
-            SearchResult result = strategy.get().search(searchRequest);
-            for (SearchResultEntry e : result.getSearchEntries()) {
-                consume(entities, e);
-            }
-
-            LDAPTestUtils.assertHasControl(result, VirtualListViewResponseControl.VIRTUAL_LIST_VIEW_RESPONSE_OID);
-            VirtualListViewResponseControl vlvResponseControl = VirtualListViewResponseControl.get(result);
-            vlvContentCount = vlvResponseControl.getContentCount();
-            vlvContextID = vlvResponseControl.getContextID();
-
-        } catch (LDAPException ex) {
-            throw new EntityException("could not query entities from LDAP", ex);
+        SearchResult result = strategy.get().search(searchRequest);
+        for (SearchResultEntry e : result.getSearchEntries()) {
+            consume(entities, e);
         }
 
+        LDAPTestUtils.assertHasControl(result, VirtualListViewResponseControl.VIRTUAL_LIST_VIEW_RESPONSE_OID);
+        VirtualListViewResponseControl vlvResponseControl = VirtualListViewResponseControl.get(result);
+        vlvContentCount = vlvResponseControl.getContentCount();
+        vlvContextID = vlvResponseControl.getContextID();
 
         return new PaginationResult<T>(entities, vlvContentCount, encodeContextId(vlvContextID));
     }
 
-  private ServerSideSortRequestControl createSortControl(PaginationQuery query) {
+    private ServerSideSortRequestControl createSortControl(PaginationQuery query) {
     String sortAttribute = "cn";
     MappingAttribute attribute = mapper.getAttribute(query.getSortBy());
     if (attribute != null) {
