@@ -71,7 +71,7 @@ export default function Users() {
                                     {user.displayName}
                                 </ActionTable.Body.Row.Column>
                                 <ActionTable.Body.Row.Column>
-                                    <a href={`mailto:${user.mail}`}/>
+                                    <a href={`mailto:${user.mail}`}>{user.mail}</a>
                                 </ActionTable.Body.Row.Column>
                                 <ActionTable.Body.Row.Column className="flex justify-center">
                                     <EditLink
