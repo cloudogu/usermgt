@@ -3,3 +3,6 @@
 **/app/**/node_modules/**
 **/app/target/**
 **/usermgt.iml
+docs/
+.idea/
+.code/

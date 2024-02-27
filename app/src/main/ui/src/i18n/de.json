@@ -1,290 +1,174 @@
 {
-  "editGroup": {
-    "buttons": {
-      "back": "Zurück",
-      "remove": "Löschen",
-      "save": "Speichern"
-    },
-    "notification": {
-      "error": "Die Gruppe {{groupName}} konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
-      "success": "Die Gruppe {{groupName}} wurde erfolgreich gespeichert."
-    }
-  },
-  "editUser": {
-    "buttons": {
-      "save": "Speichern"
-    },
-    "errors": {
-      "confirmPassword": "Passwort stimmt nicht überein.",
-      "displayName": "Anzeigename muss ausgefüllt sein.",
-      "email": {
-        "invalid": "E-Mail-Adresse ist ungültig.",
-        "required": "E-Mail-Adresse muss ausgefüllt sein."
-      },
-      "password": {
-        "capital": "Das Passwort muss mindestens ein Großbuchstaben enthalten.",
-        "length": "Das Passwort muss mindestens {{length}} Zeichen lang sein.",
-        "lowercase": "Das Passwort muss mindestens ein Kleinbuchstaben enthalten.",
-        "nonWhitespace": "Das Passwort darf nicht ausschließlich Leerzeichen enthalten.",
-        "numeric": "Das Passwort muss mindestens eine Zahl enthalten.",
-        "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten."
-      },
-      "givenname": "Vorname muss ausgefüllt sein.",
-      "surname": "Nachname muss ausgefüllt sein.",
-      "username": {
-        "invalid": "Der Nutzername darf nur Buchstaben, Zahlen, Bindestriche, Unterstriche, Punkte und @ enthalten.",
-        "maxlength": "Darf höchstens 128 zeichen enthalten",
-        "minlength": "Muss mindestens 2 Zeichen enthalten",
-        "required": "Nutzername muss ausgefüllt sein."
-      }
-    },
-    "labels": {
-      "confirmPassword": "Passwort bestätigen",
-      "displayName": "Anzeigename",
-      "email": "E-Mail",
-      "external": "Externer Account",
-      "givenName": "Vorname",
-      "mustChangePassword": "Nutzer muss sein Passwort beim nächsten Login ändern",
-      "password": "Passwort",
-      "surname": "Nachname",
-      "username": "Nutzername"
-    },
-    "notification": {
-      "error": "Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
-      "success": "Die Account Informationen wurden erfolgreich gespeichert."
-    }
-  },
-  "general": {
-    "applicationName": "User Management"
-  },
-  "generic": {
-    "errors": {
-      "general": "Beim Laden der Seite ist ein Fehler aufgetreten.",
-      "notFound": "Die Seite konnte nicht gefunden werden.",
-      "title": "Oops!"
-    },
-    "notification": {
-      "form.prompt": "Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?"
-    }
-  },
-  "groups": {
-    "buttons": {
-      "create": "Gruppe anlegen"
-    },
-    "confirmation": {
-      "message": "Soll die Gruppe {{groupName}} gelöscht werden?",
-      "title": "Gruppe löschen"
-    },
-    "labels": {
-      "addMember": "Mitglied hinzufügen",
-      "description": "Beschreibung",
-      "emptyMembers": "Keine Mitglieder zugeordnet",
-      "members": "Mitglieder",
-      "name": "Name",
-      "removeMember": "Mitglied entfernen",
-      "removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?"
-    },
-    "notification": {
-      "error": "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden.",
-      "success": "Die Gruppe '{{groupName}}' wurde erfolgreich gelöscht."
-    },
-    "placeholder": {
-      "description": "Beschreibung eingeben",
-      "name": "Namen eingeben"
-    },
-    "table": {
-      "actions": {
-        "delete": "Gruppe löschen",
-        "deleteAria": "löschen",
-        "edit": "Gruppe bearbeiten",
-        "editAria": "bearbeiten"
-      },
-      "description": "Beschreibung",
-      "name": "Name",
-      "systemGroup": "Dies ist eine Systemgruppe und darf nicht gelöscht werden.",
-      "users": "Mitglieder"
-    }
-  },
-  "modal": {
-    "cancel": "Abbrechen",
-    "confirm": "Bestätigen"
-  },
-  "navbar": {
-    "logoAltText": "Icon des User Managements: Lupe, die auf einen Benutzer-Icon gerichtet ist.",
-    "logout": "Abmelden"
-  },
-  "newGroup": {
-    "buttons": {
-      "back": "Zurück",
-      "save": "Speichern"
-    },
-    "errors": {
-      "name": "Der Wert muss ausgefüllt sein.",
-      "nameFormat": "Der Wert enthält ungültige Zeichen.",
-      "nameMaxLength": "Die Maximallänge beträgt 128 Zeichen",
-      "nameMinLength": "Die Mindestlänge beträgt 2 Zeichen"
-    },
-    "notification": {
-      "error": "Die Gruppe konnte nicht angelegt werden. Bitte versuchen Sie es später erneut.",
-      "errorDuplicate": "Die Gruppe konnte nicht angelegt werden. Der Name ist bereits vergeben.",
-      "success": "Die Gruppe {{groupName}} wurde erfolgreich angelegt."
-    }
-  },
-  "newUser": {
-    "notification": {
-      "error": "Der Nutzer '{{username}}' konnte nicht gespeichert werden.",
-      "errorDuplicateMail": "Ein Nutzer mit der E-Mail '{{mail}}' existiert bereits.",
-      "errorDuplicateUsername": "Ein Nutzer mit dem Nutzernamen '{{username}}' existiert bereits.",
-      "success": "Nutzer '{{username}}' erfolgreich gespeichert."
-    }
-  },
-  "pages": {
-    "accessDenied": {
-      "text": "Sie haben keinen Zugriff auf diese Seite",
-      "title": "Zugriff verweigert"
-    },
-    "account": "Account",
-    "groups": "Gruppen",
-    "groupsEdit": "Gruppe bearbeiten",
-    "groupsNew": "Neue Gruppe",
-    "summaries": "Importübersichten",
-    "users": "Nutzer",
-    "usersEdit": "Nutzer bearbeiten",
-    "usersImport": "Nutzerimport",
-    "usersImportResult": "Nutzerimport",
-    "usersNew": "Nutzer anlegen"
-  },
-  "summaries": {
-    "delete": {
-      "error": "Die Importübersicht konnte nicht gelöscht werden.",
-      "success": "Die Importübersicht wurde erfolgreich gelöscht."
-    },
-    "result": {
-      "created": "Neu",
-      "errors": "Übersprungen",
-      "updated": "Aktualisiert"
-    },
-    "table": {
-      "function": {
-        "delete": "Löschen",
-        "details": "Details",
-        "download": "Herunterladen"
-      },
-      "functions": "Funktionen",
-      "headline": {
-        "date": "Datum",
-        "functions": "Funktionen",
-        "name": "Name der CSV-Datei",
-        "result": "Ergebnis"
-      }
-    }
-  },
-  "users": {
-    "confirmation": {
-      "message": "Soll der Nutzer {{username}} gelöscht werden?",
-      "title": "Nutzer löschen"
-    },
-    "create": "Nutzer anlegen",
-    "labels": {
-      "addGroup": "Gruppe hinzufügen",
-      "emptyGroups": "Keine Gruppen zugeordnet",
-      "groups": "Gruppen",
-      "myGroups": "Meine Gruppen",
-      "removeGroup": "Gruppenzuordnung entfernen",
-      "removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?"
-    },
-    "notification": {
-      "error": "Der Nutzer '{{username}}' konnte nicht gelöscht werden.",
-      "success": "Der Nutzer '{{username}}' wurde erfolgreich gelöscht."
-    },
-    "placeholder": {
-      "confirmPassword": "Passwortbestätigung eingeben ",
-      "displayName": "Anzeigenamen eingeben",
-      "givenname": "Vornamen eingeben",
-      "mail": "E-Mail Adresse eingeben",
-      "password": "Passwort eingeben",
-      "surname": "Nachnamen eingeben",
-      "username": "Benutzernamen eingeben"
-    },
-    "hint": {
-      "username": "Der Nutzername wird beim Login verwendet und kann später nicht mehr geändert werden.",
-      "displayName": "Der Anzeigename ist der Name des Nutzers, der in vielen Dogus angezeigt wird."
-    },
-    "table": {
-      "actions": {
-        "add": "Nutzer hinzufügen",
-        "delete": "Nutzer löschen",
-        "deleteAria": "löschen",
-        "edit": "Nutzer bearbeiten",
-        "editAria": "bearbeiten"
-      },
-      "displayName": "Anzeigename",
-      "email": "E-Mail",
-      "username": "Nutzername"
-    }
-  },
-  "usersImport": {
-    "buttons": {
-      "reset": "Abbrechen",
-      "upload": "Importieren"
-    },
-    "headlines": {
-      "importErrors": "Fehler",
-      "importSuccess": "Import abgeschlossen",
-      "table": "Inhalt der ausgewählten Datei"
-    },
-    "info": {
-      "docsLink": "https://docs.cloudogu.com/de/usermanual/usermanagement/",
-      "further": "Weitere Informationen dazu: ",
-      "text": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden."
-    },
-    "notification": {
-      "genericError": "Die Nutzer aus der Datei '{{file}}' konnten nicht importiert werden.",
-      "invalidFile": "Die Datei '{{file}}' ist keine gültige CSV-Datei."
-    }
-  },
-  "usersImportResult": {
-    "download": "Importübersicht herunterladen",
-    "error": "Keine Import-Ergebnisse gefunden.",
-    "msg": {
-      "code-100": "Das Format der Zeile konnte nicht zugeordnet werden.",
-      "code-101": "Folgende Spalten hatten einen ungültigen Datentypen: '{{columns}}'",
-      "code-102": "Folgende Spalten waren nicht enthalten: '{{columns}}'",
-      "code-103": "Die Zeile konnte nicht eindeutig identifiziert werden",
-      "code-104": "Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spaltenüberschriften überein.",
-      "code-200": "Allgemeiner Fehler beim Verarbeiten der Zeile",
-      "code-201": "Folgende Spalten enthielten einen Wert, der als einzigartig gekennzeichnet ist und bereits vergeben war: '{{columns}}'",
-      "code-202": "Folgende Spalten entsprechen nicht dem vorgegebenen Format '{{columns}}'",
-      "code-204": "Folgende Spalten werden benötigt, waren aber leer: '{{columns}}'",
-      "code-300": "Allgemeiner interner Server-Fehler",
-      "code-301": "Serverfehler beim Schreiben des Ergebnisses ins Dateisystem"
-    },
-    "result": {
-      "failure": "Import fehlgeschlagen!",
-      "success": "Import erfolgreich abgeschlossen!",
-      "successWithFailures": "Import mit Fehlern abgeschlossen!"
-    },
-    "rows": {
-      "created": "Erstellte Nutzerkonten",
-      "skipped": "Übersprungene Datenzeilen",
-      "updated": "Aktualisierte Nutzerkonten"
-    },
-    "table": {
-      "errors": {
-        "error": "Fehler",
-        "line": "Zeile"
-      },
-      "success": {
-        "displayName": "Anzeigename",
-        "external": "Extern",
-        "false": "Nein",
-        "givenName": "Vorname",
-        "mail": "Email",
-        "name": "Nachname",
-        "passwordReset": "Passwort temporär",
-        "true": "Ja",
-        "username": "Nutzername"
-      }
-    }
-  }
+  "editGroup.buttons.back": "Zurück",
+  "editGroup.buttons.remove": "Löschen",
+  "editGroup.buttons.save": "Speichern",
+  "editGroup.notification.error": "Die Gruppe {{groupName}} konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
+  "editGroup.notification.success": "Die Gruppe {{groupName}} wurde erfolgreich gespeichert.",
+  "editUser.buttons.save": "Speichern",
+  "editUser.errors.confirmPassword": "Passwort stimmt nicht überein.",
+  "editUser.errors.displayName": "Anzeigename muss ausgefüllt sein.",
+  "editUser.errors.email.invalid": "E-Mail-Adresse ist ungültig.",
+  "editUser.errors.email.required": "E-Mail-Adresse muss ausgefüllt sein.",
+  "editUser.errors.givenname": "Vorname muss ausgefüllt sein.",
+  "editUser.errors.password.capital": "Das Passwort muss mindestens ein Großbuchstaben enthalten.",
+  "editUser.errors.password.length": "Das Passwort muss mindestens {{length}} Zeichen lang sein.",
+  "editUser.errors.password.lowercase": "Das Passwort muss mindestens ein Kleinbuchstaben enthalten.",
+  "editUser.errors.password.nonWhitespace": "Das Passwort darf nicht ausschließlich Leerzeichen enthalten.",
+  "editUser.errors.password.numeric": "Das Passwort muss mindestens eine Zahl enthalten.",
+  "editUser.errors.password.special": "Das Passwort muss mindestens ein Sonderzeichen enthalten.",
+  "editUser.errors.surname": "Nachname muss ausgefüllt sein.",
+  "editUser.errors.username.invalid": "Der Nutzername darf nur Buchstaben, Zahlen, Bindestriche, Unterstriche, Punkte und @ enthalten.",
+  "editUser.errors.username.maxlength": "Darf höchstens 128 zeichen enthalten",
+  "editUser.errors.username.minlength": "Muss mindestens 2 Zeichen enthalten",
+  "editUser.errors.username.required": "Nutzername muss ausgefüllt sein.",
+  "editUser.labels.confirmPassword": "Passwort bestätigen",
+  "editUser.labels.displayName": "Anzeigename",
+  "editUser.labels.email": "E-Mail",
+  "editUser.labels.external": "Externer Account",
+  "editUser.labels.givenName": "Vorname",
+  "editUser.labels.mustChangePassword": "Nutzer muss sein Passwort beim nächsten Login ändern",
+  "editUser.labels.password": "Passwort",
+  "editUser.labels.surname": "Nachname",
+  "editUser.labels.username": "Nutzername",
+  "editUser.notification.error": "Die Account Informationen konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
+  "editUser.notification.success": "Die Account Informationen wurden erfolgreich gespeichert.",
+  "general.applicationName": "User Management",
+  "general.all": "Alle",
+  "generic.errors.general": "Beim Laden der Seite ist ein Fehler aufgetreten.",
+  "generic.errors.notFound": "Die Seite konnte nicht gefunden werden.",
+  "generic.errors.title": "Oops!",
+  "generic.notification.form.prompt": "Das Formular enthält ungespeicherte Änderungen. Wollen Sie die Seite wirklich verlassen?",
+  "groups.buttons.create": "Gruppe anlegen",
+  "groups.confirmation.message": "Soll die Gruppe {{groupName}} gelöscht werden?",
+  "groups.confirmation.title": "Gruppe löschen",
+  "groups.labels.addMember": "Mitglied hinzufügen",
+  "groups.labels.description": "Beschreibung",
+  "groups.labels.emptyMembers": "Keine Mitglieder zugeordnet",
+  "groups.labels.members": "Mitglieder",
+  "groups.labels.name": "Name",
+  "groups.labels.removeMember": "Mitglied entfernen",
+  "groups.labels.removeMemberConfirmationMessage": "Soll das Mitglied {{username}} entfernt werden?",
+  "groups.notification.error": "Die Gruppe '{{groupName}}' konnte nicht gelöscht werden.",
+  "groups.notification.success": "Die Gruppe '{{groupName}}' wurde erfolgreich gelöscht.",
+  "groups.placeholder.description": "Beschreibung eingeben",
+  "groups.placeholder.name": "Namen eingeben",
+  "groups.table.actions.delete": "Gruppe löschen",
+  "groups.table.actions.deleteAria": "löschen",
+  "groups.table.actions.edit": "Gruppe bearbeiten",
+  "groups.table.actions.editAria": "bearbeiten",
+  "groups.table.description": "Beschreibung",
+  "groups.table.name": "Name",
+  "groups.table.systemGroup": "Dies ist eine Systemgruppe und darf nicht gelöscht werden.",
+  "groups.table.users": "Mitglieder",
+  "modal.cancel": "Abbrechen",
+  "modal.confirm": "Bestätigen",
+  "navbar.logoAltText": "Icon des User Managements: Lupe, die auf einen Benutzer-Icon gerichtet ist.",
+  "navbar.logout": "Abmelden",
+  "newGroup.buttons.back": "Zurück",
+  "newGroup.buttons.save": "Speichern",
+  "newGroup.errors.name": "Der Wert muss ausgefüllt sein.",
+  "newGroup.errors.nameFormat": "Der Wert enthält ungültige Zeichen.",
+  "newGroup.errors.nameMaxLength": "Die Maximallänge beträgt 128 Zeichen",
+  "newGroup.errors.nameMinLength": "Die Mindestlänge beträgt 2 Zeichen",
+  "newGroup.notification.error": "Die Gruppe konnte nicht angelegt werden. Bitte versuchen Sie es später erneut.",
+  "newGroup.notification.errorDuplicate": "Die Gruppe konnte nicht angelegt werden. Der Name ist bereits vergeben.",
+  "newGroup.notification.success": "Die Gruppe {{groupName}} wurde erfolgreich angelegt.",
+  "newUser.notification.error": "Der Nutzer '{{username}}' konnte nicht gespeichert werden.",
+  "newUser.notification.errorDuplicateMail": "Ein Nutzer mit der E-Mail '{{mail}}' existiert bereits.",
+  "newUser.notification.errorDuplicateUsername": "Ein Nutzer mit dem Nutzernamen '{{username}}' existiert bereits.",
+  "newUser.notification.success": "Nutzer '{{username}}' erfolgreich gespeichert.",
+  "pages.accessDenied.text": "Sie haben keinen Zugriff auf diese Seite",
+  "pages.accessDenied.title": "Zugriff verweigert",
+  "pages.account": "Account",
+  "pages.groups": "Gruppen",
+  "pages.groupsEdit": "Gruppe bearbeiten",
+  "pages.groupsNew": "Neue Gruppe",
+  "pages.summaries": "Importübersichten",
+  "pages.users": "Nutzer",
+  "pages.usersEdit": "Nutzer bearbeiten",
+  "pages.usersImport": "Nutzerimport",
+  "pages.usersImportResult": "Nutzerimport",
+  "pages.usersNew": "Nutzer anlegen",
+  "summaries.delete.error": "Die Importübersicht konnte nicht gelöscht werden.",
+  "summaries.delete.success": "Die Importübersicht wurde erfolgreich gelöscht.",
+  "summaries.result.created": "Neu",
+  "summaries.result.errors": "Übersprungen",
+  "summaries.result.updated": "Aktualisiert",
+  "summaries.table.function.delete": "Löschen",
+  "summaries.table.function.details": "Details",
+  "summaries.table.function.download": "Herunterladen",
+  "summaries.table.functions": "Funktionen",
+  "summaries.table.headline.date": "Datum",
+  "summaries.table.headline.functions": "Funktionen",
+  "summaries.table.headline.name": "Name der CSV-Datei",
+  "summaries.table.headline.result": "Ergebnis",
+  "users.confirmation.message": "Soll der Nutzer {{username}} gelöscht werden?",
+  "users.confirmation.title": "Nutzer löschen",
+  "users.create": "Nutzer anlegen",
+  "users.labels.addGroup": "Gruppe hinzufügen",
+  "users.labels.emptyGroups": "Keine Gruppen zugeordnet",
+  "users.labels.groups": "Gruppen",
+  "users.labels.myGroups": "Meine Gruppen",
+  "users.labels.removeGroup": "Gruppenzuordnung entfernen",
+  "users.labels.removeGroupConfirmationMessage": "Soll die Zuordnung zur Gruppe {{groupName}} entfernt werden?",
+  "users.notification.error": "Der Nutzer '{{username}}' konnte nicht gelöscht werden.",
+  "users.notification.success": "Der Nutzer '{{username}}' wurde erfolgreich gelöscht.",
+  "users.placeholder.confirmPassword": "Passwortbestätigung eingeben ",
+  "users.placeholder.displayName": "Anzeigenamen eingeben",
+  "users.placeholder.givenname": "Vornamen eingeben",
+  "users.placeholder.mail": "E-Mail Adresse eingeben",
+  "users.placeholder.password": "Passwort eingeben",
+  "users.placeholder.surname": "Nachnamen eingeben",
+  "users.placeholder.username": "Benutzernamen eingeben",
+  "users.hint.username": "",
+  "users.hint.displayName": "\"Der Nutzername wird beim Login verwendet und kann später nicht mehr geändert werden.",
+  "users.table.actions.add": "Nutzer hinzufügen",
+  "users.table.actions.delete": "Nutzer löschen",
+  "users.table.actions.deleteAria": "löschen",
+  "users.table.actions.edit": "Nutzer bearbeiten",
+  "users.table.actions.editAria": "bearbeiten",
+  "users.table.displayName": "Anzeigename",
+  "users.table.email": "E-Mail",
+  "users.table.username": "Nutzername",
+  "users.table.actions": "Aktionen",
+  "usersImport.buttons.reset": "Abbrechen",
+  "usersImport.buttons.upload": "Importieren",
+  "usersImport.headlines.importErrors": "Fehler",
+  "usersImport.headlines.importSuccess": "Import abgeschlossen",
+  "usersImport.headlines.table": "Inhalt der ausgewählten Datei",
+  "usersImport.info.docsLink": "https://docs.cloudogu.com/de/usermanual/usermanagement/",
+  "usersImport.info.further": "Weitere Informationen dazu: ",
+  "usersImport.info.text": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden.",
+  "usersImport.notification.genericError": "Die Nutzer aus der Datei '{{file}}' konnten nicht importiert werden.",
+  "usersImport.notification.invalidFile": "Die Datei '{{file}}' ist keine gültige CSV-Datei.",
+  "usersImportResult.download": "Importübersicht herunterladen",
+  "usersImportResult.error": "Keine Import-Ergebnisse gefunden.",
+  "usersImportResult.msg.code-100": "Das Format der Zeile konnte nicht zugeordnet werden.",
+  "usersImportResult.msg.code-101": "Folgende Spalten hatten einen ungültigen Datentypen: '{{columns}}'",
+  "usersImportResult.msg.code-102": "Folgende Spalten waren nicht enthalten: '{{columns}}'",
+  "usersImportResult.msg.code-103": "Die Zeile konnte nicht eindeutig identifiziert werden",
+  "usersImportResult.msg.code-104": "Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spaltenüberschriften überein.",
+  "usersImportResult.msg.code-200": "Allgemeiner Fehler beim Verarbeiten der Zeile",
+  "usersImportResult.msg.code-201": "Folgende Spalten enthielten einen Wert, der als einzigartig gekennzeichnet ist und bereits vergeben war: '{{columns}}'",
+  "usersImportResult.msg.code-202": "Folgende Spalten entsprechen nicht dem vorgegebenen Format '{{columns}}'",
+  "usersImportResult.msg.code-204": "Folgende Spalten werden benötigt, waren aber leer: '{{columns}}'",
+  "usersImportResult.msg.code-300": "Allgemeiner interner Server-Fehler",
+  "usersImportResult.msg.code-301": "Serverfehler beim Schreiben des Ergebnisses ins Dateisystem",
+  "usersImportResult.result.failure": "Import fehlgeschlagen!",
+  "usersImportResult.result.success": "Import erfolgreich abgeschlossen!",
+  "usersImportResult.result.successWithFailures": "Import mit Fehlern abgeschlossen!",
+  "usersImportResult.rows.created": "Erstellte Nutzerkonten",
+  "usersImportResult.rows.skipped": "Übersprungene Datenzeilen",
+  "usersImportResult.rows.updated": "Aktualisierte Nutzerkonten",
+  "usersImportResult.table.errors.error": "Fehler",
+  "usersImportResult.table.errors.line": "Zeile",
+  "usersImportResult.table.success.displayName": "Anzeigename",
+  "usersImportResult.table.success.external": "Extern",
+  "usersImportResult.table.success.false": "Nein",
+  "usersImportResult.table.success.givenName": "Vorname",
+  "usersImportResult.table.success.mail": "Email",
+  "usersImportResult.table.success.name": "Nachname",
+  "usersImportResult.table.success.passwordReset": "Passwort temporär",
+  "usersImportResult.table.success.true": "Ja",
+  "usersImportResult.table.success.username": "Nutzername"
 }

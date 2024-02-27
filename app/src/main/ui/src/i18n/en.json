@@ -1,290 +1,172 @@
 {
-  "editGroup": {
-    "buttons": {
-      "back": "Back",
-      "remove": "Delete",
-      "save": "Save"
-    },
-    "notification": {
-      "error": "The group could not be saved. Please try again later.",
-      "success": "The group was saved successfully."
-    }
-  },
-  "editUser": {
-    "buttons": {
-      "save": "Save"
-    },
-    "errors": {
-      "confirmPassword": "Passwords must match.",
-      "displayName": "Display name is required.",
-      "email": {
-        "invalid": "E-mail address is invalid.",
-        "required": "'E-mail address is required.'"
-      },
-      "password": {
-        "capital": "The password must contain at least one capital letter.",
-        "length": "The password must contain at least {{length}} characters.",
-        "lowercase": "The password must contain at least one lower case letter.",
-        "nonWhitespace": "The password must not contain only spaces.",
-        "numeric": "The password must contain at least 1 number.",
-        "special": "The password must contain at least 1 special character."
-      },
-      "givenname": "Given name is required.",
-      "surname": "Surname is required.",
-      "username": {
-        "invalid": "The username may only contain letters, numbers, hyphens, underscores, periods and @.",
-        "maxlength": "May contain a maximum of 128 characters",
-        "minlength": "Must contain at least 2 characters",
-        "required": "Username is required."
-      }
-    },
-    "labels": {
-      "confirmPassword": "Confirm Password",
-      "displayName": "Display Name",
-      "email": "E-Mail",
-      "external": "External account",
-      "givenName": "Given Name",
-      "mustChangePassword": "The user must change the password at the next login",
-      "password": "Password",
-      "surname": "Surname",
-      "username": "Username"
-    },
-    "notification": {
-      "error": "Account information could not be saved. Please try again later.",
-      "success": "Account information saved successfully."
-    }
-  },
-  "general": {
-    "applicationName": "User Management"
-  },
-  "generic": {
-    "errors": {
-      "general": "An error occurred while loading the page.",
-      "notFound": "The page could not be found.",
-      "title": "Oops!"
-    },
-    "notification": {
-      "form.prompt": "The form contains unsaved changes. Do you really want to leave the page?"
-    }
-  },
-  "groups": {
-    "buttons": {
-      "create": "Create Group"
-    },
-    "confirmation": {
-      "message": "Delete group {{groupName}}?",
-      "title": "Delete group"
-    },
-    "labels": {
-      "addMember": "Add member",
-      "description": "Description",
-      "emptyMembers": "No members assigned",
-      "members": "Members",
-      "name": "Name",
-      "removeMember": "Remove member",
-      "removeMemberConfirmationMessage": "Should the member {{username}} be removed?"
-    },
-    "notification": {
-      "error": "The group '{{groupName}}' could not be deleted.",
-      "success": "The group '{{groupName}}' was deleted successfully."
-    },
-    "placeholder": {
-      "description": "Enter description",
-      "name": "Enter name"
-    },
-    "table": {
-      "actions": {
-        "delete": "Delete group",
-        "deleteAria": "delete",
-        "edit": "Edit group",
-        "editAria": "edit"
-      },
-      "description": "Description",
-      "name": "Name",
-      "systemGroup": "This is a system group and cannot be deleted.",
-      "users": "Members"
-    }
-  },
-  "modal": {
-    "cancel": "Cancel",
-    "confirm": "Confirm"
-  },
-  "navbar": {
-    "logoAltText": "User Management icon: magnifying glass directed to a user icon.",
-    "logout": "Logout"
-  },
-  "newGroup": {
-    "buttons": {
-      "back": "Back",
-      "save": "Save"
-    },
-    "errors": {
-      "name": "Value is required",
-      "nameFormat": "Value contains illegal characters",
-      "nameMaxLength": "Maximum length is 128 characters",
-      "nameMinLength": "Minimum length is 2 characters"
-    },
-    "notification": {
-      "error": "The group could not be created. Please try again later.",
-      "errorDuplicate": "The group could not be created. The name is already in use.",
-      "success": "The group {{groupName}} was created successfully."
-    }
-  },
-  "newUser": {
-    "notification": {
-      "error": "Could not save user '{{username}}'.",
-      "errorDuplicateMail": "A user with the E-Mail '{{mail}}' already exists.",
-      "errorDuplicateUsername": "A user with the username '{{username}}' already exists.",
-      "success": "User '{{username}}' was saved successfully."
-    }
-  },
-  "pages": {
-    "accessDenied": {
-      "text": "You are not allowed to access this page",
-      "title": "Access denied"
-    },
-    "account": "Account",
-    "groups": "Groups",
-    "groupsEdit": "Edit group",
-    "groupsNew": "New Group",
-    "summaries": "Import overviews",
-    "users": "Users",
-    "usersEdit": "Edit user",
-    "usersImport": "User import",
-    "usersImportResult": "Userimport",
-    "usersNew": "New user"
-  },
-  "summaries": {
-    "delete": {
-      "error": "The import overview could not be cleared.",
-      "success": "The import overview was successfully deleted."
-    },
-    "result": {
-      "created": "New",
-      "errors": "Skipped",
-      "updated": "Updated"
-    },
-    "table": {
-      "function": {
-        "delete": "Delete",
-        "details": "Details",
-        "download": "Download"
-      },
-      "functions": "Functions",
-      "headline": {
-        "date": "Date",
-        "functions": "Functions",
-        "name": "Name of the CSV-File",
-        "result": "Result"
-      }
-    }
-  },
-  "users": {
-    "confirmation": {
-      "message": "Delete user {{username}}?",
-      "title": "Delete user"
-    },
-    "create": "Create user",
-    "labels": {
-      "addGroup": "Add group",
-      "emptyGroups": "No groups assigned",
-      "groups": "Groups",
-      "myGroups": "My Groups",
-      "removeGroup": "Remove group assigment",
-      "removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?"
-    },
-    "notification": {
-      "error": "The user '{{username}}' could not be deleted.",
-      "success": "The user '{{username}}' was deleted successfully."
-    },
-    "placeholder": {
-      "confirmPassword": "Enter corfirmation password",
-      "displayName": "Enter display name",
-      "givenname": "Enter given name",
-      "mail": "Enter E-Mail Address",
-      "password": "Enter password",
-      "surname": "Enter surname",
-      "username": "Enter username"
-    },
-    "hint": {
-      "username": "The user name is used when logging in and cannot be changed later.",
-      "displayName": "The display name is the name of the user that is displayed in many Dogus."
-    },
-    "table": {
-      "actions": {
-        "add": "Add user",
-        "delete": "Delete user",
-        "deleteAria": "delete",
-        "edit": "Edit user",
-        "editAria": "edit"
-      },
-      "displayName": "Displayname",
-      "email": "E-Mail",
-      "username": "Username"
-    }
-  },
-  "usersImport": {
-    "buttons": {
-      "reset": "Reset",
-      "upload": "Upload"
-    },
-    "headlines": {
-      "importErrors": "Fehler",
-      "importSuccess": "Import abgeschlossen",
-      "table": "Content of the CSV file"
-    },
-    "info": {
-      "docsLink": "https://docs.cloudogu.com/en/usermanual/usermanagement/",
-      "further": "Further Information: ",
-      "text": "Users can be imported on this page. These must be created in a CSV file to be uploaded here according to a certain pattern."
-    },
-    "notification": {
-      "genericError": "Could not import users from '{{file}}' file.",
-      "invalidFile": "The file '{{file}}' is not a valid csv file."
-    }
-  },
-  "usersImportResult": {
-    "download": "Download import overview",
-    "error": "No import results found.",
-    "msg": {
-      "code-100": "The format of the line could not be assigned.",
-      "code-101": "The following columns had an invalid data type: '{{columns}}'.",
-      "code-102": "The following columns were not included: '{{columns}}'.",
-      "code-103": "The line could not be identified clearly",
-      "code-104": "The number of columns does not match the number of column headers.",
-      "code-200": "General error when processing the line",
-      "code-201": "The following columns contained a value that is marked as unique and was already assigned: '{{columns}}'.",
-      "code-202": "The following columns do not match the default format '{{columns}}'.",
-      "code-204": "The following columns are required but were empty: '{{columns}}'.",
-      "code-300": "General internal server error",
-      "code-301": "Server error writing the result to the file system"
-    },
-    "result": {
-      "failure": "Import failed!",
-      "success": "Import successfully completed!",
-      "successWithFailures": "Import completed with errors!"
-    },
-    "rows": {
-      "created": "Created accounts",
-      "skipped": "Skipped data rows",
-      "updated": "Updated accounts"
-    },
-    "table": {
-      "errors": {
-        "error": "Error",
-        "line": "Line"
-      },
-      "success": {
-        "displayName": "Display name",
-        "external": "External",
-        "false": "No",
-        "givenName": "Given name",
-        "mail": "Mail",
-        "name": "Name",
-        "passwordReset": "Temporary password",
-        "true": "Yes",
-        "username": "Username"
-      }
-    }
-  }
+  "editGroup.buttons.back": "Back",
+  "editGroup.buttons.remove": "Delete",
+  "editGroup.buttons.save": "Save",
+  "editGroup.notification.error": "The group could not be saved. Please try again later.",
+  "editGroup.notification.success": "The group was saved successfully.",
+  "editUser.buttons.save": "Save",
+  "editUser.errors.confirmPassword": "Passwords must match.",
+  "editUser.errors.displayName": "Display name is required.",
+  "editUser.errors.email.invalid": "E-mail address is invalid.",
+  "editUser.errors.email.required": "'E-mail address is required.'",
+  "editUser.errors.givenname": "Given name is required.",
+  "editUser.errors.password.capital": "The password must contain at least one capital letter.",
+  "editUser.errors.password.length": "The password must contain at least {{length}} characters.",
+  "editUser.errors.password.lowercase": "The password must contain at least one lower case letter.",
+  "editUser.errors.password.nonWhitespace": "The password must not contain only spaces.",
+  "editUser.errors.password.numeric": "The password must contain at least 1 number.",
+  "editUser.errors.password.special": "The password must contain at least 1 special character.",
+  "editUser.errors.surname": "Surname is required.",
+  "editUser.errors.username.invalid": "The username may only contain letters, numbers, hyphens, underscores, periods and @.",
+  "editUser.errors.username.maxlength": "May contain a maximum of 128 characters",
+  "editUser.errors.username.minlength": "Must contain at least 2 characters",
+  "editUser.errors.username.required": "Username is required.",
+  "editUser.labels.confirmPassword": "Confirm Password",
+  "editUser.labels.displayName": "Display Name",
+  "editUser.labels.email": "E-Mail",
+  "editUser.labels.external": "External account",
+  "editUser.labels.givenName": "Given Name",
+  "editUser.labels.mustChangePassword": "The user must change the password at the next login",
+  "editUser.labels.password": "Password",
+  "editUser.labels.surname": "Surname",
+  "editUser.labels.username": "Username",
+  "editUser.notification.error": "Account information could not be saved. Please try again later.",
+  "editUser.notification.success": "Account information saved successfully.",
+  "general.applicationName": "User Management",
+  "general.all": "All",
+  "generic.errors.general": "An error occurred while loading the page.",
+  "generic.errors.notFound": "The page could not be found.",
+  "generic.errors.title": "Oops!",
+  "generic.notification.form.prompt": "The form contains unsaved changes. Do you really want to leave the page?",
+  "groups.buttons.create": "Create Group",
+  "groups.confirmation.message": "Delete group {{groupName}}?",
+  "groups.confirmation.title": "Delete group",
+  "groups.labels.addMember": "Add member",
+  "groups.labels.description": "Description",
+  "groups.labels.emptyMembers": "No members assigned",
+  "groups.labels.members": "Members",
+  "groups.labels.name": "Name",
+  "groups.labels.removeMember": "Remove member",
+  "groups.labels.removeMemberConfirmationMessage": "Should the member {{username}} be removed?",
+  "groups.notification.error": "The group '{{groupName}}' could not be deleted.",
+  "groups.notification.success": "The group '{{groupName}}' was deleted successfully.",
+  "groups.placeholder.description": "Enter description",
+  "groups.placeholder.name": "Enter name",
+  "groups.table.actions.delete": "Delete group",
+  "groups.table.actions.deleteAria": "delete",
+  "groups.table.actions.edit": "Edit group",
+  "groups.table.actions.editAria": "edit",
+  "groups.table.description": "Description",
+  "groups.table.name": "Name",
+  "groups.table.systemGroup": "This is a system group and cannot be deleted.",
+  "groups.table.users": "Members",
+  "modal.cancel": "Cancel",
+  "modal.confirm": "Confirm",
+  "navbar.logoAltText": "User Management icon: magnifying glass directed to a user icon.",
+  "navbar.logout": "Logout",
+  "newGroup.buttons.back": "Back",
+  "newGroup.buttons.save": "Save",
+  "newGroup.errors.name": "Value is required",
+  "newGroup.errors.nameFormat": "Value contains illegal characters",
+  "newGroup.errors.nameMaxLength": "Maximum length is 128 characters",
+  "newGroup.errors.nameMinLength": "Minimum length is 2 characters",
+  "newGroup.notification.error": "The group could not be created. Please try again later.",
+  "newGroup.notification.errorDuplicate": "The group could not be created. The name is already in use.",
+  "newGroup.notification.success": "The group {{groupName}} was created successfully.",
+  "newUser.notification.error": "Could not save user '{{username}}'.",
+  "newUser.notification.errorDuplicateMail": "A user with the E-Mail '{{mail}}' already exists.",
+  "newUser.notification.errorDuplicateUsername": "A user with the username '{{username}}' already exists.",
+  "newUser.notification.success": "User '{{username}}' was saved successfully.",
+  "pages.accessDenied.text": "You are not allowed to access this page",
+  "pages.accessDenied.title": "Access denied",
+  "pages.account": "Account",
+  "pages.groups": "Groups",
+  "pages.groupsEdit": "Edit group",
+  "pages.groupsNew": "New Group",
+  "pages.summaries": "Import overviews",
+  "pages.users": "Users",
+  "pages.usersEdit": "Edit user",
+  "pages.usersImport": "User import",
+  "pages.usersImportResult": "Userimport",
+  "pages.usersNew": "New user",
+  "summaries.delete.error": "The import overview could not be cleared.",
+  "summaries.delete.success": "The import overview was successfully deleted.",
+  "summaries.result.created": "New",
+  "summaries.result.errors": "Skipped",
+  "summaries.result.updated": "Updated",
+  "summaries.table.function.delete": "Delete",
+  "summaries.table.function.details": "Details",
+  "summaries.table.function.download": "Download",
+  "summaries.table.functions": "Functions",
+  "summaries.table.headline.date": "Date",
+  "summaries.table.headline.functions": "Functions",
+  "summaries.table.headline.name": "Name of the CSV-File",
+  "summaries.table.headline.result": "Result",
+  "users.confirmation.message": "Delete user {{username}}?",
+  "users.confirmation.title": "Delete user",
+  "users.create": "Create user",
+  "users.labels.addGroup": "Add group",
+  "users.labels.emptyGroups": "No groups assigned",
+  "users.labels.groups": "Groups",
+  "users.labels.myGroups": "My Groups",
+  "users.labels.removeGroup": "Remove group assigment",
+  "users.labels.removeGroupConfirmationMessage": "Should the assignment to the {{groupName}} group be removed?",
+  "users.notification.error": "The user '{{username}}' could not be deleted.",
+  "users.notification.success": "The user '{{username}}' was deleted successfully.",
+  "users.placeholder.confirmPassword": "Enter corfirmation password",
+  "users.placeholder.displayName": "Enter display name",
+  "users.placeholder.givenname": "Enter given name",
+  "users.placeholder.mail": "Enter E-Mail Address",
+  "users.placeholder.password": "Enter password",
+  "users.placeholder.surname": "Enter surname",
+  "users.placeholder.username": "Enter username",
+  "users.table.actions.add": "Add user",
+  "users.table.actions.delete": "Delete user",
+  "users.table.actions.deleteAria": "delete",
+  "users.table.actions.edit": "Edit user",
+  "users.table.actions.editAria": "edit",
+  "users.table.displayName": "Displayname",
+  "users.table.email": "E-Mail",
+  "users.table.username": "Username",
+  "users.table.actions": "Actions",
+  "usersImport.buttons.reset": "Reset",
+  "usersImport.buttons.upload": "Upload",
+  "usersImport.headlines.importErrors": "Fehler",
+  "usersImport.headlines.importSuccess": "Import abgeschlossen",
+  "usersImport.headlines.table": "Content of the CSV file",
+  "usersImport.info.docsLink": "https://docs.cloudogu.com/en/usermanual/usermanagement/",
+  "usersImport.info.further": "Further Information: ",
+  "usersImport.info.text": "Users can be imported on this page. These must be created in a CSV file to be uploaded here according to a certain pattern.",
+  "usersImport.notification.genericError": "Could not import users from '{{file}}' file.",
+  "usersImport.notification.invalidFile": "The file '{{file}}' is not a valid csv file.",
+  "usersImportResult.download": "Download import overview",
+  "usersImportResult.error": "No import results found.",
+  "usersImportResult.msg.code-100": "The format of the line could not be assigned.",
+  "usersImportResult.msg.code-101": "The following columns had an invalid data type: '{{columns}}'.",
+  "usersImportResult.msg.code-102": "The following columns were not included: '{{columns}}'.",
+  "usersImportResult.msg.code-103": "The line could not be identified clearly",
+  "usersImportResult.msg.code-104": "The number of columns does not match the number of column headers.",
+  "usersImportResult.msg.code-200": "General error when processing the line",
+  "usersImportResult.msg.code-201": "The following columns contained a value that is marked as unique and was already assigned: '{{columns}}'.",
+  "usersImportResult.msg.code-202": "The following columns do not match the default format '{{columns}}'.",
+  "usersImportResult.msg.code-204": "The following columns are required but were empty: '{{columns}}'.",
+  "usersImportResult.msg.code-300": "General internal server error",
+  "usersImportResult.msg.code-301": "Server error writing the result to the file system",
+  "usersImportResult.result.failure": "Import failed!",
+  "usersImportResult.result.success": "Import successfully completed!",
+  "usersImportResult.result.successWithFailures": "Import completed with errors!",
+  "usersImportResult.rows.created": "Created accounts",
+  "usersImportResult.rows.skipped": "Skipped data rows",
+  "usersImportResult.rows.updated": "Updated accounts",
+  "usersImportResult.table.errors.error": "Error",
+  "usersImportResult.table.errors.line": "Line",
+  "usersImportResult.table.success.displayName": "Display name",
+  "usersImportResult.table.success.external": "External",
+  "usersImportResult.table.success.false": "No",
+  "usersImportResult.table.success.givenName": "Given name",
+  "usersImportResult.table.success.mail": "Mail",
+  "usersImportResult.table.success.name": "Name",
+  "usersImportResult.table.success.passwordReset": "Temporary password",
+  "usersImportResult.table.success.true": "Yes",
+  "usersImportResult.table.success.username": "Username"
 }

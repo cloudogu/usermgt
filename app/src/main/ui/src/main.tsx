@@ -22,7 +22,6 @@ import UsersImport from "./pages/UsersImport";
 import UsersImportResult from "./pages/UsersImportResult";
 import type {CasUser} from "./services/CasUser";
 
-// import i18n (needs to be bundled)
 import "./i18n";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
