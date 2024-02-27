@@ -56,13 +56,6 @@ copyResources() {
   cp -rf /resources/* /var/lib/usermgt/conf/
 }
 
-createLogDir() {
-  if [ ! -d "/var/lib/usermgt/logs" ]; then
-    mkdir -p /var/lib/usermgt/logs
-    chown -R tomcat:tomcat /var/lib/usermgt/logs
-  fi
-}
-
 buildMailAddress() {
   GLOBAL_MAIL_ADDRESS="$(doguctl config --global --default "info@cloudogu.com" mail_address)"
   MAIL_ADDRESS="$(doguctl config --default "${GLOBAL_MAIL_ADDRESS}" mail_address)"
@@ -71,7 +64,7 @@ buildMailAddress() {
 
 renderTemplates() {
   determinePwdMinLength
-  
+
   doguctl template "/var/lib/usermgt/conf/cas.xml.tpl" "/var/lib/usermgt/conf/cas.xml"
   doguctl template "/var/lib/usermgt/conf/ldap.xml.tpl" "/var/lib/usermgt/conf/ldap.xml"
   doguctl template "/var/lib/usermgt/conf/application-configuration.xml.tpl" "/var/lib/usermgt/conf/application-configuration.xml"
@@ -84,7 +77,7 @@ createGuiConfiguration() {
   echo "Read configuration fof preselection of password reset attribute checkbox"
   PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_RESET_DEFAULT_VALUE_KEY}" --default 'false')"
   echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
-  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" > "${GUI_CONFIG_PATH}"
+  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" >"${GUI_CONFIG_PATH}"
 }
 
 createTrustStore() {
@@ -123,7 +116,6 @@ runMain() {
   waitForPostUpgrade
   encryptLdapPassword
   copyResources
-  createLogDir
   buildMailAddress
   renderTemplates
   createGuiConfiguration
