@@ -273,7 +273,7 @@ public class MappingHandler<T extends Comparable<T>> {
       List<Filter> excludeFilters = Lists.newArrayList();
       if (!CollectionUtils.isEmpty(excludes)) {
         for (String exclude : excludes) {
-          excludeFilters.add(Filter.create(String.format("!(cn=%s)", exclude)));
+          excludeFilters.add(Filter.create(String.format("!(%s=%s)", mapper.getRDNName(), exclude)));
         }
         additionalFilters.add(Filter.createANDFilter(excludeFilters));
       }
