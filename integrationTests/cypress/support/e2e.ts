@@ -141,7 +141,7 @@ const tryDeleteUser = (username) => {
 const cleanupTestUsers = () => {
     cy.api({
         method: "GET",
-        url: Cypress.config().baseUrl + "/usermgt/api/users?limit=100000",
+        url: Cypress.config().baseUrl + "/usermgt/api/users?page_size=100",
         failOnStatusCode: false,
         auth: {
             'user': env.GetAdminUsername(),
@@ -150,7 +150,7 @@ const cleanupTestUsers = () => {
     }).then((response) => {
         expect(response.status).to.eq(200);
         // @ts-ignore
-        return response.body.entries.filter(el => el.displayName.startsWith("Tester") || el.username.startsWith("testUser")) || el.username.contains("new");
+        return response.body.data.filter(el => el.displayName.startsWith("Tester") || el.username.startsWith("testUser")) || el.username.contains("new");
     }).then(testUsers => {
         testUsers.filter(testUser => {
             cy.usermgtDeleteUser(testUser.username);
@@ -161,7 +161,7 @@ const cleanupTestUsers = () => {
 const cleanupTestGroups = () => {
     cy.api({
         method: "GET",
-        url: Cypress.config().baseUrl + "/usermgt/api/groups?limit=100000",
+        url: Cypress.config().baseUrl + "/usermgt/api/groups?page_size=100",
         failOnStatusCode: false,
         auth: {
             'user': env.GetAdminUsername(),
@@ -170,7 +170,7 @@ const cleanupTestGroups = () => {
     }).then((response) => {
         expect(response.status).to.eq(200);
         // @ts-ignore
-        return response.body.entries.filter(el => el.name.startsWith("testGroup"));
+        return response.body.data.filter(el => el.name.startsWith("testGroup"));
     }).then(testGroups => {
         testGroups.filter(testGroup => {
             cy.usermgtDeleteGroup(testGroup.name);

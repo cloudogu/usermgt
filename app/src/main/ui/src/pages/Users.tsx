@@ -49,7 +49,7 @@ export default function Users() {
         </div>
         {notification}
         <ActionTableRoot paginationControl={paginationControl} isLoading={isLoading}>
-            <ActionTable className={"mt-default-2x"}>
+            <ActionTable className={"mt-default-2x"} data-testid="users">
                 <ActionTable.HeadWithOneRow>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.username")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.displayName")}</ActionTable.HeadWithOneRow.Column>
@@ -63,7 +63,7 @@ export default function Users() {
                 {!isLoading &&
                     <ActionTable.Body>
                         {items.map(user => (
-                            <ActionTable.Body.Row key={user.username}>
+                            <ActionTable.Body.Row key={user.username} data-testid={`users-row-${user.username}`}>
                                 <ActionTable.Body.Row.Column className="font-bold break-all">
                                     {user.username}
                                 </ActionTable.Body.Row.Column>
@@ -82,6 +82,7 @@ export default function Users() {
                                         variant={"danger"}
                                         dialogBody={translate("users.confirmation.message", {username: user.username})}
                                         dialogTitle={translate("users.confirmation.title")}
+                                        data-testid="user-delete-dialog"
                                         onConfirm={() => onDelete(user.username)}
                                         hasCancel
                                     >

@@ -12,9 +12,8 @@ When("the user opens the users page", function () {
     cy.clickWarpMenuCheckboxIfPossible()
 })
 
-When("the user selects the {string} users-page", function (pageNum: string) {
-    const page = parseInt(pageNum);
-    cy.get(`button[data-testid="users-footer-pagination-li-${page}-btn"]`).click();
+When("the user selects the next users-page", function () {
+    cy.get(`button[data-testid="users-pagination-forward"]`).click();
 })
 
 When("the user sets the users-filter to {string}", function (filter: string) {
@@ -121,10 +120,10 @@ When("the user removes the group {string} from the user", function (group: strin
 })
 
 When("the user confirms the delete-user-confirmation-dialog", function () {
-    cy.get('dialog[data-testid="user-delete-dialog"]').as('dialog');
+    cy.get('div[data-testid="user-delete-dialog-content"]').as('dialog');
     cy.get('@dialog').should('be.visible');
-    cy.get('@dialog').find('h3').contains('Delete user');
-    cy.get('@dialog').find('button:nth-of-type(1)').click();
+    cy.get('@dialog').find('h2').contains('Delete user');
+    cy.get('@dialog').find('button[data-testid="user-delete-dialog-confirm-btn"]').click();
 })
 
 /* GROUPS */
@@ -134,9 +133,8 @@ When("the user opens the groups page", function () {
     cy.clickWarpMenuCheckboxIfPossible()
 })
 
-When("the user selects the {string} groups-page", function (pageNum: string) {
-    const page = parseInt(pageNum);
-    cy.get(`button[data-testid="groups-footer-pagination-li-${page}-btn"]`).click();
+When("the user selects the next groups-page", function () {
+    cy.get(`button[data-testid="groups-pagination-forward"]`).click();
 })
 
 When("the user sets the groups-filter to {string}", function (filter: string) {
@@ -154,7 +152,7 @@ When("the user clicks on the create-group button", function () {
 })
 
 When("the user clicks on the edit-group button for the group {string}", function (name) {
-    cy.get(`button[id="${name}-edit-button"]`).click();
+    cy.get(`a[id="${name}-edit-link"]`).click();
 })
 
 When("the user clicks on the delete-group button for the group {string}", function (name) {
@@ -191,10 +189,10 @@ When("the user removes the member {string} from the group", function (username: 
 })
 
 When("the user confirms the delete-group-confirmation-dialog", function () {
-    cy.get('dialog[data-testid="group-delete-dialog"]').as('dialog');
+    cy.get('div[data-testid="group-delete-dialog-content"]').as('dialog');
     cy.get('@dialog').should('be.visible');
-    cy.get('@dialog').find('h3').contains('Delete group');
-    cy.get('@dialog').find('button:nth-of-type(1)').click();
+    cy.get('@dialog').find('h2').contains('Delete group');
+    cy.get('@dialog').find('button[data-testid="group-delete-dialog-confirm-btn"]').click();
 })
 
 /* IMPORT */

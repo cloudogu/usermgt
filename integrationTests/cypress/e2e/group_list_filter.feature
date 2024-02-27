@@ -3,12 +3,12 @@ Feature: Tests for list of groups.
   Background:
     Given the user "manager" exists
     And the user "manager" is member of the group "cesManager"
-    And "25" test-groups exist
+    And "32" test-groups exist
 
   Scenario: a user who is manager wants to filter testGroup_2 group
     When the user opens the groups page
     And the user sets the groups-filter to "testGroup_2"
-    Then the groups-page contains exactly "7" groups
+    Then the groups-page contains exactly "11" groups
     
   Scenario: a user who is manager wants to filter forBar_Not_Found group
     When the user opens the groups page
@@ -19,4 +19,4 @@ Feature: Tests for list of groups.
     When the user opens the groups page
     And the user sets the groups-filter to "testGroup_2"
     And the user clears the groups-filter
-    Then the groups-page contains exactly "20" groups
+    Then the groups-page contains exactly "25" groups
