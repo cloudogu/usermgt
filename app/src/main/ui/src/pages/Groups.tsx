@@ -44,7 +44,7 @@ export default function Groups() {
         <ActionTableRoot paginationControl={paginationControl} isLoading={isLoading}>
             <ActionTable className={"mt-default-2x"}>
                 <ActionTable.HeadWithOneRow>
-                    <ActionTable.HeadWithOneRow.Column>{t("groups.table.username")}</ActionTable.HeadWithOneRow.Column>
+                    <ActionTable.HeadWithOneRow.Column>{t("groups.table.name")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("groups.table.description")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("groups.table.users")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column

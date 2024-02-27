@@ -54,7 +54,7 @@ export interface ImportSummary extends Omit<ImportSummaryDto, "timestamp"> {
 export type SummariesModel = PaginationResponse<ImportSummary>
 
 export const ImportUsersService = {
-    async listSummaries(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<ImportSummary>> {
+    async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<ImportSummary>> {
         const summariesResponse = await Axios.get<SummariesModel>("/users/import/summaries", {
             params: opts,
             signal: signal
@@ -65,8 +65,8 @@ export const ImportUsersService = {
 
         return response;
     },
-    async deleteSummary(summary: ImportSummary): Promise<void> {
-        return Axios.delete(`/users/import/${summary.importID}`, {});
+    async delete(id: string): Promise<void> {
+        return Axios.delete(`/users/import/${id}`, {});
     },
     createDownloadLink(summary: ImportSummary | ImportUsersResponse): string {
         return `/usermgt/api/users/import/${summary.importID}/download`;

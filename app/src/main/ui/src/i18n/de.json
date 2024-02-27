@@ -89,6 +89,8 @@
   "pages.usersImport": "Nutzerimport",
   "pages.usersImportResult": "Nutzerimport",
   "pages.usersNew": "Nutzer anlegen",
+  "summaries.delete.confirmation.message": "Soll die Importübersicht der CSV-Datei '{{summaryId}}' gelöscht werden?",
+  "summaries.delete.confirmation.title": "Importübersicht löschen",
   "summaries.delete.error": "Die Importübersicht konnte nicht gelöscht werden.",
   "summaries.delete.success": "Die Importübersicht wurde erfolgreich gelöscht.",
   "summaries.result.created": "Neu",
