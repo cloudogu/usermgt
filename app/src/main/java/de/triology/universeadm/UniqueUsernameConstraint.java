@@ -1,5 +1,6 @@
 package de.triology.universeadm;
 
+import de.triology.universeadm.group.Group;
 import de.triology.universeadm.mapping.MappingHandler;
 import de.triology.universeadm.user.User;
 
@@ -14,17 +15,13 @@ public class UniqueUsernameConstraint extends Constraint<User> {
 
   @Override
   public boolean violatedBy(final User user, final Category currentCategory) {
-    final List<User> results = this.mapping.queryAll(user.getUsername());
-
-    for (User u : results) {
-      boolean isCreate = currentCategory == Category.CREATE;
-      boolean usernameExists = u.getUsername().equals(user.getUsername());
-      if (isCreate && usernameExists){
-          return true;
+      if (currentCategory != Category.CREATE) {
+          return false;
       }
-    }
 
-    return false;
+      final User existingUser = this.mapping.get(user.getUsername());
+
+      return existingUser != null;
   }
 
   @Override

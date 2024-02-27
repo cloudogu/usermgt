@@ -32,7 +32,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.unboundid.asn1.ASN1Exception;
+import com.unboundid.asn1.ASN1OctetString;
 import com.unboundid.ldap.sdk.*;
+import com.unboundid.ldap.sdk.controls.SimplePagedResultsControl;
 import com.unboundid.ldap.sdk.controls.ServerSideSortRequestControl;
 import com.unboundid.ldap.sdk.controls.SortKey;
 import com.unboundid.ldap.sdk.controls.VirtualListViewRequestControl;
@@ -144,8 +146,8 @@ public class MappingHandler<T extends Comparable<T>> {
 
     private Filter createObjectFilter(String id) {
         return Filter.createANDFilter(
-                mapper.getBaseFilter(),
-                Filter.createEqualityFilter(mapper.getRDNName(), id)
+            mapper.getBaseFilter(),
+            Filter.createEqualityFilter(mapper.getRDNName(), id)
         );
     }
 
@@ -182,20 +184,47 @@ public class MappingHandler<T extends Comparable<T>> {
         return entity;
     }
 
-    public List<T> queryAll(String query) {
+    public List<T> queryByAttribute(String attributeName, String attributeValue) {
+        Preconditions.checkNotNull(attributeName, "attributeName is required");
+        Preconditions.checkNotNull(attributeValue, "attributeValue is required");
         final List<T> entities = Lists.newArrayList();
 
         try {
-            SearchResult result = strategy.get().search(mapper.getParentDN(), SearchScope.SUB, createFilter(query), returningAttributes);
-            for (SearchResultEntry e : result.getSearchEntries()) {
-                consume(entities, e);
+            MappingAttribute attribute = mapper.getAttribute(attributeName);
+            if (attribute == null) {
+                throw new EntityNotFoundException("could not find entity with name ".concat(attributeName));
+            }
+
+            // create filter for given attribute
+            Filter filter = Filter.createANDFilter(mapper.getBaseFilter(), Filter.createEqualityFilter(attribute.getLdapName(), attributeValue));
+
+            SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, filter, returningAttributes);
+            ASN1OctetString resumeCookie = null;
+            LDAPInterface connection = strategy.get();
+
+            // query from LDAP in 100er-chunks to avoid max-results-limit of LDAP
+            while (true) {
+                searchRequest.setControls(new SimplePagedResultsControl(100, resumeCookie));
+                SearchResult searchResult = connection.search(searchRequest);
+                for (SearchResultEntry e : searchResult.getSearchEntries()) {
+                    consume(entities, e);
+                }
+
+                LDAPTestUtils.assertHasControl(searchResult, SimplePagedResultsControl.PAGED_RESULTS_OID);
+                SimplePagedResultsControl responseControl = SimplePagedResultsControl.get(searchResult);
+                if (responseControl.moreResultsToReturn()) {
+                    // The resume cookie can be included in the simple paged results
+                    // control included in the next search to get the next page of results.
+                    resumeCookie = responseControl.getCookie();
+                } else {
+                    break;
+                }
             }
         } catch (LDAPException ex) {
-            throw new EntityException("could not get all entities", ex);
+            throw new EntityException(String.format("could not query entities by %s for %s", attributeName, attributeValue), ex);
         }
 
-        Collections.sort(entities);
-        return ImmutableList.copyOf(entities);
+        return entities;
     }
 
     public PaginationResult<T> query(PaginationQuery query) {
@@ -220,7 +249,7 @@ public class MappingHandler<T extends Comparable<T>> {
         int vlvOffset = query.getOffset() + 1;
         int vlvLimit = query.getPageSize() - 1;
         int vlvContentCount = 0;
-        com.unboundid.asn1.ASN1OctetString vlvContextID = decodeContextId(query.getContext());
+        ASN1OctetString vlvContextID = decodeContextId(query.getContext());
 
         SearchRequest searchRequest = new SearchRequest(mapper.getParentDN(), SearchScope.SUB, createFilter(query.getQuery(), query.getExcludes()), returningAttributes);
         searchRequest.addControl(createSortControl(query));
@@ -240,49 +269,49 @@ public class MappingHandler<T extends Comparable<T>> {
     }
 
     private ServerSideSortRequestControl createSortControl(PaginationQuery query) {
-    String sortAttribute = "cn";
-    MappingAttribute attribute = mapper.getAttribute(query.getSortBy());
-    if (attribute != null) {
-      sortAttribute = attribute.getLdapName();
+        String sortAttribute = "cn";
+        MappingAttribute attribute = mapper.getAttribute(query.getSortBy());
+        if (attribute != null) {
+            sortAttribute = attribute.getLdapName();
+        }
+
+        return new ServerSideSortRequestControl(new SortKey(sortAttribute, "caseIgnoreOrderingMatch", query.isReverse()));
     }
 
-    return new ServerSideSortRequestControl(new SortKey(sortAttribute, "caseIgnoreOrderingMatch", query.isReverse()));
-  }
-
-  private Filter createFilter(String query) throws LDAPException {
+    private Filter createFilter(String query) throws LDAPException {
         return createFilter(query, null);
     }
 
     private Filter createFilter(String query, List<String> excludes) throws LDAPException {
-      List<Filter> additionalFilters = Lists.newArrayList();
+        List<Filter> additionalFilters = Lists.newArrayList();
 
-      if (!Strings.isNullOrEmpty(query)) {
-        if (!QUERY_PATTERN.matcher(query).matches()) {
-          throw new IllegalQueryException("query contain illegal characters");
+        if (!Strings.isNullOrEmpty(query)) {
+            if (!QUERY_PATTERN.matcher(query).matches()) {
+                throw new IllegalQueryException("query contain illegal characters");
+            }
+
+            String q = prepareQuery(query);
+            List<Filter> queryFilters = Lists.newArrayList();
+            for (String attribute : mapper.getSearchAttributes()) {
+                queryFilters.add(Filter.create(attribute.concat(EQUAL).concat(q)));
+            }
+            additionalFilters.add(Filter.createORFilter(queryFilters));
         }
 
-        String q = prepareQuery(query);
-        List<Filter> queryFilters = Lists.newArrayList();
-        for (String attribute : mapper.getSearchAttributes()) {
-          queryFilters.add(Filter.create(attribute.concat(EQUAL).concat(q)));
+
+        List<Filter> excludeFilters = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(excludes)) {
+            for (String exclude : excludes) {
+                excludeFilters.add(Filter.create(String.format("!(%s=%s)", mapper.getRDNName(), exclude)));
+            }
+            additionalFilters.add(Filter.createANDFilter(excludeFilters));
         }
-        additionalFilters.add(Filter.createORFilter(queryFilters));
-      }
 
-
-      List<Filter> excludeFilters = Lists.newArrayList();
-      if (!CollectionUtils.isEmpty(excludes)) {
-        for (String exclude : excludes) {
-          excludeFilters.add(Filter.create(String.format("!(%s=%s)", mapper.getRDNName(), exclude)));
+        Filter filter = mapper.getBaseFilter();
+        if (!additionalFilters.isEmpty()) {
+            additionalFilters.add(filter);
+            filter = Filter.createANDFilter(additionalFilters);
         }
-        additionalFilters.add(Filter.createANDFilter(excludeFilters));
-      }
-
-      Filter filter = mapper.getBaseFilter();
-      if (!additionalFilters.isEmpty()) {
-        additionalFilters.add(filter);
-        filter = Filter.createANDFilter(additionalFilters);
-      }
 
         logger.debug("start entity search with filter {}", filter);
 
@@ -326,22 +355,22 @@ public class MappingHandler<T extends Comparable<T>> {
     }
 
     private static String encodeContextId(com.unboundid.asn1.ASN1OctetString contextId) {
-      if (contextId == null) {
-        return null;
-      }
-      return Base64.getEncoder().encodeToString(contextId.encode());
+        if (contextId == null) {
+            return null;
+        }
+        return Base64.getEncoder().encodeToString(contextId.encode());
     }
 
-  private static com.unboundid.asn1.ASN1OctetString decodeContextId(String contextId) {
-    if (Strings.isNullOrEmpty(contextId)) {
-      return null;
+    private static com.unboundid.asn1.ASN1OctetString decodeContextId(String contextId) {
+        if (Strings.isNullOrEmpty(contextId)) {
+            return null;
+        }
+        try {
+            return com.unboundid.asn1.ASN1OctetString.decode(Base64.getDecoder().decode(contextId)).decodeAsOctetString();
+        } catch (ASN1Exception e) {
+            logger.warn("error while decoding contextId.", e);
+            return null;
+        }
     }
-    try {
-      return com.unboundid.asn1.ASN1OctetString.decode(Base64.getDecoder().decode(contextId)).decodeAsOctetString();
-    } catch (ASN1Exception e) {
-      logger.warn("error while decoding contextId.", e);
-      return null;
-    }
-  }
 
 }

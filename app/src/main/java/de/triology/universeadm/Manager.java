@@ -88,14 +88,5 @@ public interface Manager<T>
    *
    * @return
    */
-  public List<T> queryAll(String query);
-
-  /**
-   * Method description
-   *
-   * @param query
-   *
-   * @return
-   */
   public PaginationResult<T> query(PaginationQuery query);
 }
