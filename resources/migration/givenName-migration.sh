@@ -3,7 +3,7 @@
 set -o errexit
 
 # Path to the LDAP configuration file
-xml_file="/var/lib/usermgt/conf/ldap.xml"
+xml_file="${UNIVERSEADM_HOME}/ldap.xml"
 
 echo
 echo "##### Start migration for givenName #####"
