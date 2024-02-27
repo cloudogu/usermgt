@@ -206,6 +206,10 @@
       "surname": "Nachnamen eingeben",
       "username": "Benutzernamen eingeben"
     },
+    "hint": {
+      "username": "Der Nutzername wird beim Login verwendet und kann später nicht mehr geändert werden.",
+      "displayName": "Der Anzeigename ist der Name des Nutzers, der in vielen Dogus angezeigt wird."
+    },
     "table": {
       "actions": {
         "add": "Nutzer hinzufügen",

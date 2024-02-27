@@ -206,6 +206,10 @@
       "surname": "Enter surname",
       "username": "Enter username"
     },
+    "hint": {
+      "username": "The user name is used when logging in and cannot be changed later.",
+      "displayName": "The display name is the name of the user that is displayed in many Dogus."
+    },
     "table": {
       "actions": {
         "add": "Add user",
