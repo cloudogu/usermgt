@@ -63,18 +63,18 @@
       }
     },
     {
-      "Name": "mail_address",
-      "Description": "The mail address all automatic generated mails are send with",
+      "Name": "mail/sender",
+      "Description": "Email address to use as sender of the User Management dogu",
       "Optional": true
     },
     {
-      "Name": "import/mail/subject",
-      "Description": "The Subject of Mail, which is send when a User is imported via the csv import feature",
+      "Name": "mail/import/subject",
+      "Description": "The subject of the mail, which is send when a user is imported via the csv import feature",
       "Optional": true
     },
     {
-      "Name": "import/mail/content",
-      "Description": "The Content of Mail, which is send when a User is imported via the csv import feature",
+      "Name": "mail/import/content",
+      "Description": "The content of the mail, which is send when a User is imported via the csv import feature",
       "Optional": true
     },
     {
