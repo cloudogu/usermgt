@@ -14,9 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stream all log output to standard out, configure log level (#115)
    - logfiles will neither reside inside the container file system nor a volume
    - add dogu configuration key `logging/root` to control the output log level
-- no longer run as root but as unprivileged user
+- no longer run as root but as unprivileged user (#115, #117)
 - update Tomcat to the current version 8.5.99
 - update to Java OpenJDK 8.392
+- Change app configuration directory from `/var/lib/usermgt/conf` to `/var/lib/usermgt/conf2` (#117)
+  - after update to this version you may want to delete `/var/lib/usermgt/conf` with root permissions from your host 
+    like this `sudo rm -r /var/lib/ces/usermgt/volumes/data/conf`
+  - `/var/lib/usermgt/conf2` will now contain file privileges with the (unprivileged) UID/GID 1000
 
 ## [v1.12.1-1] - 2024-01-11
 ### Changed
