@@ -27,15 +27,21 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public boolean notify(User user) throws MessageBuilderException, NoSuchProviderException {
+    public boolean notify(User user) {
         MessageBuilder builder = new MessageBuilder(session);
+        Message msg;
 
-        Message msg = builder
-            .from(mailConfiguration.getFrom())
-            .to(user.getMail())
-            .subject(mailConfiguration.getSubject())
-            .content(getMailContent(user))
-            .build();
+        try {
+            msg = builder
+                .from(mailConfiguration.getFrom())
+                .to(user.getMail())
+                .subject(mailConfiguration.getSubject())
+                .content(getMailContent(user))
+                .build();
+        } catch (MessagingException e) {
+            logger.error("Unable to build message for mail", e);
+            return false;
+        }
 
         logger.debug("Built message for user {}", user.getUsername());
 

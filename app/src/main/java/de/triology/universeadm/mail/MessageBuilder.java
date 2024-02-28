@@ -4,10 +4,7 @@ import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.internet.*;
 
 public class MessageBuilder {
 
@@ -36,8 +33,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder content(String content) throws MessageBuilderException {
-        try {
+    public MessageBuilder content(String content) throws MessagingException {
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setContent(content, "text/html; charset=utf-8");
 
@@ -47,25 +43,16 @@ public class MessageBuilder {
             this.content = multipart;
 
             return this;
-        } catch (MessagingException e) {
-            throw new MessageBuilderException("Unable set content for mail", e);
-        }
     }
 
-    public Message build() throws MessageBuilderException {
+    public Message build() throws MessagingException {
         Message message = new MimeMessage(session);
 
-        try {
-            message.setFrom(new InternetAddress(from));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            message.setSubject(subject);
-            message.setContent(content);
-        } catch (MessagingException e) {
-            throw new MessageBuilderException("Unable to build message", e);
-        }
+        message.setFrom(new InternetAddress(from));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+        message.setSubject(subject);
+        message.setContent(content);
 
         return message;
     }
-
-
 }
