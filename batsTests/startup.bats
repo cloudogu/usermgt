@@ -29,6 +29,7 @@ teardown() {
 }
 
 @test "encryptLdapPassword() should set env var with LDAP password" {
+  export UNIVERSEADM_HOME=""
   source /workspace/resources/startup.sh
   export LDAP_BIND_PASSWORD=""
   export CIPHER_SH=${cipher}
