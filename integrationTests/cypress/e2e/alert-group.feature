@@ -19,11 +19,11 @@ Feature: Tests that verify that an appropriate toast is shown when creating, edi
     And the edit-group-page for group "testGroup_1" is shown
     When the user edits the group-description to "Better description"
     And the user submits the group-form
-    Then a success alert will be shown containing the text "The group was saved successfully."
+    Then a success alert will be shown containing the text "The group 'testGroup_1' was saved successfully."
 
   @reduce_group_env
   Scenario: toast on group deletion is shown
     When the user sets the groups-filter to "testGroup_1"
     When the user clicks on the delete-group button for the group "testGroup_1"
     And the user confirms the delete-group-confirmation-dialog
-    Then a success alert will be shown containing the text "testGroup_1"
+    Then a success alert will be shown containing the text "The group 'testGroup_1' was deleted successfully."

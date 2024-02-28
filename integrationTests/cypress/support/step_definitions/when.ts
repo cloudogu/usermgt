@@ -34,16 +34,6 @@ When("the user waits a few seconds", function () {
     cy.wait(1000)
 })
 
-When("the user clicks the edit function in his own user entry", function () {
-
-    cy.fixture("testuser_data").then(function (testUser) {
-        cy.get("tr").filter(`:contains("${testUser.username}")`).within((tr) => {
-            cy.get(`a[id="${testUser.username}-edit-link"]`).click()
-        })
-    })
-
-})
-
 When("the user fills the user-form for a user with the name {string}", function (username: string) {
     cy.fixture("newuser_data").then(function (newUser) {
         cy.get('input[data-testid="username-input"]').type(username);

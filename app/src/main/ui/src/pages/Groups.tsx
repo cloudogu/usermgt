@@ -80,7 +80,10 @@ export default function Groups() {
                                         dialogBody={translate("groups.confirmation.message", {groupName: group.name})}
                                         dialogTitle={translate("groups.confirmation.title")}
                                         data-testid="group-delete-dialog"
-                                        onConfirm={() => onDelete(group.name)}
+                                        onConfirm={() => onDelete(group.name)
+                                            .then(() => notify(t("groups.delete.notification.success", {groupName: group.name}), "primary"))
+                                            .catch(() => notify(t("groups.delete.notification.error", {groupName: group.name}), "danger"))
+                                        }
                                         hasCancel
                                     >
                                         <DeleteButton

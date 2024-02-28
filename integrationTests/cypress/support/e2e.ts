@@ -141,7 +141,7 @@ const tryDeleteUser = (username) => {
 const cleanupTestUsers = () => {
     cy.api({
         method: "GET",
-        url: Cypress.config().baseUrl + "/usermgt/api/users?page_size=100",
+        url: Cypress.config().baseUrl + "/usermgt/api/users?page_size=1000",
         failOnStatusCode: false,
         auth: {
             'user': env.GetAdminUsername(),
@@ -152,6 +152,7 @@ const cleanupTestUsers = () => {
         // @ts-ignore
         return response.body.data.filter(el => el.displayName.startsWith("Tester") || el.username.startsWith("testUser")) || el.username.contains("new");
     }).then(testUsers => {
+        cy.log("testUsers: ", testUsers);
         testUsers.filter(testUser => {
             cy.usermgtDeleteUser(testUser.username);
         })

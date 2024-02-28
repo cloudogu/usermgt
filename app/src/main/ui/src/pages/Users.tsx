@@ -83,7 +83,10 @@ export default function Users() {
                                         dialogBody={translate("users.confirmation.message", {username: user.username})}
                                         dialogTitle={translate("users.confirmation.title")}
                                         data-testid="user-delete-dialog"
-                                        onConfirm={() => onDelete(user.username)}
+                                        onConfirm={() => onDelete(user.username)
+                                            .then(() => notify(t("users.delete.notification.success", {username: user.username}), "primary"))
+                                            .catch(() => notify(t("users.delete.notification.error", {username: user.username}), "danger"))
+                                        }
                                         hasCancel
                                     >
                                         <DeleteButton
