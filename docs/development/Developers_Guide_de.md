@@ -19,7 +19,7 @@ Folgende Schritte sind zum Starten des LDAP im Docker-Container nötig:
 1. Repository auschecken: https://github.com/cloudogu/docker-sample-ldap
 2. Den Container bauen: `docker build -t usermgt/ldap .`
 3. Den Container starten: `docker run --rm -p 389:389 usermgt/ldap`.
-4. Die LDAP-konfiguration für das Backend in der Datei [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml) eintragen:
+4. Die LDAP-konfiguration für das Backend in der Datei [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml) eintragen: <!-- markdown-link-check-disable-line -->
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <ldap>
@@ -40,7 +40,7 @@ Folgende Schritte sind zum Starten des LDAP im Docker-Container nötig:
    > Die User und Passwörter des LDAP Containers sind in
    der [README](https://github.com/cloudogu/docker-sample-ldap/blob/master/README.md) zu finden.
 
-   > Das Passwort muss verschlüsselt sein. Dafür kann die [cipher.sh](../../app/src/main/webapp/WEB-INF/cipher.sh)
+   > Das Passwort muss verschlüsselt sein. Dafür kann die [cipher.sh](../../app/src/main/webapp/WEB-INF/cipher.sh) <!-- markdown-link-check-disable-line -->
    verwendet werden.
 
 ### Das LDAP aus dem CES nutzen
@@ -65,7 +65,7 @@ Um für das lokale Backend des Usermgt das LDAP aus dem CES zu nutzen, sind folg
       Das LDAP-Dogu mit `cesapp build ldap` neu bauen und starten.
 2. Die LDAP-Konfiguration aus dem Usermgt-Dogu des CES
    auslesen: `docker exec -it usermgt cat /var/lib/usermgt/conf/ldap.xml`
-3. Die LDAP-konfiguration für das Backend in der Datei [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml) eintragen:
+3. Die LDAP-konfiguration für das Backend in der Datei [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml) eintragen: <!-- markdown-link-check-disable-line -->
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <ldap>
@@ -124,7 +124,7 @@ Das lokale Dev-Backend kann wie [oben beschrieben](#das-backend-lokal-entwickeln
 ### Frontend starten
 
 Damit das lokale Frontend sich beim Backend authentifizieren kann muss die Datei `.env.local` erstellt werden.
-Dazu kann die Datei [`app/src/main/ui/.env`](../../app/src/main/ui/.env) als `app/src/main/ui/.env.local` kopiert werden.
+Dazu kann die Datei [`app/src/main/ui/.env`](../../app/src/main/ui/.env) als `app/src/main/ui/.env.local` kopiert werden. <!-- markdown-link-check-disable-line -->
 Dort werden dann die Credentials des lokalen Backends (`Benutzer: admin | Passwort: admin`) eingetragen.
 
 

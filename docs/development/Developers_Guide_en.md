@@ -20,7 +20,7 @@ The following steps are required to start the LDAP in the Docker container:
 1. check out the repository: https://github.com/cloudogu/docker-sample-ldap
 2. build the container: `docker build -t usermgt/ldap .`
 3. start the container: `docker run --rm -p 389:389 usermgt/ldap`.
-4. enter the LDAP configuration for the backend in the file [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml):
+4. enter the LDAP configuration for the backend in the file [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml): <!-- markdown-link-check-disable-line -->
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <ldap>
@@ -40,7 +40,7 @@ The following steps are required to start the LDAP in the Docker container:
     ```
    > The users and passwords of the LDAP container are stored in can be found in the [README](https://github.com/cloudogu/docker-sample-ldap/blob/master/README.md).
 
-   > The password must be encrypted. For this purpose, the [cipher.sh](../../app/src/main/webapp/WEB-INF/cipher.sh) can be used.
+   > The password must be encrypted. For this purpose, the [cipher.sh](../../app/src/main/webapp/WEB-INF/cipher.sh) can be used. <!-- markdown-link-check-disable-line -->
 
 ### Using the LDAP from the CES
 
@@ -64,7 +64,7 @@ To use the LDAP from the CES for the local backend of the Usermgt, the following
       Rebuild and start the LDAP-Dogu with `cesapp build ldap`.
 2. read the LDAP configuration from the usermgt logu of the CES
    read out: `docker exec -it usermgt cat /var/lib/usermgt/conf/ldap.xml`.
-3. enter the LDAP configuration for the backend in the file [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml):
+3. enter the LDAP configuration for the backend in the file [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml): <!-- markdown-link-check-disable-line -->
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <ldap>
@@ -120,7 +120,7 @@ The local dev backend can be set up and started as [described above](#develop-th
 ### Start frontend
 
 The file `.env.local` must be created so that the local frontend can authenticate with the backend.
-To do this, the file [`app/src/main/ui/.env`](../../app/src/main/ui/.env) can be copied as `app/src/main/ui/.env.local`.
+To do this, the file [`app/src/main/ui/.env`](../../app/src/main/ui/.env) can be copied as `app/src/main/ui/.env.local`. <!-- markdown-link-check-disable-line -->
 The credentials of the local backend (`User: admin | Password: admin`) are then entered there.
 
 The frontend can then be started with the following command.
