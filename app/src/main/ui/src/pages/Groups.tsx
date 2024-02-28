@@ -42,9 +42,9 @@ export default function Groups() {
         </div>
         {notification}
         <ActionTableRoot paginationControl={paginationControl} isLoading={isLoading}>
-            <ActionTable className={"mt-default-2x"}>
+            <ActionTable className={"mt-default-2x"} data-testid="groups">
                 <ActionTable.HeadWithOneRow>
-                    <ActionTable.HeadWithOneRow.Column>{t("groups.table.username")}</ActionTable.HeadWithOneRow.Column>
+                    <ActionTable.HeadWithOneRow.Column>{t("groups.table.name")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("groups.table.description")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("groups.table.users")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column
@@ -56,7 +56,7 @@ export default function Groups() {
                 {!isLoading &&
                     <ActionTable.Body>
                         {items.map(group => (
-                            <ActionTable.Body.Row key={group.name}>
+                            <ActionTable.Body.Row key={group.name} data-testid={`groups-row-${group.name}`}>
                                 <ActionTable.Body.Row.Column className="font-bold break-all">
                                     {group.name}
                                 </ActionTable.Body.Row.Column>
@@ -79,7 +79,11 @@ export default function Groups() {
                                         variant={"danger"}
                                         dialogBody={translate("groups.confirmation.message", {groupName: group.name})}
                                         dialogTitle={translate("groups.confirmation.title")}
-                                        onConfirm={() => onDelete(group.name)}
+                                        data-testid="group-delete-dialog"
+                                        onConfirm={() => onDelete(group.name)
+                                            .then(() => notify(t("groups.delete.notification.success", {groupName: group.name}), "primary"))
+                                            .catch(() => notify(t("groups.delete.notification.error", {groupName: group.name}), "danger"))
+                                        }
                                         hasCancel
                                     >
                                         <DeleteButton

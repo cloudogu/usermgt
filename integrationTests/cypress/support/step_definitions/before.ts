@@ -15,6 +15,8 @@ Before({tags: "@clean_new_user"}, () => {
     });
 })
 Before({tags: "@clean_before"}, () => {
+    cy.log("clean TestUsers");
     cy.usermgtCleanupTestUsers();
+    cy.log("clean TestGroups");
     cy.usermgtCleanupTestGroups();
 })

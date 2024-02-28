@@ -2,8 +2,8 @@
 JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true"
 JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true"
 JAVA_OPTS="$JAVA_OPTS -Duniverseadm.stage=PRODUCTION"
-JAVA_OPTS="$JAVA_OPTS -Duniverseadm.home=/var/lib/usermgt/conf"
-JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStore=/etc/ssl/truststore.jks"
+JAVA_OPTS="$JAVA_OPTS -Duniverseadm.home=${UNIVERSEADM_HOME}"
+JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStore=${TRUSTSTORE}"
 JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStorePassword=changeit"
 if [ "$(doguctl config "container_config/memory_limit" -d "empty")" != "empty" ];  then
   # Retrieve configurable java limits from etcd, valid default values exist

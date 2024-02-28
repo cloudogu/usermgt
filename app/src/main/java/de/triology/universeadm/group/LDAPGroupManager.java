@@ -131,13 +131,6 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
     }
 
     @Override
-    public List<Group> queryAll(String query) {
-      logger.debug("query all groups: {}", query);
-        SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
-        return mapping.queryAll(query);
-    }
-
-    @Override
     public PaginationResult<Group> query(PaginationQuery query) {
       logger.debug("get paged groups, query={} ", query);
         SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);

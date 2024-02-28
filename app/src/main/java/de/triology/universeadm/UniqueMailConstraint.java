@@ -14,7 +14,7 @@ public class UniqueMailConstraint extends Constraint<User> {
 
   @Override
   public boolean violatedBy(final User user, final Category category) {
-    final List<User> results = this.mapping.queryAll(user.getMail());
+    final List<User> results = this.mapping.queryByAttribute("mail", user.getMail());
 
     for (User u : results) {
       boolean hasSameEMail = u.getMail().equals(user.getMail());
