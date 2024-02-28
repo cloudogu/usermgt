@@ -1,5 +1,7 @@
 package de.triology.universeadm.account;
 
+import de.triology.universeadm.BaseDirectory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,16 +12,19 @@ import java.util.Scanner;
 public class Configuration {
 
   private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
-  private static final String defaultPath = "/var/lib/usermgt/conf";
-  private static final String configFilePath = defaultPath + "/optional.conf";
-  private static final String guiConfigFilePath = defaultPath + "/gui.conf";
+  private static final String envVarConfigDir = "UNIVERSEADM_HOME";
   private static Configuration instance;
   private final String content;
   private final String guiContent;
 
   private Configuration() {
-    this.content = this.readConfigurationFromFile(configFilePath);
-    this.guiContent = this.readConfigurationFromFile(guiConfigFilePath);
+    String defaultPath = BaseDirectory.get().toString();
+    if (defaultPath == null || defaultPath.isEmpty()) {
+        throw new RuntimeException("environment variable " + envVarConfigDir + " must not be empty but point to a directory with configuration resources");
+    }
+
+    this.content = this.readConfigurationFromFile(defaultPath + "/optional.conf");
+    this.guiContent = this.readConfigurationFromFile(defaultPath + "/gui.conf");
   }
 
   public static Configuration getInstance() {
@@ -55,6 +60,4 @@ public class Configuration {
     }
     return configuration;
   }
-
-
 }

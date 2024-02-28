@@ -20,7 +20,7 @@ function checkSameVersion() {
 
 function removeDeprecatedKeys() {
   echo "Remove deprecated etcd Keys..."
-  if [ "$(doguctl config "password_policy" -d "empty")" != "empty" ];  then
+  if [ "$(doguctl config "password_policy" -d "empty")" != "empty" ]; then
     echo
     echo "Notice: The password policy is now no longer held within the Dogu. Instead, global etcd keys are now used."
     echo "The password policy is NOT migrated. Old etcd key will be removed."
