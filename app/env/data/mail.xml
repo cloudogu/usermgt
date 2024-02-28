@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mail>
+    <host>localhost</host>
+    <port>25</port>
+    <from>info@cloudogu.com</from>
+    <subject>Ihr neuer CES Account</subject>
+    <message>Willkommen zum Cloudogu Ecosystem!
+Dies ist ihr Benutzeraccount
+Benutzername = ${username}
+Passwort = ${password}
+Bei der ersten Anmeldung müssen sie ihr Passwort ändern"</message>
+</mail>

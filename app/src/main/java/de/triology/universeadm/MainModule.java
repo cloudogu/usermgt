@@ -36,6 +36,7 @@ import com.google.inject.Module;
 import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
 import de.triology.universeadm.configuration.I18nConfiguration;
+import de.triology.universeadm.configuration.MailConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,9 +60,9 @@ public class MainModule extends ServletModule {
      *
      * @param ldapConfiguration
      */
-    public MainModule(LDAPConfiguration ldapConfiguration, ApplicationConfiguration applicationConfiguration, I18nConfiguration i18nConfiguration) {
+    public MainModule(LDAPConfiguration ldapConfiguration, MailConfiguration mailConfiguration, I18nConfiguration i18nConfiguration) {
         this.ldapConfiguration = ldapConfiguration;
-        this.applicationConfiguration = applicationConfiguration;
+        this.mailConfiguration = mailConfiguration;
         this.i18nConfiguration = i18nConfiguration;
     }
 
@@ -75,7 +76,7 @@ public class MainModule extends ServletModule {
         logger.info("bind resources");
 
         bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
-        bind(ApplicationConfiguration.class).toInstance(applicationConfiguration);
+        bind(MailConfiguration.class).toInstance(mailConfiguration);
         bind(I18nConfiguration.class).toInstance(i18nConfiguration);
 
         // events
@@ -119,6 +120,6 @@ public class MainModule extends ServletModule {
      * Field description
      */
     private final LDAPConfiguration ldapConfiguration;
-    private final ApplicationConfiguration applicationConfiguration;
+    private final MailConfiguration mailConfiguration;
     private final I18nConfiguration i18nConfiguration;
 }
