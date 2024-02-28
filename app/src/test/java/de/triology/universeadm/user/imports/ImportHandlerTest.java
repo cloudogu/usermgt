@@ -2,6 +2,7 @@ package de.triology.universeadm.user.imports;
 
 import de.triology.universeadm.Constraint;
 import de.triology.universeadm.UniqueConstraintViolationException;
+import de.triology.universeadm.mail.MailService;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,6 +28,7 @@ public class ImportHandlerTest {
     private static final String VALID_FILENAME = "ImportUsers.csv";
 
     private final SummaryRepository summaryRepositoryMock = mock(SummaryRepository.class);
+    private final MailService mailServiceMock = mock(MailService.class);
 
     @Test(expected = InvalidArgumentException.class)
     public void testMissingFileParts() throws Exception {
@@ -40,7 +42,7 @@ public class ImportHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository,summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository,summaryRepositoryMock, mailServiceMock);
 
         importHandler.handle(input);
     }
@@ -59,7 +61,7 @@ public class ImportHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         importHandler.handle(input);
     }
@@ -78,7 +80,7 @@ public class ImportHandlerTest {
         CSVParser parser = mock(CSVParser.class);
         when(parser.parse(any())).thenReturn(createMockStream(2));
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         importHandler.handle(input);
     }
@@ -97,7 +99,7 @@ public class ImportHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         importHandler.handle(input);
     }
@@ -116,7 +118,7 @@ public class ImportHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         importHandler.handle(input);
     }
@@ -136,7 +138,7 @@ public class ImportHandlerTest {
         when(parser.parse(any())).thenReturn(Stream.empty());
         when(parser.getErrors()).thenReturn(createMockErrorStream(1));
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result result = importHandler.handle(input);
         assertEquals(1, result.getErrors().size());
@@ -167,7 +169,7 @@ public class ImportHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         importHandler.handle(input);
     }
@@ -187,7 +189,7 @@ public class ImportHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result result = importHandler.handle(input);
 
@@ -215,7 +217,7 @@ public class ImportHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result result = importHandler.handle(input);
 
@@ -243,7 +245,7 @@ public class ImportHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result result = importHandler.handle(input);
 
@@ -277,7 +279,7 @@ public class ImportHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(1));
         when(parser.getErrors()).thenReturn(createMockErrorStream(2L));
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result result = importHandler.handle(input);
 
@@ -308,7 +310,7 @@ public class ImportHandlerTest {
         when(parser.parse(any())).thenReturn(createMockStream(2));
         when(parser.getErrors()).thenReturn(Stream.empty());
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result result = importHandler.handle(input);
 
@@ -329,7 +331,7 @@ public class ImportHandlerTest {
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
         CSVParser parser = mock(CSVParser.class);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result res = importHandler.getResult(UUID.randomUUID());
 
@@ -345,7 +347,7 @@ public class ImportHandlerTest {
         SummaryRepository sRepo = mock(SummaryRepository.class);
         when(sRepo.getSummaries()).thenReturn(Collections.emptyList());
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 10);
 
@@ -364,7 +366,7 @@ public class ImportHandlerTest {
         List<Result.Summary> sums = generateSummaries(4);
         when(sRepo.getSummaries()).thenReturn(sums);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 10);
 
@@ -383,7 +385,7 @@ public class ImportHandlerTest {
         List<Result.Summary> sums = generateSummaries(12);
         when(sRepo.getSummaries()).thenReturn(sums);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(10, 10);
 
@@ -408,7 +410,7 @@ public class ImportHandlerTest {
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_DELETE);
         CSVParser parser = mock(CSVParser.class);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         assertTrue(importHandler.deleteResult(UUID.randomUUID()));
     }
