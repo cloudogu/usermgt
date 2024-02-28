@@ -10,7 +10,7 @@ public class PaginationQueryTest extends TestCase {
         PaginationQuery query = new PaginationQuery(-1, 0, "test", "ctx", "a,b,c", "name", true);
 
         assertEquals(1, query.getPage());
-        assertEquals(201, query.getPageSize());
+        assertEquals(20, query.getPageSize());
     }
 
     public void testFromQueryWithNewPage() {
