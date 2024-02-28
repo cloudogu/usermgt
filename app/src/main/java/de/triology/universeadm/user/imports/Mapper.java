@@ -43,9 +43,9 @@ public class Mapper {
     }
 
     /**
-     * Creates a new user. A new password will be generated for this user. Moreover, PasswordReset will be set to false,
+     * Creates a new user. A new password will be generated for this user. Moreover, PasswordReset is always set to true,
      * no matter what option is set in the csv file. The user has no group memberships.
-     * At the moment, new users will be treated as external users.
+     * At the moment, new users will be treated as internal users.
      * @param csvUserDTO - DTO user
      * @return {@link User}
      */
@@ -57,9 +57,9 @@ public class Mapper {
                 csvUserDTO.getSurname(),
                 csvUserDTO.getMail(),
                 pwdGen.random(PASSWORD_LENGTH),
-                false,
+                true,
                 Collections.emptyList(),
-                true
+                false
         );
     }
 
