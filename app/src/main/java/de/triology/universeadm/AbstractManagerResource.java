@@ -33,9 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @param <T>
@@ -43,7 +40,7 @@ import java.util.List;
  */
 public abstract class AbstractManagerResource<T> {
 
-    public static final int PAGING_DEFAULT_PAGE = 1;
+    public static final int PAGING_MIN_PAGE = 1;
 
     public static final int PAGING_DEFAULT_PAGE_SIZE = 20;
 
@@ -53,10 +50,10 @@ public abstract class AbstractManagerResource<T> {
      * the logger for UserResource
      */
     private static final Logger logger
-            = LoggerFactory.getLogger(AbstractManagerResource.class);
+        = LoggerFactory.getLogger(AbstractManagerResource.class);
 
-  @Context
-  protected UriInfo uriInfo;
+    @Context
+    protected UriInfo uriInfo;
 
     //~--- constructors ---------------------------------------------------------
 
@@ -72,7 +69,7 @@ public abstract class AbstractManagerResource<T> {
     //~--- methods --------------------------------------------------------------
 
     protected String getCurrentPath() {
-      return UriBuilder.fromUri(this.uriInfo.getBaseUri().getPath()).path(this.uriInfo.getPath()).build().toString();
+        return UriBuilder.fromUri(this.uriInfo.getBaseUri().getPath()).path(this.uriInfo.getPath()).build().toString();
     }
 
     /**
@@ -185,42 +182,47 @@ public abstract class AbstractManagerResource<T> {
         return builder.build();
     }
 
-  /**
-   * Method description
-   *
-   * @return
-   */
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAll(
-    @QueryParam("page") int page,
-    @QueryParam("page_size") int page_size,
-    @QueryParam("query") String query,
-    @QueryParam("context") String context,
-    @QueryParam("exclude") final String exclude,
-    @QueryParam("sort_by") final String sortBy,
-    @QueryParam("reverse") final boolean reverse
-  ) {
-    String sortAttribute = sortBy;
-    if (Strings.isNullOrEmpty(sortBy)) {
-      sortAttribute = getDefaultSortAttribute();
+    /**
+     * Method description
+     *
+     * @return
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAll(
+        @QueryParam("page") int page,
+        @QueryParam("page_size") int pageSize,
+        @QueryParam("query") String query,
+        @QueryParam("context") String context,
+        @QueryParam("exclude") final String exclude,
+        @QueryParam("sort_by") final String sortBy,
+        @QueryParam("reverse") final boolean reverse
+    ) {
+        String sortAttribute = sortBy;
+        if (Strings.isNullOrEmpty(sortBy)) {
+            sortAttribute = getDefaultSortAttribute();
+        }
+
+        PaginationQuery paginationQuery = new PaginationQuery(page, pageSize, query, context, exclude, sortAttribute, reverse);
+
+        Response.ResponseBuilder builder;
+        try {
+            PaginationResult<T> result = manager.query(paginationQuery);
+
+            if (result != null) {
+                PaginationResultResponse<T> resultResponse = new PaginationResultResponse<>(paginationQuery, result, getCurrentPath());
+                builder = Response.ok(resultResponse);
+            } else if (Strings.isNullOrEmpty(query)) {
+                builder = Response.status(Response.Status.NOT_FOUND);
+            } else {
+                builder = Response.noContent();
+            }
+        } catch (PaginationQueryOutOfRangeException ex) {
+            builder = Response.status(Response.Status.BAD_REQUEST).entity(new PaginationErrorResponse(paginationQuery, ex.getResult(), getCurrentPath(), PaginationQueryError.ERR_OUT_OF_RANGE));
+        }
+
+        return builder.build();
     }
-
-    PaginationQuery paginationQuery = new PaginationQuery(page, page_size, query, context, exclude, sortAttribute, reverse);
-
-    PaginationResult<T> result = manager.query(paginationQuery);
-
-    Response.ResponseBuilder builder;
-    if (result != null) {
-      PaginationResultResponse<T> resultResponse = new PaginationResultResponse<>(paginationQuery, result, getCurrentPath());
-      builder = Response.ok(resultResponse);
-    } else if (Strings.isNullOrEmpty(query)) {
-      builder = Response.status(Response.Status.NOT_FOUND);
-    } else {
-      builder = Response.noContent();
-    }
-    return builder.build();
-  }
 
     //~--- fields ---------------------------------------------------------------
     /**

@@ -162,8 +162,8 @@ public class UserResourceTest {
         assertNotNull(links);
         assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("self").getTextValue());
         assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("first").getTextValue());
-        assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("prev").getTextValue());
-        assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("next").getTextValue());
+        assertNull(links.get("prev").getTextValue());
+        assertNull(links.get("next").getTextValue());
         assertEquals("/users?page_size=20&sort_by=username&page=1", links.get("last").getTextValue());
 
         JsonNode data = node.get("data");
@@ -377,7 +377,6 @@ public class UserResourceTest {
 
         List<User> all = ImmutableList.of(dent);
 
-        when(manager.queryAll(null)).thenReturn(all);
         when(manager.query(new PaginationQuery(1, 20, null, null, null, "username", false))).thenReturn(new PaginationResult<>(all, 1, null));
 
         return manager;

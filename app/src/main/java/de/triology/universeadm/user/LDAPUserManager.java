@@ -240,20 +240,6 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
     return mapping.get(username);
   }
 
-  /**
-   * Method description
-   *
-   * @param query
-   * @return
-   */
-  @Override
-  public List<User> queryAll(String query) {
-    logger.debug("query all users: {}", query);
-    SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
-
-    return mapping.queryAll(query);
-  }
-
   @Override
   public PaginationResult<User> query(PaginationQuery query) {
     logger.debug("get paged users, query={} ", query);

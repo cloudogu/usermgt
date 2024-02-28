@@ -1,8 +1,9 @@
 import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
+import {PaginationError} from "../hooks/usePaginatedData";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {PaginationResponse} from "../hooks/usePaginatedData";
+import type { PaginationErrorResponse, PaginationResponse} from "../hooks/usePaginatedData";
 import type {AxiosError, AxiosResponse} from "axios";
 
 export type GroupsResponse = PaginationResponse<Group>;
@@ -18,25 +19,30 @@ export type UndeletableGroupsResponse = string[];
 
 export const GroupsService = {
     async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<Group>> {
-        const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
-            params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
-            signal: signal
-        } as any);
-        if (groupsResponse.status < 200 || groupsResponse.status > 299) {
-            throw new Error("failed to load group data: " + groupsResponse.status);
-        }
-        const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable", {
-            signal: signal
-        } as any);
+        try {
+            const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
+                params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
+                signal: signal
+            } as any);
 
-        if (undeletableGroupsResponse.status < 200 || undeletableGroupsResponse.status > 299) {
-            throw new Error("failed to load undeletable groups information: " + undeletableGroupsResponse.status);
-        }
-        const groupsData = groupsResponse.data;
-        const undeletableGroupsData = undeletableGroupsResponse.data;
-        groupsData.data = mapSystemGroups(groupsData.data, undeletableGroupsData);
+            const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable", {
+                signal: signal
+            } as any);
 
-        return groupsData;
+            const groupsData = groupsResponse.data;
+            const undeletableGroupsData = undeletableGroupsResponse.data;
+            groupsData.data = mapSystemGroups(groupsData.data, undeletableGroupsData);
+
+            return groupsData;
+        } catch (err: any) {
+            const status = err.response.status;
+            if (status === 400) {
+                const errorResponse = err.response.data as PaginationErrorResponse;
+                throw new PaginationError(errorResponse);
+            }
+
+            throw new Error("failed to load group data: " + err.message);
+        }
     },
     async get(signal?: AbortSignal, groupName?: string): Promise<Group> {
         if (!groupName) {

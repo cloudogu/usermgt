@@ -27,8 +27,6 @@
 
 package de.triology.universeadm;
 
-import java.util.List;
-
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
@@ -80,15 +78,6 @@ public interface Manager<T>
    * @return
    */
   public T get(String objectname);
-
-  /**
-   * Method description
-   *
-   * @param query
-   *
-   * @return
-   */
-  public List<T> queryAll(String query);
 
   /**
    * Method description

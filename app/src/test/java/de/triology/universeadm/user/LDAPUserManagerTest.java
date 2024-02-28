@@ -241,29 +241,6 @@ public class LDAPUserManagerTest {
         verify(eventBus, times(1)).post(event);
     }
 
-
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testQueryAll() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-
-        List<User> users = manager.queryAll(null);
-        assertNotNull(users);
-
-        List<User> expUsers = Lists.newArrayList(
-                Users.createDent(),
-                Users.createTrillian(),
-                Users.createTrillexterno()
-        );
-
-
-        assertEquals(expUsers.size(), users.size());
-
-        for (int i = 0; i < users.size(); i++) {
-            assertUser(expUsers.get(i), users.get(i));
-        }
-    }
-
     @Test
     @LDAP(baseDN = BASEDN, ldif = LDIF_003)
     public void testQueryWithPaging() throws LDAPException {
@@ -291,26 +268,6 @@ public class LDAPUserManagerTest {
 
     @Test
     @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testQueryAllWithQuery() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        User expUser = Users.createTrillian();
-
-        List<User> users = manager.queryAll(expUser.getUsername());
-        assertNotNull(users);
-        assertEquals(1, users.size());
-
-        assertUser(expUser, users.get(0));
-    }
-
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    @Test(expected = IllegalQueryException.class)
-    public void testQueryAllInvalidCharacters() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        manager.queryAll("tri(c)ia");
-    }
-
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
     public void testModifyPassword() throws LDAPException {
         LDAPUserManager manager = createUserManager();
         User user = manager.get("tricia");
@@ -329,18 +286,6 @@ public class LDAPUserManagerTest {
     public void testFindExternal() throws LDAPException {
         Entry entry = ldap.getConnection().getEntry("uid=trillexterno,ou=People,dc=hitchhiker,dc=com");
         assertEquals("TRUE", entry.getAttributeValue("external"));
-    }
-
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testQueryAllExternal() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        User expUser = Users.createTrillexterno();
-
-        List<User> users = manager.queryAll(expUser.getUsername());
-        assertNotNull(users);
-        assertEquals(1, users.size());
-        assertUser(expUser, users.get(0));
     }
 
     private void assertUser(User expUser, User actUser) {

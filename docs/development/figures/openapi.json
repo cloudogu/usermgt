@@ -134,6 +134,33 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pagination_bad_request_response"
+                },
+                "example": {
+                  "meta": {
+                    "page": 13,
+                    "pageSize": 50,
+                    "totalPages": 6,
+                    "totalItems": 278
+                  },
+                  "links": {
+                    "self": "/api/v2/users?page=13&pageSize=50",
+                    "first": "/api/v2/users?page=1&pageSize=50",
+                    "prev": null,
+                    "next": null,
+                    "last": "/api/v2/users?page=6&pageSize=50"
+                  },
+                  "errorCode": "ERR_OUT_OF_RANGE",
+                  "errorMsg": "The requested page is out of range."
+                }
+              }
+            }
           }
         }
       },
@@ -971,6 +998,24 @@
           }
         }
       },
+      "pagination_bad_request_response": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/PaginationResultMetaData"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationResultLinks"
+          },
+          "errorCode": {
+            "type": "string",
+            "enum": ["ERR_OUT_OF_RANGE"]
+          },
+          "errorMsg": {
+            "type": "string"
+          }
+        }
+      },
       "inline_response_200": {
         "type": "object",
         "properties": {
@@ -1204,20 +1249,20 @@
           },
           "first": {
             "type": "string",
-            "nullable": true,
             "description": "Link to the first page (null if unavailable)"
           },
           "prev": {
             "type": "string",
+            "nullable": true,
             "description": "Link to the previous page"
           },
           "next": {
             "type": "string",
+            "nullable": true,
             "description": "Link to the next page"
           },
           "last": {
             "type": "string",
-            "nullable": true,
             "description": "Link to the last page (null if unavailable)"
           }
         }

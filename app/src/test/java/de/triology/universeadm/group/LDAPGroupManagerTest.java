@@ -138,44 +138,6 @@ public class LDAPGroupManagerTest
 
   @Test
   @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  public void queryAllTest() throws LDAPException
-  {
-    List<Group> groups = createGroupManager().queryAll(null);
-    assertNotNull(groups);
-    assertEquals(2, groups.size());
-    assertThat(groups, contains(Groups.createBrockianUltraCricket(), Groups.createHeartOfGold()));
-  }
-
-  @Test(expected = UnauthorizedException.class)
-  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  @SubjectAware(username = "dent", password = "secret")
-  public void queryAllTestWithoutAdminPrivileges() throws LDAPException
-  {
-    createGroupManager().queryAll(null);
-  }
-
-  @Test
-  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  public void queryAllTestWithQuery() throws LDAPException{
-    List<Group> groups = createGroupManager().queryAll("Heart");
-    assertThat(groups, contains(Groups.createHeartOfGold()));
-  }
-
-  @Test
-  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  public void queryAllTestNotFound() throws LDAPException{
-    List<Group> groups = createGroupManager().queryAll("Marvin");
-    assertThat(groups, empty());
-  }
-
-  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-  @Test(expected = IllegalQueryException.class)
-  public void queryAllTestIllegalCharacters() throws LDAPException{
-    createGroupManager().queryAll("Mar(v)in");
-  }
-
-  @Test
-  @LDAP(baseDN = BASEDN, ldif = LDIF_003)
   public void queryTest() throws LDAPException
   {
     PaginationResult<Group> result = createGroupManager().query(new PaginationQuery(1, 10));
