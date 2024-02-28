@@ -2,9 +2,10 @@ import {defaultPaginationData} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
+import {PaginationError} from "../hooks/usePaginatedData";
 import {emptyUser} from "./Account";
 import type {QueryOptions} from "../hooks/useAPI";
-import {PaginationError, PaginationErrorResponse, PaginationResponse} from "../hooks/usePaginatedData";
+import type { PaginationErrorResponse, PaginationResponse} from "../hooks/usePaginatedData";
 import type {PagedModel} from "@cloudogu/deprecated-ces-theme-tailwind";
 import type {AxiosError} from "axios";
 

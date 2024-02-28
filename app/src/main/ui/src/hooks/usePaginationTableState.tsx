@@ -1,9 +1,9 @@
-import type {PaginationControl} from "@cloudogu/ces-theme-tailwind";
 import {useNumberSearchParamState, useSearchParamState} from "@cloudogu/ces-theme-tailwind";
 import {useEffect, useState} from "react";
-import type {PaginationResponse} from "./usePaginatedData";
-import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, PaginationError, PaginationErrorCode, SEARCH_QUERY_PARAM} from "./usePaginatedData";
+import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, PaginationErrorCode, SEARCH_QUERY_PARAM} from "./usePaginatedData";
 import type {QueryOptions} from "./useAPI";
+import type {PaginationResponse, PaginationError} from "./usePaginatedData";
+import type {PaginationControl} from "@cloudogu/ces-theme-tailwind";
 
 export type UsePaginationHook<T> = {
     items: T[],

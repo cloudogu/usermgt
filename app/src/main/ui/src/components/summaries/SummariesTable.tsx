@@ -1,12 +1,12 @@
-import type {NotifyFunction} from "@cloudogu/deprecated-ces-theme-tailwind";
+import {ActionTable, ActionTableRoot, ConfirmDialog, DropdownMenu, translate} from "@cloudogu/ces-theme-tailwind";
 import {CesIcons, TextWithIcon} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {t} from "../../helpers/i18nHelpers";
-import type {ImportSummary} from "../../services/ImportUsers";
-import {ImportUsersService} from "../../services/ImportUsers";
-import {ActionTable, ActionTableRoot, ConfirmDialog, DropdownMenu, translate} from "@cloudogu/ces-theme-tailwind";
 import usePaginationTableState from "../../hooks/usePaginationTableState";
+import {ImportUsersService} from "../../services/ImportUsers";
+import type {ImportSummary} from "../../services/ImportUsers";
+import type {NotifyFunction} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 export interface SummaryListProps {
     notify: NotifyFunction;

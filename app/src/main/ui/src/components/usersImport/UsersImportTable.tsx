@@ -19,26 +19,22 @@ export default function UsersImportTable(file: { header: string[], rows: string[
                         {
                             file
                                 .header
-                                .map(column => <ActionTableFrontendPaginated.HeadWithOneRow.Column className={"uppercase"}>
-                                         {column}
-                                     </ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                                .map(column => <ActionTableFrontendPaginated.HeadWithOneRow.Column key={column} className={"uppercase"}>
+                                    {column}
+                                </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                                 )
                         }
                     </ActionTableFrontendPaginated.HeadWithOneRow>
                     <ActionTableFrontendPaginated.Body>
-                        {values.map((row: string[]) => {
-                            return (
-                                <ActionTableFrontendPaginated.Body.Row>
-                                    {row.map(column => {
-                                        return (
-                                            <ActionTableFrontendPaginated.Body.Row.Column>
-                                                {column}
-                                            </ActionTableFrontendPaginated.Body.Row.Column>
-                                        );
-                                    })}
-                                </ActionTableFrontendPaginated.Body.Row>
-                            );
-                        })}
+                        {values.map((row: string[], index) => (
+                            <ActionTableFrontendPaginated.Body.Row key={index}>
+                                {row.map(column => (
+                                    <ActionTableFrontendPaginated.Body.Row.Column key={column}>
+                                        {column}
+                                    </ActionTableFrontendPaginated.Body.Row.Column>
+                                ))}
+                            </ActionTableFrontendPaginated.Body.Row>
+                        ))}
                     </ActionTableFrontendPaginated.Body>
                 </>}
             </ActionTableFrontendPaginated>
