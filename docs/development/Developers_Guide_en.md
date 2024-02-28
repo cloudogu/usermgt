@@ -1,37 +1,162 @@
-# Developing Usermgt
+# Local development
 
-## Setup local ldap without CES
+The backend and frontend of the Usermgt can be developed locally.
 
-### Software Requirements
-* Following prerequisites have to be met:
-    - Install Oracle JDK / Open JDK 8
-    - Install Maven (check with mvn -version if jdk 8 is correctly setup / change JAVA_HOME if not)
-    - Install Docker
+## Develop the backend locally
 
-### Setup local LDAP using Docker
-* Checkout the following repository https://github.com/cloudogu/docker-sample-ldap
-* build the container `docker build -t usermgt/ldap .`
-* run the container `docker run --rm -p 389:389 usermgt/ldap`
+The following requirements must be met to develop the Usermgt backend:
 
-### Setup Usermgt Development Mode
-* `export UNIVERSEADM_STAGE=DEVELOPMENT`
+- Install Oracle JDK / Open JDK 8
+- Install Maven (use mvn -version to check whether jdk 8 is set up correctly / if not, change JAVA_HOME)
+- Install Docker
 
-### Build project:
-- `./mvnw clean install`
+To start or debug the Usermgt backend locally, a connection to an LDAP is required.
+This LDAP can either be operated locally in a Docker container, or the LDAP from the CES can be used.
 
-### Build the project and start the server
-* `mvn -DskipTests -P'!webcomponents' package jetty:run-war `
+### Setting up a local LDAP in a Docker container
 
-### Open the application
-* `http://localhost:8084/universeadm/`
-- Use Base Authentication `User: admin | Password: admin`
+The following steps are required to start the LDAP in the Docker container:
 
-## Setup local LDAP using CES
-* Bind the ldap port to the host system (e.g https://stackoverflow.com/questions/19335444/how-do-i-assign-a-port-mapping-to-an-existing-docker-container)
-    - alternative way add ExposedPorts to the `dogu.json` and rebuild the container
-* Change the `ldap.xml` configuration make sure the passwort is ciphered.
-    - easy solution jump inside the usermgt container and copy the `ldap.xml`
-    - alternative solution use the `cipher.sh` inside the usermgt container ` /opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encrypt <PASSWORD>`
+1. check out the repository: https://github.com/cloudogu/docker-sample-ldap
+2. build the container: `docker build -t usermgt/ldap .`
+3. start the container: `docker run --rm -p 389:389 usermgt/ldap`.
+4. enter the LDAP configuration for the backend in the file [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml):
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <ldap>
+        <host>localhost</host>
+        <port>389</port>
+    
+        <!-- LDAP User & Password -->
+        <bind-dn>cn=usermgt_x53eMC,ou=Special Users,o=ces.local,dc=cloudogu,dc=com</bind-dn>
+        <bind-password>dykIuJz9eQzylL9HLNp4xy+fjPGsNsqvzulBE7iYtMqnvusmvG6Jc4aWKTtImTxz</bind-password>
+        
+        <user-base-dn>ou=people,o=ces.local,dc=cloudogu,dc=com</user-base-dn>
+        <group-base-dn>ou=Groups,o=ces.local,dc=cloudogu,dc=com</group-base-dn>
+    
+        <disable-member-listener>true</disable-member-listener>
+        <disabled>false</disabled>
+    </ldap>
+    ```
+   > The users and passwords of the LDAP container are stored in can be found in the [README](https://github.com/cloudogu/docker-sample-ldap/blob/master/README.md).
+
+   > The password must be encrypted. For this purpose, the [cipher.sh](../../app/src/main/webapp/WEB-INF/cipher.sh) can be used.
+
+### Using the LDAP from the CES
+
+To use the LDAP from the CES for the local backend of the Usermgt, the following steps are necessary:
+
+1. make the port of the LDAP from the CES available.
+   There are two options here:
+    - Make the port available from the running container. For example with
+      this [instruction](https://stackoverflow.com/questions/19335444/how-do-i-assign-a-port-mapping-to-an-existing-docker-container)
+    - Expose the port of the LDAP via the `dogu.json`:
+      Add the following entry to the `dogu.json` of the LDAP-Dogus:
+      ```json
+      "ExposedPorts": [
+        {
+          "Type": "tcp",
+          "Host": 389,
+          "Container": 389
+        }
+      ]
+      ```
+      Rebuild and start the LDAP-Dogu with `cesapp build ldap`.
+2. read the LDAP configuration from the usermgt logu of the CES
+   read out: `docker exec -it usermgt cat /var/lib/usermgt/conf/ldap.xml`.
+3. enter the LDAP configuration for the backend in the file [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml):
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <ldap>
+      <!-- Enter the IP of the local CES-->
+      <host>192.168.56.2</host>
+      <port>389</port>
+      <bind-dn>cn=usermgt_lQURMd,ou=Special Users,o=ces.local,dc=cloudogu,dc=com</bind-dn>
+      <bind-password>wTyqbtiV9DdZvs0CCs8NU4MMmiRztny4PJt1sSvjz2G5zC2OVwWOoTA+Bj1R2rcE</bind-password>
+      <user-base-dn>ou=people,o=ces.local,dc=cloudogu,dc=com</user-base-dn>
+      <group-base-dn>ou=Groups,o=ces.local,dc=cloudogu,dc=com</group-base-dn>
+      <disabled>false</disabled>
+    </ldap>
+    ```
+   > The password is already encrypted and can be used.
+
+### Start the Usermgt backend locally
+
+So that the Usermgt backend can be used locally without a CAS, the environment variable `UNIVERSEADM_STAGE` must be set to the value `DEVELOPMENT`.
+
+```shell
+export UNIVERSEADM_STAGE=DEVELOPMENT`
+```
+
+The backend can then be started as follows:
+
+- Change to the `app` directory: `cs app`
+- Create the project: `mvn clean install`
+- Build and start the project: `mvn -DskipTests -P-webcomponents package jetty:run-war`
+
+> Only the backend is rebuilt and started, the frontend is not created, as the Maven profile `webcomponents` is ignored.
+
+The backend is accessible under the URL `http://localhost:8084/usermgt/api`
+
+> The basic authentication in development mode is `User: admin | Password: admin`.
+
+## Develop the frontend locally
+
+The frontend of Usermgt can be developed locally either with a mock backend or with the local backend of Usermgt.
+
+### Start mock backend
+
+The mock backend can be started with the following command:
+
+```
+cd app/src/main/ui
+yarn backend
+```
+
+### Start local dev backend
+
+The local dev backend can be set up and started as [described above](#develop-the-backend-locally).
+
+### Start frontend
+
+The file `.env.local` must be created so that the local frontend can authenticate with the backend.
+To do this, the file [`app/src/main/ui/.env`](../../app/src/main/ui/.env) can be copied as `app/src/main/ui/.env.local`.
+The credentials of the local backend (`User: admin | Password: admin`) are then entered there.
+
+The frontend can then be started with the following command.
+```
+cd app/src/main/ui
+yarn install
+yarn dev
+```
+
+## Create test data for local development
+
+Generated test data can be imported for local development.
+
+### Test user data
+
+- Create users: `create_users.py <number of users>`
+
+If the script is called without parameters, 5 users are created. The count always starts at 0.
+If a data conflict occurs, the script continues anyway.
+
+Example: Create 10 users
+```shell
+docs/development/create_users.py 10
+```
+
+### Test group data
+
+- Create groups: ``create_groups.py <number of groups>`
+
+If the script is called without parameters, 5 users are created. The count always starts at 0.
+If a data conflict occurs, the script continues anyway.
+
+Example: Create 10 groups
+```shell
+docs/development/create_groups.py 10
+```
 
 ## Shell testing with BATS
 
