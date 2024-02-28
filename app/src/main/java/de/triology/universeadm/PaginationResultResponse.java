@@ -49,6 +49,10 @@ public class PaginationResultResponse<T> {
             this.context = result.getContext();
         }
 
+        private static int calculateTotalPages(int totalEntries, int pageSize) {
+            return (int) Math.ceil((double) totalEntries / pageSize);
+        }
+
         public int getPage() {
             return page;
         }
@@ -76,10 +80,6 @@ public class PaginationResultResponse<T> {
         public String getContext() {
             return context;
         }
-    }
-
-    private static int calculateTotalPages(int totalEntries, int pageSize) {
-        return (int) Math.ceil((double) totalEntries / pageSize);
     }
 
     public static class Links {

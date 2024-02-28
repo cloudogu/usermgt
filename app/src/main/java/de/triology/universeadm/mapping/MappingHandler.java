@@ -265,7 +265,7 @@ public class MappingHandler<T extends Comparable<T>> {
         vlvContentCount = vlvResponseControl.getContentCount();
         vlvContextID = vlvResponseControl.getContextID();
 
-        return new PaginationResult<T>(entities, vlvContentCount, encodeContextId(vlvContextID));
+        return new PaginationResult<>(entities, vlvContentCount, encodeContextId(vlvContextID));
     }
 
     private ServerSideSortRequestControl createSortControl(PaginationQuery query) {
@@ -276,10 +276,6 @@ public class MappingHandler<T extends Comparable<T>> {
         }
 
         return new ServerSideSortRequestControl(new SortKey(sortAttribute, "caseIgnoreOrderingMatch", query.isReverse()));
-    }
-
-    private Filter createFilter(String query) throws LDAPException {
-        return createFilter(query, null);
     }
 
     private Filter createFilter(String query, List<String> excludes) throws LDAPException {

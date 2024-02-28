@@ -27,8 +27,6 @@
 
 package de.triology.universeadm;
 
-import java.util.List;
-
 /**
  *
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>

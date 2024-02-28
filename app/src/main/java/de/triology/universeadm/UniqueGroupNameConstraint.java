@@ -3,8 +3,6 @@ package de.triology.universeadm;
 import de.triology.universeadm.mapping.MappingHandler;
 import de.triology.universeadm.group.Group;
 
-import java.util.List;
-
 public class UniqueGroupNameConstraint extends Constraint<Group> {
     private final MappingHandler<Group> mapping;
 

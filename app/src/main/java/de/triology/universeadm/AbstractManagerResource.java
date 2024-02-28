@@ -191,7 +191,7 @@ public abstract class AbstractManagerResource<T> {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(
         @QueryParam("page") int page,
-        @QueryParam("page_size") int page_size,
+        @QueryParam("page_size") int pageSize,
         @QueryParam("query") String query,
         @QueryParam("context") String context,
         @QueryParam("exclude") final String exclude,
@@ -203,7 +203,7 @@ public abstract class AbstractManagerResource<T> {
             sortAttribute = getDefaultSortAttribute();
         }
 
-        PaginationQuery paginationQuery = new PaginationQuery(page, page_size, query, context, exclude, sortAttribute, reverse);
+        PaginationQuery paginationQuery = new PaginationQuery(page, pageSize, query, context, exclude, sortAttribute, reverse);
 
         Response.ResponseBuilder builder;
         try {

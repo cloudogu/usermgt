@@ -1,10 +1,7 @@
 package de.triology.universeadm;
 
-import de.triology.universeadm.group.Group;
 import de.triology.universeadm.mapping.MappingHandler;
 import de.triology.universeadm.user.User;
-
-import java.util.List;
 
 public class UniqueUsernameConstraint extends Constraint<User> {
   private final MappingHandler<User> mapping;
