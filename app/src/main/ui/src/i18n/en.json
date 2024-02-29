@@ -122,6 +122,8 @@
   "users.placeholder.password": "Enter password",
   "users.placeholder.surname": "Enter surname",
   "users.placeholder.username": "Enter username",
+  "users.hint.username": "The username is used for logging in and cannot be changed later.",
+  "users.hint.displayName": "The display name is the name of the user that is displayed in many Dogus.",
   "users.table.actions.add": "Add user",
   "users.table.actions.delete": "Delete user",
   "users.table.actions.deleteAria": "delete",

@@ -6,8 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add ces-theme-tailwind in a second, higher, version (v0.3.6) (#111)
-- add Cloudogu logo for better container crash visibility
+- Add ces-theme-tailwind in a second, higher, version (v0.3.7) (#111)
+- Add Cloudogu logo for better container crash visibility
+- Add descriptions for username / displayname (#114)
 
 ### Changed
 - Stream all log output to standard out, configure log level (#115)
