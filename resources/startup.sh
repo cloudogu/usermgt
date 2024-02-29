@@ -17,9 +17,10 @@ if [[ ${sourcingExitCode} -ne 0 ]]; then
 fi
 
 PASSWORD_RESET_DEFAULT_VALUE_KEY="pwd_reset_selected_by_default"
-OPTIONAL_CONFIG_PATH="/var/lib/usermgt/conf/optional.conf"
-GUI_CONFIG_PATH="/var/lib/usermgt/conf/gui.conf"
+OPTIONAL_CONFIG_PATH="${UNIVERSEADM_HOME}/optional.conf"
+GUI_CONFIG_PATH="${UNIVERSEADM_HOME}/gui.conf"
 CIPHER_SH="/opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh"
+APP_CONFIG_RESOURCE_SRC=/resources
 
 printCloudoguLogo() {
   echo "                                     ./////,                    "
@@ -37,10 +38,10 @@ printCloudoguLogo() {
 
 waitForPostUpgrade() {
   # check whether post-upgrade script is still running
-while [[ "$(doguctl state)" == "upgrading" ]]; do
-  echo "Upgrade script is running. Waiting..."
-  sleep 3
-done
+  while [[ "$(doguctl state)" == "upgrading" ]]; do
+    echo "Upgrade script is running. Waiting..."
+    sleep 3
+  done
 }
 
 encryptLdapPassword() {
@@ -48,19 +49,10 @@ encryptLdapPassword() {
   export LDAP_BIND_PASSWORD
 }
 
-copyResources() {
-  if [ ! -d "/var/lib/usermgt/conf" ]; then
-    mkdir -p /var/lib/usermgt/conf
-  fi
+copyConfigurationResources() {
+  mkdir -p "${UNIVERSEADM_HOME}"
 
-  cp -rf /resources/* /var/lib/usermgt/conf/
-}
-
-createLogDir() {
-  if [ ! -d "/var/lib/usermgt/logs" ]; then
-    mkdir -p /var/lib/usermgt/logs
-    chown -R tomcat:tomcat /var/lib/usermgt/logs
-  fi
+  cp -rf "${APP_CONFIG_RESOURCE_SRC}"/* "${UNIVERSEADM_HOME}"
 }
 
 buildMailAddress() {
@@ -71,11 +63,11 @@ buildMailAddress() {
 
 renderTemplates() {
   determinePwdMinLength
-  
-  doguctl template "/var/lib/usermgt/conf/cas.xml.tpl" "/var/lib/usermgt/conf/cas.xml"
-  doguctl template "/var/lib/usermgt/conf/ldap.xml.tpl" "/var/lib/usermgt/conf/ldap.xml"
-  doguctl template "/var/lib/usermgt/conf/application-configuration.xml.tpl" "/var/lib/usermgt/conf/application-configuration.xml"
-  doguctl template "/var/lib/usermgt/conf/password_policy.tpl" "${OPTIONAL_CONFIG_PATH}"
+
+  doguctl template "${UNIVERSEADM_HOME}/cas.xml.tpl" "${UNIVERSEADM_HOME}/cas.xml"
+  doguctl template "${UNIVERSEADM_HOME}/ldap.xml.tpl" "${UNIVERSEADM_HOME}/ldap.xml"
+  doguctl template "${UNIVERSEADM_HOME}/application-configuration.xml.tpl" "${UNIVERSEADM_HOME}/application-configuration.xml"
+  doguctl template "${UNIVERSEADM_HOME}/password_policy.tpl" "${OPTIONAL_CONFIG_PATH}"
 
   renderLoggingFiles
 }
@@ -84,7 +76,7 @@ createGuiConfiguration() {
   echo "Read configuration fof preselection of password reset attribute checkbox"
   PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_RESET_DEFAULT_VALUE_KEY}" --default 'false')"
   echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
-  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" > "${GUI_CONFIG_PATH}"
+  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" >"${GUI_CONFIG_PATH}"
 }
 
 createTrustStore() {
@@ -122,8 +114,7 @@ runMain() {
 
   waitForPostUpgrade
   encryptLdapPassword
-  copyResources
-  createLogDir
+  copyConfigurationResources
   buildMailAddress
   renderTemplates
   createGuiConfiguration

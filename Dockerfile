@@ -80,8 +80,8 @@ LABEL NAME="official/usermgt" \
 ENV SERVICE_TAGS=webapp \
     # tomcat version
     TOMCAT_VERSION=${TOMCAT_VERSION} \
-    # home directory
-    UNIVERSEADM_HOME=/var/lib/usermgt/conf \
+    # home of the app configuration
+    UNIVERSEADM_HOME=/var/lib/usermgt/conf2 \
     TRUSTSTORE=/opt/apache-tomcat/truststore.jks \
     CATALINA_SH=/opt/apache-tomcat/bin/catalina.sh \
     STARTUP_DIR=/

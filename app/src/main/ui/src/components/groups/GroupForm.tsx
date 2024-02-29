@@ -6,9 +6,10 @@ import {t} from "../../helpers/i18nHelpers";
 import {useBackURL} from "../../hooks/useBackURL";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";
-import {UsersService} from "../../services/Users";
+import { UsersService} from "../../services/Users";
 import {ConfirmationDialog} from "../ConfirmationDialog";
 import type {Group} from "../../services/Groups";
+import type {User} from "../../services/Users";
 import type {FormHandlerConfig} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 type GroupFormProps<T> = {
@@ -45,8 +46,8 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     };
 
     const loadMembers = async (searchValue: string): Promise<string[]> => {
-        const userData = await UsersService.find(undefined, {start: 0, limit: MAX_SEARCH_RESULTS, query: searchValue, exclude: handler.values.members});
-        return userData.data.map(x => x.username);
+        const userData = await UsersService.query(undefined, {page: 1, page_size: MAX_SEARCH_RESULTS, query: searchValue, exclude: handler.values.members});
+        return userData.data.map((x: User) => x.username);
     };
 
     return <>

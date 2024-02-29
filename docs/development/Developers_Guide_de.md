@@ -1,42 +1,167 @@
 # Usermgt entwickeln
 
-## Lokales LDAP ohne CES einrichten
+## Das Backend lokal entwickeln
 
-### Software-Anforderungen
-* Die folgenden Voraussetzungen müssen erfüllt sein:
-    - Oracle JDK / Open JDK 8 installieren
-    - Maven installieren (mit mvn -version prüfen, ob jdk 8 korrekt eingerichtet ist / falls nicht, JAVA_HOME ändern)
-    - Docker installieren
+Für die Entwicklung des Usermgt-Backends müssen die folgenden Voraussetzungen erfüllt sein:
 
-### Lokales LDAP mit Docker einrichten
-* Checken Sie das folgende Repository aus https://github.com/cloudogu/docker-sample-ldap
-* Gehen Sie in das eben geklonte Repository
-* Bauen Sie den Container `docker build -t usermgt/ldap .`
-* Starten Sie den Container `docker run --rm -p 389:389 usermgt/ldap`.
+- Oracle JDK / Open JDK 8 installieren
+- Maven installieren (mit mvn -version prüfen, ob jdk 8 korrekt eingerichtet ist / falls nicht, JAVA_HOME ändern)
+- Docker installieren
+
+Um das Usermgt-Backend lokal zu starten oder zu debuggen ist die Verbindung zu einem LDAP notwendig.
+Dieses LDAP kann entweder auch lokal in einen Docker-Container betrieben werden, oder es kann das LDAP aus dem CES
+verwendet werden.
+
+### Lokales LDAP in einem Docker-Container einrichten
+
+Folgende Schritte sind zum Starten des LDAP im Docker-Container nötig:
+
+1. Repository auschecken: https://github.com/cloudogu/docker-sample-ldap
+2. Den Container bauen: `docker build -t usermgt/ldap .`
+3. Den Container starten: `docker run --rm -p 389:389 usermgt/ldap`.
+4. Die LDAP-konfiguration für das Backend in der Datei [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml) eintragen: <!-- markdown-link-check-disable-line -->
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <ldap>
+        <host>localhost</host>
+        <port>389</port>
+    
+        <!-- LDAP User & Password   -->
+        <bind-dn>cn=usermgt_x53eMC,ou=Special Users,o=ces.local,dc=cloudogu,dc=com</bind-dn>
+        <bind-password>dykIuJz9eQzylL9HLNp4xy+fjPGsNsqvzulBE7iYtMqnvusmvG6Jc4aWKTtImTxz</bind-password>
+        
+        <user-base-dn>ou=People,o=ces.local,dc=cloudogu,dc=com</user-base-dn>
+        <group-base-dn>ou=Groups,o=ces.local,dc=cloudogu,dc=com</group-base-dn>
+    
+        <disable-member-listener>true</disable-member-listener>
+        <disabled>false</disabled>
+    </ldap>
+    ```
+   > Die User und Passwörter des LDAP Containers sind in
+   der [README](https://github.com/cloudogu/docker-sample-ldap/blob/master/README.md) zu finden.
+
+   > Das Passwort muss verschlüsselt sein. Dafür kann die [cipher.sh](../../app/src/main/webapp/WEB-INF/cipher.sh) <!-- markdown-link-check-disable-line -->
+   verwendet werden.
+
+### Das LDAP aus dem CES nutzen
+
+Um für das lokale Backend des Usermgt das LDAP aus dem CES zu nutzen, sind folgende Schritte nötig:
+
+1. Den Port des LDAP aus dem CES verfügbar machen.
+   Hier gibt es zwei Möglichkeiten:
+    - Den Port aus dem laufenden Container verfügbar machen. Zum Beispiel mit
+      dieser [Anleitung](https://stackoverflow.com/questions/19335444/how-do-i-assign-a-port-mapping-to-an-existing-docker-container)
+    - Den Port des LDAP über die `dogu.json` exposen:
+      Folgenden Eintrag in der `dogu.json` des LDAP-Dogus ergänzen:
+      ```json
+      "ExposedPorts": [
+        {
+          "Type": "tcp",
+          "Host": 389,
+          "Container": 389
+        }
+      ]
+      ```
+      Das LDAP-Dogu mit `cesapp build ldap` neu bauen und starten.
+2. Die LDAP-Konfiguration aus dem Usermgt-Dogu des CES
+   auslesen: `docker exec -it usermgt cat /var/lib/usermgt/conf/ldap.xml`
+3. Die LDAP-konfiguration für das Backend in der Datei [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml) eintragen: <!-- markdown-link-check-disable-line -->
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <ldap>
+      <!-- IP des lokalen CES eintragen-->
+      <host>192.168.56.2</host>
+      <port>389</port>
+      <bind-dn>cn=usermgt_lQURMd,ou=Special Users,o=ces.local,dc=cloudogu,dc=com</bind-dn>
+      <bind-password>wTyqbtiV9DdZvs0CCs8NU4MMmiRztny4PJt1sSvjz2G5zC2OVwWOoTA+Bj1R2rcE</bind-password>
+      <user-base-dn>ou=People,o=ces.local,dc=cloudogu,dc=com</user-base-dn>
+      <group-base-dn>ou=Groups,o=ces.local,dc=cloudogu,dc=com</group-base-dn>
+      <disabled>false</disabled>
+    </ldap>
+    ```
+   > Das Passwort ist bereits verschlüsselt und kann so übernommen werden.
+
+### Das Usermgt-Backend lokal starten
+
+Damit das Usermgt-Backend lokal ohne einen CAS verwendet werden kann muss die Umgebungsvariable `UNIVERSEADM_STAGE` auf
+den Wert `DEVELOPMENT` gesetzt werden.
+
+```shell
+export UNIVERSEADM_STAGE=DEVELOPMENT`
+```
+
+Anschließend kann das Backend wie folgt gestartet werden:
+
+- In das `app`-Verzeichnis wechseln: `cs app`
+- Das Projekt erstellen: `mvn clean install`
+- Das Projekt bauen und starten: `mvn -DskipTests -P-webcomponents package jetty:run-war`
+
+> Hierbei wird nur das Backend neu gebaut und gestartet, das Frontend wird nicht erstellt, da das
+> Maven-Profil `webcomponents` ignoriert wird.
+
+Das Backend ist unter der URL `http://localhost:8084/usermgt/api` erreichbar
+
+> Die Basisauthentifizierung im Entwicklungsmodus ist `Benutzer: admin | Passwort: admin`.
+
+## Das Frontend lokal entwickeln
+
+Das Frontend des Usermgt kann lokal entweder mit einem Mock-Backend oder mit dem lokalen Backen des Usermgt entwickelt
+werden.
+
+### Mock-Backend starten
+
+Das Mock-Backend kann mit folgendem Befehl gestartet werden: 
+
+```
+cd app/src/main/ui
+yarn backend
+```
+
+### lokales Dev-Backend starten
+
+Das lokale Dev-Backend kann wie [oben beschrieben](#das-backend-lokal-entwickeln) eingerichtet und gestartet werden.
+
+### Frontend starten
+
+Damit das lokale Frontend sich beim Backend authentifizieren kann muss die Datei `.env.local` erstellt werden.
+Dazu kann die Datei [`app/src/main/ui/.env`](../../app/src/main/ui/.env) als `app/src/main/ui/.env.local` kopiert werden. <!-- markdown-link-check-disable-line -->
+Dort werden dann die Credentials des lokalen Backends (`Benutzer: admin | Passwort: admin`) eingetragen.
 
 
-### Usermgt Entwicklungsmodus einrichten
-* `export UNIVERSEADM_STAGE=DEVELOPMENT`
+Das Frontend kann anschließend mit folgendem Befehl gestartet werden.
+```
+cd app/src/main/ui
+yarn install
+yarn dev
+```
 
-### In den richtigen Ordner begeben
-* cd `app`
+## Test-Daten für die lokale Entwicklung erstellen
 
-### Projekt erstellen:
-- `mvn clean install`
+Für die lokale Entwicklung können generierte Testdaten eingespielt werden.
 
-### Bauen Sie das Projekt und starten Sie den Server
-* `mvn -DskipTests -P'!webcomponents' package jetty:run-war`
+### Test-Benutzer-Daten
 
-### Öffnen Sie die Anwendung
-* `http://localhost:8084/universeadm/`
-- Basisauthentifizierung verwenden `Benutzer: admin | Passwort: admin`
+- Nutzer anlegen: `create_users.py <Nutzeranzahl>`
 
-## Lokales LDAP mit CES einrichten
-* Binden Sie den ldap-Port an das Host-System (z.B. https://stackoverflow.com/questions/19335444/how-do-i-assign-a-port-mapping-to-an-existing-docker-container)
-    - alternativ ExposedPorts zur `dogu.json` hinzufügen und den Container neu aufbauen
-* Ändern Sie die `ldap.xml`-Konfiguration und stellen Sie sicher, dass das Passwort verschlüsselt ist.
-    - einfache Lösung springen Sie in den usermgt-Container und kopieren Sie die `ldap.xml`
-    - alternative Lösung verwenden Sie die `cipher.sh` innerhalb des usermgt-Containers ` /opt/apache-tomcat/webapps/usermgt/WEB-INF/cipher.sh encrypt <PASSWORD>`
+Wird das Skript ohne Parameter aufgerufen, werden 5 Benutzer angelegt. Die Zählung beginnt immer bei 0.
+Tritt ein Datenkonflikt auf, wird das Skript trotzdem fortgeführt.
+
+Beispiel: 10 Nutzer anlegen
+```shell
+docs/development/create_users.py 10
+```
+
+### Test-Gruppen-Daten
+
+- Gruppen anlegen: `create_groups.py <Gruppenanzahl>`
+
+Wird das Skript ohne Parameter aufgerufen, werden 5 Benutzer angelegt. Die Zählung beginnt immer bei 0.
+Tritt ein Datenkonflikt auf, wird das Skript trotzdem fortgeführt.
+
+Beispiel: 10 Gruppen anlegen
+```shell
+docs/development/create_groups.py 10
+```
 
 ## Shell-Tests mit BATS
 
@@ -140,3 +265,5 @@ fi
 ```
 
 Es muss sichergestellt werden, dass die Variablen in der Produktions- (z. B. `Dockerfile`) und Testumgebung richtig gesetzt sind (hierzu eignen sich Umgebungsvariablen im Test).
+
+

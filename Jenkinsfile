@@ -171,7 +171,7 @@ node('docker') {
             stage('Integration Tests') {
                 echo "run integration tests."
                 ecoSystem.runCypressIntegrationTests([
-                        cypressImage     : "cypress/included:12.9.0",
+                        cypressImage     : "cypress/included:13.6.6",
                         enableVideo      : params.EnableVideoRecording,
                         enableScreenshots: params.EnableScreenshotRecording,
                 ])

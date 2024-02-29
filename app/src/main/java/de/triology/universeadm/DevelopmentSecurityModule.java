@@ -53,9 +53,9 @@ public class DevelopmentSecurityModule extends BaseSecurityModule {
     bindRealm().to(DummyRealm.class);
     
     // protect uris
-    addFilterChain("/api/users**", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/groups**", AUTHC_BASIC, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/**", AUTHC_BASIC);
+    addFilterChain("/api/users**", filterConfig(AUTHC_BASIC), filterConfig(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/groups**", filterConfig(AUTHC_BASIC), filterConfig(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/**", filterConfig(AUTHC_BASIC));
   }
   
   public static class DummyRealm extends AuthorizingRealm{

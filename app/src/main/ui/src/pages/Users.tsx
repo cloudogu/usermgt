@@ -6,8 +6,10 @@ import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
-import useUserTableState from "../hooks/useUserTableState";
+import usePaginationTableState from "../hooks/usePaginationTableState";
 import {ApplicationContext} from "../main";
+import {UsersService} from "../services/Users";
+import type {User} from "../services/Users";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
@@ -21,7 +23,7 @@ export default function Users() {
         return params.toString();
     }, [location]);
 
-    const {users, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = useUserTableState();
+    const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<User>(UsersService);
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -47,7 +49,7 @@ export default function Users() {
         </div>
         {notification}
         <ActionTableRoot paginationControl={paginationControl} isLoading={isLoading}>
-            <ActionTable className={"mt-default-2x"}>
+            <ActionTable className={"mt-default-2x"} data-testid="users">
                 <ActionTable.HeadWithOneRow>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.username")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.displayName")}</ActionTable.HeadWithOneRow.Column>
@@ -60,8 +62,8 @@ export default function Users() {
                 }
                 {!isLoading &&
                     <ActionTable.Body>
-                        {users.map(user => (
-                            <ActionTable.Body.Row key={user.username}>
+                        {items.map(user => (
+                            <ActionTable.Body.Row key={user.username} data-testid={`users-row-${user.username}`}>
                                 <ActionTable.Body.Row.Column className="font-bold break-all">
                                     {user.username}
                                 </ActionTable.Body.Row.Column>
@@ -69,7 +71,7 @@ export default function Users() {
                                     {user.displayName}
                                 </ActionTable.Body.Row.Column>
                                 <ActionTable.Body.Row.Column>
-                                    <a href={`mailto:${user.mail}`}/>
+                                    <a href={`mailto:${user.mail}`}>{user.mail}</a>
                                 </ActionTable.Body.Row.Column>
                                 <ActionTable.Body.Row.Column className="flex justify-center">
                                     <EditLink
@@ -80,7 +82,11 @@ export default function Users() {
                                         variant={"danger"}
                                         dialogBody={translate("users.confirmation.message", {username: user.username})}
                                         dialogTitle={translate("users.confirmation.title")}
-                                        onConfirm={() => onDelete(user.username)}
+                                        data-testid="user-delete-dialog"
+                                        onConfirm={() => onDelete(user.username)
+                                            .then(() => notify(t("users.delete.notification.success", {username: user.username}), "primary"))
+                                            .catch(() => notify(t("users.delete.notification.error", {username: user.username}), "danger"))
+                                        }
                                         hasCancel
                                     >
                                         <DeleteButton
