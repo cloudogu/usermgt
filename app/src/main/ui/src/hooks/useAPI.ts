@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export type QueryOptions = { start: number; limit: number; query: string; exclude?: string[]; }
+export type QueryOptions = { page: number; page_size: number; query: string; exclude?: string[]; context?: string }
 
 export type AbortableCallbackWithArgs<T, Y> = (_signal?: AbortSignal, _args?: Y) => Promise<T>
 export type AbortableCallback<T> = (_signal?: AbortSignal) => Promise<T>

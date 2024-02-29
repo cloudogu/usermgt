@@ -6,11 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add ces-theme-tailwind in a second, higher, version (#111)
+- Add ces-theme-tailwind in a second, higher, version (v0.3.6) (#111)
 - add Cloudogu logo for better container crash visibility
 
 ### Changed
-- Change table in users page to the table in the new theme (#111) 
 - Stream all log output to standard out, configure log level (#115)
    - logfiles will neither reside inside the container file system nor a volume
    - add dogu configuration key `logging/root` to control the output log level
@@ -21,6 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - after update to this version you may want to delete `/var/lib/usermgt/conf` with root permissions from your host 
     like this `sudo rm -r /var/lib/ces/usermgt/volumes/data/conf`
   - `/var/lib/usermgt/conf2` will now contain file privileges with the (unprivileged) UID/GID 1000
+- Change table in users page to the table in the new theme (#111)
+- Change table in groups page to the table in the new theme (#111) 
+- Change table in import pages to the table in the new theme (#111) 
+- Use Virtual-List-View for querying LDAP with pagination (#112)
+  - requires at least v2.6.2-7 of the LDAP-Dogu
+- Refactor Pagination-API for users, groups and import-summaries (#112)
+- Update the developer guide documentation (#112)
+
+### Fixed
+- Fix local development of the backend
 
 ## [v1.12.1-1] - 2024-01-11
 ### Changed
@@ -153,7 +162,7 @@ https://tomcat.apache.org/security-8.html#Apache_Tomcat_8.x_vulnerabilities
 ## [v1.4.1-2] - 2020-12-15
 ### Added
 - Ability to set memory limit via `cesapp edit-config`
-- Ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the Usermgt process inside the container via `cesapp edit-conf` (#27)
+- Ability to configure the `MaxRamPercentage` and `MinRamPercentage` for the PlantUML process inside the container via `cesapp edit-conf` (#27)
 
 ## [v1.4.1-1] - 2020-10-09
 ### Fixed

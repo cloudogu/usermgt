@@ -1,4 +1,4 @@
-import {Table} from "@cloudogu/deprecated-ces-theme-tailwind";
+import {Table} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {t} from "../../helpers/i18nHelpers";
 import type {ImportError} from "../../services/ImportUsers";
@@ -16,26 +16,26 @@ export default function UsersImportErrorTable({content, ...props}: UsersImportEr
     return (
         <Table {...props} className={"min-w-[900px]"}>
             <Table.Head>
-                <Table.Head.Tr>
-                    <Table.Head.Th>
+                <Table.Head.Row>
+                    <Table.Head.Row.Column>
                         {t("usersImportResult.table.errors.line")}
-                    </Table.Head.Th>
-                    <Table.Head.Th>
+                    </Table.Head.Row.Column>
+                    <Table.Head.Row.Column>
                         {t("usersImportResult.table.errors.error")}
-                    </Table.Head.Th>
-                </Table.Head.Tr>
+                    </Table.Head.Row.Column>
+                </Table.Head.Row>
             </Table.Head>
             <Table.Body>
                 {
                     content.map((c, i) =>
-                        <Table.Body.Tr key={i}>
-                            <Table.Body.Td>
+                        <Table.Body.Row key={i}>
+                            <Table.Body.Row.Column>
                                 {content[i].lineNumber}
-                            </Table.Body.Td>
-                            <Table.Body.Td>
+                            </Table.Body.Row.Column>
+                            <Table.Body.Row.Column>
                                 {prepareMessage(content[i])}
-                            </Table.Body.Td>
-                        </Table.Body.Tr>
+                            </Table.Body.Row.Column>
+                        </Table.Body.Row>
                     )
                 }
             </Table.Body>

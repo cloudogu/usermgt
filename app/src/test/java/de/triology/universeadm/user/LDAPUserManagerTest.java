@@ -33,6 +33,7 @@ import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.triology.universeadm.*;
+import de.triology.universeadm.group.Group;
 import de.triology.universeadm.mapping.DefaultMapper;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
@@ -242,72 +243,27 @@ public class LDAPUserManagerTest {
 
     @Test
     @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testGetAll() throws LDAPException {
+    public void testQueryWithPaging() throws LDAPException {
         LDAPUserManager manager = createUserManager();
 
-        List<User> users = manager.getAll();
-        assertNotNull(users);
+        PaginationResult<User> result = manager.query(new PaginationQuery(1, 1));
+        assertNotNull(result);
+        assertEquals(3, result.getTotalEntries());
 
-        List<User> expUsers = Lists.newArrayList(
-                Users.createDent(),
-                Users.createTrillian(),
-                Users.createTrillexterno()
-        );
-
-
-        assertEquals(expUsers.size(), users.size());
-
-        for (int i = 0; i < users.size(); i++) {
-            assertUser(expUsers.get(i), users.get(i));
-        }
-    }
-
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testGetAllPaging() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        PagedResultList<User> users = manager.getAll(0, 1);
-        assertNotNull(users);
-        assertEquals(0, users.getStart());
-        assertEquals(1, users.getLimit());
-        assertEquals(3, users.getTotalEntries());
-
-        List<User> entries = users.getEntries();
+        List<User> entries = result.getEntries();
         assertEquals(1, entries.size());
 
         User expUserDent = Users.createDent();
         assertUser(expUserDent, entries.get(0));
 
-        users = manager.getAll(1, 1);
-        assertEquals(1, users.getStart());
-        assertEquals(1, users.getLimit());
-        assertEquals(3, users.getTotalEntries());
+        result = manager.query(new PaginationQuery(2, 1));
+        assertEquals(3, result.getTotalEntries());
 
-        entries = users.getEntries();
+        entries = result.getEntries();
         assertEquals(1, entries.size());
 
         User expUserTricia = Users.createTrillian();
         assertUser(expUserTricia, entries.get(0));
-    }
-
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testSearch() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        User expUser = Users.createTrillian();
-
-        List<User> users = manager.search(expUser.getUsername());
-        assertNotNull(users);
-        assertEquals(1, users.size());
-
-        assertUser(expUser, users.get(0));
-    }
-
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    @Test(expected = IllegalQueryException.class)
-    public void testSearchInvalidCharacters() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        manager.search("tri(c)ia");
     }
 
     @Test
@@ -330,18 +286,6 @@ public class LDAPUserManagerTest {
     public void testFindExternal() throws LDAPException {
         Entry entry = ldap.getConnection().getEntry("uid=trillexterno,ou=People,dc=hitchhiker,dc=com");
         assertEquals("TRUE", entry.getAttributeValue("external"));
-    }
-
-    @Test
-    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
-    public void testSearchExternal() throws LDAPException {
-        LDAPUserManager manager = createUserManager();
-        User expUser = Users.createTrillexterno();
-
-        List<User> users = manager.search(expUser.getUsername());
-        assertNotNull(users);
-        assertEquals(1, users.size());
-        assertUser(expUser, users.get(0));
     }
 
     private void assertUser(User expUser, User actUser) {

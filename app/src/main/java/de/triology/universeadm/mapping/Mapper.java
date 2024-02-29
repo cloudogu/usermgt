@@ -45,7 +45,8 @@ public interface Mapper<T>
   public Filter getBaseFilter();
   
   public List<String> getSearchAttributes();
-  
+  public MappingAttribute getAttribute(String name);
+
   public Attribute getObjectClasses();
   
   public String getRDNName();

@@ -34,6 +34,7 @@ import de.triology.universeadm.*;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingHandler;
+import de.triology.universeadm.user.User;
 import de.triology.universeadm.validation.Validator;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -130,18 +131,11 @@ public class LDAPGroupManager extends AbstractLDAPManager<Group> implements Grou
     }
 
     @Override
-    public List<Group> getAll() {
-        logger.debug("get all groups");
-        SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
-        return mapping.getAll();
-    }
-
-    @Override
-    public List<Group> search(String query) {
-        logger.debug("search groups with query {}", query);
+    public PaginationResult<Group> query(PaginationQuery query) {
+      logger.debug("get paged groups, query={} ", query);
         SecurityUtils.getSubject().checkRole(Roles.ADMINISTRATOR);
 
-        return mapping.search(query);
+        return mapping.query(query);
     }
 
     @Override

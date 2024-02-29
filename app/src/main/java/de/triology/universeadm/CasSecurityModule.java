@@ -109,17 +109,17 @@ public class CasSecurityModule extends BaseSecurityModule {
     bind(SubjectFactory.class).to(CasSubjectFactory.class);
     
     // protect uris
-    addFilterChain("/login/cas", ANON, CAS);
-    addFilterChain("/api/users", API, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/users/*", API, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/users/import/*", API, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/groups", API, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/groups/*", API, config(ROLES, Roles.ADMINISTRATOR));
-    addFilterChain("/api/account", API);
-    addFilterChain("/api/account/*", API);
-    addFilterChain("/**", AUTHC);
+    addFilterChain("/login/cas", filterConfig(ANON), filterConfig(CAS));
+    addFilterChain("/api/users", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/users/*", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/users/import/*", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/groups", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/groups/*", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
+    addFilterChain("/api/account", filterConfig(API));
+    addFilterChain("/api/account/*", filterConfig(API));
+    addFilterChain("/**", filterConfig(AUTHC));
   }
-  
+
   private static class CasRealmProvider implements Provider<Realm>
   {
 
