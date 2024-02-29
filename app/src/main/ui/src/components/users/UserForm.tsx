@@ -1,5 +1,5 @@
-import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {deprecated_Form as Form} from "@cloudogu/ces-theme-tailwind";
+import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
@@ -99,7 +99,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             {notification}
             <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}
                 data-testid="username" placeholder={t("users.placeholder.username")}
-                                     hint={t("users.hint.username")}>
+                hint={t("users.hint.username")}>
                 {t("editUser.labels.username")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname"
