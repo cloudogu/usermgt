@@ -4,8 +4,9 @@ import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
-import {GroupsService} from "../../services/Groups";
+import { GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
+import type {Group} from "../../services/Groups";
 import type {User} from "../../services/Users";
 import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
 
@@ -63,7 +64,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 exclude: handler.values.memberOf ?? [],
             }
         );
-        return groupsData.data.map(x => x.name);
+        return groupsData.data.map((x: Group) => x.name);
     };
 
     const renderGroupsList = (readonly = false, pageSize = 5) => (
