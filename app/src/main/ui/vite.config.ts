@@ -1,8 +1,16 @@
+import path from "path";
 import react from "@vitejs/plugin-react";
 import {defineConfig, loadEnv} from "vite";
 
+const backendURL = "http://localhost:8084";
+
 export default defineConfig(({command, mode}) => {
     const config = {
+        resolve: {
+            alias: [
+                {find: "@cloudogu/deprecated-ces-theme-tailwind", replacement: path.resolve(__dirname, "./node_modules/@cloudogu/deprecated/ces-theme-tailwind")},
+            ],
+        },
         plugins: [react()],
         assetsInclude: ["**/*.svg"],
         define: {
@@ -10,7 +18,7 @@ export default defineConfig(({command, mode}) => {
         },
         base: "/usermgt/",
         build: {
-            chunkSizeWarningLimit: 2048
+            chunkSizeWarningLimit: 2048,
         }
     };
 
@@ -20,19 +28,19 @@ export default defineConfig(({command, mode}) => {
         config["server"] = {
             proxy: {
                 "/usermgt/api": {
-                    target: "https://192.168.56.2",
+                    target: backendURL,
                     changeOrigin: true,
                     secure: false,
                     auth: `${env.AUTH_USER}:${env.AUTH_PASSWORD}`
                 },
                 "/usermgt/downloads": {
-                    target: "http://192.168.56.2",
+                    target: backendURL,
                     changeOrigin: true,
                     secure: false,
                     auth: `${env.AUTH_USER}:${env.AUTH_PASSWORD}`
                 },
                 "/usermgt/:import": {
-                    target: "http://192.168.56.2",
+                    target: backendURL,
                     changeOrigin: true,
                     secure: false,
                     auth: `${env.AUTH_USER}:${env.AUTH_PASSWORD}`

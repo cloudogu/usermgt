@@ -1,16 +1,12 @@
 import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
+import {PaginationError} from "../hooks/usePaginationTableState";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {RefetchResponse} from "../hooks/usePaginatedData";
+import type { PaginationErrorResponse, PaginationResponse} from "../hooks/usePaginationTableState";
 import type {AxiosError, AxiosResponse} from "axios";
 
-interface GroupsResponse {
-    entries: Group[];
-    start: number;
-    limit: number;
-    totalEntries: number;
-}
+export type GroupsResponse = PaginationResponse<Group>;
 
 export type Group = {
     name: string;
@@ -22,33 +18,31 @@ export type Group = {
 export type UndeletableGroupsResponse = string[];
 
 export const GroupsService = {
-    async list(signal?: AbortSignal, opts?: QueryOptions): Promise<RefetchResponse<Group[]>> {
-        const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
-            params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
-            signal: signal
-        } as any);
-        if (groupsResponse.status < 200 || groupsResponse.status > 299) {
-            throw new Error("failed to load group data: " + groupsResponse.status);
-        }
-        const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable", {
-            signal: signal
-        } as any);
+    async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<Group>> {
+        try {
+            const groupsResponse = await Axios.get<GroupsResponse>("/groups", {
+                params: (opts?.exclude) ? {...opts, exclude: (opts?.exclude || []).join(",")} : opts,
+                signal: signal
+            } as any);
 
-        if (undeletableGroupsResponse.status < 200 || undeletableGroupsResponse.status > 299) {
-            throw new Error("failed to load undeletable groups information: " + undeletableGroupsResponse.status);
-        }
-        const groupsData = groupsResponse.data;
-        const undeletableGroupsData = undeletableGroupsResponse.data;
-        const groups = mapSystemGroups(groupsData.entries, undeletableGroupsData);
+            const undeletableGroupsResponse = await Axios<UndeletableGroupsResponse>("/groups/undeletable", {
+                signal: signal
+            } as any);
 
-        return {
-            data: groups,
-            pagination: {
-                start: groupsData.start ?? 0,
-                limit: groupsData.limit ?? 0,
-                totalEntries: groupsData.totalEntries ?? 0,
-            },
-        };
+            const groupsData = groupsResponse.data;
+            const undeletableGroupsData = undeletableGroupsResponse.data;
+            groupsData.data = mapSystemGroups(groupsData.data, undeletableGroupsData);
+
+            return groupsData;
+        } catch (err: any) {
+            const status = err.response.status;
+            if (status === 400) {
+                const errorResponse = err.response.data as PaginationErrorResponse;
+                throw new PaginationError(errorResponse);
+            }
+
+            throw new Error("failed to load group data: " + err.message);
+        }
     },
     async get(signal?: AbortSignal, groupName?: string): Promise<Group> {
         if (!groupName) {

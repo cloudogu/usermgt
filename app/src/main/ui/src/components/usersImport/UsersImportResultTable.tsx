@@ -19,15 +19,15 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
         "w-[12.5%]",
         "w-[12.5%]",
         "w-[12.5%]",
-        "w-[12.5%]",
-        "w-[12.5%]",
-        "w-[12.5%]",
+        "w-[20%]",
+        "w-[7.5%]",
+        "w-[7.5%]",
     ];
 
     return (
         <Table {...props} className={"table-fixed min-w-[900px]"}>
             <Table.Head>
-                <Table.Head.Tr>
+                <Table.Head.Row>
                     {
                         [
                             t("usersImportResult.table.success.username"),
@@ -38,19 +38,19 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                             t("usersImportResult.table.success.external"),
                             t("usersImportResult.table.success.passwordReset"),
                         ].map((k, i) =>
-                            <Table.Head.Th key={k} className={`${columnWidths[i]} break-all`}>
+                            <Table.Head.Row.Column key={k} className={`${columnWidths[i]} break-word`}>
                                 {k}
-                            </Table.Head.Th>
+                            </Table.Head.Row.Column>
                         )
                     }
-                </Table.Head.Tr>
+                </Table.Head.Row>
             </Table.Head>
             <Table.Body>
                 {
                     content.map((c, key) => {
                         const user = (c as any) || {};
                         return (
-                            <Table.Body.Tr key={key}>
+                            <Table.Body.Row key={key}>
                                 {[
                                     "username",
                                     "givenname",
@@ -65,15 +65,15 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                                             const isBoolean = h === "external" || h === "passwordReset";
                                             const isString = !isBoolean;
                                             return (
-                                                <Table.Body.Td key={h} className={`${columnWidths[i]} break-all`}>
+                                                <Table.Body.Row.Column key={h} className={`${columnWidths[i]} break-all`}>
                                                     {isBoolean && ((user[h] as boolean) ? t("usersImportResult.table.success.true") : t("usersImportResult.table.success.false"))}
                                                     {isString && user[h]}
-                                                </Table.Body.Td>
+                                                </Table.Body.Row.Column>
                                             );
                                         }
                                     )
                                 }
-                            </Table.Body.Tr>
+                            </Table.Body.Row>
                         );
                     })
                 }

@@ -19,4 +19,4 @@ Feature: Tests for list of users.
     When the user opens the users page
     And the user sets the users-filter to "test_2"
     And the user clears the users-filter
-    Then the users-page contains exactly "20" users
+    Then the users-page contains exactly "25" users

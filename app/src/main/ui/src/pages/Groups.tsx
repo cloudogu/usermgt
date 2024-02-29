@@ -1,65 +1,30 @@
-import {Button, H1, Searchbar, Table, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
-import React from "react";
+import {ActionTable, ActionTableRoot, ConfirmDialog, translate,} from "@cloudogu/ces-theme-tailwind";
+import {Button, H1, Searchbar, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
+import React , {useMemo}from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import {ConfirmationDialog} from "../components/ConfirmationDialog";
-import {DeleteButton, EditButton} from "../components/DeleteButton";
+import {DeleteButton} from "../components/DeleteButton";
+import EditLink from "../components/EditLink";
 import {t} from "../helpers/i18nHelpers";
-import {useConfirmation} from "../hooks/useConfirmation";
-import useGroups from "../hooks/useGroups";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
+import usePaginationTableState from "../hooks/usePaginationTableState";
 import {GroupsService} from "../services/Groups";
 import type {Group} from "../services/Groups";
 
-const FIRST_PAGE = 1;
 
 export default function Groups() {
-    const {
-        data: {value: groups, isLoading, currentPage: current, pageCount},
-        setPage,
-        refetch,
-        setSearchString: setQuery,
-        opts
-    } = useGroups();
-
     const location = useLocation();
     const navigate = useNavigate();
-    const {notification, notify, clearNotification} = useAlertNotification();
+    const {notification, notify} = useAlertNotification();
     useNotificationAfterRedirect(notify);
-    const {open, setOpen: toggleModal, targetName: group, setTargetName: setGroup} = useConfirmation();
-
-    const changePage = (selectedPage: number) => {
-        // clearNotification();
-        setPage(selectedPage);
-    };
-    const onSearch = (query: string) => {
-        clearNotification();
-        setQuery(query);
-    };
-    const updatePage = () => (groups?.length ?? 0) === 1
-        && setPage(Math.max((current ?? 2) - 1, FIRST_PAGE))
-        || refetch();
-
-    const openConfirmationDialog = (groupName: string): void => {
-        toggleModal(true);
-        setGroup(groupName);
-    };
-    const onDelete = async (groupName: string) => {
-        try {
-            await GroupsService.delete(groupName);
-            updatePage();
-            notify(t("groups.notification.success", {groupName: groupName}), "primary");
-        } catch (e) {
-            updatePage();
-            notify(t("groups.notification.error", {groupName: groupName}), "danger");
-        }
-        toggleModal(false);
-    };
-    const editGroup = (groupName: string) => {
+    const backUrlParams = useMemo((): string => {
         const backURL = `/groups${location.search}`;
         const params = new URLSearchParams();
         params.set("backURL", backURL);
-        navigate({pathname: `/groups/${groupName}/edit`, search: params.toString()});
-    };
+        return params.toString();
+    }, [location]);
+
+    const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<Group>(GroupsService);
+
     return <>
         <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.groups")}</H1>
@@ -70,72 +35,69 @@ export default function Groups() {
                     disabled={isLoading} onClick={() => navigate("/groups/new")}>
                     {t("groups.buttons.create")}</Button>
                 <Searchbar
-                    placeholder={"Filter"} clearOnSearch={false} onSearch={onSearch}
-                    onClear={() => setQuery("")} startValueSearch={opts.query}
+                    placeholder={"Filter"} clearOnSearch={false} onSearch={updateSearchQuery}
+                    onClear={() => updateSearchQuery("")} startValueSearch={searchQuery}
                     data-testid="groups-filter" className="mt-5 mb-2.5" disabled={isLoading}/>
             </div>
         </div>
         {notification}
-        <ConfirmationDialog
-            open={open ?? false}
-            data-testid="group-delete-dialog"
-            onClose={() => toggleModal(false)}
-            onConfirm={async () => {
-                await onDelete(group ?? "");
-            }}
-            title={t("groups.confirmation.title")}
-            message={t("groups.confirmation.message", {groupName: group})}/>
-
-        <Table className="my-4" data-testid="groups-table">
-            <Table.Head key={"table-head"}>
-                <Table.Head.Tr className={"uppercase"}>
-                    <Table.Head.Th>{t("groups.table.name")}</Table.Head.Th>
-                    <Table.Head.Th>{t("groups.table.description")}</Table.Head.Th>
-                    <Table.Head.Th>{t("groups.table.users")}</Table.Head.Th>
-                    <Table.Head.Th className="w-0"/>
-                </Table.Head.Tr>
-            </Table.Head>
-            <Table.ConditionalBody show={!isLoading}>
-                {groups?.map(group => createGroupRow(group, openConfirmationDialog, editGroup))}
-            </Table.ConditionalBody>
-            <Table.ConditionalFoot show={!isLoading && (pageCount ?? 1) > 1}>
-                <Table.Foot.Pagination
-                    data-testid="groups-footer"
-                    className={"fixed bottom-4 left-1/2 -translate-x-1/2"}
-                    currentPage={current ?? 1}
-                    pageCount={pageCount ?? 1}
-                    onPageChange={changePage}/>
-            </Table.ConditionalFoot>
-        </Table>
+        <ActionTableRoot paginationControl={paginationControl} isLoading={isLoading}>
+            <ActionTable className={"mt-default-2x"} data-testid="groups">
+                <ActionTable.HeadWithOneRow>
+                    <ActionTable.HeadWithOneRow.Column>{t("groups.table.name")}</ActionTable.HeadWithOneRow.Column>
+                    <ActionTable.HeadWithOneRow.Column>{t("groups.table.description")}</ActionTable.HeadWithOneRow.Column>
+                    <ActionTable.HeadWithOneRow.Column>{t("groups.table.users")}</ActionTable.HeadWithOneRow.Column>
+                    <ActionTable.HeadWithOneRow.Column
+                        align={"center"}>{t("users.table.actions")}</ActionTable.HeadWithOneRow.Column>
+                </ActionTable.HeadWithOneRow>
+                {isLoading &&
+                    <ActionTable.SkeletonBody columns={4} rows={20}/>
+                }
+                {!isLoading &&
+                    <ActionTable.Body>
+                        {items.map(group => (
+                            <ActionTable.Body.Row key={group.name} data-testid={`groups-row-${group.name}`}>
+                                <ActionTable.Body.Row.Column className="font-bold break-all">
+                                    {group.name}
+                                </ActionTable.Body.Row.Column>
+                                <ActionTable.Body.Row.Column className={"break-all"}>
+                                    <p>{group.description}</p>
+                                    {group.isSystemGroup ?
+                                        <p className="font-bold">{t("groups.table.systemGroup")}</p> : ""}
+                                </ActionTable.Body.Row.Column>
+                                <ActionTable.Body.Row.Column>
+                                    <span className="flex justify-center">
+                                        {group.members?.length ?? 0}
+                                    </span>
+                                </ActionTable.Body.Row.Column>
+                                <ActionTable.Body.Row.Column className="flex justify-center">
+                                    <EditLink
+                                        className={"flex items-center"}
+                                        to={`/groups/${group?.name ?? ""}/edit?${backUrlParams}`}
+                                        id={`${group?.name}-edit-link`}/>
+                                    <ConfirmDialog
+                                        variant={"danger"}
+                                        dialogBody={translate("groups.confirmation.message", {groupName: group.name})}
+                                        dialogTitle={translate("groups.confirmation.title")}
+                                        data-testid="group-delete-dialog"
+                                        onConfirm={() => onDelete(group.name)
+                                            .then(() => notify(t("groups.delete.notification.success", {groupName: group.name}), "primary"))
+                                            .catch(() => notify(t("groups.delete.notification.error", {groupName: group.name}), "danger"))
+                                        }
+                                        hasCancel
+                                    >
+                                        <DeleteButton
+                                            id={`${group?.name}-delete-button`}
+                                            disabled={group.isSystemGroup}
+                                            title={t("groups.table.actions.delete")}
+                                        />
+                                    </ConfirmDialog>
+                                </ActionTable.Body.Row.Column>
+                            </ActionTable.Body.Row>
+                        ))}
+                    </ActionTable.Body>
+                }
+            </ActionTable>
+        </ActionTableRoot>
     </>;
-}
-
-function createGroupRow(group: Group, onDelete: (_: string) => void, onEdit: (_: string) => void) {
-    return <Table.Body.Tr key={group.name}>
-        <Table.Body.Td>
-            <span className="font-bold break-all">{group.name}</span>
-        </Table.Body.Td>
-        <Table.Body.Td>
-            <p>{group.description}</p>
-            {group.isSystemGroup ?
-                <p className="font-bold">{t("groups.table.systemGroup")}</p> : ""}
-        </Table.Body.Td>
-        <Table.Body.Td>
-            <span className="flex justify-center w-full">
-                {group.members?.length ?? 0}
-            </span>
-        </Table.Body.Td>
-        <Table.Body.Td className="flex justify-center">
-            <EditButton
-                aria-label={t("groups.table.actions.editAria")}
-                onClick={() => onEdit(group.name)}
-                id={`${group?.name}-edit-button`}
-                title={t("groups.table.actions.edit")}/>
-            <DeleteButton
-                aria-label={t("groups.table.actions.deleteAria")} disabled={group.isSystemGroup}
-                title={t("groups.table.actions.delete")}
-                id={`${group?.name}-delete-button`}
-                onClick={() => onDelete(group.name)}/>
-        </Table.Body.Td>
-    </Table.Body.Tr>;
 }

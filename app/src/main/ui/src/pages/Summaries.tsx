@@ -1,11 +1,9 @@
-import {H1, useAlertNotification} from "@cloudogu/ces-theme-tailwind";
+import {H1, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
 import React from "react";
-import SummaryList from "../components/summaries/SummaryList";
+import SummariesTable from "../components/summaries/SummariesTable";
 import {t} from "../helpers/i18nHelpers";
-import useSummaries from "../hooks/useSummaries";
 
 const Summaries = () => {
-    const {data, setPage, refetch} = useSummaries();
     const {notification, notify} = useAlertNotification();
 
     return <>
@@ -15,15 +13,7 @@ const Summaries = () => {
         <div className={"mb-2"}>
             {notification}
         </div>
-        <SummaryList
-            summaries={data.value || []}
-            pageCount={data.pageCount}
-            currentPage={data.currentPage}
-            onPageChange={setPage}
-            isLoading={data.isLoading}
-            notify={notify}
-            refetch={refetch}
-        />
+        <SummariesTable notify={notify}/>
     </>;
 };
 

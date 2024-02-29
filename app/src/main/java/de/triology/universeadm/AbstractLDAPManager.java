@@ -44,8 +44,6 @@ public abstract class AbstractLDAPManager<T> implements Manager<T> {
 
     public static final String EQUAL = "=";
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractLDAPManager.class);
-
     protected List<Constraint<T>> constraints;
 
     public AbstractLDAPManager() {
@@ -57,27 +55,5 @@ public abstract class AbstractLDAPManager<T> implements Manager<T> {
         modify(object, true);
     }
 
-    @Override
-    public PagedResultList<T> getAll(int start, int limit) {
-        logger.debug("get paged entities, start={} and limit={}", start, limit);
-        return Paginations.createPaging(getAll(), start, limit);
-    }
-
     protected abstract String typeToString(final T e);
-
-    @Override
-    public PagedResultList<T> search(String query, int start, int limit) {
-        logger.debug("search paged entities, query={}, start={} and limit={}", query, start, limit);
-        return Paginations.createPaging(search(query), start, limit);
-    }
-
-    public PagedResultList<T> search(final String query, final int start, final int limit, final List<String> exclude) {
-        logger.debug("search paged entities, query={}, start={} and limit={} and exclude={}", query, start, limit, String.join(",", exclude));
-        final List<T> searchResults = search(query)
-                .stream()
-                .filter(t -> !exclude.contains(this.typeToString(t)))
-                .collect(Collectors.toList());
-        return Paginations.createPaging(searchResults, start, limit);
-    }
-
 }

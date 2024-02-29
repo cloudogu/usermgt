@@ -14,7 +14,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@cloudogu/deprecated-ces-theme-tailwind": ["./node_modules/@cloudogu/deprecated/ces-theme-tailwind"],
+    }
   },
   "include": [
     "src"

@@ -1,8 +1,8 @@
 file:
   /startup.sh:
     exists: true
-    owner: root
-    group: root
+    owner: tomcat
+    group: tomcat
     filetype: file
     contains: []
 user:

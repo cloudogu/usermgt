@@ -23,7 +23,8 @@ Feature: Tests for the functionality to prompt a user for a password change at t
     And the test user logs in with correct credentials
     And the user opens the users page
     And the user waits a few seconds
-    And the user clicks the edit function in his own user entry
+    When the user sets the users-filter to "testuser"
+    And the user clicks on the edit-user button for the user "testuser"
     Then the password reset flag is not visible
 
   Scenario: upon opening the user edit form, the password reset flag is set to unchecked
