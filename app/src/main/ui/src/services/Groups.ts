@@ -1,9 +1,9 @@
 import {isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
-import {PaginationError} from "../hooks/usePaginatedData";
+import {PaginationError} from "../hooks/usePaginationTableState";
 import type {QueryOptions} from "../hooks/useAPI";
-import type { PaginationErrorResponse, PaginationResponse} from "../hooks/usePaginatedData";
+import type { PaginationErrorResponse, PaginationResponse} from "../hooks/usePaginationTableState";
 import type {AxiosError, AxiosResponse} from "axios";
 
 export type GroupsResponse = PaginationResponse<Group>;
