@@ -10,18 +10,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class MailConfiguration {
 
     @XmlElement(name = "host")
-    private final String host;
+    private String host;
     @XmlElement(name = "port")
-    private final String port;
+    private String port;
 
     @XmlElement(name = "from")
-    private final String from;
+    private String from;
 
     @XmlElement(name = "subject")
-    private final String subject;
+    private String subject;
 
     @XmlElement(name = "message")
-    private final String message;
+    private String message;
+
+    public MailConfiguration() {}
 
     public MailConfiguration(String host, String port, String from, String subject, String message) {
         this.host = host;
