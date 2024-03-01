@@ -27,7 +27,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public boolean notify(User user) {
+    public void notify(User user) {
         MessageBuilder builder = new MessageBuilder(session);
         Message msg;
 
@@ -40,12 +40,12 @@ public class MailServiceImpl implements MailService {
                 .build();
         } catch (MessagingException e) {
             logger.error("Unable to build message for mail", e);
-            return false;
+            return;
         }
 
         logger.debug("Built message for user {}", user.getUsername());
 
-        return this.mailSender.send(msg);
+        this.mailSender.send(msg);
     }
 
     private String getMailContent(User user) {

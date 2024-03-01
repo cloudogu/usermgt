@@ -4,5 +4,5 @@ import de.triology.universeadm.user.User;
 import jakarta.mail.NoSuchProviderException;
 
 public interface MailService {
-    boolean notify(User user);
+    void notify(User user);
 }

@@ -3,15 +3,12 @@ package de.triology.universeadm.mail;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import jakarta.mail.*;
-import org.eclipse.angus.mail.smtp.SMTPTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -21,68 +18,66 @@ public class MailSender {
     private static final int MAX_DELAY_MS = 60 * 60 * 1000; // Maximum delay in milliseconds (60 minutes)
     private static final int RETRY_INTERVAL_SECONDS = 30;
     private final Map<RetryableMessage, Long> retryMessages = new ConcurrentHashMap<>();
-
-    private final SessionFactory sessionFactory;
+    private final AtomicReference<Transport> transportRef;
 
     @Inject
     public MailSender(SessionFactory sessionFactory){
-        this.sessionFactory = sessionFactory;
+        try {
+            Transport transport = sessionFactory.createSession().getTransport();
+            this.transportRef = new AtomicReference<>(transport);
+        } catch (NoSuchProviderException e) {
+            throw new IllegalArgumentException("No SMTP provider exists - cannot initialize Transport for mail", e);
+        }
+
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         executorService.scheduleAtFixedRate(this::retry, RETRY_INTERVAL_SECONDS, RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
     }
 
-    public boolean send(Message msg) {
+    public void send(Message msg) {
         Optional<Address[]> recipients = getRecipients(msg);
         Optional<String> subject = getSubject(msg);
 
         if (!recipients.isPresent() || !subject.isPresent()) {
             logger.error("Recipient or Subject is empty");
-            return false;
+            return;
         }
 
-        Session session = Optional.ofNullable(msg.getSession()).orElseGet(sessionFactory::createSession);
-        if (!checkConnection(session)){
-            RetryableMessage retryableMessage = new RetryableMessage(recipients.get(), subject.get(), session, msg);
+        if (isDisconnected()){
+            RetryableMessage retryableMessage = new RetryableMessage(recipients.get(), subject.get(), msg);
             retryMessages.put(retryableMessage, System.currentTimeMillis() + retryableMessage.delay);
-            return false;
+            return;
         }
 
         List<String> maskedEmails = getMaskedMails(recipients.get());
 
-        try {
-            Transport transport = session.getTransport();
-            transport.sendMessage(msg, recipients.get());
-        } catch (MessagingException e) {
-            logger.warn("Could not send mail with subject {} to user {}, retry later", subject.get(), maskedEmails);
-            RetryableMessage retryableMessage = new RetryableMessage(recipients.get(), subject.get(), session, msg);
-            retryMessages.put(retryableMessage, System.currentTimeMillis() + retryableMessage.delay);
+        CompletableFuture.runAsync(() -> {
+            try {
+                transportRef.get().sendMessage(msg, recipients.get());
+            } catch (MessagingException e) {
+                logger.warn("Could not send mail with subject {} to user {}, retry later", subject.get(), maskedEmails, e);
+                RetryableMessage retryableMessage = new RetryableMessage(recipients.get(), subject.get(), msg);
+                retryMessages.put(retryableMessage, System.currentTimeMillis() + retryableMessage.delay);
+            }
 
-            return false;
-        }
-
-        logger.info("Successfully sent mail with subject {} to user(s) {}", subject.get(), maskedEmails);
-        return true;
+            logger.info("Successfully sent mail with subject {} to user(s) {}", subject.get(), maskedEmails);
+        });
     }
 
-    private boolean checkConnection(Session session) {
+    private boolean isDisconnected() {
         try {
-            SMTPTransport transport = (SMTPTransport) session.getTransport();
-
-            if (transport.isConnected()){
+            if (transportRef.get().isConnected()){
                 logger.debug("Connection to mail server is established");
-                return true;
+                return false;
             }
 
             logger.debug("No connection to mail server - try reconnect");
-            session.getTransport().connect();
-            return true;
-        } catch (MessagingException e) {
-            logger.debug(
-                "No connection to mail server, try later",
-                e.getCause()
-            );
+            transportRef.get().connect();
+            logger.debug("Reconnected to mail server");
             return false;
+        } catch (MessagingException e) {
+            logger.warn("Could not connect to mail server",e);
+            return true;
         }
     }
 
@@ -175,15 +170,13 @@ public class MailSender {
     private class RetryableMessage {
         private final Address[] recipients;
         private final String subject;
-        private final Session session;
         private final Message message;
         private int retryCounter;
         private int delay;
 
-        public RetryableMessage(Address[] recipients, String subject, Session session, Message message) {
+        public RetryableMessage(Address[] recipients, String subject, Message message) {
             this.recipients = recipients;
             this.subject = subject;
-            this.session = session;
             this.message = message;
             this.retryCounter = 1;
             this.delay = RETRY_INTERVAL_SECONDS;
@@ -194,8 +187,12 @@ public class MailSender {
         }
 
         public boolean retrySend() {
+            if (isDisconnected()){
+                return false;
+            }
+
             try {
-                session.getTransport().sendMessage(message, recipients);
+                transportRef.get().sendMessage(message, recipients);
                 return true;
             } catch (MessagingException e) {
                 retryCounter++;
@@ -210,12 +207,12 @@ public class MailSender {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             RetryableMessage that = (RetryableMessage) o;
-            return Arrays.equals(recipients, that.recipients) && Objects.equals(subject, that.subject) && Objects.equals(session, that.session) && Objects.equals(message, that.message);
+            return Arrays.equals(recipients, that.recipients) && Objects.equals(subject, that.subject) && Objects.equals(message, that.message);
         }
 
         @Override
         public int hashCode() {
-            int result = Objects.hash(subject, session, message);
+            int result = Objects.hash(subject, message);
             result = 31 * result + Arrays.hashCode(recipients);
             return result;
         }
