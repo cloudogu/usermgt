@@ -1,0 +1,857 @@
+openapi: 3.0.1
+info:
+  title: Cloudogu User Management
+  description: API description for Cloudogu User Management
+  version: '2.0'
+servers:
+  - url: https://192.168.56.2/usermgt
+paths:
+
+  # +++++++++ USERS +++++++++++
+
+  /api/users:
+    get:
+      description: Get paginated user data
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/pagination_query_page'
+        - $ref: '#/components/parameters/pagination_query_page_size'
+        - $ref: '#/components/parameters/pagination_query_query'
+        - $ref: '#/components/parameters/pagination_query_sort_by'
+        - $ref: '#/components/parameters/pagination_query_reverse'
+        - $ref: '#/components/parameters/pagination_query_exclude'
+        - $ref: '#/components/parameters/pagination_query_context'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationUsersResponse'
+              example:
+                meta:
+                  page: 3
+                  pageSize: 50
+                  totalPages: 13
+                  totalItems: 643
+                  startItem: 100
+                  endItem: 150
+                  context: Zm9vQmFy
+                data:
+                  - displayName: admin
+                    givenname: admin
+                    mail: admin@ces.local
+                    memberOf:
+                      - admin2
+                      - cesManager
+                    password: __dummypassword
+                    pwdReset: false
+                    surname: admin
+                    username: admin
+                  - displayName: admin2
+                    givenname: admin2
+                    mail: admin2@test.de
+                    memberOf: [ ]
+                    password: __dummypassword
+                    pwdReset: true
+                    surname: admin2
+                    username: admin2
+                  - displayName: test
+                    givenname: test
+                    mail: test@cloudogu.com
+                    memberOf: [ ]
+                    password: __dummypassword
+                    pwdReset: false
+                    surname: test
+                    username: testuser
+                links:
+                  self: /api/users?page=3&pageSize=50
+                  first: /api/users?page=1&pageSize=50
+                  prev: /api/users?page=2&pageSize=50
+                  next: /api/users?page=4&pageSize=50
+                  last: /api/users?page=13&pageSize=50
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationBadRequestResponse'
+              example:
+                meta:
+                  page: 13
+                  pageSize: 50
+                  totalPages: 6
+                  totalItems: 278
+                  startItem: 100
+                  endItem: 278
+                  context: Zm9vQmFy
+                links:
+                  self: /api/users?page=13&pageSize=50
+                  first: /api/users?page=1&pageSize=50
+                  prev: null
+                  next: null
+                  last: /api/users?page=6&pageSize=50
+                errorCode: ERR_OUT_OF_RANGE
+                errorMsg: The requested page is out of range.
+    post:
+      description: Create a new user
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+            examples:
+              '0':
+                value: |-
+                  {
+                      "memberOf": [],
+                      "username": "mynewusertocreate2",
+                      "givenname": "mynewusertocreate",
+                      "surname": "mynewusertocreate",
+                      "displayName": "mynewusertocreate",
+                      "mail": "mynewusertocreate2@test.de",
+                      "password": "mynewusertocreate",
+                      "pwdReset": true
+                  }
+      responses:
+        '201':
+          description: Success
+  /api/users/{username}:
+    delete:
+      description: Deletes a user
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/path_username'
+      responses:
+        '204':
+          description: Success
+  /api/users/{username}/groups/{groupname}:
+    post:
+      description: Adds a group member.
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/path_groupname'
+        - $ref: '#/components/parameters/path_username'
+      responses:
+        '204':
+          description: Success
+        '409':
+          description: Error -> User is already member of the group
+    delete:
+      description: Removes a member from a group.
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/path_groupname'
+        - $ref: '#/components/parameters/path_username'
+      responses:
+        '204':
+          description: Success
+
+  # +++++++++ GROUPS +++++++++++
+
+  /api/groups:
+    get:
+      description: Get a list of paginated groups.
+      tags:
+        - Groups
+      parameters:
+        - $ref: '#/components/parameters/pagination_query_page'
+        - $ref: '#/components/parameters/pagination_query_page_size'
+        - $ref: '#/components/parameters/pagination_query_query'
+        - $ref: '#/components/parameters/pagination_query_sort_by'
+        - $ref: '#/components/parameters/pagination_query_reverse'
+        - $ref: '#/components/parameters/pagination_query_exclude'
+        - $ref: '#/components/parameters/pagination_query_context'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationGroupsResponse'
+              example:
+                meta:
+                  page: 3
+                  pageSize: 50
+                  totalPages: 13
+                  totalItems: 643
+                  startItem: 100
+                  endItem: 150
+                  context: Zm9vQmFy
+                data:
+                  - description: This group grants administrative rights to all development applications of cloudogu
+                    members:
+                      - admin
+                      - admin2
+                    name: admin2
+                  - description: Members of the cesManager group have full access to the cloudogu administration applications
+                    members:
+                      - admin
+                    name: cesManager
+                links:
+                  self: /api/groups?page=3&pageSize=50
+                  first: /api/groups?page=1&pageSize=50
+                  prev: /api/groups?page=2&pageSize=50
+                  next: /api/groups?page=4&pageSize=50
+                  last: /api/groups?page=13&pageSize=50
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationBadRequestResponse'
+              example:
+                meta:
+                  page: 13
+                  pageSize: 50
+                  totalPages: 6
+                  totalItems: 278
+                  startItem: 100
+                  endItem: 278
+                  context: Zm9vQmFy
+                links:
+                  self: /api/groups?page=13&pageSize=50
+                  first: /api/groups?page=1&pageSize=50
+                  prev: null
+                  next: null
+                  last: /api/groups?page=6&pageSize=50
+                errorCode: ERR_OUT_OF_RANGE
+                errorMsg: The requested page is out of range.
+    post:
+      description: Create a new group
+      tags:
+        - Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupRequest'
+            examples:
+              '0':
+                value: |-
+                  {
+                      "description": "mynewgroup description",
+                      "members": [
+                          "admin2"
+                      ],
+                      "name": "mynewgroupname"
+                  }
+      responses:
+        '201':
+          description: Success
+  /api/groups/{groupname}:
+    delete:
+      description: Deletes a group
+      tags:
+        - Groups
+      parameters:
+        - $ref: '#/components/parameters/path_groupname'
+      responses:
+        '204':
+          description: Success
+  /api/groups/{groupname}/members/{username}:
+    post:
+      description: Adds a user to a group. Fails if user is already member of the group.
+      tags:
+        - Groups
+      parameters:
+        - $ref: '#/components/parameters/path_groupname'
+        - $ref: '#/components/parameters/path_username'
+      responses:
+        '204':
+          description: Success
+        '409':
+          description: Error -> User is already part of the group.
+    delete:
+      description: Removes a user from a group.
+      tags:
+        - Groups
+      parameters:
+        - $ref: '#/components/parameters/path_groupname'
+        - $ref: '#/components/parameters/path_username'
+      responses:
+        '204':
+          description: success.
+  /api/groups/undeletable:
+    get:
+      description: Returns all undeletable system groups.
+      tags:
+        - Groups
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example:
+                ["admin","cesManager"]
+
+  # +++++++++ IMPORT +++++++++++
+
+  /api/users/import:
+    post:
+      summary: Import Users from CSV
+      tags:
+        - User-Import
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: CSV file to be imported
+      responses:
+        '200':
+          description: Successful import
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportError'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+  /api/users/import/{importID}:
+    get:
+      summary: Get Import Result
+      tags:
+        - User-Import
+      parameters:
+        - $ref: '#/components/parameters/path_importId'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Invalid UUID
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Result not found
+          content:
+            text/plain:
+              schema:
+                type: string
+    delete:
+      summary: Delete Import Result
+      tags:
+        - User-Import
+      description: Deletes an import result by its ID.
+      parameters:
+        - $ref: '#/components/parameters/path_importId'
+      responses:
+        '204':
+          description: Import result deleted successfully.
+        '400':
+          description: Invalid UUID provided in the request.
+        '500':
+          description: Internal server error while deleting the import result.
+  /api/users/import/{importID}/download:
+    get:
+      summary: Download Import Result
+      tags:
+        - User-Import
+      description: Downloads an import result in JSON format by its ID.
+      parameters:
+        - $ref: '#/components/parameters/path_importId'
+      responses:
+        '200':
+          description: Import result downloaded successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+          headers:
+            Content-Disposition:
+              description: File attachment header
+              schema:
+                type: string
+        '400':
+          description: Invalid UUID provided in the request or an error occurred.
+        '404':
+          description: Import result with the specified ID not found.
+  /api/users/import/summaries:
+    get:
+      summary: Get summaries
+      tags:
+        - User-Import
+      parameters:
+        - $ref: '#/components/parameters/pagination_query_page'
+        - $ref: '#/components/parameters/pagination_query_page_size'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResultListSummary'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationBadRequestResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  # +++++++++ ACCOUNT +++++++++++
+
+  /api/account:
+    get:
+      description: Returns the currently logged in account. Password will be replaced with _dummypassword.
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                '0':
+                  value: '{"displayName":"admin","givenname":"admin","mail":"admin@ces.local","memberOf":["admin2","cesManager"],"password":"__dummypassword","pwdReset":false,"surname":"admin","username":"admin"}'
+    put:
+      description: Updates the account of the current user.
+      tags:
+        - Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              '0':
+                value: |-
+                  {
+                      "displayName": "admin",
+                      "givenname": "admin",
+                      "mail": "admin@ces.local",
+                      "memberOf": [
+                          "admin2",
+                          "cesManager"
+                      ],
+                      "password": "admin",
+                      "pwdReset": false,
+                      "surname": "admin",
+                      "username": "admin"
+                  }
+      responses:
+        '204':
+          description: Success
+  /api/account/passwordpolicy:
+    get:
+      description: Returns the configured password policy
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordPolicy'
+              examples:
+                '0':
+                  value: '{ "Rules": [] }'
+  /api/account/gui_config:
+    get:
+      description: Returns the configured gui config.
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Returns the configured gui config.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuiConfig'
+              examples:
+                '0':
+                  value: '{ "pwdResetPreselected": false}'
+                '1':
+                  value: '{ "pwdResetPreselected": true}'
+
+components:
+
+  parameters:
+    pagination_query_page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      required: false
+      description: Page number to retrieve
+    pagination_query_page_size:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+        default: 20
+      required: false
+      description: Number of items per page
+    pagination_query_query:
+      name: query
+      in: query
+      schema:
+        type: string
+      required: false
+      description: A query-string to search items
+    pagination_query_sort_by:
+      name: sort_by
+      in: query
+      schema:
+        type: string
+      required: false
+      description: Item used to sort the result
+    pagination_query_reverse:
+      name: reverse
+      in: query
+      schema:
+        type: boolean
+        default: false
+      required: false
+      description: Reverse sorting order - false means ascending
+    pagination_query_exclude:
+      name: exclude
+      in: query
+      schema:
+        type: string
+      style: form
+      explode: false
+      required: false
+      description: Exclude items from the query
+    pagination_query_context:
+      name: context
+      in: query
+      schema:
+        type: string
+      required: false
+      description: The context ID that may be used to help the server continue in the same result set for subsequent searches
+    path_username:
+      name: username
+      in: path
+      description: Name of the user
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    path_groupname:
+      name: groupname
+      in: path
+      description: Name of the group
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    path_importId:
+      name: importID
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The ID of the import result.
+
+  schemas:
+
+    User:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: Display name of the user
+        givenname:
+          type: string
+          description: Given name of the user
+        mail:
+          type: string
+          format: email
+          description: Email address of the user
+        memberOf:
+          type: array
+          items:
+            type: string
+          description: List of groups the user belongs to
+        password:
+          type: string
+          description: Password of the user (dummy data)
+        pwdReset:
+          type: boolean
+          description: Indicates whether the user's password needs to be reset
+        surname:
+          type: string
+          description: Surname of the user
+        username:
+          type: string
+          description: Username of the user
+      example: null
+
+    CreateUserRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        pwdReset:
+          type: boolean
+        mail:
+          type: string
+        givenname:
+          type: string
+        surname:
+          type: string
+        displayName:
+          type: string
+        memberOf:
+          type: array
+          items:
+            type: string
+        username:
+          type: string
+
+    PaginationUsersResponse:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginationResultMetaData'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        links:
+          $ref: '#/components/schemas/PaginationResultLinks'
+
+
+    Group:
+      type: object
+      properties:
+        members:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+        description:
+          type: string
+      example: null
+
+    CreateGroupRequest:
+      type: object
+      properties:
+        members:
+          type: array
+          items:
+            type: string
+        name:
+          type: string
+        description:
+          type: string
+
+    PaginationGroupsResponse:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginationResultMetaData'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        links:
+          $ref: '#/components/schemas/PaginationResultLinks'
+
+    PasswordPolicy:
+      type: object
+      properties:
+        Rules:
+          type: array
+          items:
+            type: string
+
+    GuiConfig:
+      type: object
+      properties:
+        pwdResetPreselected:
+          type: boolean
+
+    ImportResult:
+      type: object
+      properties:
+        importID:
+          type: string
+          description: The ID of the import result.
+        filename:
+          type: string
+          description: The filename of the import result.
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of the import result.
+        created:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          description: List of created users.
+        updated:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          description: List of updated users.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportError'
+          description: List of import errors.
+
+    ImportError:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          description: The error code representing the type of error.
+        lineNumber:
+          type: integer
+          description: The line number of the import error.
+        message:
+          type: string
+          description: The error message describing the reason for the error.
+        params:
+          type: object
+          properties:
+            columns:
+              type: array
+              items:
+                type: string
+              description: List of affected columns in case of an error.
+      required:
+        - errorCode
+        - lineNumber
+        - message
+
+    PagedResultListSummary:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginationResultMetaData'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportSummary'
+        links:
+          $ref: '#/components/schemas/PaginationResultLinks'
+
+    ImportSummary:
+      type: object
+      properties:
+        importID:
+          type: string
+          description: The ID of the import.
+        filename:
+          type: string
+          description: The filename of the import.
+        created:
+          type: integer
+          description: The number of users created during the import.
+        updated:
+          type: integer
+          description: The number of users updated during the import.
+        skipped:
+          type: integer
+          description: The number of rows skipped during the import.
+
+    PaginationBadRequestResponse:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginationResultMetaData'
+        links:
+          $ref: '#/components/schemas/PaginationResultLinks'
+        errorCode:
+          type: string
+          enum:
+            - ERR_OUT_OF_RANGE
+        errorMsg:
+          type: string
+
+    PaginationResultMetaData:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        totalPages:
+          type: integer
+          description: Total number of pages
+        totalItems:
+          type: integer
+          description: Total number of items
+        startItem:
+          type: integer
+          description: The start index of the current page
+        endItem:
+          type: integer
+          description: The end index of the current page
+        context:
+          type: string
+          description: A string representing a pagination-context. Can be added to the pagination query to continue a pagination
+
+    PaginationResultLinks:
+      type: object
+      properties:
+        self:
+          type: string
+          description: Link to the current page
+          example: /api/users?page=3&pageSize=50
+        first:
+          type: string
+          description: Link to the first page (null if unavailable)
+        prev:
+          type: string
+          nullable: true
+          description: Link to the previous page
+        next:
+          type: string
+          nullable: true
+          description: Link to the next page
+        last:
+          type: string
+          description: Link to the last page (null if unavailable)

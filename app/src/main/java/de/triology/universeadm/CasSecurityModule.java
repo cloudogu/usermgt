@@ -41,13 +41,11 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cas.CasFilter;
 import org.apache.shiro.cas.CasRealm;
 import org.apache.shiro.cas.CasSubjectFactory;
-import org.apache.shiro.guice.web.ShiroWebModule;
 import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.StringUtils;
-import org.apache.shiro.web.filter.authz.RolesAuthorizationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,16 +109,8 @@ public class CasSecurityModule extends BaseSecurityModule {
     bind(SubjectFactory.class).to(CasSubjectFactory.class);
     
     // protect uris
-    logger.info("adding Filter Chains");
     addFilterChain("/login/cas", filterConfig(ANON), filterConfig(CAS));
-
-    logger.info("is guice version 3: {}", isGuiceVersion3());
-
-    logger.info("before config Roles Adminitrator");
-    FilterConfig<RolesAuthorizationFilter> cfg = filterConfig(ROLES, Roles.ADMINISTRATOR);
-    logger.info("after config Roles Adminitrator {}", cfg.getClass());
-
-    addFilterChain("/api/users", filterConfig(API), cfg);
+    addFilterChain("/api/users", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/users/*", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/users/import/*", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/groups", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
@@ -129,15 +119,6 @@ public class CasSecurityModule extends BaseSecurityModule {
     addFilterChain("/api/account/*", filterConfig(API));
     addFilterChain("/**", filterConfig(AUTHC));
   }
-
-    static boolean isGuiceVersion3() {
-        try {
-            Class<?> cls = Class.forName("com.google.inject.multibindings.MapKey");
-            return false;
-        } catch (ClassNotFoundException var1) {
-            return true;
-        }
-    }
 
   private static class CasRealmProvider implements Provider<Realm>
   {

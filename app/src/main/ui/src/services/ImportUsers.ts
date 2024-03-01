@@ -4,7 +4,7 @@ import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
 import type {User} from "./Users";
 import type {QueryOptions} from "../hooks/useAPI";
-import type {PaginationResponse} from "../hooks/usePaginatedData";
+import type {PaginationResponse} from "../hooks/usePaginationTableState";
 import type {AxiosError, AxiosResponse} from "axios";
 
 export type ImportErrorCode = 100 | 101 | 102 | 103 | 104 | 200 | 201 | 202 | 204 | 300 | 301;

@@ -1,8 +1,6 @@
 import {useNumberSearchParamState, useSearchParamState} from "@cloudogu/ces-theme-tailwind";
 import {useEffect, useState} from "react";
-import {LINES_PER_PAGE_QUERY_PARAM, PAGE_QUERY_PARAM, PaginationErrorCode, SEARCH_QUERY_PARAM} from "./usePaginatedData";
 import type {QueryOptions} from "./useAPI";
-import type {PaginationResponse, PaginationError} from "./usePaginatedData";
 import type {PaginationControl} from "@cloudogu/ces-theme-tailwind";
 
 export type UsePaginationHook<T> = {
@@ -113,4 +111,57 @@ export default function usePaginationTableState<T>(dataService: PaginationDataSe
             setSearchQuery(newValue);
         },
     };
+}
+
+export const PAGE_QUERY_PARAM = "p";
+export const SEARCH_QUERY_PARAM = "q";
+export const LINES_PER_PAGE_QUERY_PARAM = "l";
+
+export class PaginationError implements Error {
+    message: string;
+    name: string;
+    errorResponse: PaginationErrorResponse;
+    constructor(errorResponse: PaginationErrorResponse) {
+        this.name = errorResponse.errorCode;
+        this.message = errorResponse.errorMsg;
+        this.errorResponse = errorResponse;
+    }
+}
+
+export const PaginationErrorCode = {
+    ERR_OUT_OF_RANGE: "ERR_OUT_OF_RANGE",
+} as const;
+
+// Convert object key in a type
+export type PaginationErrorCodeKeys = typeof PaginationErrorCode[keyof typeof PaginationErrorCode]
+
+export interface PaginationResponse<T> {
+    data: T[];
+    meta: PaginationMetaData;
+    links: PaginationLinks;
+}
+
+export interface PaginationErrorResponse {
+    meta: PaginationMetaData;
+    links: PaginationLinks;
+    errorCode: string;
+    errorMsg: string;
+}
+
+export type PaginationMetaData = {
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    totalItems: number;
+    startItem: number;
+    endItem: number;
+    context?: string;
+}
+
+export interface PaginationLinks {
+    self: string;
+    first: string;
+    next: string;
+    prev: string;
+    last: string;
 }
