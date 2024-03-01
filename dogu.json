@@ -74,7 +74,7 @@
     },
     {
       "Name": "mail/import/content",
-      "Description": "The content of the mail, which is send when a User is imported via the csv import feature",
+      "Description": "The content of the mail, which is send when a User is imported via the csv import feature. Within the content the placeholders ${username} and ${password} need to be included.",
       "Optional": true
     },
     {
