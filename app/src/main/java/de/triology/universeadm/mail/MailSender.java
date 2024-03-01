@@ -19,6 +19,7 @@ public class MailSender {
     private static final int RETRY_INTERVAL_SECONDS = 30;
     private final Map<RetryableMessage, Long> retryMessages = new ConcurrentHashMap<>();
     private final AtomicReference<Transport> transportRef;
+    private  final ExecutorService sendTaskExecuter;
 
     @Inject
     public MailSender(SessionFactory sessionFactory){
@@ -29,8 +30,9 @@ public class MailSender {
             throw new IllegalArgumentException("No SMTP provider exists - cannot initialize Transport for mail", e);
         }
 
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        this.sendTaskExecuter = Executors.newCachedThreadPool();
 
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(this::retry, RETRY_INTERVAL_SECONDS, RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
     }
 
@@ -61,7 +63,7 @@ public class MailSender {
             }
 
             logger.info("Successfully sent mail with subject {} to user(s) {}", subject.get(), maskedEmails);
-        });
+        }, sendTaskExecuter);
     }
 
     private boolean isDisconnected() {

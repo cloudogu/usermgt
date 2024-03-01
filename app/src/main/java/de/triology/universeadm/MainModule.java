@@ -60,7 +60,8 @@ public class MainModule extends ServletModule {
      *
      * @param ldapConfiguration
      */
-    public MainModule(LDAPConfiguration ldapConfiguration, MailConfiguration mailConfiguration, I18nConfiguration i18nConfiguration) {
+    public MainModule(ApplicationConfiguration applicationConfiguration, LDAPConfiguration ldapConfiguration, MailConfiguration mailConfiguration, I18nConfiguration i18nConfiguration) {
+        this.applicationConfiguration = applicationConfiguration;
         this.ldapConfiguration = ldapConfiguration;
         this.mailConfiguration = mailConfiguration;
         this.i18nConfiguration = i18nConfiguration;
@@ -75,6 +76,7 @@ public class MainModule extends ServletModule {
     protected void configureServlets() {
         logger.info("bind resources");
 
+        bind(ApplicationConfiguration.class).toInstance(applicationConfiguration);
         bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
         bind(MailConfiguration.class).toInstance(mailConfiguration);
         bind(I18nConfiguration.class).toInstance(i18nConfiguration);
@@ -119,6 +121,7 @@ public class MainModule extends ServletModule {
     /**
      * Field description
      */
+    private final ApplicationConfiguration applicationConfiguration;
     private final LDAPConfiguration ldapConfiguration;
     private final MailConfiguration mailConfiguration;
     private final I18nConfiguration i18nConfiguration;
