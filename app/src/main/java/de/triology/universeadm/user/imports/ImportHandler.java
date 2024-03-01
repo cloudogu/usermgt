@@ -223,8 +223,9 @@ public class ImportHandler {
     private ImportEntryResult saveCSVImport(long lineNumber, Boolean isNewUser, User user) {
         try {
             if (isNewUser) {
+                User copyUser = new User(user);
                 this.userManager.create(user);
-                this.mailService.notify(user);
+                this.mailService.notify(copyUser);
                 return ImportEntryResult.created(user);
             } else {
                 this.userManager.modify(user);

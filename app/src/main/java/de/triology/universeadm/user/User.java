@@ -98,6 +98,10 @@ public class User implements Comparable<User>
     this.memberOf = memberOf;
   }
 
+    public User(User other){
+        this(other.getUsername(), other.getDisplayName(), other.getGivenname(), other.getSurname(), other.getMail(), other.getPassword(), other.isPwdReset(), other.getMemberOf(), other.isExternal());
+    }
+
   public User(String username, String displayName, String givenname,
               String surname, String mail, String password, boolean pwdReset, List<String> memberOf, boolean external) {
 
