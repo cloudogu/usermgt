@@ -60,6 +60,7 @@ public class BootstrapContextListener
      */
     @Override
     protected List<? extends Module> getModules(ServletContext context) {
+        ApplicationConfiguration applicationConfiguration = BaseDirectory.getConfiguration("application-configuration.xml", ApplicationConfiguration.class);
         LDAPConfiguration ldapConfiguration = BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class);
         MailConfiguration mailConfiguration = BaseDirectory.getConfiguration("mail.xml", MailConfiguration.class);
         I18nConfiguration i18nConfiguration = new I18nConfiguration(Language.en, Language.de);
@@ -84,7 +85,7 @@ public class BootstrapContextListener
             //J-
             modules = ImmutableList.of(
                     ShiroWebModule.guiceFilterModule(),
-                    new MainModule(ldapConfiguration, mailConfiguration, i18nConfiguration),
+                    new MainModule(applicationConfiguration, ldapConfiguration, mailConfiguration, i18nConfiguration),
                     securityModule
             );
             //J+
