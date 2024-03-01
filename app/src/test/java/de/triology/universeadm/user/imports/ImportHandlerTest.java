@@ -366,7 +366,7 @@ public class ImportHandlerTest {
         List<Result.Summary> sums = generateSummaries(4);
         when(sRepo.getSummaries()).thenReturn(sums);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo, mailServiceMock);
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 10);
 
@@ -385,7 +385,7 @@ public class ImportHandlerTest {
         List<Result.Summary> sums = generateSummaries(12);
         when(sRepo.getSummaries()).thenReturn(sums);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, sRepo, mailServiceMock);
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(10, 10);
 
