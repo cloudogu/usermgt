@@ -5,14 +5,20 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.internet.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 public class MessageBuilder {
 
+    private static final Logger logger = LoggerFactory.getLogger(MessageBuilder.class);
     private final Session session;
-    private String from;
-    private String to;
-    private String subject;
-    private Multipart content;
+
+    private String from = "";
+    private String to = "";
+    private String subject = "";
+    private Multipart content = null;
 
     public MessageBuilder(Session session) {
         this.session = session;
@@ -33,26 +39,62 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder content(String content) throws MessagingException {
-            MimeBodyPart mimeBodyPart = new MimeBodyPart();
-            mimeBodyPart.setContent(content, "text/html; charset=utf-8");
+    public MessageBuilder content(String content) {
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
 
+        try {
+            mimeBodyPart.setContent(content, "text/html; charset=utf-8");
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
-
             this.content = multipart;
+        } catch (MessagingException e) {
+            logger.warn("Could not set content for mail message", e);
+        }
 
-            return this;
+        return this;
     }
 
-    public Message build() throws MessagingException {
+    public Optional<Message> build() {
+        if(!validate()){
+            return Optional.empty();
+        }
+
         Message message = new MimeMessage(session);
 
-        message.setFrom(new InternetAddress(from));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        message.setSubject(subject);
-        message.setContent(content);
+        try {
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+            message.setContent(content);
+        } catch (MessagingException e) {
+            logger.error("Unable to build message", e);
+            return Optional.empty();
+        }
 
-        return message;
+        return Optional.of(message);
+    }
+
+    private boolean validate() {
+        if(from.isEmpty()) {
+            logger.error("Sender is empty in mail");
+            return false;
+        }
+
+        if(to.isEmpty()) {
+            logger.error("Recipient is empty in mail");
+            return false;
+        }
+
+        if(subject.isEmpty()) {
+            logger.error("Subject is empty in mail");
+            return false;
+        }
+
+        if(content == null) {
+            logger.error("Mail content is empty");
+            return false;
+        }
+
+        return true;
     }
 }

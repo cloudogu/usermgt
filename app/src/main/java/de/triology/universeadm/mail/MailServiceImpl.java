@@ -29,23 +29,17 @@ public class MailServiceImpl implements MailService {
     @Override
     public void notify(User user) {
         MessageBuilder builder = new MessageBuilder(session);
-        Message msg;
 
-        try {
-            msg = builder
-                .from(mailConfiguration.getFrom())
-                .to(user.getMail())
-                .subject(mailConfiguration.getSubject())
-                .content(getMailContent(user))
-                .build();
-        } catch (MessagingException e) {
-            logger.error("Unable to build message for mail", e);
-            return;
-        }
-
-        logger.debug("Built message for user {}", user.getUsername());
-
-        this.mailSender.send(msg);
+        builder
+            .from(mailConfiguration.getFrom())
+            .to(user.getMail())
+            .subject(mailConfiguration.getSubject())
+            .content(getMailContent(user))
+            .build()
+            .ifPresent((msg -> {
+                logger.debug("Built message for user {}", user.getUsername());
+                this.mailSender.send(msg);
+            }));
     }
 
     private String getMailContent(User user) {
