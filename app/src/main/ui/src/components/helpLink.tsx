@@ -1,8 +1,8 @@
-import { AnchorHTMLAttributes } from "react"
+import {AnchorHTMLAttributes} from "react"
 import LaunchIcon from '@mui/icons-material/Launch';
-import { Icon } from "@mui/material";
+import {Icon} from "@mui/material";
 import injectSheet from "react-jss";
-import { twMerge } from "tailwind-merge";
+import {twMerge} from "tailwind-merge";
 import {getLocale, translate} from "./helpers/i18n";
 
 const styles = {
@@ -18,11 +18,11 @@ export type HelpLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
     classes: any
 };
 
-function HelpLink({classes, ...props}: HelpLinkProps){
+function HelpLink({classes, ...props}: HelpLinkProps) {
 
     const locale = getLocale().includes("de") ? "de" : "en";
-    const handbookLink =  getLocale().includes("de") ? `https://docs.cloudogu.com/${locale}/usermanual/usermanagement/#synchronisation-von-accounts-und-gruppen`
-    : `https://docs.cloudogu.com/${locale}/usermanual/usermanagement/#synchronization-of-accounts-and-groups`;
+    const handbookLink = getLocale().includes("de") ? `https://docs.cloudogu.com/${locale}/usermanual/usermanagement/#synchronisation-von-accounts-und-gruppen`
+        : `https://docs.cloudogu.com/${locale}/usermanual/usermanagement/#synchronization-of-accounts-and-groups`;
 
     return (
         <a id="documentation"
