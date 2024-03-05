@@ -5,6 +5,9 @@ import jakarta.mail.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -33,7 +36,12 @@ public class MailSenderTest {
         when(messageMock.getSubject()).thenReturn("test");
         when(messageMock.getAllRecipients()).thenThrow(new MessagingException("Invalid recipient"));
 
-        this.mailSender.send(messageMock);
+        try {
+            this.mailSender.sendAsync(messageMock).join();
+            fail("Expected exception");
+        } catch (CompletionException e) {
+            assertTrue(e.getCause() instanceof MessagingException);
+        }
 
         verify(transportMock, never()).isConnected();
         verify(transportMock, never()).sendMessage(any(), any());
@@ -46,7 +54,12 @@ public class MailSenderTest {
         when(messageMock.getSubject()).thenThrow(new MessagingException("Invalid subject"));
         when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
 
-        this.mailSender.send(messageMock);
+        try {
+            this.mailSender.sendAsync(messageMock).join();
+            fail("Expected exception");
+        } catch (CompletionException e) {
+            assertTrue(e.getCause() instanceof MessagingException);
+        }
 
         verify(transportMock, never()).isConnected();
         verify(transportMock, never()).sendMessage(any(), any());
@@ -55,15 +68,12 @@ public class MailSenderTest {
     }
 
     @Test
-    public void sendWhenConnected() throws MessagingException, InterruptedException {
+    public void sendWhenConnected() throws MessagingException {
         when(messageMock.getSubject()).thenReturn("test");
         when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
         when(transportMock.isConnected()).thenReturn(true);
 
-        this.mailSender.send(messageMock);
-
-        // I know it's bad
-        Thread.sleep(500);
+        this.mailSender.sendAsync(messageMock).join();
 
         verify(transportMock, times(1)).isConnected();
         verify(transportMock, never()).connect();
@@ -78,7 +88,7 @@ public class MailSenderTest {
         when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
         when(transportMock.isConnected()).thenReturn(false);
 
-        this.mailSender.send(messageMock);
+        this.mailSender.sendAsync(messageMock).join();
 
         verify(transportMock, times(1)).isConnected();
         verify(transportMock, times(1)).connect();
@@ -94,7 +104,12 @@ public class MailSenderTest {
         when(transportMock.isConnected()).thenReturn(false);
         doThrow(new MessagingException("no connection")).when(transportMock).connect();
 
-        this.mailSender.send(messageMock);
+        try {
+            this.mailSender.sendAsync(messageMock).join();
+            fail("Expected exception");
+        } catch (CompletionException e) {
+            assertTrue(e.getCause() instanceof MessagingException);
+        }
 
         verify(transportMock, times(1)).isConnected();
         verify(transportMock, times(1)).connect();
@@ -105,16 +120,13 @@ public class MailSenderTest {
     }
 
     @Test
-    public void sendFailed() throws MessagingException, InterruptedException {
+    public void sendFailed() throws MessagingException, InterruptedException, ExecutionException {
         when(messageMock.getSubject()).thenReturn("test");
         when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
         when(transportMock.isConnected()).thenReturn(true);
         doThrow(new MessagingException("Failed to send")).when(transportMock).sendMessage(any(), any());
 
-        this.mailSender.send(messageMock);
-
-        // I know it's bad
-        Thread.sleep(500);
+        this.mailSender.sendAsync(messageMock).join();
 
         assertEquals(1, mailSender.getRetryMessageCount());
     }

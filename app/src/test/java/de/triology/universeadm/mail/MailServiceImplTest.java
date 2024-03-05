@@ -62,7 +62,7 @@ public class MailServiceImplTest {
                 return true;
         };
 
-        verify(mailSenderMock, times(1)).send(argThat(matcher));
+        verify(mailSenderMock, times(1)).sendAsync(argThat(matcher));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class MailServiceImplTest {
             return true;
         };
 
-        verify(mailSenderMock, times(1)).send(argThat(matcher));
+        verify(mailSenderMock, times(1)).sendAsync(argThat(matcher));
     }
 
     @Test
@@ -127,6 +127,6 @@ public class MailServiceImplTest {
         MailService mailService = new MailServiceImpl(mailConfigurationMock, sessionFactoryMock, mailSenderMock);
         mailService.notify(userMock);
 
-        verify(mailSenderMock, never()).send(any());
+        verify(mailSenderMock, never()).sendAsync(any());
     }
 }

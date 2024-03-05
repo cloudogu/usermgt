@@ -41,24 +41,29 @@ public class MailSender {
         executorService.scheduleAtFixedRate(this::retry, retryIntervalSeconds, retryIntervalSeconds, TimeUnit.SECONDS);
     }
 
-    public void send(Message msg) {
+    public CompletableFuture<Void> sendAsync(Message msg) {
+        CompletableFuture<Void> failedFuture = new CompletableFuture<>();
+
         Optional<Address[]> recipients = getRecipients(msg);
         Optional<String> subject = getSubject(msg);
 
         if (!recipients.isPresent() || !subject.isPresent()) {
-            logger.error("Recipient or Subject is empty");
-            return;
+            failedFuture.completeExceptionally(new MessagingException("Recipient or Subject is empty"));
+            return failedFuture;
         }
 
         if (isDisconnected()){
+            failedFuture.completeExceptionally(new MessagingException("Could not establish connection to mail send agent"));
+
             RetryableMessage retryableMessage = new RetryableMessage(recipients.get(), subject.get(), msg);
             retryMessages.put(retryableMessage, System.currentTimeMillis() + retryableMessage.delay);
-            return;
+
+            return failedFuture;
         }
 
         List<String> maskedEmails = getMaskedMails(recipients.get());
 
-        CompletableFuture.runAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
             try {
                 transportRef.get().sendMessage(msg, recipients.get());
             } catch (MessagingException e) {

@@ -38,7 +38,7 @@ public class MailServiceImpl implements MailService {
             .build()
             .ifPresent((msg -> {
                 logger.debug("Built message for user {}", user.getUsername());
-                this.mailSender.send(msg);
+                this.mailSender.sendAsync(msg);
             }));
     }
 
