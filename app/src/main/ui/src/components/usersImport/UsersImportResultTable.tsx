@@ -58,11 +58,11 @@ export default function UsersImportResultTable({content, ...props}: UsersImportR
                                     "displayName",
                                     "mail",
                                     "external",
-                                    "passwordReset",
+                                    "pwdReset",
                                 ]
                                     .map(
                                         (h,i) => {
-                                            const isBoolean = h === "external" || h === "passwordReset";
+                                            const isBoolean = h === "external" || h === "pwdReset";
                                             const isString = !isBoolean;
                                             return (
                                                 <Table.Body.Row.Column key={h} className={`${columnWidths[i]} break-all`}>
