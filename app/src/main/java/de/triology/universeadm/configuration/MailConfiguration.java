@@ -23,14 +23,26 @@ public class MailConfiguration {
     @XmlElement(name = "message")
     private String message;
 
+    @XmlElement(name = "maxRetries")
+    private int maxRetries;
+
+    @XmlElement(name = "maxRetryDelay")
+    private int maxRetryDelay;
+
+    @XmlElement(name = "retryInterval")
+    private int retryInterval;
+
     public MailConfiguration() {}
 
-    public MailConfiguration(String host, String port, String from, String subject, String message) {
+    public MailConfiguration(String host, String port, String from, String subject, String message, int maxRetries, int maxRetryDelay, int retryInterval) {
         this.host = host;
         this.port = port;
         this.from = from;
         this.subject = subject;
         this.message = message;
+        this.maxRetries = maxRetries;
+        this.maxRetryDelay = maxRetryDelay;
+        this.retryInterval = retryInterval;
     }
 
     public String getHost() {
@@ -51,5 +63,17 @@ public class MailConfiguration {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getMaxRetries() {
+        return maxRetries;
+    }
+
+    public int getMaxRetryDelay() {
+        return maxRetryDelay;
+    }
+
+    public int getRetryInterval() {
+        return retryInterval;
     }
 }

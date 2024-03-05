@@ -2,6 +2,7 @@ package de.triology.universeadm.mail;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import de.triology.universeadm.configuration.MailConfiguration;
 import jakarta.mail.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +15,15 @@ import java.util.stream.Collectors;
 @Singleton
 public class MailSender {
     private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
-    private static final int MAX_RETRIES = 10;
-    private static final int MAX_DELAY_MS = 60 * 60 * 1000; // Maximum delay in milliseconds (60 minutes)
-    private static final int RETRY_INTERVAL_SECONDS = 30;
+    private final int maxRetries;
+    private final int maxDelayMs;
+    private final int retryIntervalSeconds;
     private final Map<RetryableMessage, Long> retryMessages = new ConcurrentHashMap<>();
     private final AtomicReference<Transport> transportRef;
-    private  final ExecutorService sendTaskExecuter;
+    private  final ExecutorService sendTaskExecutor;
 
     @Inject
-    public MailSender(SessionFactory sessionFactory){
+    public MailSender(SessionFactory sessionFactory, MailConfiguration mailConfiguration){
         try {
             Transport transport = sessionFactory.createSession().getTransport();
             this.transportRef = new AtomicReference<>(transport);
@@ -30,10 +31,14 @@ public class MailSender {
             throw new IllegalArgumentException("No SMTP provider exists - cannot initialize Transport for mail", e);
         }
 
-        this.sendTaskExecuter = Executors.newCachedThreadPool();
+        maxRetries = mailConfiguration.getMaxRetries();
+        maxDelayMs = mailConfiguration.getMaxRetryDelay() * 1000;
+        retryIntervalSeconds = mailConfiguration.getRetryInterval();
+
+        sendTaskExecutor = Executors.newCachedThreadPool();
 
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(this::retry, RETRY_INTERVAL_SECONDS, RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(this::retry, retryIntervalSeconds, retryIntervalSeconds, TimeUnit.SECONDS);
     }
 
     public void send(Message msg) {
@@ -63,7 +68,11 @@ public class MailSender {
             }
 
             logger.info("Successfully sent mail with subject {} to user(s) {}", subject.get(), maskedEmails);
-        }, sendTaskExecuter);
+        }, sendTaskExecutor);
+    }
+
+    public int getRetryMessageCount() {
+        return retryMessages.size();
     }
 
     private boolean isDisconnected() {
@@ -111,8 +120,8 @@ public class MailSender {
                 return;
             }
 
-            if (msg.retryCounter > MAX_RETRIES) {
-                logger.error("Could not send mail to user(s) {} after {} retries, remove message from retry queue", maskedEmails, MAX_RETRIES);
+            if (msg.retryCounter > maxRetries) {
+                logger.error("Could not send mail to user(s) {} after {} retries, remove message from retry queue", maskedEmails, maxRetries);
                 retryMessages.remove(msg);
             }
 
@@ -181,11 +190,11 @@ public class MailSender {
             this.subject = subject;
             this.message = message;
             this.retryCounter = 1;
-            this.delay = RETRY_INTERVAL_SECONDS;
+            this.delay = retryIntervalSeconds;
         }
 
         public void increaseDelay() {
-            delay = Math.min(delay * 2, MAX_DELAY_MS);
+            delay = Math.min(delay * 2, maxDelayMs);
         }
 
         public boolean retrySend() {
