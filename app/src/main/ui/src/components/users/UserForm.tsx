@@ -1,11 +1,14 @@
-import {Button, Form, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
+import {deprecated_Form as Form} from "@cloudogu/ces-theme-tailwind";
+import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
+import {useMemo} from "react";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
-import {GroupsService} from "../../services/Groups";
+import { GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
+import type {Group} from "../../services/Groups";
 import type {User} from "../../services/Users";
 import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
 import HelpLink from "../helpLink";
@@ -57,16 +60,16 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     };
 
     const queryGroups = async (searchValue: string): Promise<string[]> => {
-        const groupsData = await GroupsService.list(
+        const groupsData = await GroupsService.query(
             undefined,
             {
-                start: 0,
-                limit: MAX_SEARCH_RESULTS,
+                page: 1,
+                page_size: MAX_SEARCH_RESULTS,
                 query: searchValue,
                 exclude: handler.values.memberOf ?? [],
             }
         );
-        return groupsData.data.map(x => x.name);
+        return groupsData.data.map((x: Group) => x.name);
     };
 
     const renderGroupsList = (readonly = false, pageSize = 5) => (
@@ -99,7 +102,8 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         <Form handler={handler}>
             {notification}
             <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}
-                data-testid="username" placeholder={t("users.placeholder.username")}>
+                data-testid="username" placeholder={t("users.placeholder.username")}
+                hint={t("users.hint.username")}>
                 {t("editUser.labels.username")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname"
@@ -111,7 +115,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 {t("editUser.labels.surname")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName"
-                placeholder={t("users.placeholder.displayName")}>
+                placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
                 {t("editUser.labels.displayName")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail"

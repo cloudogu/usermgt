@@ -116,8 +116,7 @@ Then("the users-page is shown", function () {
 });
 
 Then("the users-page contains the user {string}", function (username:string) {
-    cy.get('table[data-testid="users-table"]')
-        .find('tr').filter(`:contains("${username}")`).as('row');
+    cy.get(`tr[data-testid="users-row-${username}"]`).as('row');
     cy.get('@row').should('be.visible');
     cy.get('@row').find("td").should('have.length', 4);
     cy.get('@row').find("td:nth-of-type(1)").contains(username);
@@ -209,12 +208,11 @@ Then("the groups-page is shown", function () {
 });
 
 Then("the groups-page contains the group {string}", function (groupName:string) {
-    cy.get('table[data-testid="groups-table"]')
-        .find('tr td:nth-of-type(1)').filter(`:contains("${groupName}")`).parent().as('row');
+    cy.get(`tr[data-testid="groups-row-${groupName}"]`).as('row');
     cy.get('@row').should('be.visible');
     cy.get('@row').find("td").should('have.length', 4);
     cy.get('@row').find("td:nth-of-type(1)").contains(groupName);
-    cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${groupName}-edit-button"]`).should('be.visible');
+    cy.get('@row').find("td:nth-of-type(4)").find(`a[id="${groupName}-edit-link"]`).should('be.visible');
     cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${groupName}-delete-button"]`).should('be.visible');
 });
 

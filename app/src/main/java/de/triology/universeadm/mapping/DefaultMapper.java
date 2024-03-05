@@ -44,6 +44,8 @@ import com.unboundid.ldap.sdk.ModificationType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -137,6 +139,15 @@ public class DefaultMapper<T> implements Mapper<T> {
     @Override
     public List<String> getReturningAttributes() {
         return returningAttributes;
+    }
+
+    @Override
+    public MappingAttribute getAttribute(String name) {
+      try {
+        return Iterables.find(mapping.getAttributes(), input -> Objects.equals(input.getName(), name));
+      } catch (NoSuchElementException ignored) {
+        return null;
+      }
     }
 
     @Override
