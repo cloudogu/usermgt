@@ -488,7 +488,7 @@ public class ImportHandlerTest {
                 break;
             case VALID_CREATE_MODIFY:
                 when(manager.get(anyString())).thenAnswer(invocation -> {
-                    String username = invocation.getArgumentAt(0, String.class);
+                    String username = invocation.getArgument(0);
                     return username.equals("trillian") ? Users.createTrillian() : null;
                 });
             default:
