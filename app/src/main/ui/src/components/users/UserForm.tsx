@@ -7,9 +7,9 @@ import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
-import HelpLink from "../helpLink";
 import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
+import HelpLink from "../helpLink";
 import type {Group} from "../../services/Groups";
 import type {User} from "../../services/Users";
 import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
@@ -102,32 +102,32 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         <Form handler={handler}>
             {notification}
             <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}
-                                     data-testid="username" placeholder={t("users.placeholder.username")}
-                                     hint={t("users.hint.username")}>
+                data-testid="username" placeholder={t("users.placeholder.username")}
+                hint={t("users.hint.username")}>
                 {t("editUser.labels.username")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname"
-                                     placeholder={t("users.placeholder.givenname")}>
+                placeholder={t("users.placeholder.givenname")}>
                 {t("editUser.labels.givenName")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"surname"} data-testid="surname"
-                                     placeholder={t("users.placeholder.surname")}>
+                placeholder={t("users.placeholder.surname")}>
                 {t("editUser.labels.surname")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName"
-                                     placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
+                placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
                 {t("editUser.labels.displayName")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail"
-                                     placeholder={t("users.placeholder.mail")}>
+                placeholder={t("users.placeholder.mail")}>
                 {t("editUser.labels.email")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"password"} name={"password"} data-testid="password"
-                                     placeholder={t("users.placeholder.password")}>
+                placeholder={t("users.placeholder.password")}>
                 {t("editUser.labels.password")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"password"} name={"confirmPassword"} data-testid="confirmPassword"
-                                     placeholder={t("users.placeholder.confirmPassword")}>
+                placeholder={t("users.placeholder.confirmPassword")}>
                 {t("editUser.labels.confirmPassword")}
             </Form.ValidatedTextInput>
 
@@ -175,8 +175,9 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 {t("users.steps.title")}
             </Details.Summary>
             <Details.Content>
-                {t("users.steps.text")} <HelpLink/>
+                {t("users.steps.text")}
+                <HelpLink/>
             </Details.Content>
         </Details>
-    </>
+    </>;
 }
