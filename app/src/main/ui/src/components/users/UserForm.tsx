@@ -8,6 +8,8 @@ import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
 import type {User} from "../../services/Users";
 import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
+import HelpLink from "../helpLink";
+import React from "react";
 
 const MAX_SEARCH_RESULTS = 10;
 
@@ -21,6 +23,7 @@ export interface UserFormProps<T extends User> {
     backButton?: boolean;
     groupsReadonly?: boolean;
     passwordReset?: boolean;
+    editUsers?: boolean;
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
@@ -161,5 +164,13 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             </>
             : <></>
         }
-    </>;
+
+        {
+            <>
+                <H2>{t("users.steps.title")}</H2>
+                <span>{t("users.steps.text")}</span>
+                <HelpLink/>
+            </>
+        }
+        </>
 }

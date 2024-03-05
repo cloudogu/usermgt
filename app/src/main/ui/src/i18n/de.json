@@ -168,5 +168,8 @@
   "usersImportResult.table.success.name": "Nachname",
   "usersImportResult.table.success.passwordReset": "Passwort temporär",
   "usersImportResult.table.success.true": "Ja",
-  "usersImportResult.table.success.username": "Nutzername"
+  "usersImportResult.table.success.username": "Nutzername",
+  "users.steps.title": "Hinweis",
+  "users.steps.link" : "Weitere Schritte",
+  "users.steps.text" : "Damit die Nutzerdaten in Dogus verwendet werden können, reicht es meistens aus wenn der Nutzer sich einloggt und dann das Dogu aufruft. In einigen Fällen sind aber noch weitere Schritte notwendig."
 }
