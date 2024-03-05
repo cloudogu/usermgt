@@ -64,7 +64,7 @@ Um für das lokale Backend des Usermgt das LDAP aus dem CES zu nutzen, sind folg
       ```
       Das LDAP-Dogu mit `cesapp build ldap` neu bauen und starten.
 2. Die LDAP-Konfiguration aus dem Usermgt-Dogu des CES
-   auslesen: `docker exec -it usermgt cat /var/lib/usermgt/conf/ldap.xml`
+   auslesen: `docker exec -it usermgt cat /var/lib/usermgt/conf2/ldap.xml`
 3. Die LDAP-konfiguration für das Backend in der Datei [`app/env/data/ldap.xml`](../../app/env/data/ldap.xml) eintragen: <!-- markdown-link-check-disable-line -->
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
@@ -92,8 +92,8 @@ export UNIVERSEADM_STAGE=DEVELOPMENT`
 
 Anschließend kann das Backend wie folgt gestartet werden:
 
-- In das `app`-Verzeichnis wechseln: `cs app`
-- Das Projekt erstellen: `mvn clean install`
+- In das `app`-Verzeichnis wechseln: `cd app`
+- Das Projekt erstellen: `mvn clean install -DskipTests `
 - Das Projekt bauen und starten: `mvn -DskipTests -P-webcomponents package jetty:run-war`
 
 > Hierbei wird nur das Backend neu gebaut und gestartet, das Frontend wird nicht erstellt, da das

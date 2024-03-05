@@ -21,7 +21,8 @@ export type HelpLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
 function HelpLink({classes, ...props}: HelpLinkProps){
 
     const locale = getLocale().includes("de") ? "de" : "en";
-    const handbookLink = `https://docs.cloudogu.com/${locale}/usermanual/admin/documentation/`;
+    const handbookLink =  getLocale().includes("de") ? `https://docs.cloudogu.com/${locale}/usermanual/usermanagement/#synchronisation-von-accounts-und-gruppen`
+    : `https://docs.cloudogu.com/${locale}/usermanual/usermanagement/#synchronization-of-accounts-and-groups`;
 
     return (
         <a id="documentation"

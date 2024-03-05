@@ -235,6 +235,11 @@ In Dogus that do not manage groups or accounts, no groups or accounts will be cr
 
 When creating accounts and groups in the **User Management**, please note that modified or newly created accounts, groups and group assignments are **not directly** known in other dogus, but **will be made known the next time the user logs in to the respective Dogu**.
 
+There are exceptions for the **Jira and Confluence Dogus**: a synchronization of the user data is triggered every 60 minutes by default, this setting can be reduced in etcd via the key ```ldap/sync_interval```.
+Alternatively, a user can log in to CAS and then log in again to Jira / Confluence so that the synchronization for this user is completed in this one Dogu.
+Another alternative is that the administrative user triggers a synchronization manually via: "Settings (gear)" > "User management" > "User directories" > "CES LDAP mapper dogu" > "Synchronize".
+Synchronization by time or manually by the administrative user only needs to be carried out for one of the two dogus, the other dogu is also synchronized.
+
 ### Possible procedure for permission configuration
 
 If you as administrator want to create a new group and configure it directly in different Dogus, the procedure shown in the following diagram can be recommended.
