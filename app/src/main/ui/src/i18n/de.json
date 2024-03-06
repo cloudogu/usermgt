@@ -173,7 +173,7 @@
   "usersImportResult.table.success.passwordReset": "Passwort temporär",
   "usersImportResult.table.success.true": "Ja",
   "usersImportResult.table.success.username": "Nutzername",
-  "users.steps.title": "Weitere Schritte",
+  "users.steps.title": "Zusätzliche Hinweise",
   "users.steps.link" : "Dokumentation",
-  "users.steps.text" : "Beachten Sie beim Anlegen von Accounts und Gruppen im User Management, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen nicht direkt in anderen Dogus bekannt sind, sondern bei der nächsten Anmeldung des Accounts im jeweiligen Dogu bekannt gemacht werden. Ausnahmen bestehen bei Jira und Confluence, bitte betrachten sie dazu die verlinkte Dokumentation."
+  "users.steps.text" : "Beachten Sie beim Anlegen von Accounts und Gruppen im User Management, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen nicht direkt in anderen Dogus bekannt sind, sondern bei der nächsten Anmeldung des Accounts im jeweiligen Dogu bekannt gemacht werden. Ausnahmen bestehen bei Jira und Confluence. Bitte betrachten Sie dazu die verlinkte Dokumentation."
 }
