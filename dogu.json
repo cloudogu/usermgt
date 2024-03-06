@@ -78,6 +78,21 @@
       "Optional": true
     },
     {
+      "Name": "mail/import/max_retries",
+      "Description": "The number of maximum retries to send a mail, before an error occurs",
+      "Optional": true
+    },
+    {
+      "Name": "mail/import/max_retry_delay",
+      "Description": "The maximum delay for sending an email as part of a retry. By using a backoff strategy, the waiting time increases for each failed send until max_retry_delay is reached before the mail is sent again.",
+      "Optional": true
+    },
+    {
+      "Name": "mail/import/retry_interval",
+      "Description": "The interval in which failed mails will be checked to be sent again.",
+      "Optional": true
+    },
+    {
       "Name": "container_config/memory_limit",
       "Description": "Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). We recommend at least 200m of memory for usermgt.",
       "Optional": true,
