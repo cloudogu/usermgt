@@ -4,9 +4,18 @@
     <port>25</port>
     <from>no-reply@cloudogu.com</from>
     <subject>Ihr neuer CES Account</subject>
-    <message>Willkommen zum Cloudogu Ecosystem!
-Dies ist ihr Benutzeraccount
-Benutzername = ${username}
-Passwort = ${password}
-Bei der ersten Anmeldung müssen sie ihr Passwort ändern"</message>
+    <message><![CDATA[
+        <html>
+            <body>
+                <h2>Willkommen zum Cloudogu Ecosystem!</h2>
+                <p>Dies ist ihr Benutzeraccount</p>
+                <p>Benutzername: ${username}</p>
+                <p>Passwort: ${password}</p>
+                <p>Bei der ersten Anmeldung müssen sie ihr Passwort ändern</p>
+            </body>
+        </html>
+    ]]></message>
+    <maxRetries>10</maxRetries>
+    <maxRetryDelay>3600</maxRetryDelay>
+    <retryInterval>30</retryInterval>
 </mail>
