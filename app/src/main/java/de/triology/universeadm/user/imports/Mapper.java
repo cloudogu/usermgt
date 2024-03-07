@@ -75,7 +75,7 @@ public class Mapper {
         existingUser.setSurname(csvUserDTO.getSurname());
         existingUser.setMail(csvUserDTO.getMail());
         existingUser.setPwdReset(csvUserDTO.isPwdReset());
-        existingUser.setExternal(csvUserDTO.isExternal());
+        existingUser.setExternal(false);
 
         return existingUser;
     }
