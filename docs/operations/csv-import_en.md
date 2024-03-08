@@ -20,8 +20,15 @@ No groups are currently created or assigned via the import.
 
 * Any number of users can be created via the import.
 * If the user already exists, the values in the CSV are used for updating the user.
-* Currently, each user created is considered as external user.
+* Currently, each user created is considered as internal user.
 * Via the import **no** group can be created or assigned.
+
+## EMail Notification
+
+When creating a new user account, users automatically receive an email with their login information, including
+username and temporary password. These emails can be configured individually, using placeholders such as ${username}
+and ${password}. After the first login, users are prompted to change their temporary password to ensure the security
+of the account.
 
 ## Result
 A result entry is created for the import. This result can be found in the `importHistory` volume under
