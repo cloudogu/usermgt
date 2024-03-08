@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add email notification support for newly created users via csv import
+- Add email notification support for newly created users via csv import (#125)
 
 ## [v1.13.0-1] - 2024-02-29
 ### Added
