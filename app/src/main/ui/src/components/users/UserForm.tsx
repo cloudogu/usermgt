@@ -32,7 +32,6 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         notification,
         notify
     } = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
-    const isNewUser: boolean = useMemo(() => props.initialUser.username.length === 0, []);
     const {open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName} = useConfirmation();
 
     const addGroup = (groupName: string): void => {
@@ -101,7 +100,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             {notification}
             <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true}
                 data-testid="username" placeholder={t("users.placeholder.username")}
-                hint={isNewUser ? t("users.hint.username") : undefined}>
+                hint={t("users.hint.username")}>
                 {t("editUser.labels.username")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname"
@@ -113,7 +112,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 {t("editUser.labels.surname")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName"
-                placeholder={t("users.placeholder.displayName")} hint={isNewUser ? t("users.hint.displayName") : undefined}>
+                placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
                 {t("editUser.labels.displayName")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail"
