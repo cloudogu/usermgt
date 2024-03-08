@@ -2,8 +2,8 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import {Icon} from '@mui/material';
 import injectSheet from 'react-jss';
 import {twMerge} from 'tailwind-merge';
-import {getLocale, translate} from './helpers/i18n';
 import type {AnchorHTMLAttributes} from 'react';
+import {getLocale, translate, translateToPlainString} from "@cloudogu/ces-theme-tailwind";
 
 const styles = {
     helpIcon: {
@@ -32,8 +32,8 @@ function HelpLink({classes, ...props}: HelpLinkProps) {
             href={handbookLink}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={translate('users.steps.link')}
-            title={translate('users.steps.link')}
+            aria-label={translateToPlainString('users.steps.link')}
+            title={translateToPlainString('users.steps.link')}
             {...props}
         >
             <span>{translate('users.steps.link')}</span>

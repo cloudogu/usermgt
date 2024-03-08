@@ -9,10 +9,10 @@ import {Prompt} from "../../hooks/usePrompt";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
 import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
-import HelpLink from "../helpLink";
 import type {Group} from "../../services/Groups";
 import type {User} from "../../services/Users";
 import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
+import HelpLink from "../helpLink";
 
 const MAX_SEARCH_RESULTS = 10;
 

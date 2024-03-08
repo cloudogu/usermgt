@@ -87,7 +87,7 @@ Damit das Usermgt-Backend lokal ohne einen CAS verwendet werden kann muss die Um
 den Wert `DEVELOPMENT` gesetzt werden.
 
 ```shell
-export UNIVERSEADM_STAGE=DEVELOPMENT`
+export UNIVERSEADM_STAGE=DEVELOPMENT
 ```
 
 Anschließend kann das Backend wie folgt gestartet werden:
