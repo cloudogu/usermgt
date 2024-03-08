@@ -138,7 +138,7 @@
   "usersImport.headlines.importErrors": "Fehler",
   "usersImport.headlines.importSuccess": "Import abgeschlossen",
   "usersImport.headlines.table": "Content of the CSV file",
-  "usersImport.hint.newUser.summary":"Hint: New users will be informed by e-mail",
+  "usersImport.hint.newUser.summary":"Hint: New users will be informed about their login data by e-mail",
   "usersImport.hint.newUser.details": "A password is automatically generated for new users. The user is then notified about the username and password by e-mail. On first login, the user must change his/her password, regardless of the value defined in the PWDRESET column.",
   "usersImport.info.docsLink": "https://docs.cloudogu.com/en/usermanual/usermanagement/",
   "usersImport.info.further": "Further Information: ",
