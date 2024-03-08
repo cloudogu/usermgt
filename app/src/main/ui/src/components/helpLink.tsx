@@ -1,9 +1,9 @@
+import {getLocale, translate, translateToPlainString} from '@cloudogu/ces-theme-tailwind';
 import LaunchIcon from '@mui/icons-material/Launch';
 import {Icon} from '@mui/material';
 import injectSheet from 'react-jss';
 import {twMerge} from 'tailwind-merge';
 import type {AnchorHTMLAttributes} from 'react';
-import {getLocale, translate, translateToPlainString} from "@cloudogu/ces-theme-tailwind";
 
 const styles = {
     helpIcon: {
