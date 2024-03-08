@@ -1,7 +1,6 @@
 import {deprecated_Form as Form} from "@cloudogu/ces-theme-tailwind";
 import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
-import {useMemo} from "react";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";
