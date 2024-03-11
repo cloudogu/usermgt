@@ -174,5 +174,8 @@
   "usersImportResult.table.success.name": "Name",
   "usersImportResult.table.success.passwordReset": "Temporary password",
   "usersImportResult.table.success.true": "Yes",
-  "usersImportResult.table.success.username": "Username"
+  "usersImportResult.table.success.username": "Username",
+  "users.steps.title": "Additional Information",
+  "users.steps.link" : "Documentation",
+  "users.steps.text" : "When creating accounts and groups in the User Management, please note that modified or newly created accounts, groups and group assignments are not directly known in other dogus, but will be made known the next time the user logs in to the respective Dogu. There are exceptions for Jira and Confluence. Please refer to the linked documentation."
 }

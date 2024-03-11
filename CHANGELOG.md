@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add email notification support for newly created users via csv import (#125)
+- Add Data Synchronisation Detail Component to notify administrative users about cas / dogu behaviour (#119)
 
 ### Changed
 - Update ces-theme-tailwind to v0.3.8
