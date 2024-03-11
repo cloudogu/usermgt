@@ -20,8 +20,15 @@ werden jedoch zweifach verarbeitet. Über das Ergebnis des Imports kann festgest
 
 * Über den Import können beliebig viele Nutzer angelegt werden.
 * Existiert der Nutzer bereits, werden die Werte in der CSV zum Update verwendet.
-* Aktuell wird jeder angelegte Nutzer als externer Nutzer angesehen.
+* Aktuell wird jeder angelegte Nutzer als interner Nutzer angesehen.
 * Über den Import kann **keine** Gruppe erstellt oder zugeordnet werden.
+
+## E-Mail Benachrichtung
+Bei der Erstellung eines neuen Benutzerkontos erhalten die Benutzer automatisch eine 
+E-Mail mit ihren Anmeldeinformationen, einschließlich Benutzername und temporärem Passwort. Diese E-Mails können 
+individuell konfiguriert werden, wobei Platzhalter wie ${username} und ${password} verwendet werden müssen. 
+Nach dem ersten Login werden die Benutzer aufgefordert, ihr temporäres Passwort zu ändern, um die Sicherheit 
+des Kontos zu gewährleisten.
 
 ## Ergebnis
 

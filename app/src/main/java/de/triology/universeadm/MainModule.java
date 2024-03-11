@@ -36,6 +36,7 @@ import com.google.inject.Module;
 import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
 import de.triology.universeadm.configuration.I18nConfiguration;
+import de.triology.universeadm.configuration.MailConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,9 +60,10 @@ public class MainModule extends ServletModule {
      *
      * @param ldapConfiguration
      */
-    public MainModule(LDAPConfiguration ldapConfiguration, ApplicationConfiguration applicationConfiguration, I18nConfiguration i18nConfiguration) {
-        this.ldapConfiguration = ldapConfiguration;
+    public MainModule(ApplicationConfiguration applicationConfiguration, LDAPConfiguration ldapConfiguration, MailConfiguration mailConfiguration, I18nConfiguration i18nConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
+        this.ldapConfiguration = ldapConfiguration;
+        this.mailConfiguration = mailConfiguration;
         this.i18nConfiguration = i18nConfiguration;
     }
 
@@ -74,8 +76,9 @@ public class MainModule extends ServletModule {
     protected void configureServlets() {
         logger.info("bind resources");
 
-        bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
         bind(ApplicationConfiguration.class).toInstance(applicationConfiguration);
+        bind(LDAPConfiguration.class).toInstance(ldapConfiguration);
+        bind(MailConfiguration.class).toInstance(mailConfiguration);
         bind(I18nConfiguration.class).toInstance(i18nConfiguration);
 
         // events
@@ -118,7 +121,8 @@ public class MainModule extends ServletModule {
     /**
      * Field description
      */
-    private final LDAPConfiguration ldapConfiguration;
     private final ApplicationConfiguration applicationConfiguration;
+    private final LDAPConfiguration ldapConfiguration;
+    private final MailConfiguration mailConfiguration;
     private final I18nConfiguration i18nConfiguration;
 }

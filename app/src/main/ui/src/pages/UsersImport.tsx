@@ -1,3 +1,4 @@
+import {Details} from "@cloudogu/ces-theme-tailwind";
 import {
     Button,
     Form,
@@ -74,7 +75,16 @@ const UsersImport = () => {
                 />
                 {(file !== undefined && !loading) &&
                     <>
-                        <H2 className={"mt-12"}>{t("usersImport.headlines.table")}</H2>
+                        <H2 className={"mt-12 mb-6"}>{t("usersImport.headlines.table")}</H2>
+                        <Details className={"mb-6"}>
+                            <Details.Summary>
+                                <Details.Summary.Arrow/>
+                                {t("usersImport.hint.newUser.summary")}
+                            </Details.Summary>
+                            <Details.Content className={"max-w-3xl"}>
+                                {t("usersImport.hint.newUser.details")}
+                            </Details.Content>
+                        </Details>
                         <UsersImportTable header={file.header} rows={file.rows}/>
                     </>
                 }

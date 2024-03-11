@@ -26,7 +26,6 @@ export interface UserFormProps<T extends User> {
     backButton?: boolean;
     groupsReadonly?: boolean;
     passwordReset?: boolean;
-    editUsers?: boolean;
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {

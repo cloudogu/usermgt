@@ -138,6 +138,8 @@
   "usersImport.headlines.importErrors": "Fehler",
   "usersImport.headlines.importSuccess": "Import abgeschlossen",
   "usersImport.headlines.table": "Inhalt der ausgewählten Datei",
+  "usersImport.hint.newUser.summary":"Hinweis: Neu angelegte Anwender werden über Ihre Anmeldedaten per E-Mail informiert",
+  "usersImport.hint.newUser.details": "Für neu angelegte Anwender wird automatisch ein Passwort generiert. Über den Username und das Passwort wird der Anwender per E-Mail informiert. Beim ersten Anmelden muss der Anwender sein Passwort ändern, unabhängig des Werts, der in der Spalte PWDRESET definiert ist.",
   "usersImport.info.docsLink": "https://docs.cloudogu.com/de/usermanual/usermanagement/",
   "usersImport.info.further": "Weitere Informationen dazu: ",
   "usersImport.info.text": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden.",

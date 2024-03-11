@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
 import de.triology.universeadm.UniqueConstraintViolationException;
+import de.triology.universeadm.mail.MailService;
 import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
@@ -53,6 +54,10 @@ public class ImportHandler {
      * ResultRepository get the summaries of the csv imports.
      */
     private final SummaryRepository summaryRepository;
+    /**
+     * Mail service notifies newly created users about their username and password.
+     */
+    private final MailService mailService;
 
     /**
      * Constructs the CSVHandler.
@@ -60,13 +65,15 @@ public class ImportHandler {
      * @param userManager      - injected
      * @param csvParser        - injected
      * @param resultRepository - injected
+     * @param mailService      - injected
      */
     @Inject
-    public ImportHandler(UserManager userManager, CSVParser csvParser, ResultRepository resultRepository, SummaryRepository summaryRepository) {
+    public ImportHandler(UserManager userManager, CSVParser csvParser, ResultRepository resultRepository, SummaryRepository summaryRepository, MailService mailService) {
         this.userManager = userManager;
         this.csvParser = csvParser;
         this.resultRepository = resultRepository;
         this.summaryRepository = summaryRepository;
+        this.mailService = mailService;
     }
 
     /**
@@ -216,7 +223,9 @@ public class ImportHandler {
     private ImportEntryResult saveCSVImport(long lineNumber, Boolean isNewUser, User user) {
         try {
             if (isNewUser) {
+                User copyUser = new User(user);
                 this.userManager.create(user);
+                this.mailService.notify(copyUser);
                 return ImportEntryResult.created(user);
             } else {
                 this.userManager.modify(user);

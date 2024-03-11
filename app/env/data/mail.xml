@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mail>
+    <host>localhost</host>
+    <port>25</port>
+    <from>no-reply@cloudogu.com</from>
+    <subject>Ihr neuer Cloudogu Ecosystem Account</subject>
+    <message><![CDATA[
+        <html>
+            <body>
+                <h2>Willkommen im Cloudogu Ecosystem!</h2>
+                <p>Dies ist Ihr Benutzeraccount:</p>
+                <p>Benutzername: ${username}</p>
+                <p>Passwort: ${password}</p>
+                <p>Bei der ersten Anmeldung müssen Sie das Passwort ändern.</p>
+            </body>
+        </html>
+    ]]></message>
+    <maxRetries>10</maxRetries>
+    <maxRetryDelay>3600</maxRetryDelay>
+    <retryInterval>30</retryInterval>
+</mail>
