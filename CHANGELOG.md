@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update ces-theme-tailwind to v0.3.8
 
+### Fixed
+- Fix column overflow in user import table
+
 ## [v1.13.0-1] - 2024-02-29
 ### Added
 - Add ces-theme-tailwind in a second, higher, version (v0.3.7) (#111)

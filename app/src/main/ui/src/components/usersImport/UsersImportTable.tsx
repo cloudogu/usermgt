@@ -26,10 +26,10 @@ export default function UsersImportTable(file: { header: string[], rows: string[
                         }
                     </ActionTableFrontendPaginated.HeadWithOneRow>
                     <ActionTableFrontendPaginated.Body>
-                        {values.map((row: string[], index) => (
-                            <ActionTableFrontendPaginated.Body.Row key={index}>
-                                {row.map(column => (
-                                    <ActionTableFrontendPaginated.Body.Row.Column key={column}>
+                        {values.map((row: string[], rowIndex) => (
+                            <ActionTableFrontendPaginated.Body.Row key={rowIndex}>
+                                {row.map((column, columnIndex) => (
+                                    <ActionTableFrontendPaginated.Body.Row.Column key={`${column}-${rowIndex}-${columnIndex}`}>
                                         {column}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                 ))}
