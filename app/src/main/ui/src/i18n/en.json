@@ -122,7 +122,7 @@
   "users.placeholder.password": "Enter password",
   "users.placeholder.surname": "Enter surname",
   "users.placeholder.username": "Enter username",
-  "users.hint.username": "The username is used for logging in and cannot be changed later.",
+  "users.hint.username": "The username is used for logging in and cannot be changed.",
   "users.hint.displayName": "The display name is the name of the user that is displayed in many Dogus.",
   "users.table.actions.add": "Add user",
   "users.table.actions.delete": "Delete user",
@@ -138,6 +138,8 @@
   "usersImport.headlines.importErrors": "Fehler",
   "usersImport.headlines.importSuccess": "Import abgeschlossen",
   "usersImport.headlines.table": "Content of the CSV file",
+  "usersImport.hint.newUser.summary":"Hint: New users will be informed about their login data by e-mail",
+  "usersImport.hint.newUser.details": "A password is automatically generated for new users. The user is then notified about the username and password by e-mail. On first login, the user must change his/her password, regardless of the value defined in the PWDRESET column.",
   "usersImport.info.docsLink": "https://docs.cloudogu.com/en/usermanual/usermanagement/",
   "usersImport.info.further": "Further Information: ",
   "usersImport.info.text": "Users can be imported on this page. These must be created in a CSV file to be uploaded here according to a certain pattern.",
@@ -172,5 +174,8 @@
   "usersImportResult.table.success.name": "Name",
   "usersImportResult.table.success.passwordReset": "Temporary password",
   "usersImportResult.table.success.true": "Yes",
-  "usersImportResult.table.success.username": "Username"
+  "usersImportResult.table.success.username": "Username",
+  "users.steps.title": "Additional Information",
+  "users.steps.link" : "Documentation",
+  "users.steps.text" : "When creating accounts and groups in the User Management, please note that modified or newly created accounts, groups and group assignments are not directly known in other dogus, but will be made known the next time the user logs in to the respective Dogu. There are exceptions for Jira and Confluence. Please refer to the linked documentation."
 }

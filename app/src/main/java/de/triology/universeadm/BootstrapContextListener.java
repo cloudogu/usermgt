@@ -35,6 +35,7 @@ import com.google.inject.Module;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
 import de.triology.universeadm.configuration.Language;
 import de.triology.universeadm.configuration.I18nConfiguration;
+import de.triology.universeadm.configuration.MailConfiguration;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import org.slf4j.Logger;
@@ -59,8 +60,9 @@ public class BootstrapContextListener
      */
     @Override
     protected List<? extends Module> getModules(ServletContext context) {
-        LDAPConfiguration ldapConfiguration = BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class);
         ApplicationConfiguration applicationConfiguration = BaseDirectory.getConfiguration("application-configuration.xml", ApplicationConfiguration.class);
+        LDAPConfiguration ldapConfiguration = BaseDirectory.getConfiguration("ldap.xml", LDAPConfiguration.class);
+        MailConfiguration mailConfiguration = BaseDirectory.getConfiguration("mail.xml", MailConfiguration.class);
         I18nConfiguration i18nConfiguration = new I18nConfiguration(Language.en, Language.de);
 
         List<? extends Module> modules;
@@ -83,7 +85,7 @@ public class BootstrapContextListener
             //J-
             modules = ImmutableList.of(
                     ShiroWebModule.guiceFilterModule(),
-                    new MainModule(ldapConfiguration, applicationConfiguration, i18nConfiguration),
+                    new MainModule(applicationConfiguration, ldapConfiguration, mailConfiguration, i18nConfiguration),
                     securityModule
             );
             //J+

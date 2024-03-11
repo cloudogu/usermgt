@@ -1,77 +1,133 @@
 package de.triology.universeadm.mail;
 
-import de.triology.universeadm.configuration.ApplicationConfiguration;
-import de.triology.universeadm.user.User;
-import org.junit.Assert;
+import de.triology.universeadm.configuration.MailConfiguration;
+import jakarta.mail.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class MailSenderTest {
-    public static final String TEST = "test";
-    private static final String MAIL_CONTENT = "Willkommen zum Cloudogu Ecosystem!\n" +
-            "Dies ist ihr Benutzeraccount\n" +
-            "Benutzername = %s\n" +
-            "Passwort = %s\n" +
-            "Bei der ersten Anmeldung müssen sie ihr Passwort ändern\n";
 
-    private MailSender.MessageBuilder messageBuilder;
-    private MailSender.TransportSender transportSender;
-    private Message message;
+    private Transport transportMock;
+    private Message messageMock;
     private MailSender mailSender;
-    private ApplicationConfiguration applicationConfig;
-    private final User user = new User(
-            "Tester",
-            "Tester",
-            "Tes",
-            "Ter",
-            "test@test.com",
-            "temp",
-            true,
-            new ArrayList<String>());
 
     @Before
-    public void setUp() {
-        this.message = mock(Message.class);
-        this.messageBuilder = mock(MailSender.MessageBuilder.class);
-        this.transportSender = mock(MailSender.TransportSender.class);
-        this.applicationConfig = mock(ApplicationConfiguration.class);
-        this.mailSender = new MailSender(this.messageBuilder, this.transportSender, this.applicationConfig);
-        when(this.messageBuilder.build(Matchers.<Session>any())).thenReturn(this.message);
-        when(applicationConfig.getHost()).thenReturn("postifx");
-        when(applicationConfig.getPort()).thenReturn("25");
+    public void setUp() throws Exception {
+        SessionFactory sessionFactoryMock = mock(SessionFactory.class);
+        Session sessionMock = mock(Session.class);
+        transportMock = mock(Transport.class);
+        messageMock = mock(Message.class);
+
+        when(sessionFactoryMock.createSession()).thenReturn(sessionMock);
+        when(sessionMock.getTransport()).thenReturn(transportMock);
+
+        MailConfiguration mailConfiguration = new MailConfiguration("", "", "", "", "", 3, 10, 1);
+        mailSender = new MailSender(sessionFactoryMock, mailConfiguration);
     }
 
     @Test
-    public void sendMailSuccessful() throws MessagingException, IOException {
+    public void sendInvalidRecipient() throws MessagingException {
+        when(messageMock.getSubject()).thenReturn("test");
+        when(messageMock.getAllRecipients()).thenThrow(new MessagingException("Invalid recipient"));
 
-        String content = String.format(MAIL_CONTENT, user.getUsername(), TEST);
-        this.mailSender.sendMail(TEST, content, user.getMail());
-        ArgumentCaptor<Multipart> argument = ArgumentCaptor.forClass(Multipart.class);
-        verify(message).setContent(argument.capture());
-        String actualMsgBodyContent = argument.getValue().getBodyPart(0).getContent().toString();
-        Assert.assertEquals(content, actualMsgBodyContent);
-        verify(this.transportSender, times(1)).send(Matchers.<Message>any());
+        try {
+            this.mailSender.sendAsync(messageMock).join();
+            fail("Expected exception");
+        } catch (CompletionException e) {
+            assertTrue(e.getCause() instanceof MessagingException);
+        }
+
+        verify(transportMock, never()).isConnected();
+        verify(transportMock, never()).sendMessage(any(), any());
+
+        assertEquals(0, mailSender.getRetryMessageCount());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void nullValueInMethodCall() throws MessagingException {
-        this.mailSender.sendMail(null, null, null);
+    @Test
+    public void sendInvalidSubject() throws MessagingException {
+        when(messageMock.getSubject()).thenThrow(new MessagingException("Invalid subject"));
+        when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
+
+        try {
+            this.mailSender.sendAsync(messageMock).join();
+            fail("Expected exception");
+        } catch (CompletionException e) {
+            assertTrue(e.getCause() instanceof MessagingException);
+        }
+
+        verify(transportMock, never()).isConnected();
+        verify(transportMock, never()).sendMessage(any(), any());
+
+        assertEquals(0, mailSender.getRetryMessageCount());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void InvalidMailMethodCall() throws MessagingException {
-        String content = String.format(MAIL_CONTENT, user.getUsername(), TEST);
-        this.mailSender.sendMail(TEST, content, TEST);
+    @Test
+    public void sendWhenConnected() throws MessagingException {
+        when(messageMock.getSubject()).thenReturn("test");
+        when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
+        when(transportMock.isConnected()).thenReturn(true);
+
+        this.mailSender.sendAsync(messageMock).join();
+
+        verify(transportMock, times(1)).isConnected();
+        verify(transportMock, never()).connect();
+        verify(transportMock, times(1)).sendMessage(any(), any());
+
+        assertEquals(0, mailSender.getRetryMessageCount());
+    }
+
+    @Test
+    public void sendWithReconnect() throws MessagingException {
+        when(messageMock.getSubject()).thenReturn("test");
+        when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
+        when(transportMock.isConnected()).thenReturn(false);
+
+        this.mailSender.sendAsync(messageMock).join();
+
+        verify(transportMock, times(1)).isConnected();
+        verify(transportMock, times(1)).connect();
+        verify(transportMock, times(1)).sendMessage(any(), any());
+
+        assertEquals(0, mailSender.getRetryMessageCount());
+    }
+
+    @Test
+    public void sendDisconnected() throws MessagingException {
+        when(messageMock.getSubject()).thenReturn("test");
+        when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
+        when(transportMock.isConnected()).thenReturn(false);
+        doThrow(new MessagingException("no connection")).when(transportMock).connect();
+
+        try {
+            this.mailSender.sendAsync(messageMock).join();
+            fail("Expected exception");
+        } catch (CompletionException e) {
+            assertTrue(e.getCause() instanceof MessagingException);
+        }
+
+        verify(transportMock, times(1)).isConnected();
+        verify(transportMock, times(1)).connect();
+        verify(transportMock, never()).sendMessage(any(), any());
+
+        assertEquals(1, mailSender.getRetryMessageCount());
+
+    }
+
+    @Test
+    public void sendFailed() throws MessagingException, InterruptedException, ExecutionException {
+        when(messageMock.getSubject()).thenReturn("test");
+        when(messageMock.getAllRecipients()).thenReturn(new Address[]{});
+        when(transportMock.isConnected()).thenReturn(true);
+        doThrow(new MessagingException("Failed to send")).when(transportMock).sendMessage(any(), any());
+
+        this.mailSender.sendAsync(messageMock).join();
+
+        assertEquals(1, mailSender.getRetryMessageCount());
     }
 }

@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.13.0-1",
+  "Version": "1.14.0-1",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -63,18 +63,33 @@
       }
     },
     {
-      "Name": "mail_address",
-      "Description": "The mail address all automatic generated mails are send with",
+      "Name": "mail/sender",
+      "Description": "Email address to use as sender of the User Management dogu",
       "Optional": true
     },
     {
-      "Name": "import/mail/subject",
-      "Description": "The Subject of Mail, which is send when a User is imported via the csv import feature",
+      "Name": "mail/import/subject",
+      "Description": "The subject of the mail, which is send when a user is imported via the csv import feature",
       "Optional": true
     },
     {
-      "Name": "import/mail/content",
-      "Description": "The Content of Mail, which is send when a User is imported via the csv import feature",
+      "Name": "mail/import/content",
+      "Description": "The content of the mail, which is send when a User is imported via the csv import feature. Within the content the placeholders ${username} and ${password} need to be included.",
+      "Optional": true
+    },
+    {
+      "Name": "mail/import/max_retries",
+      "Description": "The number of maximum retries to send a mail, before an error occurs",
+      "Optional": true
+    },
+    {
+      "Name": "mail/import/max_retry_delay",
+      "Description": "The maximum delay for sending an email as part of a retry. By using a backoff strategy, the waiting time increases for each failed send until max_retry_delay is reached before the mail is sent again.",
+      "Optional": true
+    },
+    {
+      "Name": "mail/import/retry_interval",
+      "Description": "The interval in which failed mails will be checked to be sent again.",
       "Optional": true
     },
     {

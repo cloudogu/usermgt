@@ -73,7 +73,6 @@ public class GroupResourceTest
     List<String> undeletableGroups = new ArrayList<>();
     undeletableGroups.add("admin");
     undeletableGroups.add("cesManager");
-    when(undeletableGroupManager.getNonDeleteClassList()).thenReturn(undeletableGroups);
     this.resource = new GroupResource(groupManager, userManager, undeletableGroupManager);
   }
   

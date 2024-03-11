@@ -240,6 +240,11 @@ Ist ein Account schon intern im Dogu angelegt worden, wird der interne Account m
 
 Beachten Sie beim Anlegen von Accounts und Gruppen im **User Management**, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen **nicht direkt** in anderen Dogus bekannt sind, sondern **bei der nächsten Anmeldung des Accounts im jeweiligen Dogu** bekannt gemacht werden.
 
+Ausnahmen bestehen dabei bei den **Dogus Jira und Confluence**: Eine Synchronisation der Nutzerdaten wird in der Standardeinstellung alle 60 Minuten ausgelöst; diese Einstellung lässt sich im etcd über den key ```ldap/sync_interval``` reduzieren.
+Alternativ kann sich ein Nutzer oder eine Nutzerin im CAS und dann nochmal bei Jira / Confluence anmelden, damit die Synchronisation für den Nutzer bzw. die Nutzerin in diesem Dogu abgeschlossen wird.
+Eine weitere Alternative ist das manuelle Auslösen der Synchronisation über Administrator:innen: "Einstellungen (Zahnrad)" > "Benutzerverwaltung" > "Benutzerverzeichnisse" > "CES LDAP mapper dogu" > "Synchronisieren".
+Die Synchronisation nach Zeit oder manuell durch Administrator:innen muss nur bei einem der zwei Dogus erfolgen - das andere Dogu wird dabei ebenfalls synchronisiert.
+
 ### Mögliches Vorgehen bei der Rechtekonfiguration
 
 Möchten Sie als Administrator:in eine neue Gruppe anlegen und diese in unterschiedlichen Dogus direkt konfigurieren, kann sich das im folgenden Schaubild dargestellte Vorgehen empfehlen.

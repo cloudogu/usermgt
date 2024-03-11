@@ -122,7 +122,7 @@
   "users.placeholder.password": "Passwort eingeben",
   "users.placeholder.surname": "Nachnamen eingeben",
   "users.placeholder.username": "Benutzernamen eingeben",
-  "users.hint.username": "Der Nutzername wird beim Login verwendet und kann später nicht mehr geändert werden.",
+  "users.hint.username": "Der Nutzername wird beim Login verwendet und kann nicht geändert werden.",
   "users.hint.displayName": "Der Anzeigename ist der Name des Nutzers, der in vielen Dogus angezeigt wird.",
   "users.table.actions.add": "Nutzer hinzufügen",
   "users.table.actions.delete": "Nutzer löschen",
@@ -138,6 +138,8 @@
   "usersImport.headlines.importErrors": "Fehler",
   "usersImport.headlines.importSuccess": "Import abgeschlossen",
   "usersImport.headlines.table": "Inhalt der ausgewählten Datei",
+  "usersImport.hint.newUser.summary":"Hinweis: Neu angelegte Anwender werden über Ihre Anmeldedaten per E-Mail informiert",
+  "usersImport.hint.newUser.details": "Für neu angelegte Anwender wird automatisch ein Passwort generiert. Über den Username und das Passwort wird der Anwender per E-Mail informiert. Beim ersten Anmelden muss der Anwender sein Passwort ändern, unabhängig des Werts, der in der Spalte PWDRESET definiert ist.",
   "usersImport.info.docsLink": "https://docs.cloudogu.com/de/usermanual/usermanagement/",
   "usersImport.info.further": "Weitere Informationen dazu: ",
   "usersImport.info.text": "Auf dieser Seite können Nutzer importiert werden. Diese müssen in einer hier hochzuladenden CSV-Datei nach einem bestimmten Muster angelegt werden.",
@@ -172,5 +174,8 @@
   "usersImportResult.table.success.name": "Nachname",
   "usersImportResult.table.success.passwordReset": "Passwort temporär",
   "usersImportResult.table.success.true": "Ja",
-  "usersImportResult.table.success.username": "Nutzername"
+  "usersImportResult.table.success.username": "Nutzername",
+  "users.steps.title": "Zusätzliche Hinweise",
+  "users.steps.link" : "Dokumentation",
+  "users.steps.text" : "Beachten Sie beim Anlegen von Accounts und Gruppen im User Management, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen nicht direkt in anderen Dogus bekannt sind, sondern bei der nächsten Anmeldung des Accounts im jeweiligen Dogu bekannt gemacht werden. Ausnahmen bestehen bei Jira und Confluence. Bitte betrachten Sie dazu die verlinkte Dokumentation."
 }
