@@ -1,11 +1,11 @@
 import {Button, H1, LoadingIcon} from "@cloudogu/deprecated-ces-theme-tailwind";
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {useNavigate, useParams} from "react-router-dom";
+import { ApplicationContext } from "../components/contexts/ApplicationContext";
 import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
 import {useUser} from "../hooks/useUser";
-import {ApplicationContext} from "../main";
 import {UsersService} from "../services/Users";
 import type {User} from "../services/Users";
 

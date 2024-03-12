@@ -1,6 +1,5 @@
 import {Button, Form, H2, ListWithSearchbar, useFormHandler} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
-import React from "react";
 import {useNavigate} from "react-router-dom";
 import {t} from "../../helpers/i18nHelpers";
 import {useBackURL} from "../../hooks/useBackURL";
