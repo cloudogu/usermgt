@@ -1,13 +1,13 @@
 import {ActionTable, ActionTableRoot, ConfirmDialog, translate,} from "@cloudogu/ces-theme-tailwind";
 import {Button, H1, Searchbar, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
-import React, {useContext, useMemo} from "react";
+import {useContext, useMemo} from "react";
 import {Link, useLocation} from "react-router-dom";
 import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
+import { ApplicationContext } from "../components/contexts/ApplicationContext";
 import {t} from "../helpers/i18nHelpers";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
 import usePaginationTableState from "../hooks/usePaginationTableState";
-import {ApplicationContext} from "../main";
 import {UsersService} from "../services/Users";
 import type {User} from "../services/Users";
 

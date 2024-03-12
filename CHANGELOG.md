@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.14.1-1] - 2024-03-12
+### Fixed
+- Show data synchronization hint only to admins (#127)
+
 ## [v1.14.0-1] - 2024-03-11
 ### Added
 - Add email notification support for newly created users via csv import (#125)

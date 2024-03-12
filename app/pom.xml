@@ -5,7 +5,7 @@
 
     <groupId>com.cloudogu</groupId>
     <artifactId>usermgt</artifactId>
-    <version>1.14.0</version>
+    <version>1.14.1</version>
     <packaging>war</packaging>
     <name>usermgt</name>
 

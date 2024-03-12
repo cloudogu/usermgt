@@ -1,8 +1,8 @@
 import {H1} from '@cloudogu/deprecated-ces-theme-tailwind';
 import React, {useContext} from 'react';
 import {t} from '../helpers/i18nHelpers';
-import {ApplicationContext} from '../main';
 import TitledPage from './TitledPage';
+import { ApplicationContext } from './contexts/ApplicationContext';
 
 export default function ProtectedResource(props: {pageName: string, children: React.JSX.Element}){
     const {casUser} = useContext(ApplicationContext);
