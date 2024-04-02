@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
-- Escape passwords in notification email for new users (#128)
+- Escape username and password in notification email for new users (#128)
 
 ## [v1.14.1-1] - 2024-03-12
 ### Fixed

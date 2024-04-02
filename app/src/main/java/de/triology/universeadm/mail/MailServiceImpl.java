@@ -45,8 +45,9 @@ public class MailServiceImpl implements MailService {
 
     private String getMailContent(User user) {
         Map<String, String> substitutes = new HashMap<>();
-        substitutes.put(USER_NAME, user.getUsername());
-        //escape password and display inline in code-tag
+
+        //escape username and password and display as inline in code-tag
+        substitutes.put(USER_NAME, String.format("<code>%s</code>", HtmlEscapers.htmlEscaper().escape(user.getUsername())));
         substitutes.put(PASSWORD, String.format("<code>%s</code>", HtmlEscapers.htmlEscaper().escape(user.getPassword())));
 
         String template = mailConfiguration.getMessage();
