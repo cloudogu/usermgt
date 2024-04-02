@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.14.2-1] - 2024-04-02
+### Fixed
+- Escape username and password in notification email for new users (#128)
+
 ## [v1.14.1-1] - 2024-03-12
 ### Fixed
 - Show data synchronization hint only to admins (#127)
