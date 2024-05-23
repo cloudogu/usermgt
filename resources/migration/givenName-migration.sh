@@ -29,7 +29,7 @@ LDAP_SERVER="ldap://${LDAP_HOST}:${LDAP_PORT}"
 SEARCH_FILTER="(&(objectClass=person)(!(givenName=*)))"
 
 # Retrieve DNs of users without a given name
-USER_DNS=$(ldapsearch -x -H "${LDAP_SERVER}" -b "${USER_BASE_DN}" -D "${BIND_DN}" -w "${BIND_PASSWORD}" -LLL "${SEARCH_FILTER}" dn | awk '/^dn: / {print $2}')
+USER_DNS=$(ldapsearch -o ldif-wrap=no -x -H "${LDAP_SERVER}" -b "${USER_BASE_DN}" -D "${BIND_DN}" -w "${BIND_PASSWORD}" -LLL "${SEARCH_FILTER}" dn | awk '/^dn: / {print $2}')
 
 # Iterate through user DNs and update the givenName attribute
 for USER_DN in ${USER_DNS}; do
