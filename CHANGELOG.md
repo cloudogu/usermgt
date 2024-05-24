@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.14.2-2] - 2024-05-24
+### Fixed
+- Log errors during cas authentication
+  - previously exceptions while validating the cas ticket did not get logged which made debugging the cas authentication difficult
+- Fix givenNameMigration.sh wrap problem (#130)
+
 ## [v1.14.2-1] - 2024-04-02
 ### Fixed
 - Escape username and password in notification email for new users (#128)

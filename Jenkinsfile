@@ -1,7 +1,11 @@
 #!groovy
-@Library(['github.com/cloudogu/dogu-build-lib@v2.3.0', 'github.com/cloudogu/ces-build-lib@1.68.0'])
+@Library(['github.com/cloudogu/dogu-build-lib@v2.3.0', 'github.com/cloudogu/ces-build-lib@2.2.1'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
+
+productionReleaseBranch = "master"
+developmentBranch = "develop"
+currentBranch = "${env.BRANCH_NAME}"
 
 node('docker') {
     timestamps {
@@ -24,7 +28,6 @@ node('docker') {
         String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 
         doguName = 'usermgt'
-        branch = "${env.BRANCH_NAME}"
         Maven mvn = new MavenWrapper(this)
         Git git = new Git(this, "cesmarvin")
         git.committerName = 'cesmarvin'
@@ -83,47 +86,9 @@ node('docker') {
                     }
                 }
 
-        stage('SonarQube') {
-            withSonarQubeEnv {
-                docker.image('sonarsource/sonar-scanner-cli')
-                        .inside("-e SONAR_HOST_URL=http://${env.SONAR_HOST_URL} -v ${WORKSPACE}:/usr/src") {
-
-                            sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
-                            gitWithCredentials("fetch --all")
-
-                            def sonarParameters = "-Dsonar.host.url=${env.SONAR_HOST_URL} " +
-                                    "-Dsonar.github.oauth=${env.SONAR_AUTH_TOKEN} "
-
-                            if (branch.equals("master")) {
-                                echo "This branch has been detected as the master branch."
-                                sh "sonar-scanner " + sonarParameters
-                            } else if (branch.equals("develop")) {
-                                echo "This branch has been detected as the develop branch."
-                                sh "sonar-scanner -Dsonar.branch.name=${branch} -Dsonar.branch.target=master " + sonarParameters
-                            } else if (env.CHANGE_TARGET) {
-                                echo "This branch has been detected as a pull request."
-                                sh "sonar-scanner -Dsonar.branch.name=${env.CHANGE_BRANCH}-PR${env.CHANGE_ID} -Dsonar.branch.target=${env.CHANGE_TARGET} " + sonarParameters
-                            } else if (branch.startsWith("feature/")) {
-                                echo "This branch has been detected as a feature branch."
-                                sh "sonar-scanner -Dsonar.branch.name=${branch} -Dsonar.branch.target=develop " + sonarParameters
-                            } else if (branch.startsWith("bugfix/")) {
-                                echo "This branch has been detected as a bugfix branch."
-                                sh "sonar-scanner -Dsonar.branch.name=${branch} -Dsonar.branch.target=develop " + sonarParameters
-                            } else if (branch.startsWith("release/")) {
-                                echo "This branch has been detected as a release branch."
-                                sh "sonar-scanner -Dsonar.branch.name=${branch} -Dsonar.branch.target=master " + sonarParameters
-                            } else {
-                                echo "The branch type of branch ${branch} could not be detected"
-                            }
-                        }
-            }
-            timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
-                def qGate = waitForQualityGate()
-                if (qGate.status != 'OK') {
-                    unstable("Pipeline unstable due to SonarQube quality gate failure")
-                }
-            }
-        }
+    stage('SonarQube') {
+        stageStaticAnalysisSonarQube()
+    }
 
         EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
         Trivy trivy = new Trivy(this, ecoSystem)
@@ -259,6 +224,37 @@ email=jenkins@cloudogu.com
 always-auth=true
 _auth=${NPM_TOKEN}
 """.trim()
+        }
+    }
+}
+
+void stageStaticAnalysisSonarQube() {
+    def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    withSonarQubeEnv {
+        sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
+        gitWithCredentials("fetch --all")
+
+        if (currentBranch == productionReleaseBranch) {
+            echo "This branch has been detected as the production branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
+        } else if (currentBranch == developmentBranch) {
+            echo "This branch has been detected as the development branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
+        } else if (env.CHANGE_TARGET) {
+            echo "This branch has been detected as a pull request."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.pullrequest.key=${env.CHANGE_ID} -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} -Dsonar.pullrequest.base=${developmentBranch}"
+        } else if (currentBranch.startsWith("feature/")) {
+            echo "This branch has been detected as a feature branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
+        } else {
+            echo "This branch has been detected as a miscellaneous branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} "
+        }
+    }
+    timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
+        def qGate = waitForQualityGate()
+        if (qGate.status != 'OK') {
+            unstable("Pipeline unstable due to SonarQube quality gate failure")
         }
     }
 }

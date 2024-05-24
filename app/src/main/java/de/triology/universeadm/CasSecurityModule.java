@@ -36,11 +36,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
+
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cas.CasFilter;
-import org.apache.shiro.cas.CasRealm;
-import org.apache.shiro.cas.CasSubjectFactory;
+import org.apache.shiro.cas.*;
 import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -156,6 +158,18 @@ public class CasSecurityModule extends BaseSecurityModule {
       this.setCasService(configuration.getService());
       this.setRoleAttributeNames(configuration.getRoleAttributeNames());
       this.setValidationProtocol(CAS_VALIDATION_PROTOCOL_VALUE);
+    }
+
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        try {
+            return super.doGetAuthenticationInfo(token);
+        } catch (AuthenticationException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error("unexpected error getting authentication info", e);
+            throw e;
+        }
     }
 
     @Override
