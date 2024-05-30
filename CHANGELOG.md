@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Add support for groups which contain invalid characters (#139)
+  - a long time ago, it was possible to add groups with spaces
+  - if one of this groups does still exists, it cannot be edited anymore
+  - for that case, a workaround was added: Group names are not validated on group changed but still on group create
 
 ## [v1.14.2-2] - 2024-05-24
 ### Fixed
