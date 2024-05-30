@@ -4,7 +4,7 @@
     <port>25</port>
     <from>no-reply@cloudogu.com</from>
     <subject>Ihr neuer Cloudogu Ecosystem Account</subject>
-    <message>Willkommen im Cloudogu Ecosystem! \n\n Dies ist Ihr Benutzeraccount: \nBenutzername: ${username}\nPasswort: ${password}\n\nBei der ersten Anmeldung m\u00FCssen Sie das Passwort \u00E4ndern.</message>
+    <message>Willkommen im Cloudogu Ecosystem! \n\n Dies ist Ihr Benutzeraccount: \nBenutzername: ${username}\nPasswort: ${password}\n\nBei der ersten Anmeldung müssen Sie das Passwort ändern.</message>
     <maxRetries>10</maxRetries>
     <maxRetryDelay>3600</maxRetryDelay>
     <retryInterval>30</retryInterval>
