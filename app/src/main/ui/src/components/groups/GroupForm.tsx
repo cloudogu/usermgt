@@ -22,7 +22,8 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     const {backURL} = useBackURL();
     const navigate = useNavigate();
     const isNewGroup = !group.name;
-    const handler = useFormHandler<Group>(config);
+    // Workaround with cast to any. Our interface does not accept validateOnbChange/Blur-values but the underlying lib does.
+    const handler = useFormHandler<Group>({...config, validateOnChange: false, validateOnBlur: false} as any);
     const {open, setOpen: toggleModal, targetName: username, setTargetName: setUsername} = useConfirmation();
     const openConfirmationDialog = (username: string): void => {
         setUsername(username);

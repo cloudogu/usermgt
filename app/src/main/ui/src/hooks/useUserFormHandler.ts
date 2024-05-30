@@ -16,6 +16,7 @@ export default function useUserFormHandler<T extends User>(
     const validationSchema = useValidationSchema();
     const {notification, notify} = useAlertNotification();
 
+    // Workaround with cast to any. Our interface does not accept validateOnbChange/Blur-values but the underlying lib does.
     const handler = useFormHandler<T>(
         {
             initialValues: {
@@ -26,7 +27,9 @@ export default function useUserFormHandler<T extends User>(
             validationSchema: validationSchema,
             enableReinitialize: true,
             onSubmit: onSubmit,
-        }
+            validateOnChange: false,
+            validateOnBlur: false
+        } as any
     );
 
     return {handler: handler, notification: notification, notify: notify};
