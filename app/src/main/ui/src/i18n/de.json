@@ -75,6 +75,7 @@
   "newGroup.notification.success": "Die Gruppe {{groupName}} wurde erfolgreich angelegt.",
   "newUser.notification.error": "Der Nutzer '{{username}}' konnte nicht gespeichert werden.",
   "newUser.notification.errorDuplicateMail": "Ein Nutzer mit der E-Mail '{{mail}}' existiert bereits.",
+  "newUser.notification.errorInvalidMail": "Bitte eine Gültige E-mail Address angeben.",
   "newUser.notification.errorDuplicateUsername": "Ein Nutzer mit dem Nutzernamen '{{username}}' existiert bereits.",
   "newUser.notification.success": "Nutzer '{{username}}' erfolgreich gespeichert.",
   "pages.accessDenied.text": "Sie haben keinen Zugriff auf diese Seite",

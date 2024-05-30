@@ -41,6 +41,13 @@ export default function NewUser() {
                             handler.setFieldError("mail", msg);
                         }
 
+                        if (error.constraints.includes(UserConstraints.ValidEmail)) {
+                            const msg = t("newUser.notification.errorInvalidMail")
+                            messages.push(msg);
+                            handler.setFieldError("mail", msg);
+                        }
+
+
                         notify((<>{ messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
                     } else {
                         notify(error.message, "danger");
