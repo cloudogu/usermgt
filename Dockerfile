@@ -2,17 +2,40 @@ ARG TOMCAT_MAJOR_VERSION=8
 ARG TOMCAT_VERSION=8.5.99
 ARG TOMCAT_TARGZ_SHA512=38f636039d00c66ff8f7347dfedcc1eef85b7ce25cf98dcc9192df07f85d4f6aec447922e0f934c1ab7d099ec484b2060aad4de496d5ca14637ac435cb55b7c0
 
+# Create a stage for resolving and downloading dependencies.
+FROM eclipse-temurin:8-jdk-jammy as deps
+
+WORKDIR /usermgt
+
+# Copy the mvnw wrapper with executable permissions.
+COPY --chmod=0755 mvnw mvnw
+COPY app/.mvn/ .mvn/
+
+# Download dependencies as a separate step to take advantage of Docker's caching.
+# Leverage a cache mount to /root/.m2 so that subsequent builds don't have to
+# re-download packages.
+RUN --mount=type=bind,source=app/pom.xml,target=pom.xml \
+    --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline -DskipTests
+
+################################################################################
+
+# Create a stage for building the application based on the stage with downloaded dependencies.
+# This Dockerfile is optimized for Java applications that output an uber jar, which includes
+# all the dependencies needed to run your app inside a JVM. If your app doesn't output an uber
+# jar and instead relies on an application server like Apache Tomcat, you'll need to update this
+# stage with the correct filename of your package and update the base image of the "final" stage
+# use the relevant app server, e.g., using tomcat (https://hub.docker.com/_/tomcat/) as a base image.
 FROM timbru31/java-node:8-jdk-18 as builder
 
 WORKDIR /usermgt
 
-COPY app/pom.xml pom.xml
+COPY app/.mvn/ .mvn/
 COPY app/mvnw mvnw
-COPY app/.mvn .mvn
-
-RUN ./mvnw dependency:resolve-plugins dependency:resolve
 COPY app/ .
-RUN ./mvnw package
+
+RUN --mount=type=bind,source=app/pom.xml,target=pom.xml \
+    --mount=type=cache,target=/root/.m2 \
+    ./mvnw package -DskipTests \
 
 
 FROM registry.cloudogu.com/official/base:3.17.3-2 as tomcat
