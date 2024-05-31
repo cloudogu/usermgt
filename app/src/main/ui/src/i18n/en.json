@@ -75,7 +75,7 @@
   "newGroup.notification.success": "The group {{groupName}} was created successfully.",
   "newUser.notification.error": "Could not save user '{{username}}'.",
   "newUser.notification.errorDuplicateMail": "A user with the E-Mail '{{mail}}' already exists.",
-  "newUser.notification.errorInvalidMail": "Please enter a valid E-mail.",
+  "newUser.notification.errorInvalidMail": "Please enter a valid e-mail address.",
   "newUser.notification.errorDuplicateUsername": "A user with the username '{{username}}' already exists.",
   "newUser.notification.success": "User '{{username}}' was saved successfully.",
   "pages.accessDenied.text": "You are not allowed to access this page",
