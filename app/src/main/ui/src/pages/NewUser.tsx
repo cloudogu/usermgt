@@ -42,7 +42,7 @@ export default function NewUser() {
                         }
 
                         if (error.constraints.includes(UserConstraints.ValidEmail)) {
-                            const msg = t("newUser.notification.errorInvalidMail")
+                            const msg = t("newUser.notification.errorInvalidMail");
                             messages.push(msg);
                             handler.setFieldError("mail", msg);
                         }

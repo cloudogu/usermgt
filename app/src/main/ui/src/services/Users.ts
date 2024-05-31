@@ -32,6 +32,7 @@ export enum UserConstraints {
     UniqueEmail = "UNIQUE_EMAIL",
     // eslint-disable-next-line autofix/no-unused-vars
     UniqueUsername = "UNIQUE_USERNAME",
+    // eslint-disable-next-line autofix/no-unused-vars
     ValidEmail = "VALID_EMAIL"
 }
 
