@@ -15,7 +15,7 @@ public final class CSVUsers {
         csvUserDTO.setDisplayname("Arthur Dent");
         csvUserDTO.setGivenname("Arthur");
         csvUserDTO.setSurname("Dent");
-        csvUserDTO.setMail("arthur.dent@hitchhiker.com");
+        csvUserDTO.setMail("arthur.dent@hitchhiker24.com");
         csvUserDTO.setPwdReset(true);
         csvUserDTO.setExternal(false);
 
@@ -30,7 +30,7 @@ public final class CSVUsers {
         csvUserDTO.setDisplayname("Tricia McMillan");
         csvUserDTO.setGivenname("Tricia");
         csvUserDTO.setSurname("McMillan");
-        csvUserDTO.setMail("tricia.mcmillan@hitchhiker.com");
+        csvUserDTO.setMail("tricia.mcmillan-1337@hitchhiker.com");
         csvUserDTO.setPwdReset(false);
         csvUserDTO.setExternal(true);
 

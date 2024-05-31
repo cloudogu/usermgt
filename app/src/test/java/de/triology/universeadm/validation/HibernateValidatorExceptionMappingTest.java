@@ -59,7 +59,7 @@ public class HibernateValidatorExceptionMappingTest
   @Test
   public void validWithLongEmail() throws IOException, URISyntaxException
   {
-    MockHttpResponse response = validate(new VObject("trillian.mcmillan.ford.prefect.arthur.dent@hitchhiker.com"));
+    MockHttpResponse response = validate(new VObject("trillian.mcmillan.ford.prefect.arthur.dent@hitchhiker24.com"));
     assertEquals(204, response.getStatus());
   }
   
