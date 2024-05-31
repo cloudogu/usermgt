@@ -8,7 +8,7 @@ FROM eclipse-temurin:8-jdk-jammy as deps
 WORKDIR /usermgt
 
 # Copy the mvnw wrapper with executable permissions.
-COPY --chmod=0755 mvnw mvnw
+COPY app/mvnw mvnw
 COPY app/.mvn/ .mvn/
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
