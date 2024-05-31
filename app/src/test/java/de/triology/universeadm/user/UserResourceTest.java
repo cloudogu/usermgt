@@ -139,7 +139,7 @@ public class UserResourceTest {
         JsonNode node = Resources.parseJson(response);
 
         assertEquals("dent", node.path("username").asText());
-        assertEquals("arthur.dent@hitchhiker.com", node.path("mail").asText());
+        assertEquals("arthur.dent@hitchhiker24.com", node.path("mail").asText());
     }
 
     @Test
