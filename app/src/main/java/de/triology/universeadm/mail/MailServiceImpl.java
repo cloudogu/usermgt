@@ -46,8 +46,8 @@ public class MailServiceImpl implements MailService {
     private String getMailContent(User user) {
         Map<String, String> substitutes = new HashMap<>();
 
-        substitutes.put(USER_NAME, StringEscapeUtils.escapeJava(user.getUsername()));
-        substitutes.put(PASSWORD, StringEscapeUtils.escapeJava(user.getPassword()));
+        substitutes.put(USER_NAME, user.getUsername());
+        substitutes.put(PASSWORD, user.getPassword());
 
         String template = mailConfiguration.getMessage();
         StringSubstitutor sub = new StringSubstitutor(substitutes);
