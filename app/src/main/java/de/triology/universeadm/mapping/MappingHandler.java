@@ -104,13 +104,22 @@ public class MappingHandler<T extends Comparable<T>> {
     public void modify(T object) {
         String id = mapper.getRDNValue(object);
         logger.info("update entity {}", id);
-        validator.validate(object, "entity is not valid");
         try {
             String dn = searchDN(id);
             Attribute mappedObjectClasses = mapper.getObjectClasses();
             List<Modification> modifications = mapper.getModifications(object);
             modifications = consume(object, modifications);
             if (modifications != null && !modifications.isEmpty()) {
+                boolean shouldValidate = false;
+
+                for (Modification modification : modifications) {
+                    shouldValidate = shouldValidate || modification.getAttributeName().equals("name");
+                }
+
+                if (shouldValidate){
+                    validator.validate(object, "entity is not valid");
+                }
+
                 modifications.add(new Modification(ModificationType.REPLACE, "objectClass", mappedObjectClasses.getValues()));
                 if (logger.isTraceEnabled()) {
                     logger.trace("modify ldap entry:\n{}", LDAPUtil.toLDIF(dn, modifications));
