@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.14.3-1] - 2024-06-03
+### Fixed
+- Add support for groups which contain invalid characters (#139)
+  - a long time ago, it was possible to add groups with spaces
+  - if one of these groups does still exist, it couldn't be edited anymore
+  - for that case, a workaround was added: group names are not validated on change but still on creation
+- Send mails about account information with plain text content instead of HTML (#134)
+- Valid Emails with Numbers in them can now be used (#135)
+- Only validate user form and group form on submit [#137]
+- PluginRepository-URL to avoid status 308 errors during build (#132)
+
 ## [v1.14.2-2] - 2024-05-24
 ### Fixed
 - Log errors during cas authentication

@@ -1,5 +1,6 @@
 import {Button, Form, H2, ListWithSearchbar, useFormHandler} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
+import {useMemo} from "react";
 import {useNavigate} from "react-router-dom";
 import {t} from "../../helpers/i18nHelpers";
 import {useBackURL} from "../../hooks/useBackURL";
@@ -22,7 +23,18 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     const {backURL} = useBackURL();
     const navigate = useNavigate();
     const isNewGroup = !group.name;
-    const handler = useFormHandler<Group>(config);
+    // Workaround with cast to any. Our interface does not accept validateOnbChange/Blur-values but the underlying lib does.
+    const _handler = useFormHandler<Group>({...config, validateOnChange: false, validateOnBlur: false} as any);
+
+    // As we now only validate on submit but the inputs of the old theme change state to "success" if touched and no error exists, we now have to make touched dependent of submit count
+    const handler = useMemo(() => {
+        const mockTouched = new Proxy<Map<string, boolean>>(new Map(), {
+            get: () => _handler.submitCount > 0,
+        });
+
+        return {..._handler, touched: mockTouched as any};
+    }, [_handler]);
+
     const {open, setOpen: toggleModal, targetName: username, setTargetName: setUsername} = useConfirmation();
     const openConfirmationDialog = (username: string): void => {
         setUsername(username);

@@ -1,10 +1,10 @@
 package de.triology.universeadm.mail;
 
-import com.google.common.html.HtmlEscapers;
 import com.google.inject.Inject;
 import de.triology.universeadm.configuration.MailConfiguration;
 import de.triology.universeadm.user.User;
 import jakarta.mail.*;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +46,8 @@ public class MailServiceImpl implements MailService {
     private String getMailContent(User user) {
         Map<String, String> substitutes = new HashMap<>();
 
-        //escape username and password and display as inline in code-tag
-        substitutes.put(USER_NAME, String.format("<code>%s</code>", HtmlEscapers.htmlEscaper().escape(user.getUsername())));
-        substitutes.put(PASSWORD, String.format("<code>%s</code>", HtmlEscapers.htmlEscaper().escape(user.getPassword())));
+        substitutes.put(USER_NAME, user.getUsername());
+        substitutes.put(PASSWORD, user.getPassword());
 
         String template = mailConfiguration.getMessage();
         StringSubstitutor sub = new StringSubstitutor(substitutes);

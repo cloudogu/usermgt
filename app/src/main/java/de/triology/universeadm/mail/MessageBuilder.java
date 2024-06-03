@@ -2,7 +2,6 @@ package de.triology.universeadm.mail;
 
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
-import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.internet.*;
 import org.slf4j.Logger;
@@ -18,7 +17,7 @@ public class MessageBuilder {
     private String from = "";
     private String to = "";
     private String subject = "";
-    private Multipart content = null;
+    private String content = "";
 
     public MessageBuilder(Session session) {
         this.session = session;
@@ -40,17 +39,7 @@ public class MessageBuilder {
     }
 
     public MessageBuilder content(String content) {
-        MimeBodyPart mimeBodyPart = new MimeBodyPart();
-
-        try {
-            mimeBodyPart.setContent(content, "text/html; charset=utf-8");
-            Multipart multipart = new MimeMultipart();
-            multipart.addBodyPart(mimeBodyPart);
-            this.content = multipart;
-        } catch (MessagingException e) {
-            logger.warn("Could not set content for mail message", e);
-        }
-
+        this.content = content;
         return this;
     }
 
@@ -65,7 +54,7 @@ public class MessageBuilder {
             message.setFrom(new InternetAddress(from));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
-            message.setContent(content);
+            message.setText(content);
         } catch (MessagingException e) {
             logger.error("Unable to build message", e);
             return Optional.empty();
@@ -90,7 +79,7 @@ public class MessageBuilder {
             return false;
         }
 
-        if(content == null) {
+        if(content.isEmpty()) {
             logger.error("Mail content is empty");
             return false;
         }
