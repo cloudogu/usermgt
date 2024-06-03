@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - a long time ago, it was possible to add groups with spaces
   - if one of this groups does still exists, it cannot be edited anymore
   - for that case, a workaround was added: Group names are not validated on group changed but still on group create
+- Send mails about account information with plain text content instead of HTML (#134)
 - Valid Emails with Numbers in them can now be used (#135)
 - Only validate user form and group form on submit [#137]
+- PluginRepository-URL to avoid status 308 errors during build (#132)
 
 ## [v1.14.2-2] - 2024-05-24
 ### Fixed

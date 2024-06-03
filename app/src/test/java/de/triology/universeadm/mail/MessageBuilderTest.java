@@ -8,6 +8,8 @@ import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import org.junit.*;
 
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
@@ -20,7 +22,7 @@ public class MessageBuilderTest {
         String from = "from@example.com";
         String to = "to@example.com";
         String subject = "Test Subject";
-        String content = "<html><body><h1>Hello World!</h1></body></html>";
+        String content = "Hello World!";
 
         MessageBuilder builder = new MessageBuilder(Session.getInstance(new Properties()))
             .from(from)
@@ -37,9 +39,7 @@ public class MessageBuilderTest {
         assertEquals(from, message.getFrom()[0].toString());
         assertEquals(to, message.getRecipients(Message.RecipientType.TO)[0].toString());
         assertEquals(subject, message.getSubject());
-        assertTrue(message.getContent() instanceof Multipart);
-        assertNotNull(((Multipart) message.getContent()).getBodyPart(0));
-        assertEquals(content, ((Multipart) message.getContent()).getBodyPart(0).getContent());
+        assertEquals(content, message.getContent());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class MessageBuilderTest {
         // Arrange
         String from = "from@example.com";
         String to = "to@example.com";
-        String content = "<html><body><h1>Hello World!</h1></body></html>";
+        String content = "Hello World!";
 
         MessageBuilder builder = new MessageBuilder(Session.getInstance(new Properties()))
             .from(from)
@@ -79,7 +79,7 @@ public class MessageBuilderTest {
         // Arrange
         String to = "to@example.com";
         String subject = "Test Subject";
-        String content = "<html><body><h1>Hello World!</h1></body></html>";
+        String content = "Hello World!";
 
         MessageBuilder builder = new MessageBuilder(Session.getInstance(new Properties()))
             .to(to)
@@ -95,7 +95,7 @@ public class MessageBuilderTest {
         // Arrange
         String from = "from@example.com";
         String subject = "Test Subject";
-        String content = "<html><body><h1>Hello World!</h1></body></html>";
+        String content = "Hello World!";
 
         MessageBuilder builder = new MessageBuilder(Session.getInstance(new Properties()))
             .from(from)
