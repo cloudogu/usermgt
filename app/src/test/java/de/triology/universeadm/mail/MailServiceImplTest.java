@@ -36,15 +36,10 @@ public class MailServiceImplTest {
         ArgumentMatcher<Message> matcher = message -> {
 
                 try {
-                    Object contentObj = message.getContent();
-                    assertTrue(contentObj instanceof Multipart);
-                    Multipart multipart = (Multipart) contentObj;
+                    String msgContent = message.getContent().toString();
 
-                    BodyPart bodyPart = multipart.getBodyPart(0);
-                    String content = bodyPart.getContent().toString();
-
-                    assertTrue(content.contains("testUser"));
-                    assertTrue(content.contains("testPassword"));
+                    assertTrue(msgContent.contains("testUser"));
+                    assertTrue(msgContent.contains("testPassword"));
 
                     assertEquals("TestSubject", message.getSubject());
 
@@ -83,15 +78,10 @@ public class MailServiceImplTest {
         ArgumentMatcher<Message> matcher = message -> {
 
             try {
-                Object contentObj = message.getContent();
-                assertTrue(contentObj instanceof Multipart);
-                Multipart multipart = (Multipart) contentObj;
+                String msgContent = message.getContent().toString();
 
-                BodyPart bodyPart = multipart.getBodyPart(0);
-                String content = bodyPart.getContent().toString();
-
-                assertFalse(content.contains("testUser"));
-                assertTrue(content.contains("testPassword"));
+                assertFalse(msgContent.contains("testUser"));
+                assertTrue(msgContent.contains("testPassword"));
 
                 assertEquals("TestSubject", message.getSubject());
 

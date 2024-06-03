@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+- Send mails about account information with plain text content instead of HTML (#134)
 - Valid Emails with Numbers in them can now be used (#135)
 - Only validate user form and group form on submit [#137]
 
