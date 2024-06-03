@@ -7,12 +7,14 @@ Feature: Tests for the verification of the password policy
 
   Scenario: a user deletes his password input is shown all password rules
     When the user deletes his password input
+    And the user clicks save
     Then the password entry is marked as invalid
     And all password rules are displayed
 
   Scenario: a user enters a valid password is shown that his confirm entry is not filled out yet
     Given the user deletes his password input
     When the user enters a valid password
+    And the user clicks save
     Then the password entry is marked as valid
     And the password-confirm entry is marked as invalid
     And the password-confirm rules are displayed
@@ -20,6 +22,8 @@ Feature: Tests for the verification of the password policy
   Scenario: a user who entered a valid password, enters a valid confirm entry
     Given the user deletes his password input
     When the user enters a valid password
+    And the user deletes his given name input
     And the user enters a valid confirm-password
+    And the user clicks save
     Then the password entry is marked as valid
     And the password-confirm entry is marked as valid

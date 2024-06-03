@@ -16,6 +16,7 @@ export default function useUserFormHandler<T extends User>(
     const validationSchema = useValidationSchema();
     const {notification, notify} = useAlertNotification();
 
+    // Workaround with cast to any. Our interface does not accept validateOnbChange/Blur-values but the underlying lib does.
     const handler = useFormHandler<T>(
         {
             initialValues: {
@@ -26,8 +27,15 @@ export default function useUserFormHandler<T extends User>(
             validationSchema: validationSchema,
             enableReinitialize: true,
             onSubmit: onSubmit,
-        }
+            validateOnChange: false,
+            validateOnBlur: false
+        } as any
     );
 
-    return {handler: handler, notification: notification, notify: notify};
+    // As we now only validate on submit but the inputs of the old theme change state to "success" if touched and no error exists, we now have to make touched dependent of submit count
+    const mockTouched = new Proxy<Map<string, boolean>>(new Map(), {
+        get: () =>  handler.submitCount > 0,
+    });
+
+    return {handler: {...handler, touched: mockTouched as any}, notification: notification, notify: notify};
 }

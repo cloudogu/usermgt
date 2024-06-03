@@ -19,7 +19,7 @@ uid: dent
 givenName: Arthur
 sn: Dent
 cn: Arthur Dent
-mail: arthur.dent@hitchhiker.com
+mail: arthur.dent@hitchhiker24.com
 userPassword: hitchhiker123
 
 dn: uid=tricia,ou=People,dc=hitchhiker,dc=com
@@ -31,7 +31,7 @@ uid: tricia
 givenName: Tricia
 sn: McMillan
 cn: Tricia McMillan
-mail: tricia.mcmillan@hitchhiker.com
+mail: tricia.mcmillan-1337@hitchhiker.com
 
 dn: ou=Groups,dc=hitchhiker,dc=com
 objectClass: organizationalUnit

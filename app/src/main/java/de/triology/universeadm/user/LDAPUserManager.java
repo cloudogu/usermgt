@@ -107,6 +107,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
 
     this.constraints.add(new UniqueMailConstraint(this.mapping));
     this.constraints.add(new UniqueUsernameConstraint(this.mapping));
+    this.constraints.add(new ValidMailConstraint());
   }
 
   //~--- methods --------------------------------------------------------------
