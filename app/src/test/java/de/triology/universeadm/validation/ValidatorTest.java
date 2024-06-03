@@ -73,7 +73,7 @@ public class ValidatorTest
   @Test
   public void testRDNValid()
   {
-    validator.validate(new RDNObject("trillian.mcmillan.ford.prefect.arthur.dent@hitchhiker.com"), "not valid");
+    validator.validate(new RDNObject("trillian.mcmillan.ford.prefect.arthur.dent@hitchhiker24.com"), "not valid");
     validator.validate(new RDNObject("dent"), "not valid");
   }
   

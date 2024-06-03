@@ -46,7 +46,8 @@ function createValidationSchema(passwordPolicy: PasswordPolicy) {
         "surname": Yup.string().required(t("editUser.errors.surname") as string),
         "displayName": Yup.string().required(t("editUser.errors.displayName") as string),
         "mail": Yup.string()
-            .matches(/[a-zA-Z._-]*@[a-zA-Z-]*\.[a-zA-Z-]/, t("editUser.errors.email.invalid") as string)
+            // simple email validation was chosen after discussing Internationalized domain name (öäü)
+            .matches(/.+@.+/, t("editUser.errors.email.invalid") as string)
             .required(t("editUser.errors.email.required") as string),
         "password": Yup.string()
             .test("", "", passwordValidationFunction)
