@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.14.3-1] - 2024-06-03
 ### Fixed
 - Add support for groups which contain invalid characters (#139)
   - a long time ago, it was possible to add groups with spaces
