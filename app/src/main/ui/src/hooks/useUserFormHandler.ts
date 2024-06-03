@@ -32,5 +32,10 @@ export default function useUserFormHandler<T extends User>(
         } as any
     );
 
-    return {handler: handler, notification: notification, notify: notify};
+    // As we now only validate on submit but the inputs of the old theme change state to "success" if touched and no error exists, we now have to make touched dependent of submit count
+    const mockTouched = new Proxy<Map<string, boolean>>(new Map(), {
+        get: () =>  handler.submitCount > 0,
+    });
+
+    return {handler: {...handler, touched: mockTouched as any}, notification: notification, notify: notify};
 }
