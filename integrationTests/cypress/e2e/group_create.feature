@@ -7,8 +7,9 @@ Feature: Tests for creating new groups.
     And the user clicks on the create-group button
     Then the new-group-page is shown
 
-  Scenario: a user who is manager cannot to create a new group without a valid name
+  Scenario: a user who is manager cannot create a new group without a valid name
     When the user fills the group-form for a group with the name "a"
+    And the user submits the group-form
     Then the group-name-field is marked as invalid
 
   @clean_new_group

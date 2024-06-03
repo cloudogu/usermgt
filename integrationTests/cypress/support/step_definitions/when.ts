@@ -69,6 +69,10 @@ When("the user deletes his password input", function () {
     cy.get('input[id="password"]').clear()
 })
 
+When("the user deletes his given name input", function () {
+    cy.get('input[id="givenname"]').clear()
+})
+
 When("the user enters a valid password", function () {
     cy.fixture("newuser_data").then(function (newUser) {
         cy.get('input[id="password"]').type(newUser.password)
