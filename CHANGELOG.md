@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Valid Emails with Numbers in them can now be used (#135)
+- Only validate user form and group form on submit [#137]
 
 ## [v1.14.2-2] - 2024-05-24
 ### Fixed

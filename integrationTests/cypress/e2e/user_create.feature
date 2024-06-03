@@ -17,6 +17,7 @@ Feature: Tests for creating new users.
 
   Scenario: a user who is manager cannot to create a new user without a valid name
     When the user fills the user-form for a user with the name "a"
+    And the user clicks save
     Then the username-field is marked as invalid
 
   @clean_new_user
