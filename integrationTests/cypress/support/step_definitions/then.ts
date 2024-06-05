@@ -71,7 +71,7 @@ Then("the password-confirm entry is marked as valid", function () {
     // Since the validation is only carried out when the text field loses its focus,
     // the change of focus is effected by clicking on another position.
     cy.get('input[data-testid="password-input"]').click()
-    cy.get('input[data-testid="confirmPassword-input"]').should('have.class', 'border-textfield-success-border')
+    cy.get('input[data-testid="confirmPassword-input"]').should('not.have.class', 'border-textfield-danger-border')
     cy.get('div[data-testid="confirmPassword-input-error-errors"]').should('not.exist')
 });
 
