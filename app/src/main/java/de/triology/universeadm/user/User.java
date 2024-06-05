@@ -397,7 +397,7 @@ public class User implements Comparable<User>
   /**
    * Field description
    */
-  @Email
+  //@Email() ValidMailConstraint checks if the mail is valid.
   @NotNull
   private String mail;
 
