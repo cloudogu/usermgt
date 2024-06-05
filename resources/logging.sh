@@ -84,7 +84,7 @@ renderLoggingFile() {
   doguctl template ${template} ${targetFile} || templatingSuccessful=$?
 
   if [[ ${templatingSuccessful} -ne 0 ]]; then
-    doguctl state "LoggingTemplateError"
+    doguctl config "local_state" "LoggingTemplateError"
     echo "Could not template log ${template} to path ${targetFile}: exited with ${templatingSuccessful}"
     sleep ${DEFAULT_SLEEP_IN_SECS_BEFORE_ERROR}
     exit 2

@@ -38,7 +38,7 @@ printCloudoguLogo() {
 
 waitForPostUpgrade() {
   # check whether post-upgrade script is still running
-  while [[ "$(doguctl state)" == "upgrading" ]]; do
+  while [[ "$(doguctl config "local_state")" == "upgrading" ]]; do
     echo "Upgrade script is running. Waiting..."
     sleep 3
   done
@@ -107,6 +107,7 @@ migrateLDAPEntries() {
 }
 
 startTomcat() {
+  doguctl config --rm "local_state"
   "${CATALINA_SH}" run
 }
 
