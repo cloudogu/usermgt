@@ -36,14 +36,6 @@ printCloudoguLogo() {
   echo "                       'V/(/////////////////////////////V'      "
 }
 
-waitForPostUpgrade() {
-  # check whether post-upgrade script is still running
-  while [[ "$(doguctl config "local_state" -d "empty")" == "upgrading" ]]; do
-    echo "Upgrade script is running. Waiting..."
-    sleep 3
-  done
-}
-
 encryptLdapPassword() {
   LDAP_BIND_PASSWORD="$(${CIPHER_SH} encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
   export LDAP_BIND_PASSWORD
@@ -107,14 +99,12 @@ migrateLDAPEntries() {
 }
 
 startTomcat() {
-  doguctl config --rm "local_state" # remove potential error states
   "${CATALINA_SH}" run
 }
 
 runMain() {
   printCloudoguLogo
 
-  waitForPostUpgrade
   encryptLdapPassword
   copyConfigurationResources
   buildMailAddress

@@ -11,7 +11,6 @@ function checkSameVersion() {
   if [ "${FROM_VERSION}" = "${TO_VERSION}" ]; then
     echo "FROM and TO versions are the same"
     echo "Set registry flag so startup script can start afterwards..."
-    doguctl config --rm "local_state"
     echo "Exiting..."
     exit 0
   fi
@@ -36,13 +35,11 @@ function run_postupgrade() {
   TO_VERSION="${2}"
 
   echo "Executing Usermgt post-upgrade from ${FROM_VERSION} to ${TO_VERSION} ..."
-  doguctl config "local_state" "upgrading"
 
   checkSameVersion ${FROM_VERSION} ${TO_VERSION}
   removeDeprecatedKeys
 
   echo "Set registry flag so startup script can start afterwards..."
-  doguctl config --rm "local_state"
 
   echo "Executing Usermgt post-upgrade from ${FROM_VERSION} to ${TO_VERSION} ... Done!"
 }
