@@ -107,7 +107,7 @@ migrateLDAPEntries() {
 }
 
 startTomcat() {
-  doguctl config --rm "local_state"
+  doguctl config --rm "local_state" # remove potential error states
   "${CATALINA_SH}" run
 }
 
