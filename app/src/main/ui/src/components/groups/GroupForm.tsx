@@ -29,7 +29,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
     // As we now only validate on submit but the inputs of the old theme change state to "success" if touched and no error exists, we now have to make touched dependent of submit count
     const handler = useMemo(() => {
         const mockTouched = new Proxy<Map<string, boolean>>(new Map(), {
-            get: () => _handler.submitCount > 0,
+            get: (_, key) =>  _handler.submitCount > 0 && (_handler.errors as any)[key] !== undefined,
         });
 
         return {..._handler, touched: mockTouched as any};
