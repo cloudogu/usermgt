@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.14.3-2] - 2024-06-06
+### Fixed
+- Align email validation between frontend and backend (#145)
+- Only mark fields that are invalid during validation of a form (#137)
+
 ## [v1.14.3-1] - 2024-06-03
 ### Fixed
 - Add support for groups which contain invalid characters (#139)
