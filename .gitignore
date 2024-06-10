@@ -490,3 +490,4 @@ app/.project
 **/target/**
 **/build/tmp/**
 .npmrc
+.bin/
