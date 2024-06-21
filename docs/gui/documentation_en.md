@@ -1,4 +1,4 @@
-# User Management
+# Documentation
 
 The **User Management** is a Dogu for **managing the users and groups of the Cloudogu EcoSystem**. In addition to your own personal data, you can create, edit and delete users and groups, depending on the rights you have.
 
