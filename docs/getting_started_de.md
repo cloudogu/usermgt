@@ -2,7 +2,7 @@
 
 ## Guides
 
-- [Benutzerhandbuch](gui/usermanagement_de.md)
+- [Benutzerhandbuch](gui/documentation_de.md)
 
 
 ## Informationen für Entwickler

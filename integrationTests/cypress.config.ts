@@ -32,7 +32,7 @@ export default defineConfig({
             "DoguName": "usermgt",
             "MaxLoginRetries": 3,
             "AdminUsername":  "ces-admin",
-            "AdminPassword":  "ecosystem2016",
+            "AdminPassword":  "Ecosystem2016!",
             "AdminGroup":  "CesAdministrators",
             "groups" : 0,
             "users" : 0,
