@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Update base image to java:8u402-3 to use doguctl v0.12.0 (#92)
+- Remove state since it is not used (#142)
 
 ## [v1.14.3-2] - 2024-06-06
 ### Fixed
