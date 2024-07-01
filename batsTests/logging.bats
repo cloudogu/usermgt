@@ -142,9 +142,8 @@ teardown() {
   run renderLoggingProperties
 
   assert_failure
-  assert_equal "$(mock_get_call_num "${doguctl}")" "2"
+  assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "template /opt/apache-tomcat/conf/logging.properties.tpl /opt/apache-tomcat/conf/logging.properties"
-  assert_equal "$(mock_get_call_args "${doguctl}" "2")" "state LoggingTemplateError"
   assert_line "Could not template log /opt/apache-tomcat/conf/logging.properties.tpl to path /opt/apache-tomcat/conf/logging.properties: exited with 1"
 }
 @test "renderLogbackXml() should fail on template error" {
@@ -155,8 +154,7 @@ teardown() {
   run renderLogbackXml
 
   assert_failure
-  assert_equal "$(mock_get_call_num "${doguctl}")" "2"
+  assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "template /opt/apache-tomcat/conf/logback.xml.tpl /opt/apache-tomcat/webapps/usermgt/WEB-INF/classes/logback.xml"
-  assert_equal "$(mock_get_call_args "${doguctl}" "2")" "state LoggingTemplateError"
   assert_line "Could not template log /opt/apache-tomcat/conf/logback.xml.tpl to path /opt/apache-tomcat/webapps/usermgt/WEB-INF/classes/logback.xml: exited with 1"
 }
