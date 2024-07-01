@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.15.0-1] - 2024-07-01
 ### Changed
 - Update base-image to java:8u402-3 to use doguctl v0.12.0 (#92)
 - Remove state since it is not used (#142)
