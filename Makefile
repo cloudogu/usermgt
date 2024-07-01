@@ -7,13 +7,14 @@ ADDITIONAL_LDFLAGS=""
 NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
-MAKEFILES_VERSION=9.0.1
+MAKEFILES_VERSION=9.1.0
 .DEFAULT_GOAL:=default
 
 include build/make/variables.mk
 include build/make/self-update.mk
 include build/make/release.mk
 include build/make/bats.mk
+include build/make/k8s-dogu.mk
 
 default: dogu-release
 

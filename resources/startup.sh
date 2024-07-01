@@ -36,14 +36,6 @@ printCloudoguLogo() {
   echo "                       'V/(/////////////////////////////V'      "
 }
 
-waitForPostUpgrade() {
-  # check whether post-upgrade script is still running
-  while [[ "$(doguctl state)" == "upgrading" ]]; do
-    echo "Upgrade script is running. Waiting..."
-    sleep 3
-  done
-}
-
 encryptLdapPassword() {
   LDAP_BIND_PASSWORD="$(${CIPHER_SH} encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
   export LDAP_BIND_PASSWORD
@@ -113,7 +105,6 @@ startTomcat() {
 runMain() {
   printCloudoguLogo
 
-  waitForPostUpgrade
   encryptLdapPassword
   copyConfigurationResources
   buildMailAddress
