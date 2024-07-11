@@ -5,7 +5,7 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## Release 1.15.1-1
-* In Eigabemasken wurden optinale Felder markiert.
+* Optionale Felder sind nun beim Anlegen bzw. Bearbeiten von Accounts oder Gruppen als "optional" markiert.
 
 ## Release 1.15.0-1
 
