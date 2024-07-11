@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.15.1-1] - 2024-07-11
+### Changed
+- add optional descriptor to optional form fields (#151)
+
 ## [v1.15.0-1] - 2024-07-01
 ### Changed
 - Update base-image to java:8u402-3 to use doguctl v0.12.0 (#92)
