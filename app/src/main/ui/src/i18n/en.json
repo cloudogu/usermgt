@@ -34,6 +34,7 @@
   "editUser.notification.success": "Account information saved successfully.",
   "general.applicationName": "User Management",
   "general.all": "All",
+  "general.optional": "optional",
   "generic.errors.general": "An error occurred while loading the page.",
   "generic.errors.notFound": "The page could not be found.",
   "generic.errors.title": "Oops!",

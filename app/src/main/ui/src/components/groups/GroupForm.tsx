@@ -76,7 +76,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
                 {t("groups.labels.name")}
             </Form.ValidatedTextInput>
             <Form.ValidatedTextArea name={"description"} data-testid="description" placeholder={t("groups.placeholder.description")}>
-                {t("groups.labels.description")}
+                {t("groups.labels.description") + " (" + t("general.optional") + ")"}
             </Form.ValidatedTextArea>
             <H2>{`${t("groups.labels.members")} (${handler.values.members.length})`}</H2>
             <ListWithSearchbar
@@ -86,7 +86,7 @@ export function GroupForm({group, config}: GroupFormProps<Group>) {
                 removeItem={openConfirmationDialog}
                 queryItems={loadMembers}
                 tableTitle={t("groups.labels.name")}
-                addLable={t("groups.labels.addMember")}
+                addLable={t("groups.labels.addMember") + " (" + t("general.optional") + ")"}
                 removeLable={t("groups.labels.removeMember")}
                 emptyItemsLable={t("groups.labels.emptyMembers")}
                 removeIcon={<TrashIcon className={"w-6 h-6"}/>}
