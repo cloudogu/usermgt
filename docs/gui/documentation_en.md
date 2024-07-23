@@ -263,6 +263,21 @@ username,displayname,givenname,surname,mail,pwdReset,external
 ```
 The order of the columns can vary, but the names of the columns must be kept. 
 
+The columns describe the following information:
+* **username** - username of the account
+   * If the specified username already exists, this account will be updated with the specified information and no new account will be created.
+   * Cannot be changed after an account has been created
+**displayname** - Display name of the account
+**givenname** - First name of the user
+**surname** - Last name of the user
+**mail** - Mail address of the user
+* **pwdReset** - Indicates whether the password must be reset at the next login
+  * Specified using *false* or *true*, where *true* indicates that the password must be reset at the next login
+   * For newly created accounts, *pwdReset* is always automatically set to *true
+* **external** - Specifies whether the account has been imported from an external service
+   * Specification using *false* or *true*, where *true* indicates that the account comes from an external service
+   * The connection to an external service is currently still being implemented, therefore *external* is currently always set to *false
+
 An example of a working CSV file:
 ```
 displayname,external,mail,pwdreset,surname,username,givenname
