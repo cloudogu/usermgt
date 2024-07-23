@@ -266,7 +266,23 @@ Als Import-Format wird CSV nach [RFC 4180](https://datatracker.ietf.org/doc/html
 ```csv
 username,displayname,givenname,surname,mail,pwdReset,external
 ```
+
 Die Reihenfolge der Spalten kann variieren, jedoch müssen die Namen der Spalten beibehalten werden. 
+
+Die Spalten beschreiben folgende Informationen:
+* **username** - Nutzername des Accounts
+   * Wenn der angegebene Nutzername schon existiert, wird dieser Account mit den angegebenen Informationen aktualisiert und es wird kein neuer Account angelegt.
+   * Kann nach Anlegen eines Accounts nicht mehr verändert werden
+* **displayname** - Anzeigename des Accounts
+* **givenname** - Vorname des Nutzers bzw. der Nutzerin
+* **surname** - Nachname des Nutzers bzw. der Nutzerin
+* **mail** - Mailadresse des Nutzers bzw. der Nutzerin
+* **pwdReset** - Angabe, ob das Passwort bei der nächsten Anmeldung neu gesetzt werden muss
+  * Angabe mittels *false* oder *true*, wobei *true* angibt, dass das Passwort bei der nächsten Anmeldung neu gesetzt werden muss
+   * Bei neu angelegten Accounts wird *pwdReset* automatisch immer auf *true* gesetzt
+* **external** - Angabe, ob Account von einem externen Dienst importiert worden ist
+   * Angabe mittels *false* oder *true*, wobei *true* angibt, dass der Account aus einem externen Dienst kommt
+   * Aktuell befindet sich die Anbindung an einen externen Dienst noch in der Umsetzung, daher wird *external* aktuell immer auf *false* gesetzt
 
 Ein Beispiel für eine funktionierende CSV-Datei:
 ```
