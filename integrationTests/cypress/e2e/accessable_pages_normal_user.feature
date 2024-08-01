@@ -23,3 +23,9 @@ Feature: Tests for the view restriction on some pages a normal user without mana
   Scenario: a user cannot see the user import summary details page contents
     When the user opens the user import summary details page
     Then an access denied message will be shown
+
+  Scenario: a user cannot see the tabs users, groups, userimport and import overviews in the navbar
+    Then users, groups, userimport and import overview should not be visible in the navbar
+
+  Scenario: a user sees the account page after login
+    Then the account page for user "nomanager" is open

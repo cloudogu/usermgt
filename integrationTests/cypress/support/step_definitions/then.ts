@@ -284,3 +284,32 @@ Then("a success alert will be shown containing the text {string}", function (nam
 Then("an access denied message will be shown", function () {
     cy.get('h1[data-testid="access-denied-message"]').should('be.visible');
 });
+
+Then("users, groups, userimport and import overview should not be visible in the navbar", function () {
+    cy.get('li[data-testid="cloudogu-navbar-li-/users"]').should('not.exist')
+    cy.get('li[data-testid="cloudogu-navbar-li-/groups"]').should('not.exist')
+    cy.get('li[data-testid="cloudogu-navbar-li-/users/import"]').should('not.exist')
+    cy.get('li[data-testid="cloudogu-navbar-li-/summaries"]').should('not.exist')
+});
+
+Then("users, groups, userimport and import overview should be visible in the navbar", function () {
+    cy.get('li[data-testid="cloudogu-navbar-li-/users"]').should('be.visible')
+    cy.get('li[data-testid="cloudogu-navbar-li-/groups"]').should('be.visible')
+    cy.get('li[data-testid="cloudogu-navbar-li-/users/import"]').should('be.visible')
+    cy.get('li[data-testid="cloudogu-navbar-li-/summaries"]').should('be.visible')
+});
+
+Then("the account page for user {string} is open", function (username: string)  {
+    cy.get('h1').contains("Account")
+    cy.get('input[data-testid="username-input"]').should('have.value', username)
+});
+
+Then("the user import page is shown", function () {
+    cy.get('h1').contains("User import")
+    cy.get('p').invoke('find','a').invoke('attr', 'href').should('match', /(https:\/\/docs\.cloudogu\.com\/en\/usermanual\/usermanagement\/)|(https:\/\/docs\.cloudogu\.com\/de\/usermanual\/usermanagement\/)/)
+    cy.get('input[data-testid="userImport-input"]').should('be.visible')
+    cy.get('button[data-testid="submit-button"]').should('be.visible')
+    cy.get('button[data-testid="submit-button"]').should('be.disabled')
+    cy.get('button[data-testid="reset-button"]').should('be.visible')
+    cy.get('button[data-testid="reset-button"]').should('be.disabled')
+})
