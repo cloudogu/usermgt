@@ -15,7 +15,7 @@ COPY app/ .
 RUN ./mvnw package
 
 
-FROM registry.cloudogu.com/official/base:3.20.1-2 as tomcat
+FROM registry.cloudogu.com/official/base:3.20.2-1 as tomcat
 
 ARG TOMCAT_MAJOR_VERSION
 ARG TOMCAT_VERSION
@@ -68,12 +68,12 @@ RUN set -eux \
 RUN chown -R tomcat:tomcat /opt/apache-tomcat
 
 
-FROM registry.cloudogu.com/official/java:8u402-3
+FROM registry.cloudogu.com/official/java:8u402-4
 
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.15.1-1" \
+   VERSION="1.15.2-1" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
