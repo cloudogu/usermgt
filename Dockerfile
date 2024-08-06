@@ -68,7 +68,7 @@ RUN set -eux \
 RUN chown -R tomcat:tomcat /opt/apache-tomcat
 
 
-FROM registry.cloudogu.com/official/java:8.402-4
+FROM registry.cloudogu.com/official/java:8u402-4
 
 ARG TOMCAT_VERSION
 
