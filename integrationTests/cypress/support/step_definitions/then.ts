@@ -389,3 +389,10 @@ Then("a table with the import information regarding the file {string} is shown",
     cy.get('@row').find("td:nth-of-type(1)").contains(fileName)
     cy.get('@row').find("td:nth-of-type(3)").contains("New: 0, Updated: 0, Skipped: 1")
 })
+
+Then("no content is displayed and upload is not possible", function () {
+    cy.get('h2').should('not.exist')
+    cy.get('table').should('not.exist')
+    cy.get('button[data-testid="upload-button"]').should('be.visible').and('be.disabled')
+    cy.get('button[data-testid="reset-button"]').should('be.visible').and('be.disabled')
+})
