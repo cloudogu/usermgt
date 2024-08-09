@@ -59,7 +59,7 @@ const UsersImportResult = () => {
         }
         {(summary && affectedRows > 0 && !isLoading) &&
             <>
-                <Paragraph className={"mb-8 mt-2"}>
+                <Paragraph className={"mb-8 mt-2"} data-testid={"import-status-message"}>
                     {failedRows === 0 && t("usersImportResult.result.success")}
                     {(failedRows > 0 && successfulRows > 0) && t("usersImportResult.result.successWithFailures")}
                     {successfulRows === 0 && t("usersImportResult.result.failure")}
@@ -78,7 +78,7 @@ const UsersImportResult = () => {
                     </Details.Summary>
                     <UsersImportResultTable content={summary.updated}/>
                 </Details>
-                <Details hidden={failedRows === 0}>
+                <Details hidden={failedRows === 0} data-testid={"failed-import-details"}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
                         {t("usersImportResult.rows.skipped")} ({failedRows})
@@ -86,7 +86,7 @@ const UsersImportResult = () => {
                     <UsersImportErrorTable content={summary.errors}/>
                 </Details>
 
-                <Paragraph className={"mt-6"}>
+                <Paragraph className={"mt-6"} data-testid={"import-download-link"}>
                     <Href href={ImportUsersService.createDownloadLink(summary)}>{t("usersImportResult.download")}</Href>
                 </Paragraph>
             </>
