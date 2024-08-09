@@ -91,7 +91,7 @@ const UsersImport = () => {
                 }
                 <div className={"flex flex-row"}>
                     <Button
-                        data-testid={"submit-button"}
+                        data-testid={"upload-button"}
                         disabled={(file?.size ?? 0) === 0}
                         variant={"primary"}
                         type={"submit"}
