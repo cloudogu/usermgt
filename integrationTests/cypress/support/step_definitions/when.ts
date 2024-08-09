@@ -197,7 +197,7 @@ When("the user opens the user import page", function () {
 })
 
 When("the user opens the user import summaries page", function () {
-    cy.visit('/usermgt/users/import')
+    cy.visit('/usermgt/summaries')
     cy.clickWarpMenuCheckboxIfPossible()
 })
 
