@@ -313,3 +313,79 @@ Then("the user import page is shown", function () {
     cy.get('button[data-testid="reset-button"]').should('be.visible')
     cy.get('button[data-testid="reset-button"]').should('be.disabled')
 })
+
+Then("a table of the file content for the user {string} is displayed", function (username: string) {
+    cy.get('h2').contains("Content of the CSV file")
+    cy.get('table').should('be.visible')
+    cy.get('tr').as('row')
+    cy.get('@row').should('be.visible')
+    cy.get('@row').find("td").should('have.length', 7)
+    cy.get('@row').find("td:nth-of-type(1)").contains("Mark Muster")
+    cy.get('@row').find("td:nth-of-type(2)").contains("TRUE")
+    cy.get('@row').find("td:nth-of-type(3)").contains("mark_noemail@itzbund.de")
+    cy.get('@row').find("td:nth-of-type(4)").contains("TRUE")
+    cy.get('@row').find("td:nth-of-type(5)").contains("Muster")
+    cy.get('@row').find("td:nth-of-type(6)").contains(username)
+    cy.get('@row').find("td:nth-of-type(7)").contains("Mark")
+    cy.get('button[data-testid="upload-button"]').should('be.visible').and('not.be.disabled')
+    cy.get('button[data-testid="reset-button"]').should('be.visible').and('not.be.disabled')
+})
+
+Then("the user import page shows a failed import", function () {
+
+    cy.get('h1').contains("Userimport")
+    cy.get('p[data-testid="import-status-message"]').contains("Import failed!")
+    cy.get('details[data-testid="failed-import-details"]').invoke('find', 'summary').invoke('attr', 'text').contains("Skipped data rows (1)")
+    cy.get('details[data-testid="failed-import-details"]').invoke('attr', 'open').should('not.exist')
+    cy.get('p[data-testid="import-download-link"]').invoke('find', 'a').contains("Download import overview")
+})
+
+Then("the import is downloaded and contains information regarding the file {string}", function (fileName: string) {
+    // To test the download, the generated import ID is extracted from the URL
+    cy.url()
+        .then(url => {
+            let urlSplit = url.split("/");
+            let fileId = urlSplit[6];
+            cy.readFile("cypress/downloads/" + fileId + ".json").then((fileContent) => {
+                expect(fileContent.importID).to.eq(fileId)
+                expect(fileContent.filename).to.eq(fileName)
+                expect(fileContent.timestamp).contains(/[0-9]+/)
+                expect(fileContent.created).is.empty
+                expect(fileContent.updated).is.empty
+                expect(fileContent.errors[0].errorCode).to.eq(202)
+                expect(fileContent.errors[0].lineNumber).to.eq(2)
+                expect(fileContent.errors[0].message).to.eq("entity is not valid")
+                expect(fileContent.errors[0].params.columns[0]).to.eq("username")
+                expect(fileContent.summary.importID).to.eq(fileId)
+                expect(fileContent.summary.filename).to.eq(fileName)
+                expect(fileContent.summary.timestamp).contains(/[0-9]+/)
+                expect(fileContent.summary.summary.created).to.eq(0)
+                expect(fileContent.summary.summary.updated).to.eq(0)
+                expect(fileContent.summary.summary.skipped).to.eq(1)
+            })
+        })
+})
+
+Then("the table shows that the username was not in the correct format", function () {
+    cy.get('details[data-testid="failed-import-details"]').invoke('attr', 'open').should('exist')
+    cy.get('details[data-testid="failed-import-details"]').invoke('find', 'table').should('be.visible')
+    cy.get('tr').as('row')
+    cy.get('@row').should('be.visible')
+    cy.get('@row').find("td:nth-of-type(2)").contains("The following columns do not match the default format 'username'.")
+})
+
+Then("the new user {string} was not added", function (username: string) {
+    cy.get('table').should('be.visible')
+    cy.get('tr').as('row')
+    cy.get('@row').should('be.visible')
+    cy.get('@row').invoke('text').should('not.equal', username)
+})
+
+Then("a table with the import information regarding the file {string} is shown", function (fileName: string) {
+    cy.get('h1').contains("Import overviews")
+    cy.get('table').should('be.visible')
+    cy.get('tr').as('row')
+    cy.get('@row').should('be.visible')
+    cy.get('@row').find("td:nth-of-type(1)").contains(fileName)
+    cy.get('@row').find("td:nth-of-type(3)").contains("New: 0, Updated: 0, Skipped: 1")
+})
