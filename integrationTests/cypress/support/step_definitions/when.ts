@@ -197,11 +197,40 @@ When("the user opens the user import page", function () {
 })
 
 When("the user opens the user import summaries page", function () {
-    cy.visit('/usermgt/users/import')
+    cy.visit('/usermgt/summaries')
     cy.clickWarpMenuCheckboxIfPossible()
 })
 
 When("the user opens the user import summary details page", function (summaryId: string) {
+    // there are only tests that try to open this page without summaryId (duh! the description does not support it, only the function signature
+    // the next line will end up as HTTP 401 because summaryId evaluates to 'undefined'.
+    // It is completely unclear why tests pass for "access denied message"
     cy.visit(`/usermgt/users/import/${summaryId}`)
     cy.clickWarpMenuCheckboxIfPossible()
+})
+
+When("the user selects the file {string}", function (fileName: string) {
+    cy.get('input[type="file"]').selectFile("cypress/fixtures/" + fileName)
+})
+
+When("the user uploads the file {string}", function (fileName: string) {
+    cy.get('input[type="file"]').selectFile("cypress/fixtures/" + fileName)
+    cy.get('button[data-testid="upload-button"]').click()
+})
+
+When("the user clicks on the line 'Skipped data rows'", function () {
+    cy.get('details[data-testid="failed-import-details"]').click()
+})
+
+When("the user downloads the import overview", function () {
+    cy.get('p[data-testid="import-download-link"]').invoke('find', 'a').click()
+})
+
+When("the user opens the user import details page", function () {
+    cy.visit('/usermgt/summaries')
+    cy.clickWarpMenuCheckboxIfPossible()
+    if(cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").should('exist')) {
+        cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").find('button').click()
+        cy.get('div').find('span').contains("Details").click()
+    }
 })

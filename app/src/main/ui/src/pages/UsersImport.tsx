@@ -65,6 +65,7 @@ const UsersImport = () => {
             </p>
             <Form handler={handler}>
                 <Form.HandledFileInput
+                    data-testid={"userImport-input"}
                     className={"mt-8"}
                     variant={"primary"}
                     name={"file"}
@@ -90,6 +91,7 @@ const UsersImport = () => {
                 }
                 <div className={"flex flex-row"}>
                     <Button
+                        data-testid={"upload-button"}
                         disabled={(file?.size ?? 0) === 0}
                         variant={"primary"}
                         type={"submit"}
@@ -98,6 +100,7 @@ const UsersImport = () => {
                         {t("usersImport.buttons.upload")}
                     </Button>
                     <Button
+                        data-testid={"reset-button"}
                         disabled={(file?.size ?? 0) === 0}
                         variant={"secondary"}
                         type={"button"}
