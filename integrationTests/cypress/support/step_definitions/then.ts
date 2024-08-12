@@ -285,21 +285,21 @@ Then("an access denied message will be shown", function () {
     cy.get('h1[data-testid="access-denied-message"]').should('be.visible');
 });
 
-Then("users, groups, userimport and import overview should not be visible in the navbar", function () {
+Then("users, groups, user import and import overview should not be visible in the navbar", function () {
     cy.get('li[data-testid="cloudogu-navbar-li-/users"]').should('not.exist')
     cy.get('li[data-testid="cloudogu-navbar-li-/groups"]').should('not.exist')
     cy.get('li[data-testid="cloudogu-navbar-li-/users/import"]').should('not.exist')
     cy.get('li[data-testid="cloudogu-navbar-li-/summaries"]').should('not.exist')
 });
 
-Then("users, groups, userimport and import overview should be visible in the navbar", function () {
+Then("users, groups, user import and import overview should be visible in the navbar", function () {
     cy.get('li[data-testid="cloudogu-navbar-li-/users"]').should('be.visible')
     cy.get('li[data-testid="cloudogu-navbar-li-/groups"]').should('be.visible')
     cy.get('li[data-testid="cloudogu-navbar-li-/users/import"]').should('be.visible')
     cy.get('li[data-testid="cloudogu-navbar-li-/summaries"]').should('be.visible')
 });
 
-Then("the account page for user {string} is open", function (username: string)  {
+Then("the account page for user {string} is shown", function (username: string)  {
     cy.get('h1').contains("Account")
     cy.get('input[data-testid="username-input"]').should('have.value', username)
 });
@@ -340,7 +340,7 @@ Then("the user import page shows a failed import", function () {
     cy.get('p[data-testid="import-download-link"]').invoke('find', 'a').contains("Download import overview")
 })
 
-Then("the import is downloaded and contains information regarding the file {string}", function (fileName: string) {
+Then("the import result is downloaded and contains error information regarding the file {string}", function (fileName: string) {
     // To test the download, the generated import ID is extracted from the URL
     cy.url()
         .then(url => {

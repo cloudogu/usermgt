@@ -23,7 +23,7 @@ Feature: Tests for uploading file with user name that is too short (1 character)
    Scenario: after uploading a file a user downloads the import overview
      When the user opens the user import details page
      And the user downloads the import overview
-     Then the import is downloaded and contains information regarding the file "userimport_ein_Zeichen.csv"
+     Then the import result is downloaded and contains error information regarding the file "userimport_ein_Zeichen.csv"
 
    Scenario: after uploading a file a user inspects the users page
      When the user opens the users page
