@@ -202,6 +202,9 @@ When("the user opens the user import summaries page", function () {
 })
 
 When("the user opens the user import summary details page", function (summaryId: string) {
+    // there are only tests that try to open this page without summaryId (duh! the description does not support it, only the function signature
+    // the next line will end up as HTTP 401 because summaryId evaluates to 'undefined'.
+    // It is completely unclear why tests pass for "access denied message"
     cy.visit(`/usermgt/users/import/${summaryId}`)
     cy.clickWarpMenuCheckboxIfPossible()
 })

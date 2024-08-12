@@ -80,20 +80,20 @@ Then("the password-confirm rules are displayed", function () {
     cy.get('div[data-testid="confirmPassword-input-error-errors"]').contains('Passwords must match.')
 });
 
-Then("the user {string} was created",function (username) {
+Then("the user {string} was created",function (username:string) {
     cy.api({
         method: "GET",
         url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
         auth: {
             'user': env.GetAdminUsername(),
-            'pass': env.GetAdminPassword
+            'pass': env.GetAdminPassword()
         },
     }).then((response) => {
         expect(response.status).to.eq(200)
     })
 })
 
-Then("the user {string} does not exists",function (username) {
+Then("the user {string} does not exists",function (username:string) {
     cy.clearCookies();
     cy.request({
         method: "GET",
