@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Integration tests for user import (#153)
 
+### Changed
+- Improve usability with unique labels (#158)
+  - Change label in user form from "Add group" to "Assign group" to emphasize no group will be created
+  - Change headline from account page from "Account" to "My Account" to emphasize it is about the user's account
+
 ## [v1.15.2-1] - 2024-08-06
 ### Changed
 - update to Alpine 3.20.2
