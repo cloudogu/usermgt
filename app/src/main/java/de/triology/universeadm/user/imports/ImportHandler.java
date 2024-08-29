@@ -3,7 +3,6 @@ package de.triology.universeadm.user.imports;
 import com.google.inject.Inject;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
-import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.mail.MailService;
 import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
@@ -238,7 +237,7 @@ public class ImportHandler {
                     .build();
 
             return ImportEntryResult.skipped(error);
-        } catch (UniqueConstraintViolationException e) {
+        } catch (FieldConstraintViolationException e) {
             ImportError.Code violationErrorCode = getCode(e);
 
             ImportError error = new ImportError.Builder(violationErrorCode)
@@ -261,7 +260,7 @@ public class ImportHandler {
         }
     }
 
-    private static ImportError.Code getCode(UniqueConstraintViolationException e) {
+    private static ImportError.Code getCode(FieldConstraintViolationException e) {
         ImportError.Code violationError = null;
 
         for (Constraint.ID id : e.violated) {
