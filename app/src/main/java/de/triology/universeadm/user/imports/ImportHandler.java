@@ -239,7 +239,9 @@ public class ImportHandler {
 
             return ImportEntryResult.skipped(error);
         } catch (UniqueConstraintViolationException e) {
-            ImportError error = new ImportError.Builder(ImportError.Code.UNIQUE_FIELD_ERROR)
+            ImportError.Code violationErrorCode = getCode(e);
+
+            ImportError error = new ImportError.Builder(violationErrorCode)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
                     .withAffectedColumns(mapConstraintToColumn(e.violated))
@@ -259,6 +261,25 @@ public class ImportHandler {
         }
     }
 
+    private static ImportError.Code getCode(UniqueConstraintViolationException e) {
+        ImportError.Code violationError = null;
+
+        for (Constraint.ID id : e.violated) {
+            switch (id) {
+                case VALID_EMAIL:
+                    violationError = ImportError.Code.FIELD_FORMAT_ERROR;
+                    break;
+                case UNIQUE_EMAIL:
+                case UNIQUE_USERNAME:
+                    violationError = ImportError.Code.UNIQUE_FIELD_ERROR;
+                    break;
+                default:
+                    throw new UnsupportedOperationException(String.format("Unable to handle unknown constraint type: %s.", id));
+            }
+        }
+        return violationError;
+    }
+
     private List<String> mapConstraintToColumn(Constraint.ID[] constraints) {
         if (constraints.length < 1) {
             return Collections.emptyList();
@@ -266,12 +287,17 @@ public class ImportHandler {
         List<String> violatedColumnConstraints = new ArrayList<>();
         for (Constraint.ID constraint : constraints) {
             switch (constraint) {
+                case VALID_EMAIL:
+                    violatedColumnConstraints.add("mail");
+                    break;
                 case UNIQUE_EMAIL:
                     violatedColumnConstraints.add("mail");
                     break;
                 case UNIQUE_USERNAME:
                     violatedColumnConstraints.add("username");
                     break;
+                default:
+                    throw new UnsupportedOperationException(String.format("Unable to handle unknown constraint type: %s.", constraint.name()));
             }
         }
         return violatedColumnConstraints;
