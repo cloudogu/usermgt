@@ -28,6 +28,7 @@
 package de.triology.universeadm;
 
 import com.google.common.base.Strings;
+import de.triology.universeadm.user.imports.FieldConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +97,9 @@ public abstract class AbstractManagerResource<T> {
         } catch (UniqueConstraintViolationException e) {
             logger.warn("entity {} violates constraints", id);
             builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
+        } catch (FieldConstraintViolationException e) {
+            logger.warn("entity {} violates constraints", id);
+            builder = Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e));
         }
 
         return builder.build();
@@ -122,9 +126,13 @@ public abstract class AbstractManagerResource<T> {
             manager.modify(object);
             builder = Response.noContent();
         } catch (UniqueConstraintViolationException e) {
+            logger.warn("entity {} violates constraints", id);
             builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
         } catch (EntityNotFoundException ex) {
             builder = Response.status(Response.Status.NOT_FOUND);
+        } catch (FieldConstraintViolationException e) {
+            logger.warn("entity {} violates constraints", id);
+            builder = Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e));
         }
 
         return builder.build();

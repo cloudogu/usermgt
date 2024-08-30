@@ -32,6 +32,7 @@ package de.triology.universeadm.user;
 
 import com.github.legman.EventBus;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -46,6 +47,7 @@ import de.triology.universeadm.*;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingHandler;
+import de.triology.universeadm.user.imports.FieldConstraintViolationException;
 import de.triology.universeadm.validation.Validator;
 
 import org.apache.shiro.SecurityUtils;
@@ -132,11 +134,12 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
    * Checks if any constraints are violated.
    * If so, throws ConstraintViolationException containing all violations.
    *
-   * @param user
-   * @param category
-   * @throws UniqueConstraintViolationException
+   * @param user - the user that is about to be checked for constraints
+   * @param category - category contains the context of which constraints will be used
+   * @throws FieldConstraintViolationException - if thrown this exception will contain the constraints that are violated
+   *    in the given category.
    */
-  private void checkConstraints(final User user, final Constraint.Category category) {
+  void checkConstraints(final User user, final Constraint.Category category) {
     final List<Constraint.ID> violatedConstraints = new ArrayList<>();
     for (Constraint<User> constraint : this.constraints) {
       if (constraint.violatedBy(user, category)) {
@@ -144,7 +147,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
       }
     }
     if (!violatedConstraints.isEmpty()) {
-      throw new UniqueConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[0]));
+      throw new FieldConstraintViolationException(violatedConstraints.toArray(new Constraint.ID[0]));
     }
   }
 

@@ -28,17 +28,16 @@
 package de.triology.universeadm.user;
 
 import com.github.legman.EventBus;
-import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.triology.universeadm.*;
-import de.triology.universeadm.group.Group;
 import de.triology.universeadm.mapping.DefaultMapper;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.Mapping;
 import de.triology.universeadm.mapping.SimpleMappingConverterFactory;
+import de.triology.universeadm.user.imports.FieldConstraintViolationException;
 import de.triology.universeadm.validation.Validator;
 
 import java.util.List;
@@ -58,16 +57,15 @@ import com.github.sdorra.ldap.LDAP;
 import com.github.sdorra.ldap.LDAPRule;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import de.triology.universeadm.mapping.IllegalQueryException;
 import org.junit.rules.ExpectedException;
 
 /**
  * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
 @SubjectAware(
-        configuration = "classpath:de/triology/universeadm/shiro.001.ini",
-        username = "trillian",
-        password = "secret"
+    configuration = "classpath:de/triology/universeadm/shiro.001.ini",
+    username = "trillian",
+    password = "secret"
 )
 public class LDAPUserManagerTest {
     @Rule
@@ -124,7 +122,7 @@ public class LDAPUserManagerTest {
     @Test()
     @LDAP(baseDN = BASEDN, ldif = LDIF_001)
     public void testCreateAlreadyExists() throws LDAPException {
-        expectedException.expect(UniqueConstraintViolationException.class);
+        expectedException.expect(FieldConstraintViolationException.class);
         expectedException.expectMessage("Constraints violated: ");
         expectedException.expectMessage("UNIQUE_EMAIL");
         expectedException.expectMessage("UNIQUE_USERNAME");
@@ -138,7 +136,7 @@ public class LDAPUserManagerTest {
     @Test()
     @LDAP(baseDN = BASEDN, ldif = LDIF_001)
     public void testCreateEmailAlreadyExists() throws LDAPException {
-        expectedException.expect(UniqueConstraintViolationException.class);
+        expectedException.expect(FieldConstraintViolationException.class);
         expectedException.expectMessage("Constraints violated: ");
         expectedException.expectMessage("UNIQUE_EMAIL");
 
@@ -288,6 +286,70 @@ public class LDAPUserManagerTest {
         assertEquals("TRUE", entry.getAttributeValue("external"));
     }
 
+    @Test
+    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+    public void checkConstraintsShouldReturnNoExceptionForCreateAndNoConstraintsAreViolated() throws LDAPException {
+        LDAPUserManager sut = createUserManager();
+        User user = new User("denvercoder9");
+        user.setMail("denvercoder9@hitchhiker.com");
+        user.setPassword("alligator3");
+        user.setGivenname("Denver");
+        user.setSurname("Coder");
+
+        sut.checkConstraints(user, Constraint.Category.CREATE);
+    }
+
+    @Test
+    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+    public void checkConstraintsShouldReturnNoExceptionForModifyAndNoConstraintsAreViolated() throws LDAPException {
+        LDAPUserManager sut = createUserManager();
+        User user = new User("tricia");
+        user.setMail("tricia@hitchhiker.com");
+        user.setPassword("alligator4"); // look, a new password!
+        user.setGivenname("Tricia");
+        user.setSurname("McMillan");
+
+        sut.checkConstraints(user, Constraint.Category.MODIFY);
+    }
+
+    @Test
+    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+    public void checkConstraintsShouldReturnExceptionForCreateForInvalidMail() throws LDAPException {
+        LDAPUserManager sut = createUserManager();
+        User user = new User("denvercoder9");
+        user.setMail("WwW.iKnoWtHeInTeRNeT.cOm");
+        user.setPassword("alligator3");
+        user.setGivenname("Denver");
+        user.setSurname("Coder");
+
+        try {
+            sut.checkConstraints(user, Constraint.Category.CREATE);
+            fail("expected FieldConstraintViolationException to be fired");
+        } catch (FieldConstraintViolationException e) {
+            assertEquals(1, e.violated.length);
+            assertEquals(Constraint.ID.VALID_EMAIL, e.violated[0]);
+        }
+    }
+
+    @Test
+    @LDAP(baseDN = BASEDN, ldif = LDIF_003)
+    public void checkConstraintsShouldReturnExceptionForModifyForInvalidMail() throws LDAPException {
+        LDAPUserManager sut = createUserManager();
+        User user = new User("tricia");
+        user.setMail("triciaInvalid");
+        user.setPassword("alligator4");
+        user.setGivenname("Tricia");
+        user.setSurname("McMillan");
+
+        try {
+            sut.checkConstraints(user, Constraint.Category.MODIFY);
+            fail("expected FieldConstraintViolationException to be fired");
+        } catch (FieldConstraintViolationException e) {
+            assertEquals(1, e.violated.length);
+            assertEquals(Constraint.ID.VALID_EMAIL, e.violated[0]);
+        }
+    }
+
     private void assertUser(User expUser, User actUser) {
         assertNotNull(expUser);
         assertNotNull(actUser);
@@ -316,8 +378,8 @@ public class LDAPUserManagerTest {
         LDAPConnectionStrategy strategy = mock(LDAPConnectionStrategy.class);
         when(strategy.get()).thenReturn(ldap.getConnection());
         LDAPConfiguration config = new LDAPConfiguration(
-                "localhost", 10389, "cn=Directory Manager",
-                "manager123", peopledn, null
+            "localhost", 10389, "cn=Directory Manager",
+            "manager123", peopledn, null
         );
         Mapping mapping = JAXB.unmarshal(Resources.getResource(MAPPING_001), Mapping.class);
         Mapper<User> mapper = new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, peopledn);

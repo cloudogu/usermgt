@@ -1,7 +1,6 @@
 package de.triology.universeadm.user.imports;
 
 import de.triology.universeadm.Constraint;
-import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.mail.MailService;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
@@ -9,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.junit.Assert;
 import org.junit.Test;
 import org.opensaml.artifact.InvalidArgumentException;
 
@@ -42,7 +40,7 @@ public class ImportHandlerTest {
 
         when(input.getFormDataMap()).thenReturn(inputParts);
 
-        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository,summaryRepositoryMock, mailServiceMock);
+        ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         importHandler.handle(input);
     }
@@ -146,9 +144,9 @@ public class ImportHandlerTest {
 
     private Stream<ImportEntryResult> createMockErrorStream(long lineNumber) {
         ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
-                .withLineNumber(lineNumber)
-                .withErrorMessage("test error")
-                .build();
+            .withLineNumber(lineNumber)
+            .withErrorMessage("test error")
+            .build();
         List<ImportEntryResult> results = new ArrayList<>();
         results.add(ImportEntryResult.skipped(error));
         return results.stream();
@@ -353,7 +351,7 @@ public class ImportHandlerTest {
 
         assertNotNull(res);
         assertEmpty(res.getLeft());
-        assertEquals(0, (long)res.getRight());
+        assertEquals(0, (long) res.getRight());
     }
 
     @Test
@@ -372,7 +370,7 @@ public class ImportHandlerTest {
 
         assertNotNull(res);
         assertNotNull(res.getLeft());
-        assertEquals(4, (long)res.getRight());
+        assertEquals(4, (long) res.getRight());
     }
 
     @Test
@@ -392,13 +390,13 @@ public class ImportHandlerTest {
         assertNotNull(res);
         assertNotNull(res.getLeft());
         assertEquals(2, res.getLeft().size());
-        assertEquals(12, (long)res.getRight());
+        assertEquals(12, (long) res.getRight());
     }
 
     private static List<Result.Summary> generateSummaries(int count) {
         List<Result.Summary> sums = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            String testFileName = String.format("file%s.csv", i+1);
+            String testFileName = String.format("file%s.csv", i + 1);
             sums.add(new Result.Summary(UUID.randomUUID(), testFileName, 123, 123, 123, 0));
         }
         return sums;
@@ -484,7 +482,7 @@ public class ImportHandlerTest {
                 doThrow(new AuthorizationException()).when(manager).create(any());
                 break;
             case VALIDATION_EXCEPTION_CREATE:
-                doThrow(new UniqueConstraintViolationException(Constraint.ID.UNIQUE_EMAIL)).when(manager).create(any());
+                doThrow(new FieldConstraintViolationException(Constraint.ID.UNIQUE_EMAIL)).when(manager).create(any());
                 break;
             case VALID_CREATE_MODIFY:
                 when(manager.get(anyString())).thenAnswer(invocation -> {
