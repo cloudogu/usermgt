@@ -476,8 +476,17 @@ public class ImportHandlerTest {
     }
 
     @Test
-    public void mapConstraintToColumnShouldMapConstrainsToListOfConstraints() {
-        assertThat(mapConstraintToColumn(Constraint.ID.UNIQUE_EMAIL)).contains("mail");
+    public void mapConstraintToColumnShouldMapConstraintsToListOfConstraints() {
+        assertThat(mapConstraintToColumn(Constraint.ID.UNIQUE_EMAIL)).containsExactly("mail");
+        assertThat(mapConstraintToColumn(Constraint.ID.VALID_EMAIL)).containsExactly("mail");
+        assertThat(mapConstraintToColumn(Constraint.ID.UNIQUE_USERNAME)).containsExactly("username");
+        assertThat(mapConstraintToColumn(Constraint.ID.UNIQUE_EMAIL, Constraint.ID.VALID_EMAIL, Constraint.ID.UNIQUE_USERNAME))
+            .contains("username", "mail", "mail");
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void mapConstraintToColumnShouldThrowUnsupportedExceptionOnUnknownOrNonUserContraintID() {
+        mapConstraintToColumn(Constraint.ID.UNIQUE_GROUP_NAME);
     }
 
     private enum InputPartCase {
