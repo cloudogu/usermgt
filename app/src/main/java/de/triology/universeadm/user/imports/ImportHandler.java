@@ -107,15 +107,15 @@ public class ImportHandler {
         InputStream fileInputStream = getInputStream(filePart);
         logger.debug("Got reader from first file part");
 
-        UUID importID = UUID.randomUUID();
-        logger.debug("Created ImportID with UUID {}", importID);
-
         List<ImportEntryResult> results = this.csvParser.parse(fileInputStream)
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
                 .map(Mapper::decode) // add more information
                 .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()))
                 .collect(Collectors.toList());
+
+        UUID importID = UUID.randomUUID();
+        logger.debug("Created ImportID with UUID {}", importID);
 
         results.addAll(csvParser.getErrors().collect(Collectors.toList()));
         Result finalResult = results.stream().reduce(
@@ -189,14 +189,14 @@ public class ImportHandler {
      *
      * @param file uploaded be the user.
      * @return InputStream - from file request
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException -
      */
-    private InputStream getInputStream(@NotNull InputPart file) {
+    InputStream getInputStream(@NotNull InputPart file) {
         try {
             return file.getBody(InputStream.class, null);
         } catch (IOException e) {
             logger.error(e.toString());
-            throw new InvalidArgumentException("unable to get body from file");
+            throw new IllegalArgumentException("unable to get body from file");
         }
     }
 
@@ -260,7 +260,7 @@ public class ImportHandler {
         }
     }
 
-    private static ImportError.Code getCode(FieldConstraintViolationException e) {
+    static ImportError.Code getCode(FieldConstraintViolationException e) {
         ImportError.Code violationError = null;
 
         for (Constraint.ID id : e.violated) {
@@ -279,7 +279,7 @@ public class ImportHandler {
         return violationError;
     }
 
-    private List<String> mapConstraintToColumn(Constraint.ID[] constraints) {
+    static List<String> mapConstraintToColumn(Constraint.ID... constraints) {
         if (constraints.length < 1) {
             return Collections.emptyList();
         }

@@ -9,16 +9,20 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.junit.Test;
-import org.opensaml.artifact.InvalidArgumentException;
 
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static de.triology.universeadm.user.imports.ImportHandler.getCode;
+import static de.triology.universeadm.user.imports.ImportHandler.mapConstraintToColumn;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ImportHandlerTest {
@@ -28,7 +32,7 @@ public class ImportHandlerTest {
     private final SummaryRepository summaryRepositoryMock = mock(SummaryRepository.class);
     private final MailService mailServiceMock = mock(MailService.class);
 
-    @Test(expected = InvalidArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMissingFileParts() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
@@ -45,7 +49,7 @@ public class ImportHandlerTest {
         importHandler.handle(input);
     }
 
-    @Test(expected = InvalidArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testEmptyFileParts() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
@@ -64,7 +68,7 @@ public class ImportHandlerTest {
         importHandler.handle(input);
     }
 
-    @Test(expected = InvalidArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMultipleFileParts() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
@@ -83,7 +87,7 @@ public class ImportHandlerTest {
         importHandler.handle(input);
     }
 
-    @Test(expected = InvalidArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testInvalidFileExtension() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
@@ -102,7 +106,7 @@ public class ImportHandlerTest {
         importHandler.handle(input);
     }
 
-    @Test(expected = InvalidArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMissingFileName() throws Exception {
         UserManager userManager = mock(UserManager.class);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
@@ -139,7 +143,7 @@ public class ImportHandlerTest {
         ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         Result result = importHandler.handle(input);
-        assertEquals(1, result.getErrors().size());
+        assertThat(result.getErrors()).hasSize(1);
     }
 
     private Stream<ImportEntryResult> createMockErrorStream(long lineNumber) {
@@ -197,7 +201,7 @@ public class ImportHandlerTest {
         assertSummary(2L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
-        assertTrue(errors.isEmpty());
+        assertThat(errors).isNullOrEmpty();
     }
 
     @Test()
@@ -225,7 +229,7 @@ public class ImportHandlerTest {
         assertSummary(1L, 1L, result);
 
         List<ImportError> errors = result.getErrors();
-        assertTrue(errors.isEmpty());
+        assertThat(errors).isNullOrEmpty();
     }
 
     @Test()
@@ -253,13 +257,13 @@ public class ImportHandlerTest {
         assertSummary(0L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
-        assertEquals(2, errors.size());
+        assertThat(errors).hasSize(2);
 
-        assertEquals(2, errors.get(0).getLineNumber());
-        assertEquals(ImportError.Code.UNIQUE_FIELD_ERROR.value, errors.get(0).getErrorCode());
+        assertThat(errors.get(0).getLineNumber()).isEqualTo(2);
+        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_FIELD_ERROR.value);
 
-        assertEquals(3, errors.get(1).getLineNumber());
-        assertEquals(ImportError.Code.UNIQUE_FIELD_ERROR.value, errors.get(1).getErrorCode());
+        assertThat(errors.get(1).getLineNumber()).isEqualTo(3);
+        assertThat(errors.get(1).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_FIELD_ERROR.value);
     }
 
     @Test()
@@ -287,10 +291,10 @@ public class ImportHandlerTest {
         assertSummary(1L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
-        assertEquals(1, errors.size());
+        assertThat(errors).hasSize(1);
 
-        assertEquals(2, errors.get(0).getLineNumber());
-        assertEquals(ImportError.Code.PARSING_ERROR.value, errors.get(0).getErrorCode());
+        assertThat(errors.get(0).getLineNumber()).isEqualTo(2);
+        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.PARSING_ERROR.value);
     }
 
     @Test()
@@ -318,9 +322,8 @@ public class ImportHandlerTest {
         assertSummary(2L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
-        assertEquals(1, errors.size());
-
-        assertEquals(ImportError.Code.WRITE_RESULT_ERROR.value, errors.get(0).getErrorCode());
+        assertThat(errors).hasSize(1);
+        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.WRITE_RESULT_ERROR.value);
     }
 
     @Test()
@@ -333,7 +336,7 @@ public class ImportHandlerTest {
 
         Result res = importHandler.getResult(UUID.randomUUID());
 
-        assertNotNull(res);
+        assertThat(res).isNotNull();
     }
 
     @Test
@@ -349,9 +352,9 @@ public class ImportHandlerTest {
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 10);
 
-        assertNotNull(res);
-        assertEmpty(res.getLeft());
-        assertEquals(0, (long) res.getRight());
+        assertThat(res).isNotNull();
+        assertThat(res.getLeft()).isNullOrEmpty();
+        assertThat(res.getRight()).isEqualTo(0);
     }
 
     @Test
@@ -368,9 +371,9 @@ public class ImportHandlerTest {
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(0, 10);
 
-        assertNotNull(res);
-        assertNotNull(res.getLeft());
-        assertEquals(4, (long) res.getRight());
+        assertThat(res).isNotNull();
+        assertThat(res.getLeft()).isNotNull();
+        assertThat(res.getRight()).isEqualTo(4);
     }
 
     @Test
@@ -387,10 +390,10 @@ public class ImportHandlerTest {
 
         Pair<List<Result.Summary>, Integer> res = importHandler.getSummaries(10, 10);
 
-        assertNotNull(res);
-        assertNotNull(res.getLeft());
-        assertEquals(2, res.getLeft().size());
-        assertEquals(12, (long) res.getRight());
+        assertThat(res).isNotNull();
+        assertThat(res.getLeft()).isNotNull();
+        assertThat(res.getLeft()).hasSize(2);
+        assertThat(res.getRight()).isEqualTo(12);
     }
 
     private static List<Result.Summary> generateSummaries(int count) {
@@ -410,9 +413,72 @@ public class ImportHandlerTest {
 
         ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
-        assertTrue(importHandler.deleteResult(UUID.randomUUID()));
+        assertThat(importHandler.deleteResult(UUID.randomUUID())).isTrue();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void getInputStreamShouldThrowException() {
+        ImportHandler sut = new ImportHandler(null, null, null, null, null);
+        sut.getInputStream(new InputPart() {
+            @Override
+            public MultivaluedMap<String, String> getHeaders() {
+                return null;
+            }
+
+            @Override
+            public String getBodyAsString() throws IOException {
+                throw new IOException("oh noez");
+            }
+
+            @Override
+            public <T> T getBody(Class<T> aClass, Type type) throws IOException {
+                throw new IOException("oh noez");
+            }
+
+            @Override
+            public <T> T getBody(GenericType<T> genericType) throws IOException {
+                throw new IOException("oh noez");
+            }
+
+            @Override
+            public MediaType getMediaType() {
+                return null;
+            }
+
+            @Override
+            public boolean isContentTypeFromMessage() {
+                return false;
+            }
+
+            @Override
+            public void setMediaType(MediaType mediaType) {
+            }
+        });
+    }
+
+    @Test
+    public void getCodeShouldMapExceptionContentToErrorCodes() {
+        FieldConstraintViolationException exc1 = new FieldConstraintViolationException(Constraint.ID.UNIQUE_EMAIL);
+        assertThat(getCode(exc1)).isEqualTo(ImportError.Code.UNIQUE_FIELD_ERROR);
+
+        FieldConstraintViolationException exc2 = new FieldConstraintViolationException(Constraint.ID.UNIQUE_EMAIL);
+        assertThat(getCode(exc2)).isEqualTo(ImportError.Code.UNIQUE_FIELD_ERROR);
+
+        FieldConstraintViolationException exc3 = new FieldConstraintViolationException(Constraint.ID.VALID_EMAIL);
+        assertThat(getCode(exc3)).isEqualTo(ImportError.Code.FIELD_FORMAT_ERROR);
+    }
+
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void getCodeShouldThrowExceptionOnUnsupportedExceptionContent() {
+        FieldConstraintViolationException exc4 = new FieldConstraintViolationException(Constraint.ID.UNIQUE_GROUP_NAME);
+        getCode(exc4);
+    }
+
+    @Test
+    public void mapConstraintToColumnShouldMapConstrainsToListOfConstraints() {
+        assertThat(mapConstraintToColumn(Constraint.ID.UNIQUE_EMAIL)).contains("mail");
+    }
 
     private enum InputPartCase {
         VALID,
@@ -497,17 +563,12 @@ public class ImportHandlerTest {
 
     private void assertSummary(Long expCreated, Long expUpdated, Result result) {
         Long created = (long) result.getCreated().size();
-        assertNotNull(created);
-        assertEquals(expCreated, created);
+        assertThat(created).isNotNull();
+        assertThat(expCreated).isEqualTo(created);
 
         Long updated = (long) result.getUpdated().size();
-        assertNotNull(updated);
-        assertEquals(expUpdated, updated);
-    }
-
-    private static void assertEmpty(List collection) {
-        boolean isNullOrEmpty = collection == null || collection.isEmpty();
-        assertTrue(isNullOrEmpty);
+        assertThat(updated).isNotNull();
+        assertThat(expUpdated).isEqualTo(updated);
     }
 
     private Stream<CSVUserDTO> createMockStream(int count) {
