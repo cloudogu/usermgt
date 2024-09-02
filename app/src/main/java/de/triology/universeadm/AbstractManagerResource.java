@@ -28,7 +28,6 @@
 package de.triology.universeadm;
 
 import com.google.common.base.Strings;
-import de.triology.universeadm.user.UserResource;
 import de.triology.universeadm.user.imports.FieldConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,7 @@ public abstract class AbstractManagerResource<T> {
     private static final Logger logger
         = LoggerFactory.getLogger(AbstractManagerResource.class);
 
-    private static final String constraintViolationLogMsg = "entity {} violates constraints";
+    private static final String CONSTRAINT_VIOLATION_LOG_MSG = "entity {} violates constraints";
 
     @Context
     protected UriInfo uriInfo;
@@ -95,10 +94,10 @@ public abstract class AbstractManagerResource<T> {
             uriBuilder.path(id);
             builder = Response.created(uriBuilder.build());
         } catch (UniqueConstraintViolationException e) {
-            logger.warn(constraintViolationLogMsg, id);
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
             builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
         } catch (FieldConstraintViolationException e) {
-            logger.warn(constraintViolationLogMsg, id);
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
             builder = Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e));
         }
 
@@ -130,12 +129,12 @@ public abstract class AbstractManagerResource<T> {
             manager.modify(object);
             builder = Response.noContent();
         } catch (UniqueConstraintViolationException e) {
-            logger.warn(constraintViolationLogMsg, id);
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
             builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
         } catch (EntityNotFoundException ex) {
             builder = Response.status(Response.Status.NOT_FOUND);
         } catch (FieldConstraintViolationException e) {
-            logger.warn(constraintViolationLogMsg, id);
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
             builder = Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e));
         }
 
