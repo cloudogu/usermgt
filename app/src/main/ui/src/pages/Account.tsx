@@ -1,5 +1,6 @@
 import {H1, LoadingIcon} from "@cloudogu/deprecated-ces-theme-tailwind";
 import UserForm from "../components/users/UserForm";
+import {t} from "../helpers/i18nHelpers";
 import {useAccount} from "../hooks/useAccount";
 import {AccountService} from "../services/Account";
 import type {User} from "../services/Users";
@@ -8,7 +9,7 @@ export default function Account() {
     const {account, isLoading, setAccount} = useAccount();
 
     return <>
-        <H1 className="uppercase">Account</H1>
+        <H1 className="uppercase">{t("pages.account")}</H1>
         {isLoading ?
             <div className={"flex row justify-center w-[100%] mt-16"}>
                 <LoadingIcon className={"w-64 h-64"}/>
