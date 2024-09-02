@@ -78,7 +78,7 @@ public abstract class AbstractManagerResource<T> {
      *
      * @param uriInfo -
      * @param object - the object that represents the updated entity
-     * @return a webservice response according the success of the update.
+     * @return a webservice response according the success of the create.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
