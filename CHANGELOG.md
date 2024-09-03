@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Integration tests for user import (#153)
 
+### Fixed
+- CSV import: fix error message wording which leaves open which kind of error occurred (#157)
+- account page: replace HTTP error message with generic error message (#157)
+  - regular users are not supposed to interpret HTTP status codes
+
 ## [v1.15.2-1] - 2024-08-06
 ### Changed
 - update to Alpine 3.20.2
