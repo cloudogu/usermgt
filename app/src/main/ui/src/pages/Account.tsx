@@ -1,5 +1,7 @@
 import {H1, LoadingIcon} from "@cloudogu/deprecated-ces-theme-tailwind";
+import React from "react";
 import UserForm from "../components/users/UserForm";
+import {t} from "../helpers/i18nHelpers";
 import {useAccount} from "../hooks/useAccount";
 import {AccountService} from "../services/Account";
 import type {User} from "../services/Users";
@@ -17,13 +19,18 @@ export default function Account() {
             <UserForm<User>
                 initialUser={account}
                 groupsReadonly={true}
-                onSubmit={(user, notify, handler) => AccountService.update(user)
+                onSubmit={(account, notify, handler) => AccountService.update(account)
                     .then((msg: string) => {
                         notify(msg, "primary");
-                        setAccount(user);
-                        handler.resetForm({values: user});
+                        setAccount(account);
+                        handler.resetForm({values: account});
                     }).catch((error: Error) => {
-                        notify(error.message, "danger");
+                        const msg = t("newUser.notification.error", {username: account.username});
+                        const messages = [];
+                        console.log(error.message);
+                        messages.push(msg);
+                        handler.setFieldError("mail", msg);
+                        notify((<>{messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
                     })}
             />
         }

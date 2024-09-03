@@ -156,7 +156,7 @@
   "usersImportResult.msg.code-104": "Die Anzahl der Spalten stimmt nicht mit der Anzahl der Spaltenüberschriften überein.",
   "usersImportResult.msg.code-200": "Allgemeiner Fehler beim Verarbeiten der Zeile",
   "usersImportResult.msg.code-201": "Folgende Spalten enthielten einen Wert, der als einzigartig gekennzeichnet ist und bereits vergeben war: '{{columns}}'",
-  "usersImportResult.msg.code-202": "Folgende Spalten entsprechen nicht dem vorgegebenen Format '{{columns}}'",
+  "usersImportResult.msg.code-202": "Folgende Spalten entsprechen nicht dem vorgegebenen Format: '{{columns}}'",
   "usersImportResult.msg.code-204": "Folgende Spalten werden benötigt, waren aber leer: '{{columns}}'",
   "usersImportResult.msg.code-300": "Allgemeiner interner Server-Fehler",
   "usersImportResult.msg.code-301": "Serverfehler beim Schreiben des Ergebnisses ins Dateisystem",

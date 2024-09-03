@@ -156,7 +156,7 @@
   "usersImportResult.msg.code-104": "The number of columns does not match the number of column headers.",
   "usersImportResult.msg.code-200": "General error when processing the line",
   "usersImportResult.msg.code-201": "The following columns contained a value that is marked as unique and was already assigned: '{{columns}}'.",
-  "usersImportResult.msg.code-202": "The following columns do not match the default format '{{columns}}'.",
+  "usersImportResult.msg.code-202": "The following columns do not match the default format: '{{columns}}'.",
   "usersImportResult.msg.code-204": "The following columns are required but were empty: '{{columns}}'.",
   "usersImportResult.msg.code-300": "General internal server error",
   "usersImportResult.msg.code-301": "Server error writing the result to the file system",
