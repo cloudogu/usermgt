@@ -123,6 +123,8 @@ public abstract class AbstractManagerResource<T> {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response modify(@PathParam("id") String id, T object) {
+        logger.trace("try to modify account {}", id);
+
         Response.ResponseBuilder builder;
         try {
             prepareForModify(id, object);
