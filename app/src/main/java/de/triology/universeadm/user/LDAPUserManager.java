@@ -32,7 +32,6 @@ package de.triology.universeadm.user;
 
 import com.github.legman.EventBus;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
