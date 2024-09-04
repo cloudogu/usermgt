@@ -484,6 +484,11 @@ public class ImportHandlerTest {
             .contains("username", "mail", "mail");
     }
 
+    @Test
+    public void mapConstraintToColumnShouldReturnEmptyList() {
+        assertThat(mapConstraintToColumn()).isEmpty();
+    }
+
     @Test(expected = UnsupportedOperationException.class)
     public void mapConstraintToColumnShouldThrowUnsupportedExceptionOnUnknownOrNonUserContraintID() {
         mapConstraintToColumn(Constraint.ID.UNIQUE_GROUP_NAME);
