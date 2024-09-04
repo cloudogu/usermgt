@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Integration tests for user import (#153)
 
+### Changed
+- Improve usability with unique labels (#158)
+  - Change label in user form from "Add group" to "Assign group" to emphasize no group will be created
+  - Change headline from account page from "Account" to "My Account" to emphasize it is about the user's account
+
 ### Fixed
 - CSV import: fix error message wording which previously left open which kind of error occurred (#157)
 - account page: replace HTTP error message with generic error message (#157)
