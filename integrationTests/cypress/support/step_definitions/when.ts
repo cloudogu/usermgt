@@ -218,8 +218,8 @@ When("the user uploads the file {string}", function (fileName: string) {
     cy.get('button[data-testid="upload-button"]').click()
 })
 
-When("the user clicks on the line 'Skipped data rows'", function () {
-    cy.get('details[data-testid="failed-import-details"]').click()
+When("the user clicks on the details regarding the {string} user import", function (importStatus: string) {
+    cy.get('details[data-testid="'+ importStatus +'-import-details"]').click()
 })
 
 When("the user downloads the import overview", function () {
