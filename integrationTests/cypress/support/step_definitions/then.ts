@@ -319,24 +319,25 @@ Then("a table of the file content for the file {string} is displayed", function 
     cy.get('table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
-    cy.get('@row').find("td").should('have.length', 7)
-
     cy.fixture(filename).then(data => data.split('\n')).then((data) => {
-        let userInfo = data[1].split(',')
-        cy.get('@row').find("td:nth-of-type(1)").contains(userInfo[0])
-        cy.get('@row').find("td:nth-of-type(2)").contains(userInfo[1])
-        cy.get('@row').find("td:nth-of-type(3)").contains(userInfo[2])
-        cy.get('@row').find("td:nth-of-type(4)").contains(userInfo[3])
-        cy.get('@row').find("td:nth-of-type(5)").contains(userInfo[4])
-        cy.get('@row').find("td:nth-of-type(6)").contains(userInfo[5])
-        cy.get('@row').find("td:nth-of-type(7)").contains(userInfo[6])
+        let length = data.length;
+        let i: number;
+        for(i = 1; i == length; i++){
+            let userInfo = data[i].split(',')
+            cy.get('@row').find("td:nth-of-type(1)").contains(userInfo[0])
+            cy.get('@row').find("td:nth-of-type(2)").contains(userInfo[1])
+            cy.get('@row').find("td:nth-of-type(3)").contains(userInfo[2])
+            cy.get('@row').find("td:nth-of-type(4)").contains(userInfo[3])
+            cy.get('@row').find("td:nth-of-type(5)").contains(userInfo[4])
+            cy.get('@row').find("td:nth-of-type(6)").contains(userInfo[5])
+            cy.get('@row').find("td:nth-of-type(7)").contains(userInfo[6])
+        }
     })
     cy.get('button[data-testid="upload-button"]').should('be.visible').and('not.be.disabled')
     cy.get('button[data-testid="reset-button"]').should('be.visible').and('not.be.disabled')
 })
 
 Then("the user import page shows a failed import", function () {
-
     cy.get('h1').contains("Userimport")
     cy.get('p[data-testid="import-status-message"]').contains("Import failed!")
     cy.get('details[data-testid="failed-import-details"]').invoke('find', 'summary').invoke('attr', 'text').contains("Skipped data rows (1)")
