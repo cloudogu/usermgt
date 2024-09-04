@@ -78,7 +78,7 @@ const UsersImportResult = () => {
                     </Details.Summary>
                     <UsersImportResultTable content={summary.updated}/>
                 </Details>
-                <Details hidden={failedRows === 0} data-testid={"failed-import-details"}>
+                <Details hidden={failedRows === 0} data-testid={"skipped-import-details"}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
                         {t("usersImportResult.rows.skipped")} ({failedRows})
