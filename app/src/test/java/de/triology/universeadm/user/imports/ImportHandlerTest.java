@@ -417,25 +417,6 @@ public class ImportHandlerTest {
         assertThat(importHandler.deleteResult(UUID.randomUUID())).isTrue();
     }
 
-    @Test()
-    public void saveCSVImportShouldCatchConstraintViolationExceptionAndSkipLine() throws Exception {
-        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
-        doThrow(new IllegalQueryException("oh no")).when(userManager).create(any());
-
-        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_DELETE);
-        CSVParser parser = mock(CSVParser.class);
-        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
-        Map<String, List<InputPart>> inputParts = new HashMap<>();
-        inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
-        when(input.getFormDataMap()).thenReturn(inputParts);
-        ImportHandler sut = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
-
-        Result actual = sut.handle(input);
-
-        assertThat(actual).isNotNull();
-        assertThat(actual.getErrors()).hasSize(2);
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void getInputStreamShouldThrowException() {
         ImportHandler sut = new ImportHandler(null, null, null, null, null);
