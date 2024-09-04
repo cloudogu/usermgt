@@ -2,6 +2,7 @@ package de.triology.universeadm.user.imports;
 
 import de.triology.universeadm.Constraint;
 import de.triology.universeadm.mail.MailService;
+import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
 import org.apache.commons.lang3.tuple.Pair;
@@ -158,7 +159,7 @@ public class ImportHandlerTest {
 
     @Test(expected = AuthorizationException.class)
     public void testMissingPermissions() throws Exception {
-        UserManager userManager = createUserMangerMock(UserManagerCase.MISSING_PERMISSIONS);
+        UserManager userManager = createUserManagerMock(UserManagerCase.MISSING_PERMISSIONS);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -178,7 +179,7 @@ public class ImportHandlerTest {
 
     @Test()
     public void testImportUsersCreate() throws Exception {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -206,7 +207,7 @@ public class ImportHandlerTest {
 
     @Test()
     public void testImportUsersCreateModify() throws Exception {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE_MODIFY);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE_MODIFY);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -234,7 +235,7 @@ public class ImportHandlerTest {
 
     @Test()
     public void testImportUsersCreateValidationException() throws Exception {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALIDATION_EXCEPTION_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALIDATION_EXCEPTION_CREATE);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -268,7 +269,7 @@ public class ImportHandlerTest {
 
     @Test()
     public void testImportUsersParsingError() throws Exception {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -299,7 +300,7 @@ public class ImportHandlerTest {
 
     @Test()
     public void testWriteResultError() throws Exception {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         MultipartFormDataInput input = mock(MultipartFormDataInput.class);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.THROW_IOEXCEPTION_WRITE);
         Map<String, List<InputPart>> inputParts = new HashMap<>();
@@ -328,7 +329,7 @@ public class ImportHandlerTest {
 
     @Test()
     public void testGetResult() throws IOException {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
         CSVParser parser = mock(CSVParser.class);
 
@@ -341,7 +342,7 @@ public class ImportHandlerTest {
 
     @Test
     public void testGetSummariesReturnsEmptyList() throws IOException {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
         CSVParser parser = mock(CSVParser.class);
 
@@ -359,7 +360,7 @@ public class ImportHandlerTest {
 
     @Test
     public void testGetSummariesReturnsFourElements() throws IOException {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
         CSVParser parser = mock(CSVParser.class);
 
@@ -378,7 +379,7 @@ public class ImportHandlerTest {
 
     @Test
     public void testGetSummariesReturnsTwoElementsWithStart10() throws IOException {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_READ);
         CSVParser parser = mock(CSVParser.class);
 
@@ -407,13 +408,32 @@ public class ImportHandlerTest {
 
     @Test()
     public void testDeleteResult() throws IOException {
-        UserManager userManager = createUserMangerMock(UserManagerCase.VALID_CREATE);
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
         ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_DELETE);
         CSVParser parser = mock(CSVParser.class);
 
         ImportHandler importHandler = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
 
         assertThat(importHandler.deleteResult(UUID.randomUUID())).isTrue();
+    }
+
+    @Test()
+    public void saveCSVImportShouldCatchConstraintViolationExceptionAndSkipLine() throws Exception {
+        UserManager userManager = createUserManagerMock(UserManagerCase.VALID_CREATE);
+        doThrow(new IllegalQueryException("oh no")).when(userManager).create(any());
+
+        ResultRepository resultRepository = createResultRepositoryMock(ResultRepositoryCase.VALID_DELETE);
+        CSVParser parser = mock(CSVParser.class);
+        MultipartFormDataInput input = mock(MultipartFormDataInput.class);
+        Map<String, List<InputPart>> inputParts = new HashMap<>();
+        inputParts.put("file", Collections.singletonList(createInputPartMock(InputPartCase.VALID)));
+        when(input.getFormDataMap()).thenReturn(inputParts);
+        ImportHandler sut = new ImportHandler(userManager, parser, resultRepository, summaryRepositoryMock, mailServiceMock);
+
+        Result actual = sut.handle(input);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getErrors()).hasSize(2);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -553,7 +573,7 @@ public class ImportHandlerTest {
         VALIDATION_EXCEPTION_CREATE
     }
 
-    private UserManager createUserMangerMock(UserManagerCase c) {
+    private UserManager createUserManagerMock(UserManagerCase c) {
         UserManager manager = mock(UserManager.class);
 
         switch (c) {
