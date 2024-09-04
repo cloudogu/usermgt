@@ -5,7 +5,7 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## Release 1.15.2-2
-* FIXME
+* Verbesserung von Fehlernachrichten sowohl in manuellen als auch CSV-Import-Prozessen.
 
 ## Release 1.15.2-1
 * Behebung des kritischen CVEs CVE-2024-41110 in Bibliotheksabhängigkeiten. Diese Schwachstelle konnte im Usermanagement jedoch nicht aktiv ausgenutzt werden. 
