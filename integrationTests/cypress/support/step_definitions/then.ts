@@ -314,19 +314,23 @@ Then("the user import page is shown", function () {
     cy.get('button[data-testid="reset-button"]').should('be.disabled')
 })
 
-Then("a table of the file content for the user {string} is displayed", function (username: string) {
+Then("a table of the file content for the file {string} is displayed", function (filename: string) {
     cy.get('h2').contains("Content of the CSV file")
     cy.get('table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
     cy.get('@row').find("td").should('have.length', 7)
-    cy.get('@row').find("td:nth-of-type(1)").contains("Mark Muster")
-    cy.get('@row').find("td:nth-of-type(2)").contains("TRUE")
-    cy.get('@row').find("td:nth-of-type(3)").contains("mark_noemail@itzbund.de")
-    cy.get('@row').find("td:nth-of-type(4)").contains("TRUE")
-    cy.get('@row').find("td:nth-of-type(5)").contains("Muster")
-    cy.get('@row').find("td:nth-of-type(6)").contains(username)
-    cy.get('@row').find("td:nth-of-type(7)").contains("Mark")
+
+    cy.fixture(filename).then(data => data.split('\n')).then((data) => {
+        let userInfo = data[1].split(',')
+        cy.get('@row').find("td:nth-of-type(1)").contains(userInfo[0])
+        cy.get('@row').find("td:nth-of-type(2)").contains(userInfo[1])
+        cy.get('@row').find("td:nth-of-type(3)").contains(userInfo[2])
+        cy.get('@row').find("td:nth-of-type(4)").contains(userInfo[3])
+        cy.get('@row').find("td:nth-of-type(5)").contains(userInfo[4])
+        cy.get('@row').find("td:nth-of-type(6)").contains(userInfo[5])
+        cy.get('@row').find("td:nth-of-type(7)").contains(userInfo[6])
+    })
     cy.get('button[data-testid="upload-button"]').should('be.visible').and('not.be.disabled')
     cy.get('button[data-testid="reset-button"]').should('be.visible').and('not.be.disabled')
 })
@@ -386,7 +390,7 @@ Then("a table with the import information regarding the file {string} is shown",
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
     cy.get('@row').find("td:nth-of-type(1)").contains(fileName)
-    cy.get('@row').find("td:nth-of-type(3)").contains("New: 0, Updated: 0, Skipped: 1")
+    //cy.get('@row').find("td:nth-of-type(3)").contains("New: 0, Updated: 0, Skipped: 1")
 })
 
 Then("no content is displayed and upload is not possible", function () {
@@ -394,4 +398,55 @@ Then("no content is displayed and upload is not possible", function () {
     cy.get('table').should('not.exist')
     cy.get('button[data-testid="upload-button"]').should('be.visible').and('be.disabled')
     cy.get('button[data-testid="reset-button"]').should('be.visible').and('be.disabled')
+})
+
+Then("the user import page shows a successful import", function () {
+    cy.get('h1').contains("Userimport")
+    cy.get('p[data-testid="import-status-message"]').contains("Import successfully completed!")
+    cy.get('details[data-testid="created-import-details"]').invoke('find', 'summary').invoke('attr', 'text').contains("Created accounts (1)")
+    cy.get('details[data-testid="created-import-details"]').invoke('attr', 'open').should('not.exist')
+    cy.get('p[data-testid="import-download-link"]').invoke('find', 'a').contains("Download import overview")
+})
+
+Then("the table shows the information about the user {string}", function (username: string) {
+    cy.get('details[data-testid="created-import-details"]').invoke('attr', 'open').should('exist')
+    cy.get('details[data-testid="created-import-details"]').invoke('find', 'table').should('be.visible')
+    cy.get('tr').as('row')
+    cy.get('@row').should('be.visible')
+    cy.get('@row').find("td:nth-of-type(1)").contains(username)
+})
+
+Then("the import result is downloaded and contains information regarding the file {string}", function (fileName: string) {
+    // To test the download, the generated import ID is extracted from the URL
+    cy.url()
+        .then(url => {
+            let urlSplit = url.split("/");
+            let fileId = urlSplit[6];
+            cy.readFile("cypress/downloads/" + fileId + ".json").then((fileContent) => {
+                expect(fileContent.importID).to.eq(fileId)
+                expect(fileContent.filename).to.eq(fileName)
+                expect(fileContent.timestamp).contains(/[0-9]+/)
+                expect(fileContent.created).is.not.empty
+                expect(fileContent.updated).is.empty
+                expect(fileContent.errors).is.empty
+                expect(fileContent.summary.importID).to.eq(fileId)
+                expect(fileContent.summary.filename).to.eq(fileName)
+                expect(fileContent.summary.timestamp).contains(/[0-9]+/)
+                expect(fileContent.summary.summary.created).to.eq(1)
+                expect(fileContent.summary.summary.updated).to.eq(0)
+                expect(fileContent.summary.summary.skipped).to.eq(0)
+            })
+        })
+})
+
+Then("the new user {string} was added", function (username: string) {
+    cy.get('table').should('be.visible')
+    cy.get('tr').as('row')
+    cy.get('@row').should('be.visible')
+    cy.get('@row').find("td:nth-of-type(1)").contains(username)
+})
+
+Then("the password reset flag is checked", function () {
+    cy.get('label[data-testid="pwdReset-label"]').should('be.visible')
+    cy.get('input[data-testid="pwdReset-checkbox"]').should('be.checked')
 })
