@@ -8,8 +8,9 @@ Feature: Tests for uploading file with user name that contains a special charact
   Scenario: a user selects a file for upload
     When the user opens the user import page
     And the user selects the file "userimport_Sonderzeichen.csv"
-    Then a table of the file content for the user "mm!uster" is displayed
+    Then a table of the file content for the file "userimport_Sonderzeichen.csv" is displayed
 
+  @clear_downloadDir
   Scenario: a user uploads a file
     When the user opens the user import page
     And the user uploads the file "userimport_Sonderzeichen.csv"
@@ -17,7 +18,7 @@ Feature: Tests for uploading file with user name that contains a special charact
 
   Scenario: after uploading a file a user inspects the user import details page
     When the user opens the user import details page
-    And the user clicks on the line 'Skipped data rows'
+    And the user clicks on the details regarding the "failed" user import
     Then the table shows that the username was not in the correct format
 
   Scenario: after uploading a file a user downloads the import overview
