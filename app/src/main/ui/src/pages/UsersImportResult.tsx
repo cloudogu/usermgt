@@ -64,14 +64,14 @@ const UsersImportResult = () => {
                     {(failedRows > 0 && successfulRows > 0) && t("usersImportResult.result.successWithFailures")}
                     {successfulRows === 0 && t("usersImportResult.result.failure")}
                 </Paragraph>
-                <Details hidden={createdRows === 0}>
+                <Details hidden={createdRows === 0} data-testid={"created-import-details"}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
                         {t("usersImportResult.rows.created")} ({createdRows})
                     </Details.Summary>
                     <UsersImportResultTable content={summary.created}/>
                 </Details>
-                <Details hidden={updatedRows === 0}>
+                <Details hidden={updatedRows === 0} data-testid={"updated-import-details"}>
                     <Details.Summary>
                         <Details.Summary.Arrow/>
                         {t("usersImportResult.rows.updated")} ({updatedRows})
