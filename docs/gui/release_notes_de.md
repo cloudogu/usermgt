@@ -4,8 +4,10 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
-## Release 1.15.2-2
+## Release 1.15.3-1
 * Verbesserung von Fehlernachrichten sowohl in manuellen Kontenbearbeitungen als auch CSV-Import-Prozessen.
+* Die Überschrift der Seite zur Änderung der eigenen Daten ("Account") wird zu "Mein Account" umbenannt
+* Bezeichner rund um die Zuordnung von Benutzer:innen zu Gruppen werden so umbenannt, das klar wird, dass damit keine neuen Konten oder Gruppen angelegt werden.
 
 ## Release 1.15.2-1
 * Behebung des kritischen CVEs CVE-2024-41110 in Bibliotheksabhängigkeiten. Diese Schwachstelle konnte im Usermanagement jedoch nicht aktiv ausgenutzt werden. 

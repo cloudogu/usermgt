@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improve usability with unique labels (#158)
   - Change label in user form from "Add group" to "Assign group" to emphasize no group will be created
+  - Change label in user form from "Add member" to "Assign member" to emphasize no account will be created
   - Change headline from account page from "Account" to "My Account" to emphasize it is about the user's account
 
 ### Fixed
