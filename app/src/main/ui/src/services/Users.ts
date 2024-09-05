@@ -93,10 +93,15 @@ export const UsersService = {
     },
     async update(user: User): Promise<string> {
         try {
-
             await Axios.put(`/users/${user.username}`, removeNonRelevantUserFields(user));
             return t("newUser.notification.success", {username: user.username});
         } catch (e: AxiosError | unknown) {
+            if (isAxiosError(e)) {
+                const axiosError = e as AxiosError;
+                if (axiosError.response?.status === 409) {
+                    throw axiosError.response.data as UsersConstraintsError;
+                }
+            }
             throw new Error(t("newUser.notification.error", {username: user.username}));
         }
     },

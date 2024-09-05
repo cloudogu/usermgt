@@ -6,8 +6,7 @@ import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
 import {useBackURL} from "../hooks/useBackURL";
 import {useUser} from "../hooks/useUser";
-import {isUsersConstraintsError, UserConstraints, type UsersConstraintsError, UsersService} from "../services/Users";
-import type {User} from "../services/Users";
+import {isUsersConstraintsError, UserConstraints, type UsersConstraintsError, UsersService, type User } from "../services/Users";
 
 export default function EditUser() {
     const {casUser} = useContext(ApplicationContext);
@@ -27,44 +26,42 @@ export default function EditUser() {
                 initialUser={user}
                 groupsReadonly={false}
                 passwordReset={casUser.principal !== username}
-                onSubmit={(user, notify, handler) =>
-                    UsersService.update(user)
-                        .then((msg: string) => {
-                            navigate(backURL ?? "/users", {
-                                state: {
-                                    alert: {
-                                        message: msg,
-                                        variant: "primary"
-                                    }
+                onSubmit={(user, notify, handler) => UsersService.update(user)
+                    .then((msg: string) => {
+                        navigate(backURL ?? "/users", {
+                            state: {
+                                alert: {
+                                    message: msg,
+                                    variant: "primary"
                                 }
-                            });
-                        }).catch((error: UsersConstraintsError | Error) => {
-                            if (isUsersConstraintsError(error)) {
-                                const messages = [];
-                                if (error.constraints.includes(UserConstraints.UniqueUsername)) {
-                                    const msg = t("newUser.notification.errorDuplicateUsername", {username: user.username});
-                                    messages.push(msg);
-                                    handler.setFieldError("username", msg);
-                                }
-
-                                if (error.constraints.includes(UserConstraints.UniqueEmail)) {
-                                    const msg = t("newUser.notification.errorDuplicateMail", {mail: user.mail});
-                                    messages.push(msg);
-                                    handler.setFieldError("mail", msg);
-                                }
-
-                                if (error.constraints.includes(UserConstraints.ValidEmail)) {
-                                    const msg = t("newUser.notification.errorInvalidMail");
-                                    messages.push(msg);
-                                    handler.setFieldError("mail", msg);
-                                }
-
-
-                                notify((<>{messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
-                            } else {
-                                notify(error.message, "danger");
                             }
-                        })}
+                        });
+                    }).catch((error: UsersConstraintsError | Error) => {
+                        if (isUsersConstraintsError(error)) {
+                            const messages = [];
+                            if (error.constraints.includes(UserConstraints.UniqueUsername)) {
+                                const msg = t("newUser.notification.errorDuplicateUsername", {username: user.username});
+                                messages.push(msg);
+                                handler.setFieldError("username", msg);
+                            }
+
+                            if (error.constraints.includes(UserConstraints.UniqueEmail)) {
+                                const msg = t("newUser.notification.errorDuplicateMail", {mail: user.mail});
+                                messages.push(msg);
+                                handler.setFieldError("mail", msg);
+                            }
+
+                            if (error.constraints.includes(UserConstraints.ValidEmail)) {
+                                const msg = t("newUser.notification.errorInvalidMail");
+                                messages.push(msg);
+                                handler.setFieldError("mail", msg);
+                            }
+
+                            notify((<>{messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
+                        } else {
+                            notify(error.message, "danger");
+                        }
+                    })}
 
                 additionalButtons={
                     <Button variant={"secondary"} type={"button"} className={"ml-4"}

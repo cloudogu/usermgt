@@ -4,7 +4,7 @@ import UserForm from "../components/users/UserForm";
 import {t} from "../helpers/i18nHelpers";
 import {useAccount} from "../hooks/useAccount";
 import {AccountService} from "../services/Account";
-import type {User} from "../services/Users";
+import {isUsersConstraintsError, UserConstraints, type User, type UsersConstraintsError, } from "../services/Users";
 
 export default function Account() {
     const {account, isLoading, setAccount} = useAccount();
@@ -24,13 +24,27 @@ export default function Account() {
                         notify(msg, "primary");
                         setAccount(account);
                         handler.resetForm({values: account});
-                    }).catch((error: Error) => {
-                        const msg = t("newUser.notification.error", {username: account.username});
+                    }).catch((error: UsersConstraintsError | Error) => {
                         const messages = [];
-                        console.log(error.message);
-                        messages.push(msg);
-                        handler.setFieldError("mail", msg);
-                        notify((<>{messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
+                        if (isUsersConstraintsError(error)) {
+                            if (error.constraints.includes(UserConstraints.UniqueEmail)) {
+                                const msg = t("newUser.notification.error", {username: account.username});
+                                messages.push(msg);
+                                handler.setFieldError("mail", msg);
+                            }
+
+                            if (error.constraints.includes(UserConstraints.ValidEmail)) {
+                                const msg = t("newUser.notification.error", {username: account.username});
+                                messages.push(msg);
+                                handler.setFieldError("mail", msg);
+                            }
+
+                            notify((<>{messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
+                        } else {
+                            const msg = t("newUser.notification.error", {username: account.username});
+                            messages.push(msg);
+                            notify((<>{messages.map((msg, i) => <div key={i}>{msg}</div>)}</>), "danger");
+                        }
                     })}
             />
         }

@@ -1,6 +1,8 @@
+import { isAxiosError} from "axios";
 import {Axios} from "../api/axios";
 import {t} from "../helpers/i18nHelpers";
-import type {User} from "./Users";
+import type {User, UsersConstraintsError} from "./Users";
+import type {AxiosError} from "axios";
 
 
 export type ApiAccount = User;
@@ -40,14 +42,19 @@ export const AccountService = {
     async update(account: AccountModel): Promise<string> {
         delete account.hiddenPasswordField;
         delete account.confirmPassword;
-        const saveResponse = await Axios.put("/account", account, {
-            headers: {"Content-Type": "application/json"}
-        });
-
-        if (saveResponse.status < 200 || saveResponse.status > 299) {
-            throw new Error(t("editUser.notification.error"));
+        try {
+            await Axios.put("/account", account, {
+                headers: {"Content-Type": "application/json"}
+            });
+            return t("newUser.notification.success", {username: account.username});
+        } catch (e: AxiosError | unknown) {
+            if (isAxiosError(e)) {
+                const axiosError = e as AxiosError;
+                if (axiosError.response?.status === 409) {
+                    throw axiosError.response.data as UsersConstraintsError;
+                }
+            }
+            throw new Error(t("editUser.notification.error", {username: account.username}));
         }
-
-        return t("editUser.notification.success");
     }
 };
