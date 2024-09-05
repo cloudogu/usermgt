@@ -42,7 +42,7 @@
   "groups.buttons.create": "Gruppe anlegen",
   "groups.confirmation.message": "Soll die Gruppe {{groupName}} gelöscht werden?",
   "groups.confirmation.title": "Gruppe löschen",
-  "groups.labels.addMember": "Mitglied hinzufügen",
+  "groups.labels.addMember": "Mitglied zuweisen",
   "groups.labels.description": "Beschreibung",
   "groups.labels.emptyMembers": "Keine Mitglieder zugeordnet",
   "groups.labels.members": "Mitglieder",
