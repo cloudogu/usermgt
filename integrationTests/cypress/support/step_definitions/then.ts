@@ -417,3 +417,14 @@ Then("the password reset flag is checked", function () {
     cy.get('label[data-testid="pwdReset-label"]').should('be.visible')
     cy.get('input[data-testid="pwdReset-checkbox"]').should('be.checked')
 })
+
+Then("the import summaries page offers the possibility to delete, download or show details of the import entry", function () {
+    cy.get('div').find('span').contains("Download")
+    cy.get('div').find('span').contains("Details")
+    cy.get('div').find('span').contains("Delete")
+})
+
+Then("the entry is removed and a message regarding the successful deletion of the entry is shown", function () {
+    cy.get('table').find('tr').should('have.length', 1)
+    cy.get('div').find('div').contains("The import overview was successfully deleted.")
+})
