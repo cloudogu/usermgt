@@ -3,7 +3,6 @@ package de.triology.universeadm.user.imports;
 import com.google.inject.Inject;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
-import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.mail.MailService;
 import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
@@ -108,15 +107,15 @@ public class ImportHandler {
         InputStream fileInputStream = getInputStream(filePart);
         logger.debug("Got reader from first file part");
 
-        UUID importID = UUID.randomUUID();
-        logger.debug("Created ImportID with UUID {}", importID);
-
         List<ImportEntryResult> results = this.csvParser.parse(fileInputStream)
                 .sequential()
                 .map(this::getUserPair) // load user from LDAP
                 .map(Mapper::decode) // add more information
                 .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()))
                 .collect(Collectors.toList());
+
+        UUID importID = UUID.randomUUID();
+        logger.debug("Created ImportID with UUID {}", importID);
 
         results.addAll(csvParser.getErrors().collect(Collectors.toList()));
         Result finalResult = results.stream().reduce(
@@ -190,14 +189,14 @@ public class ImportHandler {
      *
      * @param file uploaded be the user.
      * @return InputStream - from file request
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException -
      */
-    private InputStream getInputStream(@NotNull InputPart file) {
+    InputStream getInputStream(@NotNull InputPart file) {
         try {
             return file.getBody(InputStream.class, null);
         } catch (IOException e) {
             logger.error(e.toString());
-            throw new InvalidArgumentException("unable to get body from file");
+            throw new IllegalArgumentException("unable to get body from file");
         }
     }
 
@@ -238,8 +237,10 @@ public class ImportHandler {
                     .build();
 
             return ImportEntryResult.skipped(error);
-        } catch (UniqueConstraintViolationException e) {
-            ImportError error = new ImportError.Builder(ImportError.Code.UNIQUE_FIELD_ERROR)
+        } catch (FieldConstraintViolationException e) {
+            ImportError.Code violationErrorCode = getCode(e);
+
+            ImportError error = new ImportError.Builder(violationErrorCode)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
                     .withAffectedColumns(mapConstraintToColumn(e.violated))
@@ -259,19 +260,43 @@ public class ImportHandler {
         }
     }
 
-    private List<String> mapConstraintToColumn(Constraint.ID[] constraints) {
+    static ImportError.Code getCode(FieldConstraintViolationException e) {
+        ImportError.Code violationError = null;
+
+        for (Constraint.ID id : e.violated) {
+            switch (id) {
+                case VALID_EMAIL:
+                    violationError = ImportError.Code.FIELD_FORMAT_ERROR;
+                    break;
+                case UNIQUE_EMAIL:
+                case UNIQUE_USERNAME:
+                    violationError = ImportError.Code.UNIQUE_FIELD_ERROR;
+                    break;
+                default:
+                    throw new UnsupportedOperationException(String.format("Unable to handle unknown constraint type: %s.", id));
+            }
+        }
+        return violationError;
+    }
+
+    static List<String> mapConstraintToColumn(Constraint.ID... constraints) {
         if (constraints.length < 1) {
             return Collections.emptyList();
         }
         List<String> violatedColumnConstraints = new ArrayList<>();
         for (Constraint.ID constraint : constraints) {
             switch (constraint) {
+                case VALID_EMAIL:
+                    violatedColumnConstraints.add("mail");
+                    break;
                 case UNIQUE_EMAIL:
                     violatedColumnConstraints.add("mail");
                     break;
                 case UNIQUE_USERNAME:
                     violatedColumnConstraints.add("username");
                     break;
+                default:
+                    throw new UnsupportedOperationException(String.format("Unable to handle unknown constraint type: %s.", constraint.name()));
             }
         }
         return violatedColumnConstraints;

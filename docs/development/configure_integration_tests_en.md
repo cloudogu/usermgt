@@ -59,3 +59,5 @@ The integration tests can be started in two ways:
    For example, with a Jenkins pipeline.
 2. `yarn cypress open` starts an interactive window where you can execute, visually observe and debug the tests.
    This mode is particularly helpful when developing new tests and finding errors.
+
+If an error based on the `badeball/cypress-cucumber-preprocessor` library appears in the Cypress UI (`yarn cypress open`) and refers to "Experimental Run All", then it is advisable to click through the tests individually. This may be a problem with the execution methodology that does not take place on the console (`yarn cypress run`).
