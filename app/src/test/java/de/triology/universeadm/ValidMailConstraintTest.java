@@ -3,7 +3,7 @@ package de.triology.universeadm;
 import de.triology.universeadm.user.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
 
@@ -69,6 +69,8 @@ public class ValidMailConstraintTest {
         user.setMail("test@");
         assertTrue(validator.violatedBy(user, null));
         user.setMail("@mail.de");
+        assertTrue(validator.violatedBy(user, null));
+        user.setMail("      given.surname@mail.de   ");
         assertTrue(validator.violatedBy(user, null));
     }
 }

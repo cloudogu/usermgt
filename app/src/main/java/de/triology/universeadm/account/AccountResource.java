@@ -37,6 +37,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import de.triology.universeadm.user.imports.FieldConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +121,9 @@ public class AccountResource
     }
     catch (UniqueConstraintViolationException e){
       return Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e)).build();
+    }
+    catch (FieldConstraintViolationException e){
+      return Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e)).build();
     }
     catch (IllegalArgumentException e) {
       return Response.status(Response.Status.BAD_REQUEST).entity(new DenyChangeUserResponse(e)).build();

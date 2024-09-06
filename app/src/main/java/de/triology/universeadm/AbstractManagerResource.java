@@ -28,6 +28,7 @@
 package de.triology.universeadm;
 
 import com.google.common.base.Strings;
+import de.triology.universeadm.user.imports.FieldConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,38 +47,37 @@ public abstract class AbstractManagerResource<T> {
 
     public static final int PAGING_MAXIMUM_PAGE_SIZE = 100000;
 
-    /**
-     * the logger for UserResource
-     */
     private static final Logger logger
         = LoggerFactory.getLogger(AbstractManagerResource.class);
+
+    private static final String CONSTRAINT_VIOLATION_LOG_MSG = "entity {} violates constraints";
 
     @Context
     protected UriInfo uriInfo;
 
-    //~--- constructors ---------------------------------------------------------
-
     /**
-     * Constructs ...
+     * Constructs a new AbstractManagerResource. Must be called from a concrete implementation's constructor.
      *
-     * @param manager
+     * @param manager -
      */
     public AbstractManagerResource(Manager<T> manager) {
         this.manager = manager;
     }
-
-    //~--- methods --------------------------------------------------------------
 
     protected String getCurrentPath() {
         return UriBuilder.fromUri(this.uriInfo.getBaseUri().getPath()).path(this.uriInfo.getPath()).build().toString();
     }
 
     /**
-     * Method description
+     * Modify takes an abstract entity id and creates the corresponding entity in the database.
      *
-     * @param uriInfo
-     * @param object)
-     * @return
+     * <p>
+     *     The success relies on the underlying manager implementation (for users/groups/etc). A HTTP 409 CONFLICT response will be rendered if either a field is marked as unique over all database records and the update implies a duplicated field, or if other constraints are violated. This includes if the record being updated was created in the meantime.
+     * </p>
+     *
+     * @param uriInfo -
+     * @param object - the object that represents the updated entity
+     * @return a webservice response according the success of the create.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -94,8 +94,11 @@ public abstract class AbstractManagerResource<T> {
             uriBuilder.path(id);
             builder = Response.created(uriBuilder.build());
         } catch (UniqueConstraintViolationException e) {
-            logger.warn("entity {} violates constraints", id);
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
             builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
+        } catch (FieldConstraintViolationException e) {
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
+            builder = Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e));
         }
 
         return builder.build();
@@ -106,25 +109,35 @@ public abstract class AbstractManagerResource<T> {
     protected abstract String getDefaultSortAttribute();
 
     /**
-     * Method description
+     * Modify takes an abstract entity id and updates the corresponding entity in the database.
      *
-     * @param id
-     * @param object
-     * @return
+     * <p>
+     *     The success relies on the underlying manager implementation (for users/groups/etc). A HTTP 409 CONFLICT response will be rendered if either a field is marked as unique over all database records and the update implies a duplicated field, or if other constraints are violated. If the record being updated was deleted in the meantime, a HTTP 404 NOT FOUND will be rendered.
+     * </p>
+     *
+     * @param id - the entity's unique identifier
+     * @param object - the object that represents the updated entity
+     * @return a webservice response according the success of the update.
      */
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response modify(@PathParam("id") String id, T object) {
+        logger.trace("try to modify account {}", id);
+
         Response.ResponseBuilder builder;
         try {
             prepareForModify(id, object);
             manager.modify(object);
             builder = Response.noContent();
         } catch (UniqueConstraintViolationException e) {
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
             builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
         } catch (EntityNotFoundException ex) {
             builder = Response.status(Response.Status.NOT_FOUND);
+        } catch (FieldConstraintViolationException e) {
+            logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
+            builder = Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e));
         }
 
         return builder.build();
@@ -159,8 +172,6 @@ public abstract class AbstractManagerResource<T> {
 
 
     }
-
-    //~--- get methods ----------------------------------------------------------
 
     /**
      * Method description
