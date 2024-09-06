@@ -428,3 +428,12 @@ Then("the entry is removed and a message regarding the successful deletion of th
     cy.get('table').find('tr').should('have.length', 1)
     cy.get('div').find('div').contains("The import overview was successfully deleted.")
 })
+
+Then("the user {string} has his mail updated to {string} and his display name to {string}", function (username: string, mail: string, displayName: string) {
+    cy.get('table').should('be.visible')
+    cy.get('tr').as('row')
+    cy.get('@row').should('be.visible')
+    cy.get('@row').find("td:nth-of-type(1)").contains(username)
+    cy.get('@row').find("td:nth-of-type(2)").contains(displayName)
+    cy.get('@row').find("td:nth-of-type(3)").contains(mail)
+})
