@@ -34,4 +34,11 @@ Before({tags: "@clear_downloadDir"}, () => {
             });
         }
     });
-});
+})
+
+Before({tags: "@add_user"}, () => {
+    cy.log("add Test user Max Mustermann");
+    cy.withUser("mmustermann").then(userData => {
+        cy.usermgtCreateUser(userData.username, userData.givenname, userData.surname, userData.displayName, userData.mail, userData.password,false, [])
+    })
+})
