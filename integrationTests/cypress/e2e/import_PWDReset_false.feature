@@ -15,17 +15,17 @@ Feature: Tests for uploading file with user that has password reset disabled
    Scenario: a user uploads a file
      When the user opens the user import page
      And the user uploads the file "tap_userimport_pwd_f.csv"
-     Then the user import page shows a successful import
+     Then the user import page shows an import with the message "Import successfully completed!" and the details "Created accounts (1)"
 
    Scenario: after uploading a file a user inspects the user import details page
      When the user opens the user import details page
      And the user clicks on the details regarding the "created" user import
-     Then the table shows the information about the user "testUser"
+     Then the table shows the information about the "created" user "testUser"
 
    Scenario: after uploading a file a user downloads the import overview
      When the user opens the user import details page
      And the user downloads the import overview
-     Then the import result is downloaded and contains information regarding the file "tap_userimport_pwd_f.csv"
+     Then the import result is downloaded and contains information regarding "1" created, "0" updated and "0" skipped accounts in the file "tap_userimport_pwd_f.csv"
 
    Scenario: after uploading a file a user inspects the users page
      When the user opens the users page
@@ -39,4 +39,4 @@ Feature: Tests for uploading file with user that has password reset disabled
    @clean_user_import
    Scenario: after uploading a file a user inspects the user import summaries page
      When the user opens the user import summaries page
-     Then a table with the import information regarding the file "tap_userimport_pwd_f.csv" is shown
+     Then a table with the import information "New: 1, Updated: 0, Skipped: 0" regarding the file "tap_userimport_pwd_f.csv" is shown
