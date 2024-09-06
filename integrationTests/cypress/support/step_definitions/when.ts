@@ -234,3 +234,18 @@ When("the user opens the user import details page", function () {
         cy.get('div').find('span').contains("Details").click()
     }
 })
+
+When("the user opens the menu in the functions column", function () {
+    cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").find( 'button').click()
+})
+
+When("deletes the entry for the user import", function () {
+    cy.get('table').find('tr').then((row) => {
+        let i: number = 1;
+        for (i; i < row.length; i++){
+            cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").find( 'button').click()
+            cy.get('div').find('span').contains("Delete").click()
+            cy.get('button').find('span').contains("OK").click()
+        }
+    })
+})
