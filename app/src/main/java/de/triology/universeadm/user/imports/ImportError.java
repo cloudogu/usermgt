@@ -1,6 +1,7 @@
 package de.triology.universeadm.user.imports;
 
 import com.google.common.collect.ImmutableMap;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -13,20 +14,23 @@ import java.util.Objects;
 public class ImportError {
 
     /**
-     *  Enum of the error codes that can be used for the ImportError
+     * Enum of the error codes that can be used for the ImportError
      */
     public enum Code {
-        PARSING_ERROR(100),
-        FIELD_CONVERSION_ERROR(101),
-        MISSING_FIELD_ERROR(102),
-        FIELD_ASSIGNMENT_ERROR(103),
-        FIELD_LENGTH_ERROR(104),
-        VALIDATION_ERROR(200),
-        UNIQUE_FIELD_ERROR(201),
-        FIELD_FORMAT_ERROR(202),
-        MISSING_REQUIRED_FIELD_ERROR(204),
-        INTERNAL_ERROR(300),
-        WRITE_RESULT_ERROR(301);
+        MISSING_FIELD_ERROR(1000),
+        WRITE_RESULT_ERROR(1001),
+
+        FIELD_LENGTH_ERROR(2000),
+        MISSING_REQUIRED_FIELD_ERROR(2001),
+        GENERIC_VALIDATION_ERROR(2002),
+
+        UNIQUE_FIELD_ERROR(3000),
+        UNIQUE_MAIL_ERROR(3001),
+
+        FIELD_FORMAT_ERROR(4000),
+        FIELD_FORMAT_TOO_LONG_ERROR(4001),
+        FIELD_FORMAT_TOO_SHORT_ERROR(4002),
+        FIELD_FORMAT_INVALID_CHARACTERS_ERROR(4003);
 
         public final int value;
 
@@ -52,9 +56,10 @@ public class ImportError {
 
     /**
      * Constructs an ImportError
-     * @param code - enum value, so only predefined codes can be used
+     *
+     * @param code       - enum value, so only predefined codes can be used
      * @param lineNumber - affected csv row
-     * @param message - error message to describe the error
+     * @param message    - error message to describe the error
      */
     private ImportError(int code, long lineNumber, String message, Map<String, List<String>> params) {
         this.errorCode = code;
@@ -95,11 +100,11 @@ public class ImportError {
     @Override
     public String toString() {
         return "ImportError{" +
-                "errorCode=" + errorCode +
-                ", lineNumber=" + lineNumber +
-                ", message='" + message + '\'' +
-                ", params=" + params +
-                '}';
+            "errorCode=" + errorCode +
+            ", lineNumber=" + lineNumber +
+            ", message='" + message + '\'' +
+            ", params=" + params +
+            '}';
     }
 
     public static class Builder {
@@ -107,6 +112,7 @@ public class ImportError {
         private long lineNumber = -1;
         private String message = "";
         private List<String> affectedColumns = Collections.emptyList();
+        private List<String> values = Collections.emptyList();
 
         public Builder(ImportError.Code code) {
             this.errorCode = code.value;
@@ -114,6 +120,11 @@ public class ImportError {
 
         public Builder withLineNumber(long lineNumber) {
             this.lineNumber = lineNumber;
+            return this;
+        }
+
+        public Builder withValues(List<String> values) {
+            this.values = values;
             return this;
         }
 
@@ -133,8 +144,9 @@ public class ImportError {
             }
 
             Map<String, List<String>> params = ImmutableMap.<String, List<String>>builder()
-                    .put("columns", this.affectedColumns)
-                    .build();
+                .put("columns", this.affectedColumns)
+                .put("values", this.values)
+                .build();
 
             return new ImportError(this.errorCode, this.lineNumber, this.message, params);
         }

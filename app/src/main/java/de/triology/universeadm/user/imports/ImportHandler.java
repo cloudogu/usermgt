@@ -5,9 +5,9 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import de.triology.universeadm.Constraint;
 import de.triology.universeadm.UniqueConstraintViolationException;
 import de.triology.universeadm.mail.MailService;
-import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.User;
 import de.triology.universeadm.user.UserManager;
+import de.triology.universeadm.validation.RDNValidator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -86,7 +86,7 @@ public class ImportHandler {
      * @return Result containing information how many lines (Users) are created, modified or skipped. In terms of
      * skipped rows, errors are provided as well.
      * @throws InvalidArgumentException in case further processing of the csv file is not possible.
-     * Throwing the exception means no data has been processed.
+     *                                  Throwing the exception means no data has been processed.
      */
     public Result handle(MultipartFormDataInput input) throws CsvRequiredFieldEmptyException, IOException {
         Map<String, List<InputPart>> inputParts = input.getFormDataMap();
@@ -112,17 +112,17 @@ public class ImportHandler {
         logger.debug("Created ImportID with UUID {}", importID);
 
         List<ImportEntryResult> results = this.csvParser.parse(fileInputStream)
-                .sequential()
-                .map(this::getUserPair) // load user from LDAP
-                .map(Mapper::decode) // add more information
-                .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()))
-                .collect(Collectors.toList());
+            .sequential()
+            .map(this::getUserPair) // load user from LDAP
+            .map(Mapper::decode) // add more information
+            .map(userTriple -> saveCSVImport(userTriple.getLeft(), userTriple.getMiddle(), userTriple.getRight()))
+            .collect(Collectors.toList());
 
         results.addAll(csvParser.getErrors().collect(Collectors.toList()));
         Result finalResult = results.stream().reduce(
-                new Result(importID, this.getFileName(filePart)),
-                this::accumulateResultType,
-                this::combineAccumulators
+            new Result(importID, this.getFileName(filePart)),
+            this::accumulateResultType,
+            this::combineAccumulators
         );
 
         logger.debug("Generated CSV import result: {}", finalResult);
@@ -161,7 +161,7 @@ public class ImportHandler {
 
         if (!filename.endsWith(".csv")) {
             throw new InvalidArgumentException(String.format("Unsupported filetype \"%s\"",
-                    filename.substring(filename.lastIndexOf("."))
+                filename.substring(filename.lastIndexOf("."))
             ));
         }
     }
@@ -174,14 +174,14 @@ public class ImportHandler {
      */
     private String getFileName(InputPart filePart) {
         return Arrays.stream(filePart
-                        .getHeaders()
-                        .getFirst("Content-Disposition")
-                        .split(";"))
-                .map(String::trim)
-                .filter(name -> name.startsWith("filename"))
-                .map(name -> name.split("=")[1].trim().replaceAll("\"", ""))
-                .findFirst()
-                .orElse("");
+                .getHeaders()
+                .getFirst("Content-Disposition")
+                .split(";"))
+            .map(String::trim)
+            .filter(name -> name.startsWith("filename"))
+            .map(name -> name.split("=")[1].trim().replaceAll("\"", ""))
+            .findFirst()
+            .orElse("");
     }
 
     /**
@@ -217,7 +217,7 @@ public class ImportHandler {
      *
      * @param isNewUser: Flag indication whether the user needs to be created
      * @param user:      User object to be saved / modified
-     * <p>
+     *                   <p>
      * @return ResultType whether the user has been created, updated or skipped
      */
     private ImportEntryResult saveCSVImport(long lineNumber, Boolean isNewUser, User user) {
@@ -231,32 +231,79 @@ public class ImportHandler {
                 this.userManager.modify(user);
                 return ImportEntryResult.updated(user);
             }
-        } catch (IllegalQueryException e) {
-            ImportError error = new ImportError.Builder(ImportError.Code.VALIDATION_ERROR)
-                    .withErrorMessage(e.getMessage())
-                    .withLineNumber(lineNumber)
-                    .build();
-
-            return ImportEntryResult.skipped(error);
         } catch (UniqueConstraintViolationException e) {
-            ImportError error = new ImportError.Builder(ImportError.Code.UNIQUE_FIELD_ERROR)
+            e.printStackTrace();
+            List<String> columns = mapConstraintToColumn(e.violated);
+            ImportError error;
+
+            if (this.isMailColumnViolated(columns)) {
+                error = new ImportError.Builder(ImportError.Code.UNIQUE_MAIL_ERROR)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
-                    .withAffectedColumns(mapConstraintToColumn(e.violated))
+                    .withAffectedColumns(columns)
+                    .withValues(Collections.singletonList(user.getMail()))
                     .build();
+            } else {
+                error = new ImportError.Builder(ImportError.Code.UNIQUE_FIELD_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .withAffectedColumns(columns)
+                    .build();
+            }
 
             return ImportEntryResult.skipped(error);
         } catch (ConstraintViolationException e) {
-                List<ConstraintViolation<?>> violas = new ArrayList<>(e.getConstraintViolations());
-                List<String> strViolas = violas.stream().map(ConstraintViolation::getPropertyPath).map(Path::toString).collect(Collectors.toList());
-                ImportError error = new ImportError.Builder(ImportError.Code.FIELD_FORMAT_ERROR)
+            List<ConstraintViolation<?>> violas = new ArrayList<>(e.getConstraintViolations());
+            List<String> strViolas = violas.stream().map(ConstraintViolation::getPropertyPath).map(Path::toString).collect(Collectors.toList());
+
+            ImportError error;
+
+            final String message = violas.stream().map(ConstraintViolation::getMessage).findFirst().orElse("");
+            switch (message) {
+                case RDNValidator.ERROR_TOO_LONG:
+                    error = new ImportError.Builder(ImportError.Code.FIELD_FORMAT_TOO_LONG_ERROR)
                         .withErrorMessage(e.getMessage())
                         .withLineNumber(lineNumber)
                         .withAffectedColumns(strViolas)
                         .build();
+                    break;
+                case RDNValidator.ERROR_TOO_SHORT:
+                    error = new ImportError.Builder(ImportError.Code.FIELD_FORMAT_TOO_SHORT_ERROR)
+                        .withErrorMessage(e.getMessage())
+                        .withLineNumber(lineNumber)
+                        .withAffectedColumns(strViolas)
+                        .build();
+                    break;
+                case RDNValidator.ERROR_INVALID_CHARACTERS:
+                    error = new ImportError.Builder(ImportError.Code.FIELD_FORMAT_INVALID_CHARACTERS_ERROR)
+                        .withErrorMessage(e.getMessage())
+                        .withLineNumber(lineNumber)
+                        .withAffectedColumns(strViolas)
+                        .build();
+                    break;
+                default:
+                    error = new ImportError.Builder(ImportError.Code.FIELD_FORMAT_ERROR)
+                        .withErrorMessage(e.getMessage())
+                        .withLineNumber(lineNumber)
+                        .withAffectedColumns(strViolas)
+                        .build();
+                    break;
+            }
 
-                return ImportEntryResult.skipped(error);
+
+            return ImportEntryResult.skipped(error);
+        } catch (Exception e) {
+            ImportError error = new ImportError.Builder(ImportError.Code.GENERIC_VALIDATION_ERROR)
+                .withErrorMessage(e.getMessage())
+                .withLineNumber(lineNumber)
+                .build();
+
+            return ImportEntryResult.skipped(error);
         }
+    }
+
+    private boolean isMailColumnViolated(List<String> columns) {
+        return ((columns.size() == 1) && (columns.get(0).equals("mail")));
     }
 
     private List<String> mapConstraintToColumn(Constraint.ID[] constraints) {
@@ -321,24 +368,24 @@ public class ImportHandler {
             logger.warn("Could not write Result", e);
 
             return Optional.of(new ImportError.Builder(ImportError.Code.WRITE_RESULT_ERROR)
-                    .withErrorMessage("Unable to save result to repository")
-                    .build());
+                .withErrorMessage("Unable to save result to repository")
+                .build());
         }
 
         return Optional.empty();
     }
 
     public Result getResult(UUID importID) throws FileNotFoundException {
-       return this.resultRepository.read(importID);
+        return this.resultRepository.read(importID);
     }
 
     public Pair<List<Result.Summary>, Integer> getSummaries(int start, int limit) throws IOException {
         List<Result.Summary> allSummaries = this.summaryRepository.getSummaries();
         List<Result.Summary> paginatedList = allSummaries.stream()
-                .sorted(Comparator.comparingLong(Result.Summary::getTimestamp).reversed())
-                .skip(start)
-                .limit(limit)
-                .collect(Collectors.toList());
+            .sorted(Comparator.comparingLong(Result.Summary::getTimestamp).reversed())
+            .skip(start)
+            .limit(limit)
+            .collect(Collectors.toList());
 
         return Pair.of(paginatedList, allSummaries.size());
     }

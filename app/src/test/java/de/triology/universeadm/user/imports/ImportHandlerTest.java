@@ -145,7 +145,7 @@ public class ImportHandlerTest {
     }
 
     private Stream<ImportEntryResult> createMockErrorStream(long lineNumber) {
-        ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+        ImportError error = new ImportError.Builder(ImportError.Code.GENERIC_VALIDATION_ERROR)
                 .withLineNumber(lineNumber)
                 .withErrorMessage("test error")
                 .build();
@@ -292,7 +292,7 @@ public class ImportHandlerTest {
         assertEquals(1, errors.size());
 
         assertEquals(2, errors.get(0).getLineNumber());
-        assertEquals(ImportError.Code.PARSING_ERROR.value, errors.get(0).getErrorCode());
+        assertEquals(ImportError.Code.GENERIC_VALIDATION_ERROR.value, errors.get(0).getErrorCode());
     }
 
     @Test()
