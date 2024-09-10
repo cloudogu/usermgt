@@ -52,8 +52,6 @@ public class RDNValidator implements ConstraintValidator<RDN, String> {
     public boolean isValid(String value, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
-        System.out.println(value);
-        System.out.println(value.length());
         if (value.length() < 2) {
             context.buildConstraintViolationWithTemplate(ERROR_TOO_SHORT)
                 .addConstraintViolation();

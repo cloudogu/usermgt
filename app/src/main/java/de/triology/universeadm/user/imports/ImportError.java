@@ -17,19 +17,59 @@ public class ImportError {
      * Enum of the error codes that can be used for the ImportError
      */
     public enum Code {
+        /**
+         * This error occurs if mandatory columns are missing in the header of the CSV file.
+         */
         MISSING_FIELD_ERROR(1000),
+
+        /**
+         * This error occurs if the csv file could not be written to the file system.
+         */
         WRITE_RESULT_ERROR(1001),
 
+        /**
+         * This error occurs if the number of columns in the current row is not equal to the number of columns in the header
+         */
         FIELD_LENGTH_ERROR(2000),
+
+        /**
+         * This error occurs if a required field (e.g. username) exists in the column but is empty.
+         */
         MISSING_REQUIRED_FIELD_ERROR(2001),
+
+        /**
+         * This is an unspecific error in csv column count validation.
+         */
         GENERIC_VALIDATION_ERROR(2002),
 
+        /**
+         * This error occurs if there is a unique constraint is violated.
+         */
         UNIQUE_FIELD_ERROR(3000),
+
+        /**
+         * This error occurs if the unique mail constraint is violated.
+         */
         UNIQUE_MAIL_ERROR(3001),
 
+        /**
+         * This is an unspecific error in field validation.
+         */
         FIELD_FORMAT_ERROR(4000),
+
+        /**
+         * This error occurs when a field violates the rdn validator (characters > 128)
+         */
         FIELD_FORMAT_TOO_LONG_ERROR(4001),
+
+        /**
+         * This error occurs when a field violates the rdn validator (characters < 2)
+         */
         FIELD_FORMAT_TOO_SHORT_ERROR(4002),
+
+        /**
+         * This error occurs when a field violates the rdn validator (invalid characters included)
+         */
         FIELD_FORMAT_INVALID_CHARACTERS_ERROR(4003);
 
         public final int value;

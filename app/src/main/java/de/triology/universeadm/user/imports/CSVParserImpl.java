@@ -106,6 +106,18 @@ public class CSVParserImpl implements CSVParser {
                     .build();
         }
 
+        if (e instanceof CustomCsvDataTypeMismatchException) {
+            CustomCsvDataTypeMismatchException exception = (CustomCsvDataTypeMismatchException) e;
+
+            final String name = exception.getAffectedField().getName();
+
+            return createImportBuilder
+                .apply(ImportError.Code.FIELD_FORMAT_ERROR)
+                .withErrorMessage(e.getMessage())
+                .withAffectedColumns(Collections.singletonList(name))
+                .build();
+        }
+
         return createImportBuilder
                 .apply(ImportError.Code.GENERIC_VALIDATION_ERROR)
                 .withErrorMessage(e.getMessage())
