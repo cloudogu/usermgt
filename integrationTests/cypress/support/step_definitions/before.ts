@@ -42,3 +42,8 @@ Before({tags: "@add_user"}, () => {
         cy.usermgtCreateUser(userData.username, userData.givenname, userData.surname, userData.displayName, userData.mail, userData.password,false, [])
     })
 })
+
+Before({tags: "@clear_mails"}, () => {
+    cy.log("delete previous mails in Mailhog");
+    cy.mhDeleteAll()
+})

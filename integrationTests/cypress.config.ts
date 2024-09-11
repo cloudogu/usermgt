@@ -40,6 +40,9 @@ export default defineConfig({
             "AdminGroup":  "CesAdministrators",
             "groups" : 0,
             "users" : 0,
+            mailHogUrl: "https://192.168.56.2/mailhog/",
+            "mailHogUsername": "adminuser",
+            "mailHogPassword": "adminpw"
         },
         videoCompression: false,
         experimentalRunAllSpecs: true,

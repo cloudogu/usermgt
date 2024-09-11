@@ -1040,6 +1040,16 @@ cypress-fs@^0.2.5:
     cypress "^13.2.0"
     typescript "^5.0.4"
 
+cypress-mailhog@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/cypress-mailhog/-/cypress-mailhog-2.4.0.tgz#1f1732d4c4777ccbda828b8a85cd0fa1798d1060"
+  integrity sha512-CKCuaNBJOM3P0f68YzfBOY3seOX2dOK253xJ8Zw7axNWOvtmbrvV0MGax6iO94afHIynoowYlZ26cmPiawum1Q==
+
+cypress-mailpit@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/cypress-mailpit/-/cypress-mailpit-1.2.1.tgz#7c0b507459db2623120caab17bc6d0b0bfdc6f22"
+  integrity sha512-9bwHh1+rKlS8tAHU0CwviwyhLCwMHFkFZPaD4/8Z2kKLcc8R806cGA1PnELCt3h0X561kfsHkGLolO9HBhnwbg==
+
 cypress@^12.9.0:
   version "12.9.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.9.0.tgz#e6ab43cf329fd7c821ef7645517649d72ccf0a12"

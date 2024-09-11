@@ -13,5 +13,8 @@
   },
   "scripts": {
     "updateTests": "mkdir -p cypress/e2e/dogu_integration_test_lib && cp -r node_modules/@cloudogu/dogu-integration-test-library/lib/integration/* cypress/e2e/dogu_integration_test_lib"
+  },
+  "devDependencies": {
+    "cypress-mailhog": "^2.4.0"
   }
 }
