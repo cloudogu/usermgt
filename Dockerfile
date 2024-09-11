@@ -10,9 +10,9 @@ COPY app/pom.xml pom.xml
 COPY app/mvnw mvnw
 COPY app/.mvn .mvn
 
-RUN ./mvnw dependency:resolve-plugins dependency:resolve -DskipTests
+RUN ./mvnw dependency:resolve-plugins dependency:resolve
 COPY app/ .
-RUN ./mvnw package -DskipTests
+RUN ./mvnw package
 
 
 FROM registry.cloudogu.com/official/base:3.20.2-1 as tomcat
