@@ -249,3 +249,29 @@ When("deletes the entry for the user import", function () {
         }
     })
 })
+
+When("the user {string} tries to log in with his generated password", function (username: string) {
+    cy.mhGetMailsBySender("no-reply@cloudogu.com").mhFirst().mhGetBody().then((body) => {
+        let strings: string[]
+        strings = body.split(" ")
+        let password = strings[8]
+
+        cy.clearCookies()
+
+        cy.visit("/" + env.GetDoguName(), {failOnStatusCode: false})
+        cy.clickWarpMenuCheckboxIfPossible()
+
+        cy.get('input[data-testid="login-username-input-field"]').type(username)
+        cy.get('input[data-testid="login-password-input-field"]').type(password)
+    })
+})
+
+When("the user sets the new password to {string}", function (password: string) {
+    cy.get('input[data-testid="password-input"]').type(password)
+    cy.get('input[data-testid="confirmedPassword-input"]').type(password)
+    cy.get('button').find('span').contains("Submit").click()
+})
+
+When("the user {string} with password {string} logs in", function (username: string, password: string) {
+    cy.login(username, password, env.GetMaxRetryCount())
+})

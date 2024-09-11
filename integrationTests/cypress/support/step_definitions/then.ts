@@ -1,6 +1,7 @@
 import '@bahmutov/cy-api'
 import {Then} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
+import 'cypress-mailhog';
 
 Then("the newly created user is asked to change his password", function () {
     cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
@@ -436,4 +437,16 @@ Then("the user {string} has his mail updated to {string} and his display name to
     cy.get('@row').find("td:nth-of-type(1)").contains(username)
     cy.get('@row').find("td:nth-of-type(2)").contains(displayName)
     cy.get('@row').find("td:nth-of-type(3)").contains(mail)
+})
+
+Then("the user {string} receives an email with his user details", function (username: string) {
+    cy.mhGetMailsBySender("no-reply@cloudogu.com").should('exist')
+    cy.mhGetMailsBySender("no-reply@cloudogu.com").mhFirst().mhGetBody().then((body) => {
+      expect(body).contains("Benutzername: " + username)
+      expect(body).contains("Passwort")
+    })
+})
+
+Then("the user is prompted to change the password", function () {
+    cy.log("Change password!")
 })
