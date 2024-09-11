@@ -57,5 +57,7 @@ Die Integrationstests können auf zwei Arten gestartet werden:
 2. Mit `yarn cypress run` starten die Tests nur in der Konsole ohne visuelles Feedback.
    Dieser Modus ist hilfreich, wenn die Ausführung im Vordergrund steht.
    Beispielsweise bei einer Jenkins-Pipeline.
-2. Mit `yarn cypress open` startet ein interaktives Fenster, wo man die Tests ausführen, visuell beobachten und debuggen kann.
+3. Mit `yarn cypress open` startet ein interaktives Fenster, wo man die Tests ausführen, visuell beobachten und debuggen kann.
    Dieser Modus ist besonders hilfreich bei der Entwicklung neuer Tests und beim Finden von Fehlern.
+
+Sollte in der Cypress-UI (`yarn cypress open`) ein Error basierend auf der `badeball/cypress-cucumber-preprocessor`-Bibliothek auftauchen und sich auf "Experimental Run All" bezieht, dann ist es ratsam, die Tests einzeln durchzuklicken. Dies kann ein Problem der Ausführungsmethodik sein, das nicht auf der Konsole (`yarn cypress run`) stattfindet.

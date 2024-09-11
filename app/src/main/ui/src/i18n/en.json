@@ -42,7 +42,7 @@
   "groups.buttons.create": "Create Group",
   "groups.confirmation.message": "Delete group {{groupName}}?",
   "groups.confirmation.title": "Delete group",
-  "groups.labels.addMember": "Add member",
+  "groups.labels.addMember": "Assign member",
   "groups.labels.description": "Description",
   "groups.labels.emptyMembers": "No members assigned",
   "groups.labels.members": "Members",

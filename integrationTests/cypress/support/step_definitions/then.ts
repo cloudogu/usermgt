@@ -371,7 +371,7 @@ Then("the table shows that the username was not in the correct format", function
     cy.get('details[data-testid="failed-import-details"]').invoke('find', 'table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
-    cy.get('@row').find("td:nth-of-type(2)").contains("The following columns do not match the default format 'username'.")
+    cy.get('@row').find("td:nth-of-type(2)").contains("The following columns do not match the default format: 'username'.")
 })
 
 Then("the new user {string} was not added", function (username: string) {
