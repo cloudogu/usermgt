@@ -126,6 +126,10 @@ export const ImportUsersService = {
         } catch (e: AxiosError | unknown) {
             if (isAxiosError(e)) {
                 const axiosError = e as AxiosError;
+                const errorCode = e.response?.data.errorCode ?? -1;
+                if (errorCode === ERR_CODE_MISSING_FIELD_ERROR || errorCode === ERR_CODE_WRITE_RESULT_ERROR) {
+                    throw new Error(t(`usersImportResult.msg.code-${errorCode}`));
+                }
                 if (axiosError.response?.status === 400) {
                     throw new Error(t("usersImport.notification.invalidFile", {file: file.name}));
                 }
