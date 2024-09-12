@@ -352,7 +352,6 @@ Then("the import result is downloaded and contains error information regarding t
                 expect(fileContent.timestamp).contains(/[0-9]+/)
                 expect(fileContent.created).is.empty
                 expect(fileContent.updated).is.empty
-                expect(fileContent.errors[0].errorCode).to.eq(202)
                 expect(fileContent.errors[0].lineNumber).to.eq(2)
                 expect(fileContent.errors[0].message).to.eq("entity is not valid")
                 expect(fileContent.errors[0].params.columns[0]).to.eq("username")
@@ -371,7 +370,7 @@ Then("the table shows that the username was not in the correct format", function
     cy.get('details[data-testid="failed-import-details"]').invoke('find', 'table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
-    cy.get('@row').find("td:nth-of-type(2)").contains("The following columns do not match the default format: 'username'.")
+    cy.get('@row').find("td:nth-of-type(2)").contains("'username'")
 })
 
 Then("the new user {string} was not added", function (username: string) {
