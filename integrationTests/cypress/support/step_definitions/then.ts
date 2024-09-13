@@ -3,7 +3,7 @@ import {Then} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 import 'cypress-mailhog';
 
-Then("the newly created user is asked to change his password", function () {
+Then("the user is asked to change his password", function () {
     cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
     cy.get('input[data-testid="password-input"]').should('be.visible')
     cy.get('input[data-testid="confirmedPassword-input"]').should('be.visible')

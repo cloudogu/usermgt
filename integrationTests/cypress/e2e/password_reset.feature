@@ -13,7 +13,7 @@ Feature: Tests for the functionality to prompt a user for a password change at t
     And the user clicks save
     And the user logs out by visiting the cas logout page
     And the newly created user logs in
-    Then the newly created user is asked to change his password
+    Then the user is asked to change his password
 
   @clean_before
   Scenario: an already existing user cannot set the password reset flag for himself
