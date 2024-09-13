@@ -440,13 +440,9 @@ Then("the user {string} has his mail updated to {string} and his display name to
 })
 
 Then("the user {string} receives an email with his user details", function (username: string) {
-    cy.mhGetMailsBySender("no-reply@cloudogu.com").should('exist')
-    cy.mhGetMailsBySender("no-reply@cloudogu.com").mhFirst().mhGetBody().then((body) => {
+    cy.mhGetMailsByRecipient("testmail@cloudogu.de").should('exist')
+    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
       expect(body).contains("Benutzername: " + username)
       expect(body).contains("Passwort")
     })
-})
-
-Then("the user is prompted to change the password", function () {
-    cy.log("Change password!")
 })

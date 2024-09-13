@@ -251,10 +251,12 @@ When("deletes the entry for the user import", function () {
 })
 
 When("the user {string} tries to log in with his generated password", function (username: string) {
-    cy.mhGetMailsBySender("no-reply@cloudogu.com").mhFirst().mhGetBody().then((body) => {
+    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
         let strings: string[]
         strings = body.split(" ")
-        let password = strings[8]
+        let passwordWithLineBreak = strings[8]
+        let passwordSplitted = passwordWithLineBreak.split("\\r\\n")
+        let password = passwordSplitted[0]
 
         cy.clearCookies()
 
