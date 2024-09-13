@@ -66,5 +66,5 @@ Feature: Tests for uploading file with users with same mail address
 
    Scenario: a newly created user tries to log in for the first time
       When the user logs out by visiting the cas logout page
-      And the user "Testertest " tries to log in with his generated password
+      And the user "Testertest" tries to log in with his generated password
       Then the user is asked to change his password
