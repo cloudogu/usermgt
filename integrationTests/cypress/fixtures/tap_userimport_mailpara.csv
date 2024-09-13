@@ -1,0 +1,6 @@
+displayname,external,mail,pwdreset,surname,username,givenname
+Test,TRUE,same@mail.com,TRUE,Tester,Testertest,Tester
+Muster,TRUE,muster_no_email@itzbund.de,TRUE,Muster,Mustertest,Muster
+Neu,TRUE,neu_no_email@itzbund.de,TRUE,Neu,Neutest,Neu
+Alt,TRUE,same@mail.com,TRUE,Alt,Alt,Alt
+Haus,TRUE,haus_no_email@itzbund.de,TRUE,Haus,Haustest,Haus
