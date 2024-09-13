@@ -1,2 +1,2 @@
 displayname,external,mail,pwdreset,surname,username,givenname
-Mustermann,False,$report_email$,True,Tester,Tester,Tester
+Mustermann,False,testmail@cloudogu.de,True,Tester,Testertest,Tester
