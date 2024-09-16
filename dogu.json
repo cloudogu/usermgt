@@ -16,7 +16,7 @@
     {
       "Type": "dogu",
       "Name": "cas",
-      "Version": ">=6.5.3-2"
+      "Version": ">=7.0.5.1-6"
     },
     {
       "Type": "dogu",
@@ -154,6 +154,10 @@
       "Params": [
         "rw"
       ]
+    },
+    {
+      "Type": "cas",
+      "Params": ["cas"]
     }
   ],
   "HealthCheck": {
