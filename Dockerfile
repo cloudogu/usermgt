@@ -15,7 +15,7 @@ COPY app/ .
 RUN ./mvnw package
 
 
-FROM registry.cloudogu.com/official/base:3.20.2-1 as tomcat
+FROM registry.cloudogu.com/official/base:3.20.3-1 as tomcat
 
 ARG TOMCAT_MAJOR_VERSION
 ARG TOMCAT_VERSION
