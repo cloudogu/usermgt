@@ -4,6 +4,9 @@ Below you will find the release notes for User Management.
 
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
+## Release 1.16.0-1
+*Relicense own code to AGPL-3-only
+
 ## Release 1.15.3-1
 * Improved some error messages in both manual editing and CSV import processes.
 * The page headline in which users can change their own data ("Account") renames to "My Account".
