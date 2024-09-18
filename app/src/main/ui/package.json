@@ -1,6 +1,6 @@
 {
   "name": "usermgt",
-  "license": "agpl-3.0",
+  "license": "AGPL-3.0-only",
   "private": true,
   "version": "0.0.0",
   "type": "module",
