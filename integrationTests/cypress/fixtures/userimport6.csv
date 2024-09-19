@@ -1,0 +1,5 @@
+displayname,external,mail,pwdreset,surname,username,givenname
+Max Test,TRUE,max@test.de,TRUE,Mustermann,maxtest,Max
+Maria Test,TRUE,maria@test.de,TRUE,Musterfrau,mariatest,Maria
+Claus,TRUE,max@test.de,TRUE,Claus,Claus,Carl
+Mark Test,TRUE,mark@test.de,TRUE,Muster,mmustermann,Mark

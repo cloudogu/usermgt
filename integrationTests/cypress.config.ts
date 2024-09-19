@@ -4,6 +4,8 @@ import createBundler from "@bahmutov/cypress-esbuild-preprocessor";
 import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
 import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild";
 import doguTestLibrary from "@cloudogu/dogu-integration-test-library";
+// @ts-ignore
+import fsConf from "cypress-fs/plugins/index.js";
 
 async function setupNodeEvents(
     on: Cypress.PluginEvents,
@@ -18,6 +20,8 @@ async function setupNodeEvents(
             plugins: [createEsbuildPlugin(config)],
         })
     );
+
+    fsConf(on);
 
     config = doguTestLibrary.configure(config)
 
@@ -36,6 +40,9 @@ export default defineConfig({
             "AdminGroup":  "CesAdministrators",
             "groups" : 0,
             "users" : 0,
+            mailHogUrl: "https://192.168.56.2/mailhog/",
+            "mailHogUsername": "adminuser",
+            "mailHogPassword": "adminpw"
         },
         videoCompression: false,
         experimentalRunAllSpecs: true,
