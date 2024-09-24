@@ -118,6 +118,7 @@ public class CSVParserImpl implements CSVParser {
                 .build();
         }
 
+        e.printStackTrace();
         return createImportBuilder
                 .apply(ImportError.Code.GENERIC_VALIDATION_ERROR)
                 .withErrorMessage(e.getMessage())

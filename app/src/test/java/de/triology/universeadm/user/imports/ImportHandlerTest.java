@@ -260,10 +260,10 @@ public class ImportHandlerTest {
         assertThat(errors).hasSize(2);
 
         assertThat(errors.get(0).getLineNumber()).isEqualTo(2);
-        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.GENERIC_VALIDATION_ERROR.value);
+        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_MAIL_ERROR.value);
 
         assertThat(errors.get(1).getLineNumber()).isEqualTo(3);
-        assertThat(errors.get(1).getErrorCode()).isEqualTo(ImportError.Code.GENERIC_VALIDATION_ERROR.value);
+        assertThat(errors.get(1).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_MAIL_ERROR.value);
     }
 
     @Test()

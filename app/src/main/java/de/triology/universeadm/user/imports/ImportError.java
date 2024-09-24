@@ -2,10 +2,7 @@ package de.triology.universeadm.user.imports;
 
 import com.google.common.collect.ImmutableMap;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * ImportError is an error occurred during the import. The occurrence of the error does not
@@ -179,14 +176,15 @@ public class ImportError {
         }
 
         public ImportError build() {
-            if (this.affectedColumns.isEmpty()) {
-                return new ImportError(this.errorCode, this.lineNumber, this.message, null);
+            Map<String, List<String>> params = new HashMap<>();
+
+            if (!this.affectedColumns.isEmpty()){
+                params.put("columns", this.affectedColumns);
             }
 
-            Map<String, List<String>> params = ImmutableMap.<String, List<String>>builder()
-                .put("columns", this.affectedColumns)
-                .put("values", this.values)
-                .build();
+            if (!this.values.isEmpty()){
+                params.put("values", this.values);
+            }
 
             return new ImportError(this.errorCode, this.lineNumber, this.message, params);
         }

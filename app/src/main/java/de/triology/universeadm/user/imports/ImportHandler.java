@@ -19,9 +19,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
 import javax.validation.constraints.NotNull;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static de.triology.universeadm.Constraint.ID.UNIQUE_EMAIL;
 
 
 /**
@@ -289,6 +293,22 @@ public class ImportHandler {
                     break;
             }
 
+
+            return ImportEntryResult.skipped(error);
+        } catch (FieldConstraintViolationException e) {
+            ImportError error;
+            if (e.violated.length > 0 && e.violated[0] == UNIQUE_EMAIL) {
+                error = new ImportError.Builder(ImportError.Code.UNIQUE_MAIL_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .withValues(Collections.singletonList(user.getMail()))
+                    .build();
+            } else {
+                error = new ImportError.Builder(ImportError.Code.GENERIC_VALIDATION_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .build();
+            }
 
             return ImportEntryResult.skipped(error);
         } catch (Exception e) {
