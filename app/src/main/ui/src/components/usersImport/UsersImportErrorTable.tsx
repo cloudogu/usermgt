@@ -44,5 +44,8 @@ export default function UsersImportErrorTable({content, ...props}: UsersImportEr
 }
 
 function prepareMessage(error: ImportError): string {
-    return t(`usersImportResult.msg.code-${error.errorCode}`, {columns: error.params?.columns?.join(", ") ?? ""});
+    return t(`usersImportResult.msg.code-${error.errorCode}`, {
+        columns: error.params?.columns?.join(", ") ?? "",
+        values: error.params?.values?.join(", ") ?? "",
+    });
 }

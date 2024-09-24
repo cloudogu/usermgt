@@ -7,6 +7,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 ## Release 1.16.0-1
 *Relicense own code to AGPL-3-only
 
+## Release 1.15.4-1
+* Improved user-friendliness of the user import
+    * The error messages in the import overviews are now more meaningful and more similar to those during normal user creation
+
 ## Release 1.15.3-1
 * Improved some error messages in both manual editing and CSV import processes.
 * The page headline in which users can change their own data ("Account") renames to "My Account".
