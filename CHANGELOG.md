@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The error messages now look more like the error messages in single user creation
   - There are specific error messages for unique mail, username too long/short, username with invalid characters
 
+## [v1.16.0-1] - 2024-09-19
+### Changed
+- Relicense to AGPL-3.0-only
+
 ## [v1.15.3-1] - 2024-09-06
 ### Added
 - Integration tests for user import (#153)
