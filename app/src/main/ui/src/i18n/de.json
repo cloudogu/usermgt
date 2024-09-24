@@ -156,7 +156,7 @@
   "usersImportResult.msg.code-2002": "Allgemeiner Fehler beim Verarbeiten der Zeile.",
   "usersImportResult.msg.code-3000": "Die Spalte '{{columns}}' enthielt einen Wert, der als einzigartig gekennzeichnet war.",
   "usersImportResult.msg.code-3001": "Ein Nutzer mit der E-Mail '{{values}}' existiert bereits.",
-  "usersImportResult.msg.code-4000": "Die Spalte '{{columns}}' hatte ein ungültiges Format.",
+  "usersImportResult.msg.code-4000": "Die Spalte '{{columns}}' hate ein ungültiges Format.",
   "usersImportResult.msg.code-4001": "Die Spalte '{{columns}}' darf höchstens 128 Zeichen haben.",
   "usersImportResult.msg.code-4002": "Die Spalte '{{columns}}' muss mindestens 2 Zeichen haben.",
   "usersImportResult.msg.code-4003": "Die Spalte '{{columns}}' darf nur Buchstaben, Zahlen, Bindestriche, Unterstriche, Punkte und @ enthalten.",
