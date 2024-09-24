@@ -46,6 +46,7 @@ Eintrag wird ein Fehlercode ausgegeben:
 | 2002 | Undefinierter Fehler beim Auswerten einer Zeile.                                            |
 | 3000 | In der Zeile ist ein Wert enthalten, der bereits vergeben ist.                              |
 | 3001 | In der Zeile wird versucht, einen Benutzer zu definieren, dessen Mail bereits vergeben ist. |
+| 3002 | Die Mail des Nutzers in dieser Zeile hat ein ungültiges Format                              |
 | 4000 | Eine Spalte dieser Zeile hatte einen undefinierten Formatfehler.                            |
 | 4001 | Eine Spalte dieser Zeile hatte mehr als 128 Zeichen.                                        |
 | 4002 | Eine Spalte dieser Zeile hatte weniger als 2 Zeichen.                                       |

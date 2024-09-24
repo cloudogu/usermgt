@@ -46,6 +46,7 @@ Furthermore, the result contains possible errors that occurred during the import
 | 2002 | Undefined error when evaluating a row.                                                      |
 | 3000 | The row contains a value that has already been assigned.                                    |
 | 3001 | An attempt is being made in the line to define a user whose mail has already been assigned. |
+| 3002 | The mail address of the user in this row is invalid.                                        |
 | 4000 | A column in this row had an undefined format error.                                         |
 | 4001 | A column in this row had more than 128 characters.                                          |
 | 4002 | A column in this row had less than 2 characters.                                            |
