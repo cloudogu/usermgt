@@ -156,6 +156,7 @@
   "usersImportResult.msg.code-2002": "General error when processing the line.",
   "usersImportResult.msg.code-3000": "The column '{{columns}}' contained a value that was labelled as unique.",
   "usersImportResult.msg.code-3001": "A user with the email '{{values}}' already exists.",
+  "usersImportResult.msg.code-3002": "The mail address '{{values}}' is invalid.",
   "usersImportResult.msg.code-4000": "The column '{{columns}}' has an invalid format.",
   "usersImportResult.msg.code-4001": "The column '{{columns}}' may have a maximum of 128 characters.",
   "usersImportResult.msg.code-4002": "The column '{{columns}}' must have at least 2 characters.",

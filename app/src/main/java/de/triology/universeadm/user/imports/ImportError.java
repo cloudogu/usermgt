@@ -49,6 +49,12 @@ public class ImportError {
          */
         UNIQUE_MAIL_ERROR(3001),
 
+
+        /**
+         * This error occurs if the mail address is invalid.
+         */
+        VALID_MAIL_ERROR(3002),
+
         /**
          * This is an unspecific error in field validation.
          */

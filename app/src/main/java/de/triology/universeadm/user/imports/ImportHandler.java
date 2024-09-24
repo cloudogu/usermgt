@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.triology.universeadm.Constraint.ID.UNIQUE_EMAIL;
+import static de.triology.universeadm.Constraint.ID.VALID_EMAIL;
 
 
 /**
@@ -299,6 +300,12 @@ public class ImportHandler {
             ImportError error;
             if (e.violated.length > 0 && e.violated[0] == UNIQUE_EMAIL) {
                 error = new ImportError.Builder(ImportError.Code.UNIQUE_MAIL_ERROR)
+                    .withErrorMessage(e.getMessage())
+                    .withLineNumber(lineNumber)
+                    .withValues(Collections.singletonList(user.getMail()))
+                    .build();
+            } else if (e.violated.length > 0 && e.violated[0] == VALID_EMAIL) {
+                error = new ImportError.Builder(ImportError.Code.VALID_MAIL_ERROR)
                     .withErrorMessage(e.getMessage())
                     .withLineNumber(lineNumber)
                     .withValues(Collections.singletonList(user.getMail()))

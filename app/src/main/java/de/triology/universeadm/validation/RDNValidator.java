@@ -17,11 +17,6 @@ public class RDNValidator implements ConstraintValidator<RDN, String> {
     private static final Pattern PATTERN = Pattern.compile("[a-zA-Z0-9-_@\\.]{2,128}");
 
     @Override
-    public void initialize(RDN rdn) {
-
-    }
-
-    @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
