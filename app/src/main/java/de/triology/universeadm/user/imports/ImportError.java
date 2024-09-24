@@ -1,10 +1,8 @@
 package de.triology.universeadm.user.imports;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
+import java.util.*;
 
 /**
  * ImportError is an error occurred during the import. The occurrence of the error does not
@@ -13,20 +11,69 @@ import java.util.Objects;
 public class ImportError {
 
     /**
-     *  Enum of the error codes that can be used for the ImportError
+     * Enum of the error codes that can be used for the ImportError
      */
     public enum Code {
-        PARSING_ERROR(100),
-        FIELD_CONVERSION_ERROR(101),
-        MISSING_FIELD_ERROR(102),
-        FIELD_ASSIGNMENT_ERROR(103),
-        FIELD_LENGTH_ERROR(104),
-        VALIDATION_ERROR(200),
-        UNIQUE_FIELD_ERROR(201),
-        FIELD_FORMAT_ERROR(202),
-        MISSING_REQUIRED_FIELD_ERROR(204),
-        INTERNAL_ERROR(300),
-        WRITE_RESULT_ERROR(301);
+        /**
+         * This error occurs if mandatory columns are missing in the header of the CSV file.
+         */
+        MISSING_FIELD_ERROR(1000),
+
+        /**
+         * This error occurs if the csv file could not be written to the file system.
+         */
+        WRITE_RESULT_ERROR(1001),
+
+        /**
+         * This error occurs if the number of columns in the current row is not equal to the number of columns in the header
+         */
+        FIELD_LENGTH_ERROR(2000),
+
+        /**
+         * This error occurs if a required field (e.g. username) exists in the column but is empty.
+         */
+        MISSING_REQUIRED_FIELD_ERROR(2001),
+
+        /**
+         * This is an unspecific error in csv column count validation.
+         */
+        GENERIC_VALIDATION_ERROR(2002),
+
+        /**
+         * This error occurs if there is a unique constraint is violated.
+         */
+        UNIQUE_FIELD_ERROR(3000),
+
+        /**
+         * This error occurs if the unique mail constraint is violated.
+         */
+        UNIQUE_MAIL_ERROR(3001),
+
+
+        /**
+         * This error occurs if the mail address is invalid.
+         */
+        VALID_MAIL_ERROR(3002),
+
+        /**
+         * This is an unspecific error in field validation.
+         */
+        FIELD_FORMAT_ERROR(4000),
+
+        /**
+         * This error occurs when a field violates the rdn validator (characters > 128)
+         */
+        FIELD_FORMAT_TOO_LONG_ERROR(4001),
+
+        /**
+         * This error occurs when a field violates the rdn validator (characters < 2)
+         */
+        FIELD_FORMAT_TOO_SHORT_ERROR(4002),
+
+        /**
+         * This error occurs when a field violates the rdn validator (invalid characters included)
+         */
+        FIELD_FORMAT_INVALID_CHARACTERS_ERROR(4003);
 
         public final int value;
 
@@ -52,9 +99,10 @@ public class ImportError {
 
     /**
      * Constructs an ImportError
-     * @param code - enum value, so only predefined codes can be used
+     *
+     * @param code       - enum value, so only predefined codes can be used
      * @param lineNumber - affected csv row
-     * @param message - error message to describe the error
+     * @param message    - error message to describe the error
      */
     private ImportError(int code, long lineNumber, String message, Map<String, List<String>> params) {
         this.errorCode = code;
@@ -95,11 +143,11 @@ public class ImportError {
     @Override
     public String toString() {
         return "ImportError{" +
-                "errorCode=" + errorCode +
-                ", lineNumber=" + lineNumber +
-                ", message='" + message + '\'' +
-                ", params=" + params +
-                '}';
+            "errorCode=" + errorCode +
+            ", lineNumber=" + lineNumber +
+            ", message='" + message + '\'' +
+            ", params=" + params +
+            '}';
     }
 
     public static class Builder {
@@ -107,6 +155,7 @@ public class ImportError {
         private long lineNumber = -1;
         private String message = "";
         private List<String> affectedColumns = Collections.emptyList();
+        private List<String> values = Collections.emptyList();
 
         public Builder(ImportError.Code code) {
             this.errorCode = code.value;
@@ -114,6 +163,11 @@ public class ImportError {
 
         public Builder withLineNumber(long lineNumber) {
             this.lineNumber = lineNumber;
+            return this;
+        }
+
+        public Builder withValues(List<String> values) {
+            this.values = values;
             return this;
         }
 
@@ -128,13 +182,15 @@ public class ImportError {
         }
 
         public ImportError build() {
-            if (this.affectedColumns.isEmpty()) {
-                return new ImportError(this.errorCode, this.lineNumber, this.message, null);
+            Map<String, List<String>> params = new HashMap<>();
+
+            if (!this.affectedColumns.isEmpty()){
+                params.put("columns", this.affectedColumns);
             }
 
-            Map<String, List<String>> params = ImmutableMap.<String, List<String>>builder()
-                    .put("columns", this.affectedColumns)
-                    .build();
+            if (!this.values.isEmpty()){
+                params.put("values", this.values);
+            }
 
             return new ImportError(this.errorCode, this.lineNumber, this.message, params);
         }

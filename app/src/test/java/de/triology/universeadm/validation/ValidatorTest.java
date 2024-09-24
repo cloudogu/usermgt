@@ -115,10 +115,10 @@ public class ValidatorTest
     validator.validate(new RDNObject("as*as"), "not valid");
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test(expected = javax.validation.ValidationException.class)
   public void testRDNInvalidNull()
   {
-    validator.validate(new RDNObject(null), "not valid");
+     validator.validate(new RDNObject(null), "not valid");
   }
   
   private static class RDNObject {

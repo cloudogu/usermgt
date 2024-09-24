@@ -37,19 +37,20 @@ Für den Import wird ein Ergebnis-Eintrag angelegt. Dieses Ergebnis ist im Volum
 oder modifiziert wurden. Ferner enthält das Ergebnis mögliche Fehler, die während des Imports aufgetreten sind. Pro 
 Eintrag wird ein Fehlercode ausgegeben:
 
-| Code | Fehlerbeschreibung                                                                        |
-|------|-------------------------------------------------------------------------------------------|
-| 100  | Allgemeiner Fehler, der beim Parsing der CSV Datei aufgetreten ist                        |
-| 101  | Wert aus der Spalte, konnte nicht auf Datentypen übertragen werden, z.b. "10" als Boolean |
-| 102  | Es fehlt ein Spalteneintrag in der Kopfzeile                                              |
-| 103  | Der Wert der Spalte konnte dem User nicht zugewiesen werden                               |
-| 104  | Die Anzahl der Spalten einer Zeilen passen nicht mit denen der Kopfzeile überein          |
-| 200  | Allgemeiner Fehler bei der Validierung der Zeile                                          |
-| 201  | Der Username ist bereits vergeben                                                         |
-| 202  | Das Format des Wertes stimmt nicht mit dem geforderten Format überein                     |
-| 204  | Erforderlicher Wert ist nicht gesetzt                                                     |
-| 300  | Interner Server Fehler                                                                    |
-| 301  | Beim Schreiben des Ergebnisses ist ein Fehler aufgetreten                                 |
+| Code | Fehlerbeschreibung                                                                          |
+|------|---------------------------------------------------------------------------------------------|
+| 1000 | In der CSV-Datei fehlen Spalten, die benötigt werden.                                       |
+| 1001 | Das Importergebnis konnte nicht ins Dateisystem geschrieben werden.                         |
+| 2000 | Die Anzahl der Spalten einer Zeile stimmt nicht mit denen des Headers überein.              |
+| 2001 | Eine benötigte Spalte war leer.                                                             |
+| 2002 | Undefinierter Fehler beim Auswerten einer Zeile.                                            |
+| 3000 | In der Zeile ist ein Wert enthalten, der bereits vergeben ist.                              |
+| 3001 | In der Zeile wird versucht, einen Benutzer zu definieren, dessen Mail bereits vergeben ist. |
+| 3002 | Die Mail des Nutzers in dieser Zeile hat ein ungültiges Format                              |
+| 4000 | Eine Spalte dieser Zeile hatte einen undefinierten Formatfehler.                            |
+| 4001 | Eine Spalte dieser Zeile hatte mehr als 128 Zeichen.                                        |
+| 4002 | Eine Spalte dieser Zeile hatte weniger als 2 Zeichen.                                       |
+| 4003 | Eine Spalte dieser Zeile enthielt ungültige Zeichen.                                        |
 
 Neben dem Volume können Zusammenfassungen der Imports über den Endpunkt `/users/import/summaries` abgerufen werden.
 Einzelne Ergebnisse sind über den Endpunkt `/users/import/{importID}` verfügbar können über `/users/import/{importID}/download`

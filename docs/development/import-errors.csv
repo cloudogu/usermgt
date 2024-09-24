@@ -1,0 +1,9 @@
+DISPLAYNAME,EXTERNAL,MAIL,PWDRESET,SURNAME,USERNAME,GIVENNAME
+AAA1,TRUE,AAA1@mail.de,TRUE,AAA1,AAA1,AAA1
+AAA2,TRUE,AAA1@mail.de,TRUE,AAA2,AAA2,AAA2
+AAA3,TRUE,AAA3@mail.de,TRUE,AAA3,A,AAA3
+AAA4,TRUE,AAA4@mail.de,TRUE,AAA4,%%,AAA4
+AAA5,TRUE,AAA5@mail.de,TRUE,AAA5,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,AAA5
+,,,,,,,,,,,,,
+AAA6,TREUE,AAA6@mail.de,TRUE,AAA6,AAA6,AAA6
+AAA7,TRUE,AAA7mail.de,TRUE,AAA7,AAA7,AAA7

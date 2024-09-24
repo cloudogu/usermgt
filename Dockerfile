@@ -4,6 +4,8 @@ ARG TOMCAT_TARGZ_SHA512=38f636039d00c66ff8f7347dfedcc1eef85b7ce25cf98dcc9192df07
 
 FROM timbru31/java-node:8-jdk-18 as builder
 
+VOLUME "${USER_HOME_DIR}/.m2"
+
 WORKDIR /usermgt
 
 COPY app/pom.xml pom.xml
@@ -73,7 +75,7 @@ FROM registry.cloudogu.com/official/java:8u402-4
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.16.0-1" \
+   VERSION="1.16.1-1" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx

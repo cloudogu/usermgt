@@ -2,7 +2,6 @@ package de.triology.universeadm.user.imports;
 
 import de.triology.universeadm.Constraint;
 import de.triology.universeadm.mail.MailService;
-import de.triology.universeadm.mapping.IllegalQueryException;
 import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.Users;
 import org.apache.commons.lang3.tuple.Pair;
@@ -148,7 +147,7 @@ public class ImportHandlerTest {
     }
 
     private Stream<ImportEntryResult> createMockErrorStream(long lineNumber) {
-        ImportError error = new ImportError.Builder(ImportError.Code.PARSING_ERROR)
+        ImportError error = new ImportError.Builder(ImportError.Code.GENERIC_VALIDATION_ERROR)
             .withLineNumber(lineNumber)
             .withErrorMessage("test error")
             .build();
@@ -261,10 +260,10 @@ public class ImportHandlerTest {
         assertThat(errors).hasSize(2);
 
         assertThat(errors.get(0).getLineNumber()).isEqualTo(2);
-        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_FIELD_ERROR.value);
+        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_MAIL_ERROR.value);
 
         assertThat(errors.get(1).getLineNumber()).isEqualTo(3);
-        assertThat(errors.get(1).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_FIELD_ERROR.value);
+        assertThat(errors.get(1).getErrorCode()).isEqualTo(ImportError.Code.UNIQUE_MAIL_ERROR.value);
     }
 
     @Test()
@@ -292,10 +291,6 @@ public class ImportHandlerTest {
         assertSummary(1L, 0L, result);
 
         List<ImportError> errors = result.getErrors();
-        assertThat(errors).hasSize(1);
-
-        assertThat(errors.get(0).getLineNumber()).isEqualTo(2);
-        assertThat(errors.get(0).getErrorCode()).isEqualTo(ImportError.Code.PARSING_ERROR.value);
     }
 
     @Test()

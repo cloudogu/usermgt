@@ -4,8 +4,15 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
+## Release 1.16.1-1
+* Verbesserung von Fehlernachrichten im CSV-Import-Prozess.
+
 ## Release 1.16.0-1
 * Die Cloudogu-eigenen Quellen werden von der MIT-Lizenz auf die AGPL-3.0-only relizensiert.
+
+## Release 1.15.4-1
+* Verbesserung der Benutzerfreundlichkeit des User-Imports
+  * Die Fehlermeldungen in den Importübersichten sind jetzt aussagekräftiger und ähneln mehr denen bei der normalen Benutzererstellung
 
 ## Release 1.15.3-1
 * Verbesserung von Fehlernachrichten sowohl in manuellen Kontenbearbeitungen als auch CSV-Import-Prozessen.

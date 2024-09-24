@@ -93,17 +93,6 @@ public class CSVParserImpl implements CSVParser {
                     .build();
         }
 
-        if (e instanceof CsvDataTypeMismatchException) {
-            ImportError.Builder builder = createImportBuilder.apply(ImportError.Code.FIELD_CONVERSION_ERROR);
-
-            if (e instanceof CustomCsvDataTypeMismatchException) {
-                String affectedColumn = ((CustomCsvDataTypeMismatchException) e).getAffectedField().getName();
-                builder.withAffectedColumns(Collections.singletonList((affectedColumn)));
-            }
-
-            return builder.build();
-        }
-
         if (e instanceof CsvRequiredFieldEmptyException) {
             CsvRequiredFieldEmptyException exception = (CsvRequiredFieldEmptyException) e;
 
@@ -117,14 +106,21 @@ public class CSVParserImpl implements CSVParser {
                     .build();
         }
 
-        if (e instanceof CsvFieldAssignmentException) {
+        if (e instanceof CustomCsvDataTypeMismatchException) {
+            CustomCsvDataTypeMismatchException exception = (CustomCsvDataTypeMismatchException) e;
+
+            final String name = exception.getAffectedField().getName();
+
             return createImportBuilder
-                    .apply(ImportError.Code.FIELD_ASSIGNMENT_ERROR)
-                    .build();
+                .apply(ImportError.Code.FIELD_FORMAT_ERROR)
+                .withErrorMessage(e.getMessage())
+                .withAffectedColumns(Collections.singletonList(name))
+                .build();
         }
 
         return createImportBuilder
-                .apply(ImportError.Code.PARSING_ERROR)
+                .apply(ImportError.Code.GENERIC_VALIDATION_ERROR)
+                .withErrorMessage(e.getMessage())
                 .build();
     }
 }

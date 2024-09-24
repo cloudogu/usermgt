@@ -7,7 +7,25 @@ import type {QueryOptions} from "../hooks/useAPI";
 import type {PaginationResponse} from "../hooks/usePaginationTableState";
 import type {AxiosError, AxiosResponse} from "axios";
 
-export type ImportErrorCode = 100 | 101 | 102 | 103 | 104 | 200 | 201 | 202 | 204 | 300 | 301;
+export const ERR_CODE_MISSING_FIELD_ERROR = 1000;
+export const ERR_CODE_WRITE_RESULT_ERROR = 1001;
+export const ERR_CODE_FIELD_LENGTH_ERROR = 2000;
+export const ERR_CODE_MISSING_REQUIRED_FIELD_ERROR = 2001;
+export const ERR_CODE_GENERIC_VALIDATION_ERROR = 2002;
+export const ERR_CODE_UNIQUE_FIELD_ERROR = 3000;
+export const ERR_CODE_UNIQUE_MAIL_ERROR = 3001;
+export const ERR_CODE_FIELD_FORMAT_ERROR = 4000;
+export const ERR_CODE_FIELD_FORMAT_TOO_LONG_ERROR = 4001;
+export const ERR_CODE_FIELD_FORMAT_TOO_SHORT_ERROR = 4002;
+export const ERR_CODE_FIELD_FORMAT_INVALID_CHARACTERS_ERROR = 4003;
+
+export type ImportErrorCode =
+    typeof ERR_CODE_MISSING_FIELD_ERROR | typeof ERR_CODE_WRITE_RESULT_ERROR |
+    typeof ERR_CODE_FIELD_LENGTH_ERROR | typeof ERR_CODE_MISSING_REQUIRED_FIELD_ERROR |
+    typeof ERR_CODE_GENERIC_VALIDATION_ERROR | typeof ERR_CODE_UNIQUE_FIELD_ERROR |
+    typeof ERR_CODE_UNIQUE_MAIL_ERROR | typeof ERR_CODE_FIELD_FORMAT_ERROR |
+    typeof ERR_CODE_FIELD_FORMAT_TOO_LONG_ERROR | typeof ERR_CODE_FIELD_FORMAT_TOO_SHORT_ERROR |
+    typeof ERR_CODE_FIELD_FORMAT_INVALID_CHARACTERS_ERROR;
 
 export type ImportedUser = User
 
@@ -18,6 +36,7 @@ export interface ImportError {
     lineNumber: number;
     params: {
         columns: string[];
+        values: string[];
     };
 }
 
@@ -107,6 +126,10 @@ export const ImportUsersService = {
         } catch (e: AxiosError | unknown) {
             if (isAxiosError(e)) {
                 const axiosError = e as AxiosError;
+                const errorCode = e.response?.data.errorCode ?? -1;
+                if (errorCode === ERR_CODE_MISSING_FIELD_ERROR || errorCode === ERR_CODE_WRITE_RESULT_ERROR) {
+                    throw new Error(t(`usersImportResult.msg.code-${errorCode}`));
+                }
                 if (axiosError.response?.status === 400) {
                     throw new Error(t("usersImport.notification.invalidFile", {file: file.name}));
                 }
