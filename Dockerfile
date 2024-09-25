@@ -17,7 +17,7 @@ COPY app/ .
 RUN ./mvnw package
 
 
-FROM registry.cloudogu.com/official/base:3.20.2-1 as tomcat
+FROM registry.cloudogu.com/official/base:3.20.3-2 as tomcat
 
 ARG TOMCAT_MAJOR_VERSION
 ARG TOMCAT_VERSION
@@ -40,7 +40,7 @@ RUN set -eux && \
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
 
-FROM registry.cloudogu.com/official/java:8u402-3 AS binaryConcentrator
+FROM registry.cloudogu.com/official/java:8u402-6 AS binaryConcentrator
 # Prepare all file system actions here to achieve a simpler dogu build below.
 # Also this allows the developers to act on a finer granularity when it comes to file system changes
 ARG TOMCAT_VERSION
@@ -70,7 +70,7 @@ RUN set -eux \
 RUN chown -R tomcat:tomcat /opt/apache-tomcat
 
 
-FROM registry.cloudogu.com/official/java:8u402-4
+FROM registry.cloudogu.com/official/java:8u402-6
 
 ARG TOMCAT_VERSION
 
