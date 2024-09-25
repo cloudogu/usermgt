@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.16.1-1",
+  "Version": "1.16.1-2",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -157,7 +157,9 @@
     },
     {
       "Type": "cas",
-      "Params": ["cas"]
+      "Params": [
+        "cas"
+      ]
     }
   ],
   "HealthCheck": {
