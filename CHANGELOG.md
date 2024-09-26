@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.16.1-2] - 2024-09-25
+### Changed
+- Switch to new CAS service account structure in dogu.json
+
 ## [v1.16.1-1] - 2024-09-24
 ### Changed
 - Improve error messages in user import
