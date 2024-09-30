@@ -72,6 +72,11 @@ export interface ImportSummary extends Omit<ImportSummaryDto, "timestamp"> {
 
 export type SummariesModel = PaginationResponse<ImportSummary>
 
+function sortImportResult(summary: ImportUsersResponseDto): ImportUsersResponseDto {
+    summary.errors = summary.errors.sort((a, b) => a.lineNumber - b.lineNumber);
+    return summary;
+}
+
 export const ImportUsersService = {
     async query(signal?: AbortSignal, opts?: QueryOptions): Promise<PaginationResponse<ImportSummary>> {
         const summariesResponse = await Axios.get<SummariesModel>("/users/import/summaries", {
@@ -101,7 +106,7 @@ export const ImportUsersService = {
         return {
             ...result,
             data: {
-                ...result.data,
+                ...sortImportResult(result.data),
                 timestamp: new Date(result.data.timestamp),
             },
         };
@@ -119,7 +124,7 @@ export const ImportUsersService = {
             return {
                 ...result,
                 data: {
-                    ...result.data,
+                    ...sortImportResult(result.data),
                     timestamp: new Date(result.data.timestamp),
                 },
             };
@@ -136,5 +141,6 @@ export const ImportUsersService = {
             }
             throw new Error(t("usersImport.notification.genericError", {file: file.name}));
         }
+
     }
 };

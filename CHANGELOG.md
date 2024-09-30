@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.16.3-1] - 2024-09-30
+### Changed
+- Sort import result translations by line number [#168]
+
 ## [v1.16.2-1] - 2024-09-27
 ### Fixed
 - Fix typo in translations 
