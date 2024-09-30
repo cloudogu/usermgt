@@ -1,4 +1,3 @@
-import type {AxiosError, AxiosResponse} from "axios";
 import {isAxiosError} from "axios";
 
 import {Axios} from "../api/axios";
@@ -6,6 +5,7 @@ import {t} from "../helpers/i18nHelpers";
 import type {User} from "./Users";
 import type {QueryOptions} from "../hooks/useAPI";
 import type {PaginationResponse} from "../hooks/usePaginationTableState";
+import type {AxiosError, AxiosResponse} from "axios";
 
 export const ERR_CODE_MISSING_FIELD_ERROR = 1000;
 export const ERR_CODE_WRITE_RESULT_ERROR = 1001;
