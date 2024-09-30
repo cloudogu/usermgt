@@ -4,6 +4,9 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
+## Release 1.16.3-1
+* Die Fehler der Nutzer-Importergebnisse sind jetzt korrekt aufsteigend nach der Zeilennummer sortiert.
+
 ## Release 1.16.2-1
 * Behebung eines Rechtschreibfehlers in den Fehlernachrichten des Imports
 
