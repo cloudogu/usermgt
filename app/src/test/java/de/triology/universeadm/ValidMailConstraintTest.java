@@ -69,6 +69,9 @@ public class ValidMailConstraintTest {
         user.setMail("test@");
         assertTrue(validator.violatedBy(user, null));
         user.setMail("@mail.de");
+        user.setMail("test@@mail.de");
+        user.setMail("test@mail@de");
+        user.setMail("te@st@mail.de");
         assertTrue(validator.violatedBy(user, null));
         user.setMail("      given.surname@mail.de   ");
         assertTrue(validator.violatedBy(user, null));
