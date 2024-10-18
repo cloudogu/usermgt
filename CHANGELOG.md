@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.16.4-1] - 2024-10-18
+### Changed
+- Set the page size of user import preview to 25 from 8 [#170]
+- Mails with more than one '@' are not allowed anymore [#171] 
+
 ## [v1.16.3-1] - 2024-09-30
 ### Changed
 - Sort import result translations by line number [#168]
