@@ -75,7 +75,7 @@ FROM registry.cloudogu.com/official/java:8u402-6
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.16.3-1" \
+   VERSION="1.16.4-1" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
