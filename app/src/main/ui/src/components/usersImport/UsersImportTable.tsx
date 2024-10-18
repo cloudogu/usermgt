@@ -4,10 +4,10 @@ import React from "react";
 export default function UsersImportTable(file: { header: string[], rows: string[][] }) {
     const paginationControl = usePaginationControl(
         {
-            lineCountOptions: [8, 25, 50, 100],
+            lineCountOptions: [25, 50, 100],
             allLineCount: file.rows.length,
             defaultStartPage: 1,
-            defaultLinesPerPage: 8
+            defaultLinesPerPage: 25
         }
     );
 

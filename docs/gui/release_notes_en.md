@@ -4,6 +4,10 @@ Below you will find the release notes for User Management.
 
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
+## Release 1.16.4-1
+* On the user import preview page there are now 25 entries per page instead of the previously 8 entries
+* Mails with more than one ‘@’ are no longer allowed
+
 ## Release 1.16.3-1
 * The errors of the user import results are now correctly sorted in ascending order by line number.
 
