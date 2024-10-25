@@ -138,7 +138,7 @@
   "users.table.external": "Extern",
   "users.table.external.true": "Ja",
   "users.table.external.false": "Nein",
-  "users.externalUserWarning": "Externer Nutzer. Dieser Nutzer kann nicht bearbeitet werden - mit Ausnahme der Gruppen.",
+  "users.externalUserWarning": "Externer Nutzer. Für diesen Nutzer können Sie nur die Gruppenzuordnung bearbeiten.",
   "usersImport.buttons.reset": "Abbrechen",
   "usersImport.buttons.upload": "Importieren",
   "usersImport.headlines.importErrors": "Fehler",

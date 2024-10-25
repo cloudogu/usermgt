@@ -138,7 +138,7 @@
   "users.table.external": "External",
   "users.table.external.true": "Yes",
   "users.table.external.false": "No",
-  "users.externalUserWarning": "External User. You cannot edit this user - except for groups.",
+  "users.externalUserWarning": "External user. You can only edit the group assignment for this user.",
   "usersImport.buttons.reset": "Reset",
   "usersImport.buttons.upload": "Upload",
   "usersImport.headlines.importErrors": "Fehler",
