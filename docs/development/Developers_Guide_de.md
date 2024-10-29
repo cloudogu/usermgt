@@ -105,7 +105,7 @@ Das Backend ist unter der URL `http://localhost:8084/usermgt/api` erreichbar
 
 ## Das Frontend lokal entwickeln
 
-Das Frontend des Usermgt kann lokal entweder mit einem Mock-Backend oder mit dem lokalen Backen des Usermgt entwickelt
+Das Frontend des Usermgt kann lokal entweder mit einem Mock-Backend oder mit dem lokalen Backend des Usermgt entwickelt
 werden.
 
 ### Mock-Backend starten
