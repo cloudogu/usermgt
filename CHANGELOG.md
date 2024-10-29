@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.17.0-1] - 2024-10-29
+### Changed
+- Mark external users [#173]
+  - When editing external users, the password field is hidden and all other fields cannot be edited
+  - Groups can still be added or removed to the users
+
 ## [v1.16.4-1] - 2024-10-18
 ### Changed
 - Set the page size of user import preview to 25 from 8 [#170]

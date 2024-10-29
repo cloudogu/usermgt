@@ -25,6 +25,11 @@ export default function Users() {
 
     const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<User>(UsersService);
 
+    const hasExternal = useMemo(() => {
+        console.log(items);
+        return items.reduce((a,b) => a || b.external, false);
+    }, [items]);
+
     return <>
         <div className="flex flex-wrap justify-between">
             <H1 className="uppercase">{t("pages.users")}</H1>
@@ -54,6 +59,7 @@ export default function Users() {
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.username")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.displayName")}</ActionTable.HeadWithOneRow.Column>
                     <ActionTable.HeadWithOneRow.Column>{t("users.table.email")}</ActionTable.HeadWithOneRow.Column>
+                    {hasExternal && <ActionTable.HeadWithOneRow.Column>{t("users.table.external")}</ActionTable.HeadWithOneRow.Column>}
                     <ActionTable.HeadWithOneRow.Column
                         align={"center"}>{t("users.table.actions")}</ActionTable.HeadWithOneRow.Column>
                 </ActionTable.HeadWithOneRow>
@@ -73,6 +79,7 @@ export default function Users() {
                                 <ActionTable.Body.Row.Column>
                                     <a href={`mailto:${user.mail}`}>{user.mail}</a>
                                 </ActionTable.Body.Row.Column>
+                                {hasExternal && <ActionTable.Body.Row.Column>{t(`users.table.external.${user.external}`)}</ActionTable.Body.Row.Column>}
                                 <ActionTable.Body.Row.Column className="flex justify-center">
                                     <EditLink
                                         className={"flex items-center"}

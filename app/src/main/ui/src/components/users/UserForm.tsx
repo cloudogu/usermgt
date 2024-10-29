@@ -1,18 +1,18 @@
-import { deprecated_Form as Form, Details } from "@cloudogu/ces-theme-tailwind";
-import { Button, H2, ListWithSearchbar } from "@cloudogu/deprecated-ces-theme-tailwind";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { twMerge } from "tailwind-merge";
-import { t } from "../../helpers/i18nHelpers";
-import { useConfirmation } from "../../hooks/useConfirmation";
-import { Prompt } from "../../hooks/usePrompt";
+import {deprecated_Form as Form, Details} from "@cloudogu/ces-theme-tailwind";
+import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
+import {TrashIcon} from "@heroicons/react/24/outline";
+import {twMerge} from "tailwind-merge";
+import {t} from "../../helpers/i18nHelpers";
+import {useConfirmation} from "../../hooks/useConfirmation";
+import {Prompt} from "../../hooks/usePrompt";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
-import { GroupsService } from "../../services/Groups";
-import { ConfirmationDialog } from "../ConfirmationDialog";
-import { useApplicationContext } from "../contexts/ApplicationContext";
+import {GroupsService} from "../../services/Groups";
+import {ConfirmationDialog} from "../ConfirmationDialog";
+import {useApplicationContext} from "../contexts/ApplicationContext";
 import HelpLink from "../helpLink";
-import type { Group } from "../../services/Groups";
-import type { User } from "../../services/Users";
-import type { NotifyFunction, UseFormHandlerFunctions } from "@cloudogu/deprecated-ces-theme-tailwind";
+import type {Group} from "../../services/Groups";
+import type {User} from "../../services/Users";
+import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
 
 const MAX_SEARCH_RESULTS = 10;
 
@@ -29,15 +29,15 @@ export interface UserFormProps<T extends User> {
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
-    const { handler, notification, notify } = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
-    const { open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName } = useConfirmation();
+    const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
+    const {open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName} = useConfirmation();
 
-    const { admin } = useApplicationContext().casUser;
+    const {admin} = useApplicationContext().casUser;
 
     const addGroup = (groupName: string): void => {
         if (handler.values.memberOf.indexOf(groupName) < 0) {
             const newGroups = [...handler.values.memberOf, groupName];
-            handler.setValues({ ...handler.values, memberOf: newGroups });
+            handler.setValues({...handler.values, memberOf: newGroups});
         }
     };
 
@@ -78,7 +78,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             addLable={t("users.labels.addGroup") + " (" + t("general.optional") + ")"}
             removeLable={t("users.labels.removeGroup")}
             emptyItemsLable={t("users.labels.emptyGroups")}
-            removeIcon={<TrashIcon className={"w-6 h-6"} />}
+            removeIcon={<TrashIcon className={"w-6 h-6"}/>}
             pageSize={pageSize}
         />
     );
@@ -93,35 +93,42 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     await removeGroup(groupName ?? "");
                 }}
                 title={t("users.labels.removeGroup")}
-                message={t("users.labels.removeGroupConfirmationMessage", { groupName: groupName })}
+                message={t("users.labels.removeGroupConfirmationMessage", {groupName: groupName})}
             />
-            <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")} />
+            <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")}/>
             <Form handler={handler}>
                 {notification}
+                <span className={"font-bold"}>
+                    {t("users.externalUserWarning")}
+                </span>
                 <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username" placeholder={t("users.placeholder.username")} hint={t("users.hint.username")}>
                     {t("editUser.labels.username")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput type={"text"} name={"givenname"} data-testid="givenname" placeholder={t("users.placeholder.givenname")}>
+                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"givenname"} data-testid="givenname" placeholder={t("users.placeholder.givenname")}>
                     {t("editUser.labels.givenName")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput type={"text"} name={"surname"} data-testid="surname" placeholder={t("users.placeholder.surname")}>
+                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"surname"} data-testid="surname" placeholder={t("users.placeholder.surname")}>
                     {t("editUser.labels.surname")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput type={"text"} name={"displayName"} data-testid="displayName" placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
+                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"displayName"} data-testid="displayName" placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
                     {t("editUser.labels.displayName")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput type={"text"} name={"mail"} data-testid="mail" placeholder={t("users.placeholder.mail")}>
+                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"mail"} data-testid="mail" placeholder={t("users.placeholder.mail")}>
                     {t("editUser.labels.email")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput type={"password"} name={"password"} data-testid="password" placeholder={t("users.placeholder.password")}>
-                    {t("editUser.labels.password")}
-                </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput type={"password"} name={"confirmPassword"} data-testid="confirmPassword" placeholder={t("users.placeholder.confirmPassword")}>
-                    {t("editUser.labels.confirmPassword")}
-                </Form.ValidatedTextInput>
+                {!props.initialUser.external &&
+                    <>
+                        <Form.ValidatedTextInput disabled={props.initialUser.external} type={"password"} name={"password"} data-testid="password" placeholder={t("users.placeholder.password")}>
+                            {t("editUser.labels.password")}
+                        </Form.ValidatedTextInput>
+                        <Form.ValidatedTextInput disabled={props.initialUser.external} type={"password"} name={"confirmPassword"} data-testid="confirmPassword" placeholder={t("users.placeholder.confirmPassword")}>
+                            {t("editUser.labels.confirmPassword")}
+                        </Form.ValidatedTextInput>
+                    </>
+                }
 
                 <>
-                    {props.passwordReset && (
+                    {(props.passwordReset && !props.initialUser.external) && (
                         <>
                             <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
                                 {t("editUser.labels.mustChangePassword")}
@@ -154,33 +161,37 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 </div>
             </Form>
 
-            {props.groupsReadonly ? (
-                <>
-                    <H2>
-                        {t("users.labels.myGroups")} ({handler.values.memberOf.length})
-                    </H2>
-                    {renderGroupsList(true, 10)}
-                </>
-            ) : (
-                <></>
-            )}
-            {admin ? (
-                <>
-                    <hr />
-                    <Details className={twMerge("py-2")}>
-                        <Details.Summary>
-                            <Details.Summary.Arrow />
-                            {t("users.steps.title")}
-                        </Details.Summary>
-                        <Details.Content>
-                            {t("users.steps.text")}
-                            <HelpLink />
-                        </Details.Content>
-                    </Details>
-                </>
-            ) : (
-                <></>
-            )}
+            {
+                props.groupsReadonly ? (
+                    <>
+                        <H2>
+                            {t("users.labels.myGroups")} ({handler.values.memberOf.length})
+                        </H2>
+                        {renderGroupsList(true, 10)}
+                    </>
+                ) : (
+                    <></>
+                )
+            }
+            {
+                admin ? (
+                    <>
+                        <hr/>
+                        <Details className={twMerge("py-2")}>
+                            <Details.Summary>
+                                <Details.Summary.Arrow/>
+                                {t("users.steps.title")}
+                            </Details.Summary>
+                            <Details.Content>
+                                {t("users.steps.text")}
+                                <HelpLink/>
+                            </Details.Content>
+                        </Details>
+                    </>
+                ) : (
+                    <></>
+                )
+            }
         </>
     );
 }
