@@ -4,6 +4,13 @@ Below you will find the release notes for User Management.
 
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
+## Release 1.17.0-1
+* External users are marked as such in the overview
+    * There will be an additional column in the user overview table that shows whether a user is external or internal
+        * This column is only displayed if there is at least one external user
+    * External users cannot be edited. All fields are either hidden or deactivated
+    * Groups can still be added to and removed from external users
+  
 ## Release 1.16.4-1
 * On the user import preview page there are now 25 entries per page instead of the previously 8 entries
 * Mails with more than one ‘@’ are no longer allowed
