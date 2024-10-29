@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ldap>
-  <host>192.168.56.2</host>
+  <host>localhost</host>
   <port>389</port>
-    <bind-dn>cn=usermgt_7I0HMk,ou=Special Users,o=ces.local,dc=cloudogu,dc=com</bind-dn>
-    <bind-password>s/bAvTjp8yoDB6e7F5mN3SAagGkaPi6YIe2bm9oSxqZsb36VuI3wFsdERrLuW0le</bind-password>
+  <!--
+  <bind-dn>cn=admin,dc=cloudogu,dc=com</bind-dn>
+  <bind-password>bJ3VoW2iMEgsj+misqcY7z4rdVJwSuSxDwlIcaPYYAx+nBScxbFvI1ISihDRio/F</bind-password>
+  -->
+  <bind-dn>cn=usermgt_x53eMC,ou=Special Users,o=ces.local,dc=cloudogu,dc=com</bind-dn>
+
+  <!--<bind-dn>cn=Directory Manager,dc=cloudogu,dc=com</bind-dn>-->
+  <bind-password>uXMC36Mdei48rhVBQ+p6+nCTz0AvlDRg9Qc1I31Xht2GidUo3BFds+S/0NooTcRC</bind-password>
+
   <user-base-dn>ou=People,o=ces.local,dc=cloudogu,dc=com</user-base-dn>
   <group-base-dn>ou=Groups,o=ces.local,dc=cloudogu,dc=com</group-base-dn>
   
@@ -11,7 +18,6 @@
   
   <disabled>false</disabled>
 </ldap>
-
 
 <!--<?xml version="1.0" encoding="UTF-8"?>
 <ldap>
