@@ -6,7 +6,7 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## Release 1.17.0-1
 * External users are marked as such in the overview
-    * There will be an additional column in the user overview table that shows whether a user is external or internal
+    * There is an additional column in the user overview table that shows whether a user is external or internal
         * This column is only displayed if there is at least one external user
     * External users cannot be edited. All fields are either hidden or deactivated
     * Groups can still be added to and removed from external users

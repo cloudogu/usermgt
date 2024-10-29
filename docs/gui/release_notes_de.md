@@ -6,7 +6,7 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## Release 1.17.0-1
 * Externe Nutzer werden als solche in der Übersicht markiert
-  * In der Übersichtstabelle der Nutzer wird es eine weitere Spalte geben, die anzeigt, ob ein Nutzer extern oder intern ist
+  * In der Übersichtstabelle der Nutzer wird eine weitere Spalte angezeigt, die angibt ob ein Nutzer extern oder intern ist
     * Diese Spalte wird nur angezeigt, wenn mindestens ein externer Benutzer vorhanden ist
   * Externe Nutzer können nicht editiert werden. Alle Felder werden entweder ausgeblendet oder deaktiviert
   * Gruppen können weiterhin zu externen Nutzern hinzugefügt und entfernt werden
