@@ -98,9 +98,11 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
             <Prompt when={handler.dirty && !handler.isSubmitting} message={t("generic.notification.form.prompt")}/>
             <Form handler={handler}>
                 {notification}
-                <span className={"font-bold"}>
-                    {t("users.externalUserWarning")}
-                </span>
+                {(props.initialUser.external) && (
+                    <span className={"font-bold"}>
+                        {t("users.externalUserWarning")}
+                    </span>
+                )}
                 <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username" placeholder={t("users.placeholder.username")} hint={t("users.hint.username")}>
                     {t("editUser.labels.username")}
                 </Form.ValidatedTextInput>
