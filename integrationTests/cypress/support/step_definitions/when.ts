@@ -268,12 +268,19 @@ When("the user {string} tries to log in with his generated password", function (
     })
 })
 
+When("the user configures the new password to {string}", function (password: string) {
+    cy.get('input[id="password"]').clear().type(password);
+    cy.get('input[id="confirmPassword"]').clear().type(password);
+    cy.get('button[data-testid="save-button"]').click()
+})
+
 When("the user sets the new password to {string}", function (password: string) {
-    cy.get('input[data-testid="password-input"]').type(password)
-    cy.get('input[data-testid="confirmedPassword-input"]').type(password)
-    cy.get('button').find('span').contains("Submit").click()
+    cy.get('input[data-testid="password-input"]').clear().type(password);
+    cy.get('input[data-testid="confirmedPassword-input"]').clear().type(password);
+    cy.get('button[id="submit"]').click()
 })
 
 When("the user {string} with password {string} logs in", function (username: string, password: string) {
+    cy.visit("/cas/login")
     cy.login(username, password, env.GetMaxRetryCount())
 })

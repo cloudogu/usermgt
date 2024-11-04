@@ -32,7 +32,7 @@ export default function UsersImportErrorTable({content, ...props}: UsersImportEr
                             <Table.Body.Row.Column>
                                 {content[i].lineNumber}
                             </Table.Body.Row.Column>
-                            <Table.Body.Row.Column>
+                            <Table.Body.Row.Column data-testid={"import-error-message"}>
                                 {prepareMessage(content[i])}
                             </Table.Body.Row.Column>
                         </Table.Body.Row>

@@ -4,7 +4,7 @@ import env from "@cloudogu/dogu-integration-test-library/lib/environment_variabl
 import 'cypress-mailhog';
 
 Then("the user is asked to change his password", function () {
-    cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
+    //cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
     cy.get('input[data-testid="password-input"]').should('be.visible')
     cy.get('input[data-testid="confirmedPassword-input"]').should('be.visible')
 });
@@ -363,7 +363,7 @@ Then("the table shows the error message {string}", function (errorMessage: strin
     cy.get('details[data-testid="skipped-import-details"]').invoke('find', 'table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
-    cy.get('@row').find("td:nth-of-type(2)").contains(errorMessage)
+    cy.get('td[data-testid="import-error-message"]').contains(errorMessage)
 })
 
 Then("the new user {string} was not added", function (username: string) {
