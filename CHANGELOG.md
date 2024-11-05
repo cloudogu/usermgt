@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+- Only show external-user-hint if user is marked as external [#177]
 - Fix list structure in gui docs
 
 ## [v1.17.0-1] - 2024-10-29
