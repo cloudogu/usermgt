@@ -3,6 +3,7 @@ Feature: Tests for updating user that has password reset disabled
  Background:
      Given the user "manager" exists
      And the user "manager" is member of the group "cesManager"
+     And the file "tap_userimport_akt_f.csv" is uploaded
      And the user "manager" with password "newuserpassword1234A$" is logged in
 
    @clean_before
@@ -10,8 +11,7 @@ Feature: Tests for updating user that has password reset disabled
    @clear_mails
    @clean_user_import
    Scenario: a user uploads a file
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_akt_f.csv"
+     When the user opens the user import details page
      Then the user import page shows an import with the message "Import successfully completed!" and the details "Created accounts (1)"
 
    @clean_before
@@ -19,8 +19,6 @@ Feature: Tests for updating user that has password reset disabled
    @clear_mails
    Scenario: a newly created user logs in for the first time
      When the user opens the user import page
-     And the user uploads the file "tap_userimport_akt_f.csv"
-     And the user opens the user import page
      And the user uploads the file "tap_userimport_akt2_f.csv"
      And the user logs out by visiting the cas logout page
      And the user "Testertest" tries to log in with his generated password
@@ -43,8 +41,6 @@ Feature: Tests for updating user that has password reset disabled
    @clean_user_import
    Scenario: a user uploads an updated file
      When the user opens the user import page
-     And the user uploads the file "tap_userimport_akt_f.csv"
-     And the user opens the user import page
      And the user uploads the file "tap_userimport_akt2_f.csv"
      Then the user import page shows an import with the message "Import successfully completed!" and the details "Updated accounts (1)"
 
@@ -54,8 +50,6 @@ Feature: Tests for updating user that has password reset disabled
    @clean_user_import
    Scenario: after uploading a file a user downloads the import overview
      When the user opens the user import page
-     And the user uploads the file "tap_userimport_akt_f.csv"
-     And the user opens the user import page
      And the user uploads the file "tap_userimport_akt2_f.csv"
      And the user opens the user import details page
      And the user downloads the import overview
@@ -67,8 +61,6 @@ Feature: Tests for updating user that has password reset disabled
    @clean_user_import
    Scenario: after uploading a file a user inspects the users page
      When the user opens the user import page
-     And the user uploads the file "tap_userimport_akt_f.csv"
-     And the user opens the user import page
      And the user uploads the file "tap_userimport_akt2_f.csv"
      And the user opens the users page
      Then the new user "Testertest" was added
@@ -79,8 +71,6 @@ Feature: Tests for updating user that has password reset disabled
    @clean_user_import
    Scenario: after uploading a file an imported user can be edited
      When the user opens the user import page
-     And the user uploads the file "tap_userimport_akt_f.csv"
-     And the user opens the user import page
      And the user uploads the file "tap_userimport_akt2_f.csv"
      And the user opens the users page
      And the user clicks on the edit-user button for the user "Testertest"
@@ -92,8 +82,6 @@ Feature: Tests for updating user that has password reset disabled
    @clean_user_import
    Scenario: after uploading a file a user inspects the user import summaries page
      When the user opens the user import page
-     And the user uploads the file "tap_userimport_akt_f.csv"
-     And the user opens the user import page
      And the user uploads the file "tap_userimport_akt2_f.csv"
      And the user opens the user import summaries page
      Then a table with the import information "New: 0, Updated: 1, Skipped: 0" regarding the file "tap_userimport_akt2_f.csv" is shown

@@ -3,6 +3,7 @@ Feature: Tests for uploading file with user that has password reset enabled
  Background:
      Given the user "manager" exists
      And the user "manager" is member of the group "cesManager"
+     And the file "tap_userimport_pwd_t.csv" is uploaded
      And the user "manager" with password "newuserpassword1234A$" is logged in
 
    Scenario: a user selects a file for upload
@@ -15,8 +16,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_mails
    @clean_user_import
    Scenario: a user uploads a file
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_pwd_t.csv"
+     When the user opens the user import details page
      Then the user import page shows an import with the message "Import successfully completed!" and the details "Created accounts (1)"
 
    @clean_before
@@ -24,9 +24,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_mails
    @clean_user_import
    Scenario: after uploading a file a user inspects the user import details page
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_pwd_t.csv"
-     And the user opens the user import details page
+     When the user opens the user import details page
      And the user clicks on the details regarding the "created" user import
      Then the table shows the information about the "created" user "testUser"
 
@@ -35,9 +33,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_mails
    @clean_user_import
    Scenario: after uploading a file a user downloads the import overview
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_pwd_t.csv"
-     And the user opens the user import details page
+     When the user opens the user import details page
      And the user downloads the import overview
      Then the import result is downloaded and contains information regarding "1" created, "0" updated and "0" skipped accounts in the file "tap_userimport_pwd_t.csv"
 
@@ -46,9 +42,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_mails
    @clean_user_import
    Scenario: after uploading a file a user inspects the users page
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_pwd_t.csv"
-     And the user opens the users page
+     When the user opens the users page
      Then the new user "testUser" was added
 
    @clean_before
@@ -56,9 +50,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_mails
    @clean_user_import
    Scenario: after uploading a file an imported user can be edited
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_pwd_t.csv"
-     And the user opens the users page
+     When the user opens the users page
      And the user clicks on the edit-user button for the user "testUser"
      Then the password reset flag is checked
 
@@ -67,9 +59,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_mails
    @clean_user_import
    Scenario: after uploading a file a user inspects the user import summaries page
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_pwd_t.csv"
-     And the user opens the user import summaries page
+     When the user opens the user import summaries page
      Then a table with the import information "New: 1, Updated: 0, Skipped: 0" regarding the file "tap_userimport_pwd_t.csv" is shown
 
    @clean_before
@@ -77,17 +67,13 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_mails
    @clean_user_import
    Scenario: after the user import the newly created user receives an email
-     When the user opens the user import page
-     And the user uploads the file "tap_userimport_pwd_t.csv"
      Then the user "testUser" receives an email with his user details
 
    @clean_before
    @clear_downloadDir
    @clear_mails
    Scenario: a newly created user tries to log in for the first time
-      When the user opens the user import page
-      And the user uploads the file "tap_userimport_pwd_t.csv"
-      And the user logs out by visiting the cas logout page
+      When the user logs out by visiting the cas logout page
       And the user "testUser" tries to log in with his generated password
       Then the user is asked to change his password
 
@@ -95,9 +81,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clear_downloadDir
    @clear_mails
    Scenario: a newly created user logs in for the first time
-      When the user opens the user import page
-      And the user uploads the file "tap_userimport_pwd_t.csv"
-      And the user logs out by visiting the cas logout page
+      When the user logs out by visiting the cas logout page
       And the user "testUser" tries to log in with his generated password
       And the user sets the new password to "testuserpassword1234A$"
       And the user "testUser" with password "testuserpassword1234A$" logs in
