@@ -267,10 +267,10 @@ The columns describe the following information:
 * **username** - username of the account
    * If the specified username already exists, this account will be updated with the specified information and no new account will be created.
    * Cannot be changed after an account has been created
-**displayname** - Display name of the account
-**givenname** - First name of the user
-**surname** - Last name of the user
-**mail** - Mail address of the user
+* **displayname** - Display name of the account
+* **givenname** - First name of the user
+* **surname** - Last name of the user
+* **mail** - Mail address of the user
 * **pwdReset** - Indicates whether the password must be reset at the next login
   * Specified using *false* or *true*, where *true* indicates that the password must be reset at the next login
    * For newly created accounts, *pwdReset* is always automatically set to *true
