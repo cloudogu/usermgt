@@ -198,14 +198,7 @@ parallel(
             }
         }
 
-        void gitWithCredentials(String command) {
-            withCredentials([usernamePassword(credentialsId: 'cesmarvin', usernameVariable: 'GIT_AUTH_USR', passwordVariable: 'GIT_AUTH_PSW')]) {
-                sh(
-                        script: "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" " + command,
-                        returnStdout: true
-                )
-            }
-        }
+
 
         void createNpmrcFile(credentialsId) {
             withCredentials([usernamePassword(credentialsId: "${credentialsId}", usernameVariable: 'TARGET_USER', passwordVariable: 'TARGET_PSW')]) {
@@ -309,6 +302,15 @@ parallel(
         }
     }
 )
+
+void gitWithCredentials(String command) {
+    withCredentials([usernamePassword(credentialsId: 'cesmarvin', usernameVariable: 'GIT_AUTH_USR', passwordVariable: 'GIT_AUTH_PSW')]) {
+        sh(
+                script: "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" " + command,
+                returnStdout: true
+        )
+    }
+}
 
 
 
