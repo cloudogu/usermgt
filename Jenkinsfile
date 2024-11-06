@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/dogu-build-lib@v2.3.1', 'github.com/cloudogu/ces-build-lib@2.2.1'])
+@Library(['github.com/cloudogu/dogu-build-lib@v2.5.0', 'github.com/cloudogu/ces-build-lib@3.0.0'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -92,6 +92,9 @@ node('docker') {
 
         EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
         Trivy trivy = new Trivy(this, ecoSystem)
+
+        ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
+        ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
 
         try {
             stage('Provision') {
