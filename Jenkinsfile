@@ -200,53 +200,7 @@ parallel(
 
 
 
-        void createNpmrcFile(credentialsId) {
-            withCredentials([usernamePassword(credentialsId: "${credentialsId}", usernameVariable: 'TARGET_USER', passwordVariable: 'TARGET_PSW')]) {
-                withEnv(["HOME=${env.WORKSPACE}"]) {
-                    String NPM_TOKEN = """${sh(
-                            returnStdout: true,
-                            script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
-                    )}""".trim()
-                    writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
-        @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
-        email=jenkins@cloudogu.com
-        always-auth=true
-        _auth=${NPM_TOKEN}
-        """.trim()
-                }
-            }
-        }
 
-        void stageStaticAnalysisSonarQube() {
-            def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-            withSonarQubeEnv {
-                sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
-                gitWithCredentials("fetch --all")
-
-                if (currentBranch == productionReleaseBranch) {
-                    echo "This branch has been detected as the production branch."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
-                } else if (currentBranch == developmentBranch) {
-                    echo "This branch has been detected as the development branch."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
-                } else if (env.CHANGE_TARGET) {
-                    echo "This branch has been detected as a pull request."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.pullrequest.key=${env.CHANGE_ID} -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} -Dsonar.pullrequest.base=${developmentBranch}"
-                } else if (currentBranch.startsWith("feature/")) {
-                    echo "This branch has been detected as a feature branch."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
-                } else {
-                    echo "This branch has been detected as a miscellaneous branch."
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} "
-                }
-            }
-            timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
-                def qGate = waitForQualityGate()
-                if (qGate.status != 'OK') {
-                    unstable("Pipeline unstable due to SonarQube quality gate failure")
-                }
-            }
-        }
     },
     "dogu-integration": {
         node('vagrant') {
@@ -309,6 +263,53 @@ void gitWithCredentials(String command) {
                 script: "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" " + command,
                 returnStdout: true
         )
+    }
+}
+void createNpmrcFile(credentialsId) {
+            withCredentials([usernamePassword(credentialsId: "${credentialsId}", usernameVariable: 'TARGET_USER', passwordVariable: 'TARGET_PSW')]) {
+                withEnv(["HOME=${env.WORKSPACE}"]) {
+                    String NPM_TOKEN = """${sh(
+                            returnStdout: true,
+                            script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
+                    )}""".trim()
+                    writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
+        @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+        email=jenkins@cloudogu.com
+        always-auth=true
+        _auth=${NPM_TOKEN}
+        """.trim()
+        }
+    }
+}
+
+void stageStaticAnalysisSonarQube() {
+    def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    withSonarQubeEnv {
+        sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
+        gitWithCredentials("fetch --all")
+
+        if (currentBranch == productionReleaseBranch) {
+            echo "This branch has been detected as the production branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
+        } else if (currentBranch == developmentBranch) {
+            echo "This branch has been detected as the development branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
+        } else if (env.CHANGE_TARGET) {
+            echo "This branch has been detected as a pull request."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.pullrequest.key=${env.CHANGE_ID} -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} -Dsonar.pullrequest.base=${developmentBranch}"
+        } else if (currentBranch.startsWith("feature/")) {
+            echo "This branch has been detected as a feature branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME}"
+        } else {
+            echo "This branch has been detected as a miscellaneous branch."
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} "
+        }
+    }
+    timeout(time: 2, unit: 'MINUTES') { // Needed when there is no webhook for example
+        def qGate = waitForQualityGate()
+        if (qGate.status != 'OK') {
+            unstable("Pipeline unstable due to SonarQube quality gate failure")
+        }
     }
 }
 
