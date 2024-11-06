@@ -234,6 +234,22 @@ parallel(
                     stage('Provision') {
                         ecoSystem.provision("/dogu");
                     }
+
+                    stage('Setup') {
+                        ecoSystem.loginBackend('cesmarvin-setup')
+                        ecoSystem.setup([registryConfig: """
+                                        "_global": {
+                                            "password-policy": {
+                                                "must_contain_capital_letter": "true",
+                                                "must_contain_lower_case_letter": "true",
+                                                "must_contain_digit": "true",
+                                                "must_contain_special_character": "true",
+                                                "min_length": "14"
+                                            }
+                                         }
+                                        """])
+                    }
+
                     stage('Build dogu') {
                         ecoSystem.build("/dogu")
                     }
