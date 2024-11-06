@@ -10,6 +10,14 @@ currentBranch = "${env.BRANCH_NAME}"
 EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
 Trivy trivy = new Trivy(this, ecoSystem)
 
+Maven mvn = new MavenWrapper(this)
+Git git = new Git(this, "cesmarvin")
+git.committerName = 'cesmarvin'
+git.committerEmail = 'cesmarvin@cloudogu.com'
+GitFlow gitflow = new GitFlow(this, git)
+GitHub github = new GitHub(this, git)
+Changelog changelog = new Changelog(this)
+
 parallel(
     "source code": {
         node('docker') {
@@ -33,13 +41,7 @@ parallel(
                 String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 
                 doguName = 'usermgt'
-                Maven mvn = new MavenWrapper(this)
-                Git git = new Git(this, "cesmarvin")
-                git.committerName = 'cesmarvin'
-                git.committerEmail = 'cesmarvin@cloudogu.com'
-                GitFlow gitflow = new GitFlow(this, git)
-                GitHub github = new GitHub(this, git)
-                Changelog changelog = new Changelog(this)
+
 
                 stage('Checkout') {
                     checkout scm
