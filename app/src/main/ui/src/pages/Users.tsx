@@ -77,7 +77,7 @@ export default function Users() {
                                     {user.displayName}
                                 </ActionTable.Body.Row.Column>
                                 <ActionTable.Body.Row.Column>
-                                    <a href={`mailto:${user.mail}`}>{user.mail}</a>
+                                    {user.mail}
                                 </ActionTable.Body.Row.Column>
                                 {hasExternal && <ActionTable.Body.Row.Column>{t(`users.table.external.${user.external}`)}</ActionTable.Body.Row.Column>}
                                 <ActionTable.Body.Row.Column className="flex justify-center">
