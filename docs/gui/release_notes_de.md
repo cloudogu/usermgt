@@ -4,6 +4,9 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
+## Release 1.17.1-1
+* Behebung eines Bugs: In der 1.17.0-1 werden fälschlicherweise auch nicht-externe Nutzer als externe Nutzer markiert. Ab dieser Version werden nur externe Nutzer als externe Nutzer angegeben.
+
 ## Release 1.17.0-1
 * Externe Nutzer werden als solche in der Übersicht markiert
   * In der Übersichtstabelle der Nutzer wird eine weitere Spalte angezeigt, die angibt ob ein Nutzer extern oder intern ist
