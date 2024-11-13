@@ -9,4 +9,4 @@ sudo docker run -d -e MH_UI_WEB_PATH=mailhog -p 25:1025 -p 8025:8025 --name mail
 MAILHOG_IP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mailhog) && \
 etcdctl set services/mailhog/registrator:mailhog:8025 "{\"name\":\"mailhog\",\"service\":\"${MAILHOG_IP}:8025\",\"port\":\"8025\",\"tags\":[\"webapp\"],\"healthStatus\":\"healthy\",\"attributes\":{}}" && \
 etcdctl set /config/postfix/relayhost mailhog:1025 && sudo docker restart postfix
-cesapp start mailhog
+sudo cesapp start mailhog
