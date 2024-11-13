@@ -106,16 +106,16 @@ parallel(
                     stage('Setup') {
                         ecoSystem.loginBackend('cesmarvin-setup')
                         ecoSystem.setup([registryConfig: """
-            "_global": {
-                "password-policy": {
-                    "must_contain_capital_letter": "true",
-                    "must_contain_lower_case_letter": "true",
-                    "must_contain_digit": "true",
-                    "must_contain_special_character": "true",
-                    "min_length": "14"
-                }
-            }
-                    """])
+                                        "_global": {
+                                            "password-policy": {
+                                                "must_contain_capital_letter": "true",
+                                                "must_contain_lower_case_letter": "true",
+                                                "must_contain_digit": "true",
+                                                "must_contain_special_character": "true",
+                                                "min_length": "14"
+                                            }
+                                        }
+                                        """])
                     }
 
                     stage('Wait for dependencies') {
@@ -223,11 +223,11 @@ parallel(
                         ])
                 ])
 
-              stage('Checkout') {
-                 checkout scm
-                 git.clean('".*/"')
-                 createNpmrcFile("jenkins")
-              }
+                stage('Checkout') {
+                    checkout scm
+                    git.clean('".*/"')
+                    createNpmrcFile("jenkins")
+                }
 
 
                 try {
@@ -255,15 +255,15 @@ parallel(
                     }
 
                     stage('Integration Tests') {
-                      echo "setup mailhog"
-                      ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
-                      ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
-                      echo "run integration tests."
-                      ecoSystem.runCypressIntegrationTests([
+                        echo "setup mailhog"
+                        ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
+                        ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
+                        echo "run integration tests."
+                        ecoSystem.runCypressIntegrationTests([
                               cypressImage     : "cypress/included:13.13.1",
                               enableVideo      : params.EnableVideoRecording,
                               enableScreenshots: params.EnableScreenshotRecording,
-                      ])
+                        ])
                     }
                 } finally {
                      stage('Clean') {
