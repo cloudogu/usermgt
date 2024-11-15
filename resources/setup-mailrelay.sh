@@ -3,7 +3,13 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-cd /dogu/resources/mail
+curl
+
+cd /dogu/resources
+mkdir mailrelay
+cd mailrelay
+curl -o emailrelay.zip "https://sourceforge.net/projects/emailrelay/files/latest/download"
+unzip emailrelay.zip
 sudo ./configure && sudo make && sudo make install
 echo "server plain ces-admin Ecosystem2016!" > secret.auth
 sudo emailrelay -t --as-server --forward-on-disconnect --log --verbose --log-file mailrelay.log --log-time --port 587 --forward-to localhost:1025 --server-auth ./secret.auth
