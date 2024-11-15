@@ -6,7 +6,7 @@ set -o pipefail
 cd /dogu/resources
 mkdir mailrelay
 cd mailrelay
-curl -o emailrelay.zip "https://sourceforge.net/projects/emailrelay/files/emailrelay/2.6/emailrelay-2.6-w32.zip/download"
+curl -o emailrelay.zip "https://master.dl.sourceforge.net/project/emailrelay/emailrelay/2.6/emailrelay-2.6-src.zip\?viasf\=1"
 unzip emailrelay.zip
 sudo ./configure && sudo make && sudo make install
 echo "server plain ces-admin Ecosystem2016!" > secret.auth
