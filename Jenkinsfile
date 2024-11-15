@@ -250,6 +250,12 @@ parallel(
                                         """])
                     }
 
+                    stage('Wait for dependencies') {
+                        timeout(15) {
+                            ecoSystem.waitForDogu("cas")
+                        }
+                    }
+
                     stage('Build dogu') {
                         ecoSystem.build("/dogu")
                     }
