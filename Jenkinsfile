@@ -258,6 +258,9 @@ parallel(
                         echo "setup mailhog"
                         ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                         ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
+                        echo "setup mailrelay"
+                        ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailrelay.sh'
+                        ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailrelay.sh"
                         echo "run integration tests."
                         ecoSystem.runCypressIntegrationTests([
                               cypressImage     : "cypress/included:13.13.1",

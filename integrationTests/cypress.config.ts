@@ -41,6 +41,8 @@ export default defineConfig({
             "groups" : 0,
             "users" : 0,
             "mailHogUrl": "https://192.168.56.2/mailhog/",
+            "mailHogUsername": "ces-admin",
+            "mailHogPassword": "Ecosystem2016!"
         },
         videoCompression: false,
         experimentalRunAllSpecs: true,
