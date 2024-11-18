@@ -7,6 +7,8 @@ import doguTestLibrary from "@cloudogu/dogu-integration-test-library";
 // @ts-ignore
 import fsConf from "cypress-fs/plugins/index.js";
 
+const baseUrl = 'https://192.168.56.2';
+
 async function setupNodeEvents(
     on: Cypress.PluginEvents,
     config: Cypress.PluginConfigOptions
@@ -31,7 +33,7 @@ async function setupNodeEvents(
 
 export default defineConfig({
     e2e: {
-        baseUrl: 'https://192.168.56.2',
+        baseUrl: baseUrl,
         env: {
             "DoguName": "usermgt",
             "MaxLoginRetries": 3,
@@ -40,9 +42,7 @@ export default defineConfig({
             "AdminGroup":  "CesAdministrators",
             "groups" : 0,
             "users" : 0,
-            "mailHogUrl": "https://192.168.56.2/mailhog/",
-            "mailHogUsername": "ces-admin",
-            "mailHogPassword": "Ecosystem2016!"
+            "mailHogUrl": `${baseUrl}/mailhog/`,
         },
         videoCompression: false,
         experimentalRunAllSpecs: true,
