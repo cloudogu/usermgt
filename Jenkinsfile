@@ -19,7 +19,7 @@ GitHub github = new GitHub(this, git)
 Changelog changelog = new Changelog(this)
 
 parallel(
-/*     "source code": {
+     "source code": {
         node('docker') {
             timestamps {
                 properties([
@@ -46,7 +46,7 @@ parallel(
                 stage('Checkout') {
                     checkout scm
                     //  Don't remove folders starting in "." like * .m2 (maven), .npm, .cache, .local (bower)
-                    git.clean('".*//* "')
+                    git.clean('".*//*  *//* "')
                     createNpmrcFile("jenkins")
                 }
 
@@ -78,7 +78,7 @@ parallel(
                             dir('app') {
                                 stage('Build') {
                                     mvn 'clean install -DskipTests'
-                                    archive '**//* target *//*.jar,**//* target *//*.zip'
+                                    archive '**//*  *//* target *//*  *//*.jar,**//*  *//* target *//*  *//*.zip'
                                 }
 
                                 stage('ESLint') {
@@ -194,16 +194,12 @@ parallel(
                 }
 
         // Archive Unit and integration test results, if any
-                junit allowEmptyResults: true, testResults: '**//* target/failsafe-reports/TEST-*.xml,**//* target/surefire-reports/TEST-*.xml,**//* target/jest-reports/TEST-*.xml'
+                junit allowEmptyResults: true, testResults: '**//*  *//* target/failsafe-reports/TEST-*.xml,**//*  *//* target/surefire-reports/TEST-*.xml,**//*  *//* target/jest-reports/TEST-*.xml'
 
                 mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
             }
         }
-
-
-
-
-    }, */
+    },
     "dogu-integration": {
         node('vagrant') {
             timestamps {
@@ -228,7 +224,6 @@ parallel(
                     git.clean('".*/"')
                     createNpmrcFile("jenkins")
                 }
-
 
                 try {
                     stage('Provision') {
@@ -264,9 +259,6 @@ parallel(
                         echo "setup mailhog"
                         ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                         ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
-                        echo "setup mailrelay"
-                        // ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailrelay.sh'
-                        // ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailrelay.sh"
                         echo "run integration tests."
                         ecoSystem.runCypressIntegrationTests([
                               cypressImage     : "cypress/included:13.13.1",
@@ -339,6 +331,3 @@ void stageStaticAnalysisSonarQube() {
         }
     }
 }
-
-
-
