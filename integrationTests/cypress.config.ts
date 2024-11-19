@@ -27,6 +27,8 @@ async function setupNodeEvents(
 
     config.env["mailHogUrl"] = `${config.baseUrl}/mailhog/`
 
+    console.log("after mailhog config:", config.env)
+
     // Make sure to return the config object as it might have been modified by the plugin.
     return config;
 }
@@ -42,7 +44,6 @@ export default defineConfig({
             "AdminGroup":  "CesAdministrators",
             "groups" : 0,
             "users" : 0,
-            "mailHogUrl": '',
         },
         videoCompression: false,
         experimentalRunAllSpecs: true,
