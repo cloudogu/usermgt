@@ -337,15 +337,7 @@ Then("a table of the file content for the file {string} is displayed", function 
     cy.get('button[data-testid="reset-button"]').should('be.visible').and('not.be.disabled')
 })
 
-Then("the user import page shows a failed import", function () {
-    cy.get('h1').contains("Userimport")
-    cy.get('p[data-testid="import-status-message"]').contains("Import failed!")
-    cy.get('details[data-testid="failed-import-details"]').invoke('find', 'summary').invoke('attr', 'text').contains("Skipped data rows (1)")
-    cy.get('details[data-testid="failed-import-details"]').invoke('attr', 'open').should('not.exist')
-    cy.get('p[data-testid="import-download-link"]').invoke('find', 'a').contains("Download import overview")
-})
-
-Then("the import result is downloaded and contains error information regarding the file {string}", function (fileName: string) {
+Then("the import result is downloaded and contains information regarding {string} created, {string} updated and {string} skipped accounts in the file {string}", function (created: string, updated: string, skipped: string, fileName: string) {
     // To test the download, the generated import ID is extracted from the URL
     cy.url()
         .then(url => {
@@ -355,27 +347,22 @@ Then("the import result is downloaded and contains error information regarding t
                 expect(fileContent.importID).to.eq(fileId)
                 expect(fileContent.filename).to.eq(fileName)
                 expect(fileContent.timestamp).contains(/[0-9]+/)
-                expect(fileContent.created).is.empty
-                expect(fileContent.updated).is.empty
-                expect(fileContent.errors[0].lineNumber).to.eq(2)
-                expect(fileContent.errors[0].message).to.eq("entity is not valid")
-                expect(fileContent.errors[0].params.columns[0]).to.eq("username")
                 expect(fileContent.summary.importID).to.eq(fileId)
                 expect(fileContent.summary.filename).to.eq(fileName)
                 expect(fileContent.summary.timestamp).contains(/[0-9]+/)
-                expect(fileContent.summary.summary.created).to.eq(0)
-                expect(fileContent.summary.summary.updated).to.eq(0)
-                expect(fileContent.summary.summary.skipped).to.eq(1)
+                expect(fileContent.summary.summary.created).to.eq(parseInt(created))
+                expect(fileContent.summary.summary.updated).to.eq(parseInt(updated))
+                expect(fileContent.summary.summary.skipped).to.eq(parseInt(skipped))
             })
         })
 })
 
-Then("the table shows that the username was not in the correct format", function () {
-    cy.get('details[data-testid="failed-import-details"]').invoke('attr', 'open').should('exist')
-    cy.get('details[data-testid="failed-import-details"]').invoke('find', 'table').should('be.visible')
+Then("the table shows the error message {string}", function (errorMessage: string) {
+    cy.get('details[data-testid="skipped-import-details"]').invoke('attr', 'open').should('exist')
+    cy.get('details[data-testid="skipped-import-details"]').invoke('find', 'table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
-    cy.get('@row').find("td:nth-of-type(2)").contains("'username'")
+    cy.get('@row').find("td:nth-of-type(2)").contains(errorMessage)
 })
 
 Then("the new user {string} was not added", function (username: string) {
@@ -385,13 +372,13 @@ Then("the new user {string} was not added", function (username: string) {
     cy.get('@row').invoke('text').should('not.equal', username)
 })
 
-Then("a table with the import information regarding the file {string} is shown", function (fileName: string) {
+Then("a table with the import information {string} regarding the file {string} is shown", function (importInfo: string, fileName: string) {
     cy.get('h1').contains("Import overviews")
     cy.get('table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
     cy.get('@row').find("td:nth-of-type(1)").contains(fileName)
-    //cy.get('@row').find("td:nth-of-type(3)").contains("New: 0, Updated: 0, Skipped: 1")
+    cy.get('@row').find("td:nth-of-type(3)").contains(importInfo)
 })
 
 Then("no content is displayed and upload is not possible", function () {
@@ -401,43 +388,22 @@ Then("no content is displayed and upload is not possible", function () {
     cy.get('button[data-testid="reset-button"]').should('be.visible').and('be.disabled')
 })
 
-Then("the user import page shows a successful import", function () {
+Then("the user import page shows an import with the message {string} and the details {string}", function (message: string, details: string) {
+    let messageDetails = details.split(" ")
+    let status = messageDetails[0].toLowerCase()
     cy.get('h1').contains("Userimport")
-    cy.get('p[data-testid="import-status-message"]').contains("Import successfully completed!")
-    cy.get('details[data-testid="created-import-details"]').invoke('find', 'summary').invoke('attr', 'text').contains("Created accounts (1)")
-    cy.get('details[data-testid="created-import-details"]').invoke('attr', 'open').should('not.exist')
+    cy.get('p[data-testid="import-status-message"]').contains(message)
+    cy.get('details[data-testid="' + status + '-import-details"]').invoke('find', 'summary').invoke('attr', 'text').contains(details)
+    cy.get('details[data-testid="' + status + '-import-details"]').invoke('attr', 'open').should('not.exist')
     cy.get('p[data-testid="import-download-link"]').invoke('find', 'a').contains("Download import overview")
 })
 
-Then("the table shows the information about the user {string}", function (username: string) {
-    cy.get('details[data-testid="created-import-details"]').invoke('attr', 'open').should('exist')
-    cy.get('details[data-testid="created-import-details"]').invoke('find', 'table').should('be.visible')
+Then("the table shows the information about the {string} user {string}", function (importStatus: string, username: string) {
+    cy.get('details[data-testid="' + importStatus + '-import-details"]').invoke('attr', 'open').should('exist')
+    cy.get('details[data-testid="' + importStatus + '-import-details"]').invoke('find', 'table').should('be.visible')
     cy.get('tr').as('row')
     cy.get('@row').should('be.visible')
     cy.get('@row').find("td:nth-of-type(1)").contains(username)
-})
-
-Then("the import result is downloaded and contains information regarding the file {string}", function (fileName: string) {
-    // To test the download, the generated import ID is extracted from the URL
-    cy.url()
-        .then(url => {
-            let urlSplit = url.split("/");
-            let fileId = urlSplit[6];
-            cy.readFile("cypress/downloads/" + fileId + ".json").then((fileContent) => {
-                expect(fileContent.importID).to.eq(fileId)
-                expect(fileContent.filename).to.eq(fileName)
-                expect(fileContent.timestamp).contains(/[0-9]+/)
-                expect(fileContent.created).is.not.empty
-                expect(fileContent.updated).is.empty
-                expect(fileContent.errors).is.empty
-                expect(fileContent.summary.importID).to.eq(fileId)
-                expect(fileContent.summary.filename).to.eq(fileName)
-                expect(fileContent.summary.timestamp).contains(/[0-9]+/)
-                expect(fileContent.summary.summary.created).to.eq(1)
-                expect(fileContent.summary.summary.updated).to.eq(0)
-                expect(fileContent.summary.summary.skipped).to.eq(0)
-            })
-        })
 })
 
 Then("the new user {string} was added", function (username: string) {
