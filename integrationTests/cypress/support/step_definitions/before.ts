@@ -44,8 +44,6 @@ Before({tags: "@add_user"}, () => {
 })
 
 Before({tags: "@clear_mails"}, () => {
-    cy.log("clear mail config:", Cypress.env("mailHogUrl"))
-
     cy.log("delete previous mails in Mailhog");
     cy.mhDeleteAll()
 })
