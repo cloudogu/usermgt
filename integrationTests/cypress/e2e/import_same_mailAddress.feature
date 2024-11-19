@@ -47,7 +47,7 @@ Feature: Tests for uploading file with users with same mail address
    Scenario: after uploading a file a user inspects the user import details page about the skipped accounts
      When the user opens the user import details page
      And the user clicks on the details regarding the "skipped" user import
-     Then the table shows the error message "The following columns contained a value that is marked as unique and was already assigned: 'mail'."
+     Then the table shows the error message "A user with the email 'testmail@cloudogu.de' already exists."
 
    @clean_before
    @clear_downloadDir

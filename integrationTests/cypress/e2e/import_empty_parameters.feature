@@ -27,14 +27,14 @@ Feature: Tests for inspecting the result details of an user import
        Then the table shows the error message "<message>"
 
        Examples:
-        | message                                                           |
-        | The following columns are required but were empty: 'displayname'. |
-        | The following columns had an invalid data type: 'external'.       |
-        | The following columns are required but were empty: 'mail'.        |
-        | The following columns had an invalid data type: 'pwdReset'.       |
-        | The following columns are required but were empty: 'surname'.     |
-        | The following columns are required but were empty: 'username'.    |
-        | The following columns are required but were empty: 'givenname'.   |
+        | message                                      |
+        | The column 'displayname' must be filled in.  |
+        | The column 'external' has an invalid format. |
+        | The column 'mail' must be filled in.         |
+        | The column 'pwdReset' has an invalid format. |
+        | The column 'surname' must be filled in.      |
+        | The column 'username' must be filled in.     |
+        | The column 'givenname' must be filled in.    |
 
    @clean_before
    @clear_downloadDir

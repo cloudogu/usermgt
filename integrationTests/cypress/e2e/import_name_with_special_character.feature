@@ -22,7 +22,7 @@ Feature: Tests for uploading file with user name that contains a special charact
   Scenario: after uploading a file a user inspects the user import details page
     When the user opens the user import details page
     And the user clicks on the details regarding the "skipped" user import
-    Then the table shows the error message "The following columns do not match the default format: 'username'."
+    Then the table shows the error message "The column 'username' may only contain letters, numbers, hyphens, underscores, dots and @."
 
   @clean_user_import
   @clear_downloadDir

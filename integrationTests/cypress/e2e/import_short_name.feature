@@ -22,7 +22,7 @@ Feature: Tests for uploading file with user name that is too short (1 character)
    Scenario: after uploading a file a user inspects the user import details page about the skipped accounts
      When the user opens the user import details page
      And the user clicks on the details regarding the "skipped" user import
-     Then the table shows the error message "The following columns do not match the default format: 'username'."
+     Then the table shows the error message "The column 'username' must have at least 2 characters."
 
    @clear_downloadDir
    @clean_user_import
