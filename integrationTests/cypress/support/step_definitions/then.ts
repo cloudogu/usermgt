@@ -121,8 +121,8 @@ Then("the users-page contains the user {string}", function (username:string) {
     cy.get('@row').should('be.visible');
     cy.get('@row').find("td").should('have.length', 4);
     cy.get('@row').find("td:nth-of-type(1)").contains(username);
-    cy.get('@row').find("td:nth-of-type(4)").find(`a[id="${username}-edit-link"]`).should('be.visible');
-    cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${username}-delete-button"]`).should('be.visible');
+    cy.get('@row').find("td:nth-of-type(4)").find(`a[id="${username}_new-edit-link"]`).should('be.visible');
+    cy.get('@row').find("td:nth-of-type(4)").find(`button[id="${username}_new-delete-button"]`).should('be.visible');
 });
 
 Then("the users-page contains the displayName {string}", function (displayName:string) {

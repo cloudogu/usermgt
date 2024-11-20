@@ -17,6 +17,7 @@ Feature: Tests for updating user that has password reset enabled
    @clean_before
    @clear_downloadDir
    @clear_mails
+   @clean_user_import
    Scenario: a newly created user logs in for the first time
      When the user opens the user import page
      And the user uploads the file "tap_userimport_akt3_f.csv"
@@ -88,6 +89,7 @@ Feature: Tests for updating user that has password reset enabled
    @clean_before
    @clear_downloadDir
    @clear_mails
+   @clean_user_import
    Scenario: an updated user tries to log in again
      When the user logs out by visiting the cas logout page
      And the user "Testertest" tries to log in with his generated password

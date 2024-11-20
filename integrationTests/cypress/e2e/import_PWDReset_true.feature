@@ -6,6 +6,10 @@ Feature: Tests for uploading file with user that has password reset enabled
      And the file "tap_userimport_pwd_t.csv" is uploaded
      And the user "manager" with password "newuserpassword1234A$" is logged in
 
+   @clean_before
+   @clear_downloadDir
+   @clear_mails
+   @clean_user_import
    Scenario: a user selects a file for upload
      When the user opens the user import page
      And the user selects the file "tap_userimport_pwd_t.csv"
@@ -72,6 +76,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clean_before
    @clear_downloadDir
    @clear_mails
+   @clean_user_import
    Scenario: a newly created user tries to log in for the first time
       When the user logs out by visiting the cas logout page
       And the user "testUser" tries to log in with his generated password
@@ -80,6 +85,7 @@ Feature: Tests for uploading file with user that has password reset enabled
    @clean_before
    @clear_downloadDir
    @clear_mails
+   @clean_user_import
    Scenario: a newly created user logs in for the first time
       When the user logs out by visiting the cas logout page
       And the user "testUser" tries to log in with his generated password
