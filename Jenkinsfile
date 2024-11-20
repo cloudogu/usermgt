@@ -259,6 +259,10 @@ parallel(
                         echo "setup mailhog"
                         ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                         ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
+                        echo "wait for postfix"
+                        timeout(15) {
+                            ecoSystem.waitForDogu("postfix")
+                        }
                         echo "run integration tests."
                         ecoSystem.runCypressIntegrationTests([
                               cypressImage     : "cypress/included:13.13.1",
