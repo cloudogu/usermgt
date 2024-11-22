@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.17.2-1] - 2024-11-22
+### Removed
+- Remove mail-to link from user-list
+
 ## [v1.17.1-1] - 2024-11-05
 ### Fixed
 - Only show external-user-hint if user is marked as external [#177]
