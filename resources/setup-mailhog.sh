@@ -10,7 +10,3 @@ MAILHOG_IP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddr
 etcdctl set services/mailhog/registrator:mailhog:8025 "{\"name\":\"mailhog\",\"service\":\"${MAILHOG_IP}:8025\",\"port\":\"8025\",\"tags\":[\"webapp\"],\"healthStatus\":\"healthy\",\"attributes\":{}}" && \
 etcdctl set /config/postfix/relayhost mailhog:1025
 sudo docker restart postfix
-CURRENT=$(etcdctl get dogu/mailhog/current)
-REGISTRATOR=$(etcdctl get services/mailhog/registrator:mailhog:8025)
-RELAYHOST=$(etcdctl get /config/postfix/relayhost)
-echo "Current Mailhog: ${CURRENT} Mailhog-IP: ${MAILHOG_IP} Registrator: ${REGISTRATOR} Relayhost: ${RELAYHOST}"
