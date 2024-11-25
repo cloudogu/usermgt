@@ -151,7 +151,21 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-
+                    stage('Integration Tests') {
+                        echo "setup mailhog"
+                        ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
+                        ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
+                        echo "wait for postfix"
+                        timeout(15) {
+                            ecoSystem.waitForDogu("postfix")
+                        }
+                        echo "run integration tests."
+                        ecoSystem.runCypressIntegrationTests([
+                                cypressImage     : "cypress/included:12.9.0",
+                                enableVideo      : params.EnableVideoRecording,
+                                enableScreenshots: params.EnableScreenshotRecording,
+                        ])
+                    }
 
                     if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {
                         stage('Upgrade dogu') {
@@ -174,13 +188,6 @@ parallel(
                         }
 
                         stage('Integration Tests - After Upgrade') {
-                            echo "setup mailhog"
-                            ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
-                            ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
-                            echo "wait for postfix"
-                            timeout(15) {
-                                ecoSystem.waitForDogu("postfix")
-                            }
                             echo "run integration tests."
                             ecoSystem.runCypressIntegrationTests([
                                     cypressImage     : "cypress/included:12.9.0",
