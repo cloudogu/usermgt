@@ -17,31 +17,13 @@ git.committerEmail = 'cesmarvin@cloudogu.com'
 GitFlow gitflow = new GitFlow(this, git)
 GitHub github = new GitHub(this, git)
 Changelog changelog = new Changelog(this)
+String defaultEmailRecipients = env.EMAIL_RECIPIENTS
+String doguName = 'usermgt'
 
 parallel(
      "source code": {
         node('docker') {
             timestamps {
-                properties([
-                        // Keep only the last 10 build to preserve space
-                        buildDiscarder(logRotator(numToKeepStr: '10')),
-                        // Don't run concurrent builds for a branch, because they use the same workspace directory
-                        disableConcurrentBuilds(),
-                        // Parameter to activate dogu upgrade test on demand
-                        parameters([
-                                booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
-                                string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
-                                booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
-                                booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
-                                choice(name: 'TrivyScanLevels', choices: [TrivyScanLevel.CRITICAL, TrivyScanLevel.HIGH, TrivyScanLevel.MEDIUM, TrivyScanLevel.ALL], description: 'The levels to scan with trivy'),
-                                choice(name: 'TrivyStrategy', choices: [TrivyScanStrategy.UNSTABLE, TrivyScanStrategy.FAIL, TrivyScanStrategy.IGNORE], description: 'Define whether the build should be unstable, fail or whether the error should be ignored if any vulnerability was found.'),
-                        ])
-                ])
-
-                String defaultEmailRecipients = env.EMAIL_RECIPIENTS
-
-                doguName = 'usermgt'
-
 
                 stage('Checkout') {
                     checkout scm
@@ -97,6 +79,37 @@ parallel(
                 stageStaticAnalysisSonarQube()
             }
 
+        // Archive Unit and integration test results, if any
+                junit allowEmptyResults: true, testResults: '**//*  *//* target/failsafe-reports/TEST-*.xml,**//*  *//* target/surefire-reports/TEST-*.xml,**//*  *//* target/jest-reports/TEST-*.xml'
+
+                mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
+            }
+        }
+    },
+    "dogu-integration": {
+        node('vagrant') {
+            timestamps {
+                properties([
+                        // Keep only the last 10 build to preserve space
+                        buildDiscarder(logRotator(numToKeepStr: '10')),
+                        // Don't run concurrent builds for a branch, because they use the same workspace directory
+                        disableConcurrentBuilds(),
+                        // Parameter to activate dogu upgrade test on demand
+                        parameters([
+                                booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
+                                string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
+                                booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
+                                booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
+                                choice(name: 'TrivyScanLevels', choices: [TrivyScanLevel.CRITICAL, TrivyScanLevel.HIGH, TrivyScanLevel.MEDIUM, TrivyScanLevel.ALL], description: 'The levels to scan with trivy'),
+                                choice(name: 'TrivyStrategy', choices: [TrivyScanStrategy.UNSTABLE, TrivyScanStrategy.FAIL, TrivyScanStrategy.IGNORE], description: 'Define whether the build should be unstable, fail or whether the error should be ignored if any vulnerability was found.'),
+                        ])
+                ])
+
+                stage('Checkout') {
+                    checkout scm
+                    git.clean('".*/"')
+                    createNpmrcFile("jenkins")
+                }
 
                 try {
                     stage('Provision') {
@@ -161,6 +174,13 @@ parallel(
                         }
 
                         stage('Integration Tests - After Upgrade') {
+                            echo "setup mailhog"
+                            ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
+                            ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
+                            echo "wait for postfix"
+                            timeout(15) {
+                                ecoSystem.waitForDogu("postfix")
+                            }
                             echo "run integration tests."
                             ecoSystem.runCypressIntegrationTests([
                                     cypressImage     : "cypress/included:12.9.0",
@@ -193,88 +213,12 @@ parallel(
                     }
                 }
 
-        // Archive Unit and integration test results, if any
+                // Archive Unit and integration test results, if any
                 junit allowEmptyResults: true, testResults: '**//*  *//* target/failsafe-reports/TEST-*.xml,**//*  *//* target/surefire-reports/TEST-*.xml,**//*  *//* target/jest-reports/TEST-*.xml'
 
                 mailIfStatusChanged(findEmailRecipients(defaultEmailRecipients))
-            }
-        }
-    },
-    "dogu-integration": {
-        node('vagrant') {
-            timestamps {
-                properties([
-                        // Keep only the last 10 build to preserve space
-                        buildDiscarder(logRotator(numToKeepStr: '10')),
-                        // Don't run concurrent builds for a branch, because they use the same workspace directory
-                        disableConcurrentBuilds(),
-                        // Parameter to activate dogu upgrade test on demand
-                        parameters([
-                                booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
-                                string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
-                                booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
-                                booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
-                                choice(name: 'TrivyScanLevels', choices: [TrivyScanLevel.CRITICAL, TrivyScanLevel.HIGH, TrivyScanLevel.MEDIUM, TrivyScanLevel.ALL], description: 'The levels to scan with trivy'),
-                                choice(name: 'TrivyStrategy', choices: [TrivyScanStrategy.UNSTABLE, TrivyScanStrategy.FAIL, TrivyScanStrategy.IGNORE], description: 'Define whether the build should be unstable, fail or whether the error should be ignored if any vulnerability was found.'),
-                        ])
-                ])
 
-                stage('Checkout') {
-                    checkout scm
-                    git.clean('".*/"')
-                    createNpmrcFile("jenkins")
-                }
 
-                try {
-                    stage('Provision') {
-                        ecoSystem.provision("/dogu");
-                    }
-
-                    stage('Setup') {
-                        ecoSystem.loginBackend('cesmarvin-setup')
-                        ecoSystem.setup([registryConfig: """
-                                        "_global": {
-                                            "password-policy": {
-                                                "must_contain_capital_letter": "true",
-                                                "must_contain_lower_case_letter": "true",
-                                                "must_contain_digit": "true",
-                                                "must_contain_special_character": "true",
-                                                "min_length": "14"
-                                            }
-                                         }
-                                        """])
-                    }
-
-                    stage('Wait for dependencies') {
-                        timeout(15) {
-                            ecoSystem.waitForDogu("cas")
-                        }
-                    }
-
-                    stage('Build dogu') {
-                        ecoSystem.build("/dogu")
-                    }
-
-                    stage('Integration Tests') {
-                        echo "setup mailhog"
-                        ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
-                        ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
-                        echo "wait for postfix"
-                        timeout(15) {
-                            ecoSystem.waitForDogu("postfix")
-                        }
-                        echo "run integration tests."
-                        ecoSystem.runCypressIntegrationTests([
-                              cypressImage     : "cypress/included:13.13.1",
-                              enableVideo      : params.EnableVideoRecording,
-                              enableScreenshots: params.EnableScreenshotRecording,
-                        ])
-                    }
-                } finally {
-                     stage('Clean') {
-                         ecoSystem.destroy()
-                     }
-                }
             }
         }
     }
