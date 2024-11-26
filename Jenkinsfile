@@ -164,6 +164,7 @@ parallel(
                                 cypressImage     : "cypress/included:12.9.0",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
+                                timeoutInMinutes : 45,
                         ])
                     }
 
@@ -193,6 +194,7 @@ parallel(
                                     cypressImage     : "cypress/included:12.9.0",
                                     enableVideo      : params.EnableVideoRecording,
                                     enableScreenshots: params.EnableScreenshotRecording,
+                                    timeoutInMinutes : 45,
                             ])
                         }
                     }
