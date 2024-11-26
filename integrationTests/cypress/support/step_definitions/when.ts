@@ -264,13 +264,12 @@ When("the user {string} tries to log in with his generated password", function (
         cy.visit("/cas/login", {failOnStatusCode: false})
         cy.get('input[data-testid="login-username-input-field"]').type(username)
         cy.get('input[data-testid="login-password-input-field"]').type(password)
-        //cy.get('div[data-testid=login-form-login-button-container]').children('button').click()
     })
 })
 
 When("the user configures the new password to {string}", function (password: string) {
-    cy.get('input[id="password"]').clear().type(password);
-    cy.get('input[id="confirmPassword"]').clear().type(password);
+    cy.get('input[data-testid="password-input"]').clear().type(password);
+    cy.get('input[data-testid="confirmPassword-input"]').clear().type(password);
     cy.get('button[data-testid="save-button"]').click()
 })
 
