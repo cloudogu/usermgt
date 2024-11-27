@@ -19,12 +19,13 @@ Feature: Tests for updating user that has password reset disabled
    @clear_mails
    @clean_user_import
    Scenario: a newly created user logs in for the first time
-     When the user opens the user import page
+     When the user logs out by visiting the cas logout page
+     And the user "Testertest" tries to log in with his generated password
+     And the user sets the new password to "testuserpassword1234A$"
+     And the user "manager" with password "newuserpassword1234A$" logs in
+     And the user opens the user import page
      And the user uploads the file "tap_userimport_akt2_f.csv"
      And the user logs out by visiting the cas logout page
-     And the user "Testertest" tries to log in with his generated password
-     And the user opens his own page in usermgt
-     And the user configures the new password to "testuserpassword1234A$"
      And the user "Testertest" with password "testuserpassword1234A$" logs in
      Then the account page for user "Testertest" is shown
 
