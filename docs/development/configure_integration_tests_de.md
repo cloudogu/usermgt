@@ -18,6 +18,7 @@ Die Werte konfigurieren die Passwort-Regeln, welche in den Integrationstests üb
 ## Voraussetzungen
 
 * Es ist notwendig, das Programm `yarn` zu installieren
+* Da einige Tests das Versenden von Emails beinhalten, muss vorher Mailhog im CES vorhanden sein. Dafür kann die [[Anleitung zum lokalen Emailversand] (https://docs.cloudogu.com/de/docs/dogus/postfix/development/Send_Mails_locally/)] im Postfix-Dogu genutzt werden. <!-- markdown-link-check-disable-line -->
 
 ## Konfiguration
 
