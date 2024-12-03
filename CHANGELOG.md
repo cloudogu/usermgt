@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add new integration tests [#161]
+  - New integration tests regarding user import, including the testing of the e-mail dispatch
+  - Adjust Pipeline to include Mailhog for Testing 
 
 ## [v1.17.1-1] - 2024-11-05
 ### Fixed
