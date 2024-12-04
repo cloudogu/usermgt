@@ -75,3 +75,10 @@ Given("{string} test-groups exist", (groups: string) => {
         }
     })
 })
+
+Given("the file {string} is uploaded", (file: string) => {
+    cy.visit('/usermgt/users/import')
+    cy.clickWarpMenuCheckboxIfPossible()
+    cy.get('input[type="file"]').selectFile("cypress/fixtures/" + file)
+    cy.get('button[data-testid="upload-button"]').click()
+})
