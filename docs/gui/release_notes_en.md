@@ -4,6 +4,10 @@ Below you will find the release notes for User Management.
 
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
+## [Unreleased]
+### Changed
+* The internal makefiles have been updated to standardize the versioning of the release notes.
+
 ## Release 1.17.2-1
 * Mail-To links are no longer displayed in the user list
 
