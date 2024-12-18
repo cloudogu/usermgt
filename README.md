@@ -1,5 +1,3 @@
-![Cloudogu logo](https://cloudogu.com/images/logo.png)
-
 [![GitHub license](https://img.shields.io/github/license/cloudogu/usermgt.svg)](https://github.com/cloudogu/usermgt/blob/develop/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/cloudogu/usermgt.svg)](https://github.com/cloudogu/usermgt/releases)
 
