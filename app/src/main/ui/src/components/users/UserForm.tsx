@@ -1,7 +1,7 @@
 import {deprecated_Form as Form, Details} from "@cloudogu/ces-theme-tailwind";
 import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
-import { useState} from "react";
+import {useEffect, useState} from "react";
 import {twMerge} from "tailwind-merge";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
@@ -33,7 +33,8 @@ export interface UserFormProps<T extends User> {
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
     const {open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName} = useConfirmation();
-    const [formDisabled, setFormDisabled] = useState(true);
+    const [formDisabled, setFormDisabled] = useState(false);
+    useEffect(() => hasEmptyRequiredFields(), []);
 
     const {admin} = useApplicationContext().casUser;
 
@@ -48,7 +49,6 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         if (handler.values.memberOf.indexOf(groupName) < 0) {
             const newGroups = [...handler.values.memberOf, groupName];
             handler.setValues({...handler.values, memberOf: newGroups});
-            hasEmptyRequiredFields();
         }
     };
 
@@ -63,7 +63,6 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         if (index >= 0) {
             groups.splice(index, 1);
             handler.setFieldValue("memberOf", groups);
-            hasEmptyRequiredFields();
         }
         toggleModal(false);
     };
