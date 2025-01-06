@@ -1,19 +1,20 @@
 import {deprecated_Form as Form, Details} from "@cloudogu/ces-theme-tailwind";
-import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
-import {ChangeEvent, useState} from "react";
+import { useState} from "react";
 import {twMerge} from "tailwind-merge";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
 import {Prompt} from "../../hooks/usePrompt";
 import useUserFormHandler from "../../hooks/useUserFormHandler";
-import type {Group} from "../../services/Groups";
 import {GroupsService} from "../../services/Groups";
 import {ConfirmationDialog} from "../ConfirmationDialog";
 import {useApplicationContext} from "../contexts/ApplicationContext";
 import HelpLink from "../helpLink";
+import type {Group} from "../../services/Groups";
 import type {User} from "../../services/Users";
+import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
+import type {ChangeEvent} from "react";
 
 const MAX_SEARCH_RESULTS = 10;
 
@@ -47,6 +48,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         if (handler.values.memberOf.indexOf(groupName) < 0) {
             const newGroups = [...handler.values.memberOf, groupName];
             handler.setValues({...handler.values, memberOf: newGroups});
+            hasEmptyRequiredFields();
         }
     };
 
@@ -61,6 +63,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         if (index >= 0) {
             groups.splice(index, 1);
             handler.setFieldValue("memberOf", groups);
+            hasEmptyRequiredFields();
         }
         toggleModal(false);
     };
