@@ -20,10 +20,10 @@ public abstract class AbstractManagerResource<T> {
 
     public static final int PAGING_MAXIMUM_PAGE_SIZE = 100000;
 
-    private static final Logger logger
+    protected static final Logger logger
         = LoggerFactory.getLogger(AbstractManagerResource.class);
 
-    private static final String CONSTRAINT_VIOLATION_LOG_MSG = "entity {} violates constraints";
+    protected static final String CONSTRAINT_VIOLATION_LOG_MSG = "entity {} violates constraints";
 
     @Context
     protected UriInfo uriInfo;
