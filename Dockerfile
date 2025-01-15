@@ -14,10 +14,10 @@ COPY app/.mvn .mvn
 
 RUN ./mvnw dependency:resolve-plugins dependency:resolve
 COPY app/ .
-RUN ./mvnw package
+RUN ./mvnw package -DskipTests
 
 
-FROM registry.cloudogu.com/official/base:3.20.3-2 as tomcat
+FROM registry.cloudogu.com/official/base:3.21.0-1 as tomcat
 
 ARG TOMCAT_MAJOR_VERSION
 ARG TOMCAT_VERSION
@@ -70,7 +70,7 @@ RUN set -eux \
 RUN chown -R tomcat:tomcat /opt/apache-tomcat
 
 
-FROM registry.cloudogu.com/official/java:8u402-6
+FROM registry.cloudogu.com/official/java:v8u432-1
 
 ARG TOMCAT_VERSION
 
