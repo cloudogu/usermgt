@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - The internal makefiles have been updated to standardize the versioning of the release notes.
+### Added
+- optional sync query parameter to create user endpoint [#184]
+  - if supplied, users and groups will be added synchronously to avoid unauthorized errors
 
 ### Added
 - Add new integration tests [#161]
