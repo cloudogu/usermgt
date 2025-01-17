@@ -9,7 +9,6 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 * Die internen Makefiles wurden aktualisiert um die Versionierung der Release-Notes zu vereinheitlichen.
 ### Added
 * Optionaler sync-Queryparameter am create-User Endpunkt
-    * If supplied, users and groups will be added synchronously to avoid unauthorized errors
     * Benutzer und Gruppen werden synchron angelegt, wenn der Parameter angegeben wird
     * Eine Anleitung befindet sich in create_users_synced.md
 
