@@ -5,6 +5,8 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.18.0-1] - 2025-01-17
 ### Changed
 * Die internen Makefiles wurden aktualisiert um die Versionierung der Release-Notes zu vereinheitlichen.
 ### Added
