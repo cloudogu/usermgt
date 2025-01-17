@@ -8,4 +8,5 @@ import de.triology.universeadm.Manager;
  */
 public interface UserManager extends Manager<User>
 {
+    public void createSynced(User user);
 }

@@ -7,6 +7,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 ## [Unreleased]
 ### Changed
 * Die internen Makefiles wurden aktualisiert um die Versionierung der Release-Notes zu vereinheitlichen.
+### Added
+* Optionaler sync-Queryparameter am create-User Endpunkt
+    * Benutzer und Gruppen werden synchron angelegt, wenn der Parameter angegeben wird
+    * Eine Anleitung befindet sich in create_users_synced.md
 
 ## Release 1.17.2-1
 * In der Benutzerliste werden nun keine Mail-To Links mehr angezeigt 

@@ -59,7 +59,7 @@ parallel(
                         .inside {
                             dir('app') {
                                 stage('Build') {
-                                    mvn 'clean install -DskipTests'
+                                    sh './mvnw clean install -DskipTests'
                                     archive '**//*  *//* target *//*  *//*.jar,**//*  *//* target *//*  *//*.zip'
                                 }
 
@@ -70,7 +70,7 @@ parallel(
                                 }
 
                                 stage('Unit Test') {
-                                    mvn 'test jacoco:report'
+                                    sh './mvnw test jacoco:report'
                                 }
                             }
                         }

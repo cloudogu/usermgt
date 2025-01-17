@@ -5,6 +5,7 @@ import com.google.common.io.Resources;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.triology.universeadm.*;
+import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.mapping.DefaultMapper;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
@@ -53,6 +54,7 @@ public class LDAPUserManagerTest {
     private static final String MAPPING_001 = "de/triology/universeadm/user/mapping.001.xml";
 
     private EventBus eventBus;
+    private GroupManager groupManager;
     private Validator validator;
     private final LDAPHasher hasher = new PlainLDAPHasher();
 
@@ -60,6 +62,7 @@ public class LDAPUserManagerTest {
     public void before() {
         eventBus = mock(EventBus.class);
         validator = mock(Validator.class);
+        groupManager = mock(GroupManager.class);
     }
 
     @Test
@@ -358,7 +361,7 @@ public class LDAPUserManagerTest {
         Mapper<User> mapper = new DefaultMapper<>(new SimpleMappingConverterFactory(), mapping, User.class, peopledn);
         MapperFactory mapperFactory = mock(MapperFactory.class);
         when(mapperFactory.createMapper(User.class, peopledn)).thenReturn(mapper);
-        return new LDAPUserManager(strategy, config, hasher, mapperFactory, validator, eventBus);
+        return new LDAPUserManager(strategy, config, hasher, mapperFactory, validator, eventBus, groupManager);
     }
 
     @Rule
