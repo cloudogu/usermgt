@@ -55,6 +55,7 @@ When("the user clicks save", function () {
 })
 
 When("the newly created user logs in", function () {
+    cy.visit("/cas/login")
     cy.fixture("newuser_data").then(function (newUser) {
         cy.login(newUser.username, newUser.password, env.GetMaxRetryCount()) // We dont want to retry the login
     })
@@ -218,8 +219,8 @@ When("the user uploads the file {string}", function (fileName: string) {
     cy.get('button[data-testid="upload-button"]').click()
 })
 
-When("the user clicks on the line 'Skipped data rows'", function () {
-    cy.get('details[data-testid="failed-import-details"]').click()
+When("the user clicks on the details regarding the {string} user import", function (importStatus: string) {
+    cy.get('details[data-testid="'+ importStatus +'-import-details"]').click()
 })
 
 When("the user downloads the import overview", function () {
@@ -233,4 +234,52 @@ When("the user opens the user import details page", function () {
         cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").find('button').click()
         cy.get('div').find('span').contains("Details").click()
     }
+})
+
+When("the user opens the menu in the functions column", function () {
+    cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").find( 'button').click()
+})
+
+When("deletes the entry for the user import", function () {
+    cy.get('table').find('tr').then((row) => {
+        let i: number = 1;
+        for (i; i < row.length; i++){
+            cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").find( 'button').click()
+            cy.get('div').find('span').contains("Delete").click()
+            cy.get('button').find('span').contains("OK").click()
+        }
+    })
+})
+
+When("the user {string} tries to log in with his generated password", function (username: string) {
+    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
+        let strings: string[]
+        strings = body.split(" ")
+        let passwordWithLineBreak = strings[8]
+        let passwordSplitted = passwordWithLineBreak.split("\\r\\n")
+        let password = passwordSplitted[0]
+
+        cy.clearCookies()
+
+        cy.visit("/cas/login", {failOnStatusCode: false})
+        cy.get('input[data-testid="login-username-input-field"]').type(username)
+        cy.get('input[data-testid="login-password-input-field"]').type(password)
+    })
+})
+
+When("the user configures the new password to {string}", function (password: string) {
+    cy.get('input[data-testid="password-input"]').clear().type(password);
+    cy.get('input[data-testid="confirmPassword-input"]').clear().type(password);
+    cy.get('button[data-testid="save-button"]').click()
+})
+
+When("the user sets the new password to {string}", function (password: string) {
+    cy.get('input[data-testid="password-input"]').clear().type(password);
+    cy.get('input[data-testid="confirmedPassword-input"]').clear().type(password);
+    cy.get('button[id="submit"]').click()
+})
+
+When("the user {string} with password {string} logs in", function (username: string, password: string) {
+    cy.visit("/cas/login")
+    cy.login(username, password, env.GetMaxRetryCount())
 })

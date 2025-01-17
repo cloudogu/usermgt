@@ -5,6 +5,7 @@ package de.triology.universeadm.user;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
+import de.triology.universeadm.group.LDAPGroupManager;
 import org.kohsuke.MetaInfServices;
 
 /**
@@ -26,6 +27,6 @@ public class UserModule extends AbstractModule
     bind(MemberListener.class).asEagerSingleton();
     bind(UserResource.class);
     bind(UserSelfRemoveExceptionMapper.class);
-
+    bind(LDAPGroupManager.class);
   }
 }

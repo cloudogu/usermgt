@@ -4,6 +4,8 @@ import createBundler from "@bahmutov/cypress-esbuild-preprocessor";
 import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
 import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild";
 import doguTestLibrary from "@cloudogu/dogu-integration-test-library";
+// @ts-ignore
+import fsConf from "cypress-fs/plugins/index.js";
 
 async function setupNodeEvents(
     on: Cypress.PluginEvents,
@@ -19,7 +21,11 @@ async function setupNodeEvents(
         })
     );
 
+    fsConf(on);
+
     config = doguTestLibrary.configure(config)
+
+    config.env["mailHogUrl"] = `${config.baseUrl}/mailhog/`
 
     // Make sure to return the config object as it might have been modified by the plugin.
     return config;
@@ -40,6 +46,11 @@ export default defineConfig({
         videoCompression: false,
         experimentalRunAllSpecs: true,
         specPattern: ["cypress/e2e/**/*.feature"],
+        //can be set to ensure minimization of flaky tests
+        retries: {
+            runMode: 2,
+            openMode: 0,
+        },
         setupNodeEvents,
     }
 });

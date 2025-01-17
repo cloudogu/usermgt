@@ -18,6 +18,7 @@ The values configure the password rules that are checked in the integration test
 ## Prerequisites
 
 * It is necessary to install the program `yarn`.
+* As some tests involve sending emails, Mailhog must be present in the CES beforehand. The [[instructions for sending emails locally (https://docs.cloudogu.com/en/docs/dogus/postfix/development/Send_Mails_locally/)]] in the postfix dogu can be used for this purpose. <!-- markdown-link-check-disable-line -->
 
 ## Configuration
 

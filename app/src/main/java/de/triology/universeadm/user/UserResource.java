@@ -11,6 +11,9 @@ import de.triology.universeadm.PaginationResultResponse;
 import de.triology.universeadm.group.Group;
 import de.triology.universeadm.group.GroupManager;
 import de.triology.universeadm.user.imports.*;
+import de.triology.universeadm.UniqueConstraintViolationResponse;
+import de.triology.universeadm.UniqueConstraintViolationException;
+import de.triology.universeadm.FieldConstraintViolationResponse;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.shiro.authz.AuthorizationException;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -19,15 +22,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 
 /**
  * TODO remove package cycle with group.
@@ -52,6 +53,40 @@ public class UserResource extends AbstractManagerResource<User> {
     }
 
     //~--- methods --------------------------------------------------------------
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response create(@Context UriInfo uriInfo, User object) {
+        // if the request contains a sync param the users are created synchronously
+        // this fixes an LDAP issue where too many requests cause inconsistent data
+        // Warning: this significantly slows down the user creation
+        if (uriInfo.getQueryParameters().containsKey("sync") && uriInfo.getQueryParameters().getFirst("sync").equals("true")) {
+                logger.info("Creating user synchronous");
+                Response.ResponseBuilder builder;
+
+                String id = getId(object);
+                try {
+                    userManager.createSynced(object);
+
+                    UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
+
+                    uriBuilder.path(id);
+                    builder = Response.created(uriBuilder.build());
+                } catch (UniqueConstraintViolationException e) {
+                    logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
+                    builder = Response.status(Response.Status.CONFLICT).entity(new UniqueConstraintViolationResponse(e));
+                } catch (FieldConstraintViolationException e) {
+                    logger.warn(CONSTRAINT_VIOLATION_LOG_MSG, id);
+                    builder = Response.status(Response.Status.CONFLICT).entity(new FieldConstraintViolationResponse(e));
+                }
+
+                return builder.build();
+            } else {
+            logger.info("Creating user asynchronous");
+            return super.create(uriInfo, object);
+            }
+        }
 
     /**
      * Method description

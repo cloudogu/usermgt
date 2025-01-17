@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.18.0-1] - 2025-01-17
+### Changed
+- The internal makefiles have been updated to standardize the versioning of the release notes.
+### Added
+- optional sync query parameter to create user endpoint [#184]
+  - if supplied, users and groups will be added synchronously to avoid unauthorized errors
+
+### Added
+- Add new integration tests [#161]
+  - New integration tests regarding user import, including the testing of the e-mail dispatch
+  - Adjust Pipeline to include Mailhog for Testing 
+
 ## [v1.17.2-1] - 2024-11-22
 ### Removed
 - Remove mail-to link from user-list
