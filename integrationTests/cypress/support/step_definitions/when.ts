@@ -285,9 +285,9 @@ When("the user {string} with password {string} logs in", function (username: str
 })
 
 When("the user enters an invalid password", function () {
-    cy.get('input[id="password"]').type("a")
+    cy.get('input[id="password"]').type(" ")
 })
 
 When("the user enters an invalid confirm-password", function () {
-        cy.get('input[id="confirmPassword"]').clear().type("a")
+        cy.get('input[id="confirmPassword"]').clear().type(" ")
 })

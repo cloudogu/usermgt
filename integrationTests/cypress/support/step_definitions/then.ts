@@ -49,11 +49,13 @@ Then("all password rules are displayed", function () {
     cy.get('span[data-testid="password-input-error-1"]').should('be.visible')
     cy.get('span[data-testid="password-input-error-2"]').should('be.visible')
     cy.get('span[data-testid="password-input-error-3"]').should('be.visible')
+    cy.get('span[data-testid="password-input-error-4"]').should('be.visible')
 
     cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least 14 characters.')
     cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least one capital letter.')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least one lower case letter.')
     cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least 1 number.')
-    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must contain at least 1 special character.')
+    cy.get('div[data-testid="password-input-error-errors"]').contains('The password must not contain only spaces.')
 });
 
 Then("the password-confirm entry is marked as invalid", function () {
