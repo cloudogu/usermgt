@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.19.0-1] - 2025-01-22
+* Alle Pflichtfelder im Formular zum Anlegen/Editieren von Nutzern sind jetzt als verpflichtend markiert und es ist 
+  nicht mehr möglich, das Formular abzusenden, wenn nicht alle verpflichtenden Felder ausgefüllt sind
+
 ## [v1.18.0-1] - 2025-01-17
 ### Changed
 * Die internen Makefiles wurden aktualisiert um die Versionierung der Release-Notes zu vereinheitlichen.
