@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.19.0-1] - 2025-01-22
+### Changed
+- The user form is now only valid if all required fields are filled out [#183]
+
 ## [v1.18.0-1] - 2025-01-17
 ### Changed
 - The internal makefiles have been updated to standardize the versioning of the release notes.
