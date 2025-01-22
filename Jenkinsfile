@@ -8,7 +8,6 @@ developmentBranch = "develop"
 currentBranch = "${env.BRANCH_NAME}"
 
 EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
-Trivy trivy = new Trivy(this, ecoSystem)
 
 Maven mvn = new MavenWrapper(this)
 Git git = new Git(this, "cesmarvin")
