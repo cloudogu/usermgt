@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/dogu-build-lib@v2.5.0', 'github.com/cloudogu/ces-build-lib@3.0.0'])
+@Library(['github.com/cloudogu/dogu-build-lib@v3.0.0', 'github.com/cloudogu/ces-build-lib@4.0.1'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -100,8 +100,8 @@ parallel(
                                 string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
                                 booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
                                 booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
-                                choice(name: 'TrivyScanLevels', choices: [TrivyScanLevel.CRITICAL, TrivyScanLevel.HIGH, TrivyScanLevel.MEDIUM, TrivyScanLevel.ALL], description: 'The levels to scan with trivy'),
-                                choice(name: 'TrivyStrategy', choices: [TrivyScanStrategy.UNSTABLE, TrivyScanStrategy.FAIL, TrivyScanStrategy.IGNORE], description: 'Define whether the build should be unstable, fail or whether the error should be ignored if any vulnerability was found.'),
+                                choice(name: 'TrivySeverityLevels', choices: [TrivySeverityLevel.CRITICAL, TrivySeverityLevel.HIGH_AND_ABOVE, TrivySeverityLevel.MEDIUM_AND_ABOVE, TrivySeverityLevel.ALL], description: 'The levels to scan with trivy', defaultValue: TrivySeverityLevel.CRITICAL),
+                                                        choice(name: 'TrivyStrategy', choices: [TrivyScanStrategy.UNSTABLE, TrivyScanStrategy.FAIL, TrivyScanStrategy.IGNORE], description: 'Define whether the build should be unstable, fail or whether the error should be ignored if any vulnerability was found.', defaultValue: TrivyScanStrategy.UNSTABLE),
                         ])
                 ])
 
@@ -138,13 +138,20 @@ parallel(
                     }
 
                     stage('Build') {
+                        // change namespace to prerelease_namespace if in develop-branch
+                        if (gitflow.isPreReleaseBranch()) {
+                            ecoSystem.vagrant.ssh "cd /dogu && make prerelease_namespace"
+                        }
                         ecoSystem.build("/dogu")
                     }
 
                     stage('Trivy scan') {
-                        trivy.scanDogu("/dogu", TrivyScanFormat.HTML, params.TrivyScanLevels, params.TrivyStrategy)
-                        trivy.scanDogu("/dogu", TrivyScanFormat.JSON, params.TrivyScanLevels, params.TrivyStrategy)
-                        trivy.scanDogu("/dogu", TrivyScanFormat.PLAIN, params.TrivyScanLevels, params.TrivyStrategy)
+                        ecoSystem.copyDoguImageToJenkinsWorker("/dogu")
+                        Trivy trivy = new Trivy(this)
+                        trivy.scanDogu(".", params.TrivySeverityLevels, params.TrivyStrategy)
+                        trivy.saveFormattedTrivyReport(TrivyScanFormat.TABLE)
+                        trivy.saveFormattedTrivyReport(TrivyScanFormat.JSON)
+                        trivy.saveFormattedTrivyReport(TrivyScanFormat.HTML)
                     }
 
                     stage('Verify') {
@@ -212,6 +219,11 @@ parallel(
 
                         stage('Add Github-Release') {
                             github.createReleaseWithChangelog(releaseVersion, changelog)
+                        }
+                    } else if (gitflow.isPreReleaseBranch()) {
+                        // push to registry in prerelease_namespace
+                        stage('Push Prerelease Dogu to registry') {
+                            ecoSystem.pushPreRelease("/dogu")
                         }
                     }
 
