@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new integration tests [#161]
   - New integration tests regarding user import, including the testing of the e-mail dispatch
   - Adjust Pipeline to include Mailhog for Testing 
+  - 
+### Fixed
+- Fixed validation in user creation form to only allow saving when all required fields are filled out
 
 ## [v1.17.2-1] - 2024-11-22
 ### Removed

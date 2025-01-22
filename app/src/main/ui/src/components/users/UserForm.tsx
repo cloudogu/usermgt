@@ -1,6 +1,7 @@
 import {deprecated_Form as Form, Details} from "@cloudogu/ces-theme-tailwind";
 import {Button, H2, ListWithSearchbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {TrashIcon} from "@heroicons/react/24/outline";
+import {useEffect, useState} from "react";
 import {twMerge} from "tailwind-merge";
 import {t} from "../../helpers/i18nHelpers";
 import {useConfirmation} from "../../hooks/useConfirmation";
@@ -13,6 +14,7 @@ import HelpLink from "../helpLink";
 import type {Group} from "../../services/Groups";
 import type {User} from "../../services/Users";
 import type {NotifyFunction, UseFormHandlerFunctions} from "@cloudogu/deprecated-ces-theme-tailwind";
+import type {ChangeEvent} from "react";
 
 const MAX_SEARCH_RESULTS = 10;
 
@@ -31,8 +33,17 @@ export interface UserFormProps<T extends User> {
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const {handler, notification, notify} = useUserFormHandler<T>(props.initialUser, (values: T) => props.onSubmit(values, notify, handler));
     const {open, setOpen: toggleModal, targetName: groupName, setTargetName: setGroupName} = useConfirmation();
+    const [formDisabled, setFormDisabled] = useState(false);
+    useEffect(() => hasEmptyRequiredFields(), []);
 
     const {admin} = useApplicationContext().casUser;
+
+    const originalChangeFunction = handler.handleChange;
+
+    handler.handleChange = (e:ChangeEvent) => {
+        originalChangeFunction(e);
+        hasEmptyRequiredFields();
+    };
 
     const addGroup = (groupName: string): void => {
         if (handler.values.memberOf.indexOf(groupName) < 0) {
@@ -83,6 +94,24 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         />
     );
 
+    const hasEmptyRequiredFields = (): void => {
+        const form = document.forms.item(0);
+        console.log("Check for null values");
+        if (form) {
+            const inputs: NodeListOf<HTMLInputElement> = form.querySelectorAll("input:required");
+            for (const input of inputs) {
+                if (!input.value) {
+                    setFormDisabled(true);
+                    return;
+                }
+            }
+            setFormDisabled(false);
+            return;
+        }
+        setFormDisabled(true);
+        return;
+    };
+
     return (
         <>
             <ConfirmationDialog
@@ -103,27 +132,27 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                         {t("users.externalUserWarning")}
                     </span>
                 )}
-                <Form.ValidatedTextInput type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username" placeholder={t("users.placeholder.username")} hint={t("users.hint.username")}>
+                <Form.ValidatedTextInput required type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username" placeholder={t("users.placeholder.username")} hint={t("users.hint.username")} >
                     {t("editUser.labels.username")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"givenname"} data-testid="givenname" placeholder={t("users.placeholder.givenname")}>
+                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"givenname"} data-testid="givenname" placeholder={t("users.placeholder.givenname")}  >
                     {t("editUser.labels.givenName")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"surname"} data-testid="surname" placeholder={t("users.placeholder.surname")}>
+                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"surname"} data-testid="surname" placeholder={t("users.placeholder.surname")} >
                     {t("editUser.labels.surname")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"displayName"} data-testid="displayName" placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
+                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"displayName"} data-testid="displayName" placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")} >
                     {t("editUser.labels.displayName")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput disabled={props.initialUser.external} type={"text"} name={"mail"} data-testid="mail" placeholder={t("users.placeholder.mail")}>
+                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"mail"} data-testid="mail" placeholder={t("users.placeholder.mail")} >
                     {t("editUser.labels.email")}
                 </Form.ValidatedTextInput>
                 {!props.initialUser.external &&
                     <>
-                        <Form.ValidatedTextInput disabled={props.initialUser.external} type={"password"} name={"password"} data-testid="password" placeholder={t("users.placeholder.password")}>
+                        <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"password"} name={"password"} data-testid="password" placeholder={t("users.placeholder.password")} >
                             {t("editUser.labels.password")}
                         </Form.ValidatedTextInput>
-                        <Form.ValidatedTextInput disabled={props.initialUser.external} type={"password"} name={"confirmPassword"} data-testid="confirmPassword" placeholder={t("users.placeholder.confirmPassword")}>
+                        <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"password"} name={"confirmPassword"} data-testid="confirmPassword" placeholder={t("users.placeholder.confirmPassword")} >
                             {t("editUser.labels.confirmPassword")}
                         </Form.ValidatedTextInput>
                     </>
@@ -156,7 +185,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 )}
 
                 <div className={"my-4"}>
-                    <Button variant={"primary"} type={"submit"} disabled={!handler.dirty} data-testid="save-button">
+                    <Button variant={"primary"} type={"submit"} disabled={formDisabled} data-testid="save-button">
                         {t("editUser.buttons.save")}
                     </Button>
                     {props.additionalButtons as JSX.Element}

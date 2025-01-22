@@ -1,5 +1,5 @@
 import '@bahmutov/cy-api'
-import { When } from "@badeball/cypress-cucumber-preprocessor";
+import {When} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 
 //Implement all necessary steps fore dogu integration test library
@@ -220,7 +220,7 @@ When("the user uploads the file {string}", function (fileName: string) {
 })
 
 When("the user clicks on the details regarding the {string} user import", function (importStatus: string) {
-    cy.get('details[data-testid="'+ importStatus +'-import-details"]').click()
+    cy.get('details[data-testid="' + importStatus + '-import-details"]').click()
 })
 
 When("the user downloads the import overview", function () {
@@ -230,21 +230,21 @@ When("the user downloads the import overview", function () {
 When("the user opens the user import details page", function () {
     cy.visit('/usermgt/summaries')
     cy.clickWarpMenuCheckboxIfPossible()
-    if(cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").should('exist')) {
+    if (cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").should('exist')) {
         cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").find('button').click()
         cy.get('div').find('span').contains("Details").click()
     }
 })
 
 When("the user opens the menu in the functions column", function () {
-    cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").find( 'button').click()
+    cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").find('button').click()
 })
 
 When("deletes the entry for the user import", function () {
     cy.get('table').find('tr').then((row) => {
         let i: number = 1;
-        for (i; i < row.length; i++){
-            cy.get('tbody').find('tr:nth-of-type(1)').invoke('find',"td:nth-of-type(4)").find( 'button').click()
+        for (i; i < row.length; i++) {
+            cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").find('button').click()
             cy.get('div').find('span').contains("Delete").click()
             cy.get('button').find('span').contains("OK").click()
         }
@@ -282,4 +282,12 @@ When("the user sets the new password to {string}", function (password: string) {
 When("the user {string} with password {string} logs in", function (username: string, password: string) {
     cy.visit("/cas/login")
     cy.login(username, password, env.GetMaxRetryCount())
+})
+
+When("the user enters an invalid password", function () {
+    cy.get('input[id="password"]').type(" ")
+})
+
+When("the user enters an invalid confirm-password", function () {
+        cy.get('input[id="confirmPassword"]').clear().type(" ")
 })
