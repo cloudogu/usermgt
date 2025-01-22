@@ -6,6 +6,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.19.0-1] - 2025-01-22
+* All mandatory fields in the form for creating/editing users are now marked as mandatory and it is no longer possible to submit the form
+  no longer possible to submit the form if not all mandatory fields are filled in
+
 ## [v1.18.0-1] - 2025-01-17
 ### Changed
 * The internal makefiles have been updated to standardize the versioning of the release notes.

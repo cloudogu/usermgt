@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.19.0-1] - 2025-01-22
+### Changed
+- The user form is now only valid if all required fields are filled out [#183]
+
 ## [v1.18.0-1] - 2025-01-17
 ### Changed
 - The internal makefiles have been updated to standardize the versioning of the release notes.
@@ -17,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new integration tests [#161]
   - New integration tests regarding user import, including the testing of the e-mail dispatch
   - Adjust Pipeline to include Mailhog for Testing 
+  - 
+### Fixed
+- Fixed validation in user creation form to only allow saving when all required fields are filled out
 
 ## [v1.17.2-1] - 2024-11-22
 ### Removed
