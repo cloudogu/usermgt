@@ -5,6 +5,7 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+We have only made technical changes. You can find more details in the changelogs.
 
 ## [v1.19.0-1] - 2025-01-22
 * All mandatory fields in the form for creating/editing users are now marked as mandatory and it is no longer possible to submit the form

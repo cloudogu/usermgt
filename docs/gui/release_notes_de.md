@@ -5,6 +5,7 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## [v1.19.0-1] - 2025-01-22
 * Alle Pflichtfelder im Formular zum Anlegen/Editieren von Nutzern sind jetzt als verpflichtend markiert und es ist 
