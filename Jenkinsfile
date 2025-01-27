@@ -18,6 +18,7 @@ GitHub github = new GitHub(this, git)
 Changelog changelog = new Changelog(this)
 String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 String doguName = 'usermgt'
+String base_url=ecosystem.getExternalIP()
 
 parallel(
      "source code": {
@@ -164,10 +165,14 @@ parallel(
                     new Docker(this).image('mcr.microsoft.com/playwright:v1.50.0-noble')
                             .mountJenkinsUser()
                             .inside {
-                                  stage('e2e-tests') {
+                                dir('playwright') {
+                                    stage('e2e-tests') {
                                         sh 'npm ci'
-                                        sh 'npx bddgen && BASE_URL=https://${ecoSystem.getExternalIP()} npx playwright test'
-                                  }
+                                        sh "npx bddgen && BASE_URL=https://${base_url} npx playwright test"
+                                    }
+
+                                }
+
                             }
 
                    /* stage('Integration Tests') {
