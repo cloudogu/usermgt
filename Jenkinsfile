@@ -141,7 +141,7 @@ parallel(
                     }
 
                     stage('Build') {
-                        // purge usermgt from old namespace to prevent conflicts while building prerelease_official/usermgt
+                        // purge usermgt from official namespace to prevent conflicts while building prerelease_official/usermgt
                         if (gitflow.isPreReleaseBranch()) {
                             ecoSystem.purgeDogu("usermgt")
                         }
