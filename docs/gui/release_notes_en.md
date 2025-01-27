@@ -6,6 +6,9 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.20.0-1] - 2025-01-27
+We have only made technical changes. You can find more details in the changelogs.
+
 ## [v1.19.0-1] - 2025-01-22
 * All mandatory fields in the form for creating/editing users are now marked as mandatory and it is no longer possible to submit the form
   no longer possible to submit the form if not all mandatory fields are filled in

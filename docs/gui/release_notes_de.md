@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.20.0-1] - 2025-01-27
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+
 ## [v1.19.0-1] - 2025-01-22
 * Alle Pflichtfelder im Formular zum Anlegen/Editieren von Nutzern sind jetzt als verpflichtend markiert und es ist 
   nicht mehr möglich, das Formular abzusenden, wenn nicht alle verpflichtenden Felder ausgefüllt sind

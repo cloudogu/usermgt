@@ -1,6 +1,6 @@
-ARG TOMCAT_MAJOR_VERSION=8
-ARG TOMCAT_VERSION=8.5.99
-ARG TOMCAT_TARGZ_SHA512=38f636039d00c66ff8f7347dfedcc1eef85b7ce25cf98dcc9192df07f85d4f6aec447922e0f934c1ab7d099ec484b2060aad4de496d5ca14637ac435cb55b7c0
+ARG TOMCAT_MAJOR_VERSION=9
+ARG TOMCAT_VERSION=9.0.96
+ARG TOMCAT_TARGZ_SHA512=ef3ac81debbc3a519c43d1fdb1c88ab26a8052af424d81bceccfbd6e663050a06d7aad7960fd5d11c17849829daebbebf33d92ac1158902283d0e534514aab93
 
 FROM timbru31/java-node:8-jdk-18 as builder
 
@@ -75,7 +75,7 @@ FROM registry.cloudogu.com/official/java:8u432-1
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.19.0-1" \
+   VERSION="1.20.0-1" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx

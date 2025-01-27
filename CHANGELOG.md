@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.20.0-1] - 2025-01-27
+### Changed
+- Update ces-build-lib to 4.0.1 and dogu-build-lib to v3.0.0 [#189]
+- Update Tomcat to 9.0.36
+### Added
+- Add Trivy-Scan of ces-build-lib
+- Add develop-prerelease build step
+
 ## [v1.19.0-1] - 2025-01-22
 ### Changed
 - The user form is now only valid if all required fields are filled out [#183]
