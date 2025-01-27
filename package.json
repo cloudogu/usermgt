@@ -10,7 +10,6 @@
   "version": "1.20.0-1",
   "devDependencies": {
     "dotenv": "^16.4.7",
-    "playwright-bdd": "^8.0.1",
-    "playwright-mailhog": "^1.1.0"
+    "playwright-bdd": "^8.0.1"
   }
 }
