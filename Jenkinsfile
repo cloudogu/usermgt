@@ -165,10 +165,8 @@ parallel(
                             .mountJenkinsUser()
                             .inside {
                                   stage('e2e-tests') {
-                                     steps {
                                         sh 'npm ci'
                                         sh 'npx bddgen && BASE_URL=https://${ecoSystem.getExternalIP()} npx playwright test'
-                                     }
                                   }
                             }
 
