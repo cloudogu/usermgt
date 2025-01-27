@@ -18,7 +18,6 @@ GitHub github = new GitHub(this, git)
 Changelog changelog = new Changelog(this)
 String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 String doguName = 'usermgt'
-String base_url=ecosystem.getExternalIP()
 
 parallel(
      "source code": {
@@ -168,7 +167,7 @@ parallel(
                                 dir('playwright') {
                                     stage('e2e-tests') {
                                         sh 'npm ci'
-                                        sh "npx bddgen && BASE_URL=https://${base_url} npx playwright test"
+                                        sh "npx bddgen && BASE_URL=https://${ecosystem.getExternalIP()} npx playwright test"
                                     }
 
                                 }
