@@ -167,7 +167,7 @@ parallel(
                                 dir('playwright') {
                                     stage('e2e-tests') {
                                         sh 'npm ci'
-                                        sh "npx bddgen && BASE_URL=https://${ecosystem.getExternalIP()} npx playwright test"
+                                        sh "npx bddgen && npx BASE_URL=https://${ecosystem.getExternalIP()} playwright test"
                                     }
 
                                 }
