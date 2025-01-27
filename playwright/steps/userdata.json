@@ -1,0 +1,36 @@
+{
+  "testUser": [
+    {
+      "username": "manager",
+      "password": "newuserpassword1234A$",
+      "givenname": "manager",
+      "surname": "manager",
+      "displayName": "Tester",
+      "mail": "manager@cloudogu.com"
+    },
+    {
+      "username": "nomanager",
+      "password": "newuserpassword1234A$",
+      "givenname": "nomanager",
+      "surname": "nomanager",
+      "displayName": "Tester",
+      "mail": "nomanager@cloudogu.com"
+    },
+    {
+      "username": "testuser",
+      "password": "testuserpassword1234A$",
+      "givenname": "test",
+      "surname": "test",
+      "displayName": "Tester",
+      "mail": "test@cloudogu.com"
+    },
+    {
+      "username": "mmustermann",
+      "password": "testuserpassword1234A$",
+      "givenname": "Max",
+      "surname": "Mustermann",
+      "displayName": "Max Mustermann",
+      "mail": "max@mustermann.de"
+    }
+  ]
+}

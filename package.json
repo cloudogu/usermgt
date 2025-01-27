@@ -1,7 +1,16 @@
 {
   "dependencies": {
+    "@cucumber/message-streams": "^4.0.1",
+    "@cucumber/messages": "^27.0.2",
+    "@playwright/test": "^1.49.1",
     "cypress": "^13.13.1",
+    "typescript": "^5.7.3",
     "yarn": "^1.22.22"
   },
-  "version": "1.20.0-1"
+  "version": "1.20.0-1",
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "playwright-bdd": "^8.0.1",
+    "playwright-mailhog": "^1.1.0"
+  }
 }

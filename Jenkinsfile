@@ -161,7 +161,18 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-                    stage('Integration Tests') {
+                    new Docker(this).image('mcr.microsoft.com/playwright:v1.50.0-noble')
+                            .mountJenkinsUser()
+                            .inside {
+                                  stage('e2e-tests') {
+                                     steps {
+                                        sh 'npm ci'
+                                        sh 'npx bddgen && npx playwright test'
+                                     }
+                                  }
+                            }
+
+                   /* stage('Integration Tests') {
                         echo "setup mailhog"
                         ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                         ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
@@ -176,7 +187,7 @@ parallel(
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
                         ])
-                    }
+                    }*/
 
                     if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {
                         stage('Upgrade dogu') {
@@ -198,7 +209,7 @@ parallel(
                             ecoSystem.waitForDogu(doguName)
                         }
 
-                        stage('Integration Tests - After Upgrade') {
+                        /*stage('Integration Tests - After Upgrade') {
                             echo "run integration tests."
                             ecoSystem.runCypressIntegrationTests([
                                     cypressImage     : "cypress/included:12.9.0",
@@ -206,7 +217,7 @@ parallel(
                                     enableScreenshots: params.EnableScreenshotRecording,
                                     timeoutInMinutes : 45,
                             ])
-                        }
+                        }*/
                     }
 
                     if (gitflow.isReleaseBranch()) {
