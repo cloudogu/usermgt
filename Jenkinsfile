@@ -161,18 +161,14 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-                    new Docker(this).image('mcr.microsoft.com/playwright:v1.50.0-noble')
-                            .mountJenkinsUser()
-                            .inside {
-                                dir('playwright') {
-                                    stage('e2e-tests') {
-                                        sh 'npm ci'
-                                        sh "npx bddgen && npx BASE_URL=https://${ecosystem.getExternalIP()} playwright test"
-                                    }
-
-                                }
-
-                            }
+                    stage('e2e-tests') {
+                        dir('playwright') {
+                            sh 'sudo apt-get install npm -y'
+                            sh 'npm ci'
+                            sh 'npx playwright install --with-deps'
+                            sh "npx bddgen && npx BASE_URL=https://${ecosystem.getExternalIP()} playwright test"
+                        }
+                    }
 
                    /* stage('Integration Tests') {
                         echo "setup mailhog"
