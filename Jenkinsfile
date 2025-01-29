@@ -162,12 +162,15 @@ parallel(
                     }
 
                     stage('e2e-tests') {
-
                         dir('playwright') {
+                            sh 'rm ../package-lock.json'
                             sh 'sudo apt-get install npm -y'
-                            sh 'npm ci'
-                            sh 'npx playwright install --with-deps'
-                            sh "npx bddgen && npx BASE_URL=https://${ecoSystem.getExternalIP()} playwright test"
+                            sh 'sudo npm i -g npx'
+                            sh 'curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -'
+                            sh 'sudo npm install nodejs -y'
+                            sh 'npm install'
+                            sh 'npx bddgen'
+                            sh "npx BASE_URL=https://${ecoSystem.getExternalIP()} playwright test"
                         }
                     }
 
