@@ -162,11 +162,12 @@ parallel(
                     }
 
                     stage('e2e-tests') {
+
                         dir('playwright') {
                             sh 'sudo apt-get install npm -y'
                             sh 'npm ci'
                             sh 'npx playwright install --with-deps'
-                            sh "npx bddgen && npx BASE_URL=https://${ecosystem.getExternalIP()} playwright test"
+                            sh "npx bddgen && npx BASE_URL=https://${ecoSystem.getExternalIP()} playwright test"
                         }
                     }
 
