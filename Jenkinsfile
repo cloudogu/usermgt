@@ -161,18 +161,18 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-                    stage('e2e-tests') {
-                        dir('playwright') {
-                            sh 'rm ../package-lock.json'
-                            sh 'sudo apt-get install npm -y'
-                            sh 'sudo npm i -g npx'
-                            sh 'curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -'
-                            sh 'sudo npm install nodejs -y'
-                            sh 'npm install'
-                            sh 'npx bddgen'
-                            sh "npx BASE_URL=https://${ecoSystem.getExternalIP()} playwright test"
-                        }
-                    }
+                    new Docker(this).image('mcr.microsoft.com/playwright:v1.50.0-noble')
+                            .mountJenkinsUser()
+                            .inside("-e BASE_URL=https://${ecoSystem.getExternalIP()}") {
+                                dir('playwright') {
+                                    stage('e2e-tests') {
+                                        sh "echo ${BASE_URL}"
+                                        sh 'npm ci'
+                                        sh 'npx bddgen'
+                                        sh "BASE_URL=https://${BASE_URL} npx playwright test"
+                                    }
+                                }
+                            }
 
                    /* stage('Integration Tests') {
                         echo "setup mailhog"
