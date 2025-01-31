@@ -104,6 +104,8 @@ parallel(
                         ])
                 ])
 
+                def BASE_URL = ecoSystem.getExternalIP()
+
                 stage('Checkout') {
                     checkout scm
                     git.clean('".*/"')
@@ -163,14 +165,16 @@ parallel(
 
                     new Docker(this).image('mcr.microsoft.com/playwright:v1.50.0-noble')
                             .mountJenkinsUser()
-                            .inside("-e BASE_URL=https://${ecoSystem.getExternalIP()}") {
-                                dir('playwright') {
-                                    stage('e2e-tests') {
-                                        sh "export BASE_URL=$BASE_URL"
-                                        sh "echo $BASE_URL"
-                                        sh 'npm ci'
-                                        sh 'npx bddgen'
-                                        sh "BASE_URL=$BASE_URL npx playwright test"
+                            .inside("-e BASE_URL=https://${BASE_URL}") {
+                                withEnv(["BASE_URL=${BASE_URL}"]) {
+                                    dir('playwright') {
+                                        stage('e2e-tests') {
+                                            sh "export BASE_URL=$BASE_URL"
+                                            sh "echo $BASE_URL"
+                                            sh 'npm ci'
+                                            sh 'npx bddgen'
+                                            sh "BASE_URL=$BASE_URL npx playwright test"
+                                        }
                                     }
                                 }
                             }
