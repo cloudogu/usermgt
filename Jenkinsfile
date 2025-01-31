@@ -168,7 +168,7 @@ parallel(
                                     stage('e2e-tests') {
                                         sh 'npm ci'
                                         sh 'npx bddgen'
-                                        sh "BASE_URL=https://${BASE_URL} npx playwright test"
+                                        sh "BASE_URL=${BASE_URL} npx playwright test"
                                     }
                                 }
                             }
