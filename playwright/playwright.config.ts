@@ -32,7 +32,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL || 'https://192.168.56.2',
+    baseURL: process.env.BASE_URL,
     httpCredentials: {
       username: 'ces-admin',
       password: 'Ecosystem2016!',
