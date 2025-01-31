@@ -166,9 +166,11 @@ parallel(
                             .inside("-e BASE_URL=https://${ecoSystem.getExternalIP()}") {
                                 dir('playwright') {
                                     stage('e2e-tests') {
+                                        sh "export BASE_URL=$BASE_URL"
+                                        sh "echo $BASE_URL"
                                         sh 'npm ci'
                                         sh 'npx bddgen'
-                                        sh "BASE_URL=${BASE_URL} npx playwright test"
+                                        sh "BASE_URL=$BASE_URL npx playwright test"
                                     }
                                 }
                             }
