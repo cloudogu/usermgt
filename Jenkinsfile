@@ -104,7 +104,7 @@ parallel(
                         ])
                 ])
 
-                def BASE_URL = ecoSystem.getExternalIP()
+
 
                 stage('Checkout') {
                     checkout scm
@@ -163,6 +163,8 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
+                    def BASE_URL = ecoSystem.getExternalIP()
+
                     new Docker(this).image('mcr.microsoft.com/playwright:v1.49.1-noble')
                             .mountJenkinsUser()
                             .inside("--net=host") {
@@ -172,7 +174,7 @@ parallel(
                                             sh "export BASE_URL=$BASE_URL"
                                             sh 'npm ci'
                                             sh 'npx bddgen'
-                                            sh "BASE_URL=$BASE_URL npx playwright test"
+                                            sh "BASE_URL=$BASE_URL PLAYWRIGHT_JUNIT_OUTPUT_FILE=cypress-reports/TEST-${UUID.randomUUID().toString()}.xml npx playwright test --reporter=junit"
                                         }
                                     }
                                 }
