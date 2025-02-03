@@ -163,14 +163,15 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-                    new Docker(this).image('mcr.microsoft.com/playwright:v1.50.0-noble')
+                    def BASE_URL="https://${ecoSystem.getExternalIP()}"
+
+                    new Docker(this).image('mcr.microsoft.com/playwright:v1.49.1-noble')
                             .mountJenkinsUser()
-                            .inside("-e BASE_URL=https://${BASE_URL}") {
+                            .inside("--net=host") {
                                 withEnv(["BASE_URL=${BASE_URL}"]) {
                                     dir('playwright') {
                                         stage('e2e-tests') {
                                             sh "export BASE_URL=$BASE_URL"
-                                            sh "echo $BASE_URL"
                                             sh 'npm ci'
                                             sh 'npx bddgen'
                                             sh "BASE_URL=$BASE_URL npx playwright test"
