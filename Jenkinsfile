@@ -163,8 +163,6 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-                    def BASE_URL="https://${ecoSystem.getExternalIP()}"
-
                     new Docker(this).image('mcr.microsoft.com/playwright:v1.49.1-noble')
                             .mountJenkinsUser()
                             .inside("--net=host") {
