@@ -33,7 +33,7 @@ export const tryCreateUser = async (page: Page, username: string) => {
             pwdReset: null,
             memberOf: [],
         },
-        failOnStatusCode: false,
+        failOnStatusCode: true,
     });
 }
 
