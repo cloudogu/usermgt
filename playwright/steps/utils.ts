@@ -15,10 +15,11 @@ export const tryDeleteUser = async (page: Page, username: string) => {
 
 export const tryCreateUser = async (page: Page, username: string) => {
     let user: { username: string; givenname: string; surname: string; displayName: string; mail: string; password: string; };
+    let currentUser: { username: any; givenname: any; surname: any; displayName: any; mail: any; password: any; };
 
-    for(user of testUser) {
-        if(user.username === username){
-            return user;
+    for(currentUser of testUser) {
+        if(currentUser.username === username){
+            user = currentUser;
         }
     }
     await page.request.post('/usermgt/api/users/' + username, {
