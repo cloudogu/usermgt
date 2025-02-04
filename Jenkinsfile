@@ -174,10 +174,10 @@ parallel(
                                             sh "export BASE_URL=$BASE_URL"
                                             sh 'npm ci'
                                             sh 'npx bddgen'
-                                            sh "BASE_URL=https://$BASE_URL PLAYWRIGHT_JUNIT_OUTPUT_FILE=playwright/test-results/results.xml npx playwright test --reporter=junit"
-                                            junit allowEmptyResults: true, testResults: "test-results/results.xml"
-                                            archiveArtifacts artifacts: "playwright/test-results/**/video.webm", allowEmptyArchive: true
+                                            sh "BASE_URL=https://$BASE_URL npx playwright test"
                                         }
+                                        junit allowEmptyResults: true, testResults: "test-results/results.xml"
+                                        archiveArtifacts artifacts: "test-results/**/video.webm", allowEmptyArchive: true
                                     }
                                 }
                             }
