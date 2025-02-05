@@ -176,7 +176,7 @@ parallel(
                                             sh 'npx bddgen'
                                             sh "BASE_URL=https://$BASE_URL npx playwright test"
                                         }
-                                        junit allowEmptyResults: true, testResults: "test-results/results.xml"
+                                        junit allowEmptyResults: true, testResults: "playwright/test-results/results.xml"
                                         archiveArtifacts artifacts: "test-results/**/video.webm", allowEmptyArchive: true
                                     }
                                 }

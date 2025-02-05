@@ -16,6 +16,7 @@ export const tryDeleteUser = async (page: Page, username: string) => {
 export const tryCreateUser = async (page: Page, username: string) => {
     let user: { username: string; givenname: string; surname: string; displayName: string; mail: string; password: string; };
     let currentUser: { username: any; givenname: any; surname: any; displayName: any; mail: any; password: any; };
+    const credentials = Buffer.from(`${process.env.ADMIN_USERNAME}:${process.env.ADMIN_PASSWORD}`).toString('base64')
 
     for(currentUser of testUser) {
         if(currentUser.username === username){
@@ -32,6 +33,9 @@ export const tryCreateUser = async (page: Page, username: string) => {
             password: user.password,
             pwdReset: null,
             memberOf: [],
+        },
+        headers: {
+            'Authorization': `Basic ${credentials}`
         },
         failOnStatusCode: true,
     });
