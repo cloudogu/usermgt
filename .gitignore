@@ -491,4 +491,3 @@ app/.project
 **/build/tmp/**
 .npmrc
 .bin/
-keys.md
