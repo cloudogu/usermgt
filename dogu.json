@@ -99,11 +99,6 @@
       }
     },
     {
-      "Name": "mail_address",
-      "Description": "Sets email address. The default value is equal the global key 'mail_address'. It's default is 'info@cloudogu.com'",
-      "Optional": true
-    },
-    {
       "Name": "mail/sender",
       "Description": "Email address to use as sender of the User Management dogu",
       "Default": "no-reply@cloudogu.com",
