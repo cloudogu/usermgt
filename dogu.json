@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.20.0-1",
+  "Version": "1.20.0-2",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -59,7 +59,6 @@
       "Description": "Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
       "Optional": true
     },
-
     {
       "Name": "container_config/memory_request",
       "Description": "Requests the container's minimal memory requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
@@ -84,7 +83,6 @@
         "Type": "BINARY_MEASUREMENT"
       }
     },
-
     {
       "Name": "pwd_reset_selected_by_default",
       "Description": "Specifies whether the checkbox for the password change at the next login attribute should be preselected by default ",
@@ -183,7 +181,6 @@
         ]
       }
     }
-
   ],
   "ExposedCommands": [
     {
