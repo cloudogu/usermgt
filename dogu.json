@@ -50,6 +50,42 @@
   ],
   "Configuration": [
     {
+      "Name": "container_config/cpu_core_limit",
+      "Description": "Limits the container's CPU core usage. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Optional": true
+    },
+    {
+      "Name": "container_config/cpu_core_request",
+      "Description": "Requests the container's minimal CPU core requirement. Use a positive floating value describing a fraction of 1 CPU core. When you define a value of '0.5', you are requesting half as much CPU time compared to if you asked for '1.0' CPU.",
+      "Optional": true
+    },
+
+    {
+      "Name": "container_config/memory_request",
+      "Description": "Requests the container's minimal memory requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/storage_limit",
+      "Description": "Limits the container's ephemeral storage usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+    {
+      "Name": "container_config/storage_request",
+      "Description": "Requests the container's minimal ephemeral storage requirement. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte).",
+      "Optional": true,
+      "Validation": {
+        "Type": "BINARY_MEASUREMENT"
+      }
+    },
+
+    {
       "Name": "pwd_reset_selected_by_default",
       "Description": "Specifies whether the checkbox for the password change at the next login attribute should be preselected by default ",
       "Default": "false",
@@ -65,31 +101,37 @@
     {
       "Name": "mail/sender",
       "Description": "Email address to use as sender of the User Management dogu",
+      "Default": "no-reply@cloudogu.com",
       "Optional": true
     },
     {
       "Name": "mail/import/subject",
       "Description": "The subject of the mail, which is send when a user is imported via the csv import feature",
+      "Default": "Ihr neuer Cloudogu Ecosystem Account",
       "Optional": true
     },
     {
-      "Name": "mail/import/content",
+      "Name": "mail/import/message",
       "Description": "The content of the mail, which is send when a User is imported via the csv import feature. Within the content the placeholders ${username} and ${password} need to be included.",
+      "Default": "Willkommen im Cloudogu Ecosystem!\n\nDies ist Ihr Benutzeraccount:\n\nBenutzername: ${username}\nPasswort: ${password}\n\nBei der ersten Anmeldung müssen Sie das Passwort ändern.",
       "Optional": true
     },
     {
       "Name": "mail/import/max_retries",
       "Description": "The number of maximum retries to send a mail, before an error occurs",
+      "Default": "10",
       "Optional": true
     },
     {
       "Name": "mail/import/max_retry_delay",
       "Description": "The maximum delay for sending an email as part of a retry. By using a backoff strategy, the waiting time increases for each failed send until max_retry_delay is reached before the mail is sent again.",
+      "Default": "3600",
       "Optional": true
     },
     {
       "Name": "mail/import/retry_interval",
       "Description": "The interval in which failed mails will be checked to be sent again.",
+      "Default": "30",
       "Optional": true
     },
     {
@@ -141,6 +183,7 @@
         ]
       }
     }
+
   ],
   "ExposedCommands": [
     {

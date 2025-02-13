@@ -110,18 +110,16 @@ teardown() {
   assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "validate logging/root"
 }
-@test "validateDoguLogLevel() should fail on invalid log levels, warn about it, and remove bad config key" {
+@test "validateDoguLogLevel() should fail on invalid log levels, print an error message and exit with code 1" {
   source /workspace/resources/logging.sh
   mock_set_status "${doguctl}" 42
 
   run validateDoguLogLevel
 
   assert_failure
-  assert_equal "$(mock_get_call_num "${doguctl}")" "2"
+  assert_equal "$(mock_get_call_num "${doguctl}")" "1"
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "validate logging/root"
-  assert_equal "$(mock_get_call_args "${doguctl}" "2")" "config --rm logging/root"
-  assert_line "WARNING: The loglevel configured in logging/root is invalid."
-  assert_line "WARNING: Removing misconfigured value."
+  assert_line "ERROR: The loglevel configured in logging/root is invalid."
 }
 
 @test "renderLoggingProperties() should call doguctl to render logging.properties" {

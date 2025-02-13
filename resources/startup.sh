@@ -47,12 +47,6 @@ copyConfigurationResources() {
   cp -rf "${APP_CONFIG_RESOURCE_SRC}"/* "${UNIVERSEADM_HOME}"
 }
 
-buildMailAddress() {
-  GLOBAL_MAIL_ADDRESS="$(doguctl config --global --default "info@cloudogu.com" mail_address)"
-  MAIL_ADDRESS="$(doguctl config --default "${GLOBAL_MAIL_ADDRESS}" mail_address)"
-  export MAIL_ADDRESS
-}
-
 renderTemplates() {
   determinePwdMinLength
 
@@ -107,7 +101,6 @@ runMain() {
 
   encryptLdapPassword
   copyConfigurationResources
-  buildMailAddress
   renderTemplates
   createGuiConfiguration
   createTrustStore
