@@ -167,7 +167,7 @@ parallel(
 
                     new Docker(this).image('mcr.microsoft.com/playwright:v1.49.1-noble')
                             .mountJenkinsUser()
-                            .inside("--net=host") {
+                            .inside() {
                                 withEnv(["BASE_URL=${BASE_URL}"]) {
                                     dir('playwright') {
                                         stage('e2e-tests') {

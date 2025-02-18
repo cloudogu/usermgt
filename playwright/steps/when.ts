@@ -5,6 +5,6 @@ When('the user opens the user import page', async ({importPage}) => {
 });
 
 When('the user selects the file {string}', async ({importPage}, file) => {
-    await importPage.selectFile( file);
+    await importPage.selectFile(file);
 });
 

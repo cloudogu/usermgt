@@ -12,7 +12,5 @@ Given('the user {string} exists', async ({page}, username) => {
 })
 
 Given('the user {string} is member of the group {string}', async ({page}, username, group) => {
-    //await tryDeleteGroup(page, group);
-    //await createGroup(page, group);
     await addMemberToGroup(page, group, username);
 })
