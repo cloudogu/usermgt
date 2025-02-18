@@ -5,6 +5,8 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+### Changed
+- Der Tabellenheader "Datum" wurde in "Importdatum" umbenannt
 
 ## [v1.20.0-2] - 2025-02-13
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
