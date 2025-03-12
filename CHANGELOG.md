@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.20.0-3] - 2025-02-21
+### Changed
+- Renamed table headline key from "Date" to "Date of import" (en/de)
+
+## [v1.20.0-2] - 2025-02-13
+### Added
+- [#193] Add missing keys to dogu descriptor
+
+### Changed
+- If root log level is set to an invalid value, the script exits with an error message.
+
 ## [v1.20.0-1] - 2025-01-27
 ### Changed
 - Update ces-build-lib to 4.0.1 and dogu-build-lib to v3.0.0 [#189]

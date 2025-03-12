@@ -6,6 +6,13 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.20.0-3] - 2025-02-21
+### Changed
+- Der Tabellenheader "Datum" wurde in "Importdatum" umbenannt
+
+## [v1.20.0-2] - 2025-02-13
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+
 ## [v1.20.0-1] - 2025-01-27
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 

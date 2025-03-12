@@ -6,6 +6,13 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.20.0-3] - 2025-02-21
+### Changed
+- Renamed table headline key "from" Date to "Date of import"
+
+## [v1.20.0-2] - 2025-02-13
+We have only made technical changes. You can find more details in the changelogs.
+
 ## [v1.20.0-1] - 2025-01-27
 We have only made technical changes. You can find more details in the changelogs.
 
