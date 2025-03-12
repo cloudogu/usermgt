@@ -163,7 +163,7 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-                    def BASE_URL = ecoSystem.getExternalIP()
+                    /* def BASE_URL = ecoSystem.getExternalIP()
 
                     new Docker(this).image('mcr.microsoft.com/playwright:v1.49.1-noble')
                             .mountJenkinsUser()
@@ -176,14 +176,14 @@ parallel(
                                             sh 'npx bddgen'
                                             sh "BASE_URL=https://$BASE_URL npx playwright test --reporter=junit"
                                             junit allowEmptyResults: true, testResults: "test-results/results.xml"
-                                            archiveArtifacts artifacts: "../test-results/**/video.webm", allowEmptyArchive: true
+                                            archiveArtifacts artifacts: "../test-results/**video.webm", allowEmptyArchive: true
                                         }
                                     }
                                 }
-                            }
+                            } */
 
-                   /* stage('Integration Tests') {
-                        echo "setup mailhog"
+                    stage('Integration Tests') {
+                        /*echo "setup mailhog"
                         ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                         ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
                         echo "wait for postfix"
@@ -193,6 +193,14 @@ parallel(
                         echo "run integration tests."
                         ecoSystem.runCypressIntegrationTests([
                                 cypressImage     : "cypress/included:12.9.0",
+                                enableVideo      : params.EnableVideoRecording,
+                                enableScreenshots: params.EnableScreenshotRecording,
+                                timeoutInMinutes : 45,
+                        ])*/
+
+                        echo "run integration tests."
+                         ecoSystem.runPlaywrightIntegrationTests([
+                                cypressImage     : "mcr.microsoft.com/playwright:v1.49.1-noble",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
