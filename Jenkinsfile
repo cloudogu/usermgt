@@ -205,7 +205,7 @@ parallel(
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
                         ])
-                    }*/
+                    }
 
                     if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {
                         stage('Upgrade dogu') {
