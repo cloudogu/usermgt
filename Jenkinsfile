@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/dogu-build-lib@66d4af68cc4c2858285ce271439b6bb9f9159ea1', 'github.com/cloudogu/ces-build-lib@4.0.1'])
+@Library(['github.com/cloudogu/dogu-build-lib@feature/include_playwright_as_lib', 'github.com/cloudogu/ces-build-lib@4.0.1'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
