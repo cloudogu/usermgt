@@ -200,7 +200,7 @@ parallel(
 
                         echo "run playwright integration tests."
                          ecoSystem.runPlaywrightIntegrationTests([
-                                cypressImage     : "mcr.microsoft.com/playwright:v1.49.1-noble",
+                                cypressImage     : "mcr.microsoft.com/playwright:v1.51.0-noble",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,

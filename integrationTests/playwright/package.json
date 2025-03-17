@@ -2,10 +2,10 @@
   "dependencies": {
     "typescript": "^5.7.3",
     "yarn": "^1.22.22",
-    "@playwright/test": "^1.49.1",
+    "@playwright/test": "1.51.0",
     "@types/node": "^22.12.0",
     "dotenv": "^16.4.7",
-    "playwright-bdd": "^8.0.1"
+    "playwright-bdd": "8.2.1"
   },
   "scripts": {
     "updateTests": "mkdir -p cypress/e2e/dogu_integration_test_lib && cp -r node_modules/@cloudogu/dogu-integration-test-library/lib/integration/* cypress/e2e/dogu_integration_test_lib"

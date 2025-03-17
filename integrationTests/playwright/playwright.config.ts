@@ -10,7 +10,7 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const testDir = defineBddConfig({
-  features: './features/*.feature',
+  features: './features/**/*.feature',
   steps: './steps/*.ts',
 });
 
