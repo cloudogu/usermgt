@@ -24,7 +24,7 @@ Die Werte konfigurieren die Passwort-Regeln, welche in den Integrationstests üb
 
 Damit alle Integrationstests auch einwandfrei funktionieren, müssen vorher einige Daten konfiguriert werden.
 
-**integrationTests/cypress.json** [[Link zur Datei](../../integrationTests/cypress.config.ts)] <!-- markdown-link-check-disable-line -->
+**integrationTests/cypress.json** [[Link zur Datei](../../integrationTests/cypress/cypress.config.ts)] <!-- markdown-link-check-disable-line -->
 
 1) Es muss die base-URL auf das Hostsystem angepasst werden.
    - Dafür muss das Feld `baseUrl` auf die Host-FQDN angepasst werden.

@@ -183,22 +183,22 @@ parallel(
                             } */
 
                     stage('Integration Tests') {
-                        /*echo "setup mailhog"
+                        echo "setup mailhog"
                         ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                         ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
                         echo "wait for postfix"
                         timeout(15) {
                             ecoSystem.waitForDogu("postfix")
                         }
-                        echo "run integration tests."
+                        echo "run cypress integration tests."
                         ecoSystem.runCypressIntegrationTests([
                                 cypressImage     : "cypress/included:12.9.0",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
-                        ])*/
+                        ])
 
-                        echo "run integration tests."
+                        echo "run playwright integration tests."
                          ecoSystem.runPlaywrightIntegrationTests([
                                 cypressImage     : "mcr.microsoft.com/playwright:v1.49.1-noble",
                                 enableVideo      : params.EnableVideoRecording,

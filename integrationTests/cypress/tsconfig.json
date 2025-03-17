@@ -1,7 +1,6 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["cypress", "node"]
+    "esModuleInterop": true,
   },
-  "include": ["**/*.ts"]
+  "files": ["*.ts"]
 }
