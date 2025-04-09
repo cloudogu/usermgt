@@ -5,8 +5,9 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
-### Changed
-Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+### Security
+* Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
+  Ein Update ist daher empfohlen.
 
 ## [v1.20.0-3] - 2025-02-21
 ### Changed
