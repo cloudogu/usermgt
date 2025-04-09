@@ -12,6 +12,10 @@ Um das Usermgt-Backend lokal zu starten oder zu debuggen ist die Verbindung zu e
 Dieses LDAP kann entweder auch lokal in einen Docker-Container betrieben werden, oder es kann das LDAP aus dem CES
 verwendet werden.
 
+Um das Dogu zu bauen, ist authentifizierter Zugriff auf ein internes Package Repository notwendig.  
+Die Credentials müssen mittels einer `.npmrc` Datei zur Verfügung gestellt werden.
+Um diese Datei zu generieren, führe das make target `gen-npmrc-release` aus.
+
 ### Lokales LDAP in einem Docker-Container einrichten
 
 Folgende Schritte sind zum Starten des LDAP im Docker-Container nötig:
