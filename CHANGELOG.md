@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.20.0-4] - 2025-04-10
+### Changed
+- Update Tomcat to 9.0.102 [#197]
+### Security
+- [#243] Fix [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813)
+
 ## [v1.20.0-3] - 2025-02-21
 ### Changed
 - Renamed table headline key from "Date" to "Date of import" (en/de)

@@ -13,6 +13,9 @@ The following requirements must be met to develop the Usermgt backend:
 To start or debug the Usermgt backend locally, a connection to an LDAP is required.
 This LDAP can either be operated locally in a Docker container, or the LDAP from the CES can be used.
 
+To build the Dogu, authenticated access to an internal package repository is required.  
+The credentials must be provided via a `.npmrc` file. To generate the file, run the make target `gen-npmrc-release`.
+
 ### Setting up a local LDAP in a Docker container
 
 The following steps are required to start the LDAP in the Docker container:

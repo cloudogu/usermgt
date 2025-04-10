@@ -6,6 +6,11 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.20.0-4] - 2025-04-10
+### Security
+* Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
+  Ein Update ist daher empfohlen.
+
 ## [v1.20.0-3] - 2025-02-21
 ### Changed
 - Der Tabellenheader "Datum" wurde in "Importdatum" umbenannt
