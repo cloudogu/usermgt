@@ -194,12 +194,6 @@
       "Params": [
         "rw"
       ]
-    },
-    {
-      "Type": "cas",
-      "Params": [
-        "cas"
-      ]
     }
   ],
   "HealthCheck": {
