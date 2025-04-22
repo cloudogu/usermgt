@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.20.0.0-1] - 2025-04-22
+> [!CAUTION]
+> **Hotfix-Release**
+> This is a Hotfix-Release for Usermgt 1.20.0 for Ecosystems with CAS < v7.0.5.1-6
+> This release includes the fix for the encoding bug and does not use cas-service-accounts.
+> This release will not work in CES Multinode environments
+### Removed
+- CAS service-accounts to be compatible with CAS < v7.0.5.1-6
+
 ## [v1.20.0-4] - 2025-04-10
 ### Changed
 - Update Tomcat to 9.0.102 [#197]
