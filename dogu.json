@@ -15,8 +15,7 @@
   "Dependencies": [
     {
       "Type": "dogu",
-      "Name": "cas",
-      "Version": ">=7.0.5.1-6"
+      "Name": "cas"
     },
     {
       "Type": "dogu",
