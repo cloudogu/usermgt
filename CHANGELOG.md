@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.20.0-5] - 2025-04-25
+
+### Changed
+- [#200] Set sensible resource requests and limits
+
 ## [v1.20.0-4] - 2025-04-10
 ### Changed
 - Update Tomcat to 9.0.102 [#197]

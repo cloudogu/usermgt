@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.20.0-5] - 2025-04-25
+### Changed
+- Die Verwendung von Speicher und CPU wurden für die Kubernetes-Multinode-Umgebung optimiert.
+
 ## [v1.20.0-4] - 2025-04-10
 ### Security
 * Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
