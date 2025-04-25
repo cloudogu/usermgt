@@ -67,7 +67,7 @@
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
       },
-      "Default": "195m"
+      "Default": "400m"
     },
     {
       "Name": "container_config/storage_limit",
@@ -141,7 +141,7 @@
       "Validation": {
         "Type": "BINARY_MEASUREMENT"
       },
-      "Default": "195m"
+      "Default": "400m"
     },
     {
       "Name": "container_config/swap_limit",
