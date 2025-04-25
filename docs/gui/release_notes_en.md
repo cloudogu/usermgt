@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+### Changed
+- Usage of memory and CPU was optimized for the Kubernetes Mutlinode environment.
 
 ## [v1.20.0-4] - 2025-04-10
 ### Security
