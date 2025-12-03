@@ -9,7 +9,7 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [v1.20.0-5] - 2025-04-25
 ### Changed
-- Usage of memory and CPU was optimized for the Kubernetes Mutlinode environment.
+- Usage of memory and CPU was optimized for the Kubernetes Multinode environment.
 
 ## [v1.20.0-4] - 2025-04-10
 ### Security
