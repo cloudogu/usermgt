@@ -109,6 +109,93 @@ public class CasRestClientTest {
     }
 
     @Test
+    public void createServiceTicket_throws_runtime_exception_that_is_not_CasAuthenticationExc() throws Exception {        // given
+        HttpURLConnection tgtConnMock = mock(HttpURLConnection.class);
+
+        when(tgtConnMock.getOutputStream()).thenThrow(new IOException("whoopsie"));
+
+
+        when(tgtConnMock.getHeaderField("Location")).thenReturn("https://something/tgt/TGT-123-askdjfhlaksdf");
+        when(tgtConnMock.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
+
+        MockUrlConnection mockConnFactory = new MockUrlConnection(tgtConnMock, null);
+        CasRestClient sut = new CasRestClient("https://fqdn.invalid/cas", "https://fqdn.invalid/usermgt", mockConnFactory);
+
+        try {
+            // when
+            sut.createServiceTicket("user", "pass");
+        } catch (RuntimeException e) {
+            // then
+            assertThat(e).isExactlyInstanceOf(RuntimeException.class);
+            assertThat(e.getMessage()).isEqualTo("cas validation failed");
+        }
+    }
+
+    @Test
+    public void createServiceTicket_fails_on_missing_TGT_location() throws Exception {
+        // given
+        HttpURLConnection tgtConnMock = mock(HttpURLConnection.class);
+        HttpURLConnection stConnMock = mock(HttpURLConnection.class);
+
+        OutputStream tgtOutputStream = mock(OutputStream.class);
+        OutputStream stOutputStream = mock(OutputStream.class);
+        when(tgtConnMock.getOutputStream()).thenReturn(tgtOutputStream);
+        when(stConnMock.getOutputStream()).thenReturn(stOutputStream);
+        InputStream tgtInputStream = new ByteArrayInputStream("TGT-123-askdjfhlaksdf".getBytes(StandardCharsets.UTF_8));
+        InputStream stInputStream = new ByteArrayInputStream("ST-456-qpoweiruqpoweiru".getBytes(StandardCharsets.UTF_8));
+        when(tgtConnMock.getInputStream()).thenReturn(tgtInputStream);
+        when(stConnMock.getInputStream()).thenReturn(stInputStream);
+
+        when(tgtConnMock.getHeaderField("Location")).thenReturn(null);
+        when(stConnMock.getHeaderField("Location")).thenReturn("");
+        when(tgtConnMock.getResponseCode()).thenReturn(HttpURLConnection.HTTP_CREATED);
+        when(stConnMock.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+
+        MockUrlConnection mockConnFactory = new MockUrlConnection(tgtConnMock, stConnMock);
+        CasRestClient sut = new CasRestClient("https://fqdn.invalid/cas", "https://fqdn.invalid/usermgt", mockConnFactory);
+
+        // when
+        try {
+            sut.createServiceTicket("user", "pass");
+        } catch (CasAuthenticationException e) {
+            // then
+            assertThat(e.getMessage()).isEqualTo("could not create granting ticket, web service returned no location header");
+        }
+    }
+
+    @Test
+    public void createServiceTicket_fails_on_ST_creation() throws Exception {
+        // given
+        HttpURLConnection tgtConnMock = mock(HttpURLConnection.class);
+        HttpURLConnection stConnMock = mock(HttpURLConnection.class);
+
+        OutputStream tgtOutputStream = mock(OutputStream.class);
+        OutputStream stOutputStream = mock(OutputStream.class);
+        when(tgtConnMock.getOutputStream()).thenReturn(tgtOutputStream);
+        when(stConnMock.getOutputStream()).thenReturn(stOutputStream);
+        InputStream tgtInputStream = new ByteArrayInputStream("TGT-123-askdjfhlaksdf".getBytes(StandardCharsets.UTF_8));
+        InputStream stInputStream = new ByteArrayInputStream("ST-456-qpoweiruqpoweiru".getBytes(StandardCharsets.UTF_8));
+        when(tgtConnMock.getInputStream()).thenReturn(tgtInputStream);
+        when(stConnMock.getInputStream()).thenReturn(stInputStream);
+
+        when(tgtConnMock.getHeaderField("Location")).thenReturn("https://something/tgt/TGT-123-askdjfhlaksdf");
+        when(stConnMock.getHeaderField("Location")).thenReturn("");
+        when(tgtConnMock.getResponseCode()).thenReturn(HttpURLConnection.HTTP_CREATED);
+        when(stConnMock.getResponseCode()).thenReturn(HttpURLConnection.HTTP_UNAUTHORIZED);
+
+        MockUrlConnection mockConnFactory = new MockUrlConnection(tgtConnMock, stConnMock);
+        CasRestClient sut = new CasRestClient("https://fqdn.invalid/cas", "https://fqdn.invalid/usermgt", mockConnFactory);
+
+        // when
+        try {
+            sut.createServiceTicket("user", "pass");
+        }  catch (CasAuthenticationException e) {
+        // then
+            assertThat(e.getMessage()).isEqualTo("could not create service ticket, web service returned 401");
+        }
+    }
+
+    @Test
     public void extractTgtFromLocation_returnsTgt() {
         CasRestClient sut = new CasRestClient(null, null, null);
         String actual = sut.extractTgtFromLocation("something/tgt-test-123");
@@ -123,6 +210,12 @@ public class CasRestClientTest {
         } catch (CasAuthenticationException e) {
             assertThat(e.getMessage()).isEqualTo("could not create granting ticket, web service returned invalid location header");
         }
+    }
+
+    @Test
+    public void publicConstructorShouldReturnValidObject() {
+        CasRestClient sut = new CasRestClient(null, null);
+        assertThat(sut).isNotNull();
     }
 }
 
