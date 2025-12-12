@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.20.1-1] - 2025-12-12
+- Als fälschlich ausgewiesene Authentifizierungsfehler werden von der User-REST-API nun korrekt als interne Serverfehler gemeldet. Dies könnten z. B. mangelnde CAS-Konnektivität, Throttling oder LDAP-Zeitüberschreitungen sein.
+
 ## [v1.20.0-5] - 2025-04-25
 ### Changed
 - Die Verwendung von Speicher und CPU wurden für die Kubernetes-Multinode-Umgebung optimiert.
