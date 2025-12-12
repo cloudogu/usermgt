@@ -5,6 +5,8 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.20.1-1] - 2025-12-12
 - Als fälschlich ausgewiesene Authentifizierungsfehler werden von der User-REST-API nun korrekt als interne Serverfehler gemeldet. Dies könnten z. B. mangelnde CAS-Konnektivität, Throttling oder LDAP-Zeitüberschreitungen sein.
 
 ## [v1.20.0-5] - 2025-04-25
