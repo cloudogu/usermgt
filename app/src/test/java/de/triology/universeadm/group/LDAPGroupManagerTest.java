@@ -20,7 +20,6 @@ import de.triology.universeadm.mapping.SimpleMappingConverterFactory;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 import de.triology.universeadm.validation.Validator;
-import java.util.List;
 import javax.xml.bind.JAXB;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.junit.Before;
