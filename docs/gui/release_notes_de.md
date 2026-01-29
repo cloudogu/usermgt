@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+### Security
+- [#204] Sicherheitslücke geschlossen [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
+
 ## [v1.20.1-1] - 2025-12-12
 - Als fälschlich ausgewiesene Authentifizierungsfehler werden von der User-REST-API nun korrekt als interne Serverfehler gemeldet. Dies könnten z. B. mangelnde CAS-Konnektivität, Throttling oder LDAP-Zeitüberschreitungen sein.
 

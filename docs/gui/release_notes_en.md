@@ -6,6 +6,9 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+### Security
+- [#204] fixed [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
+
 ## [v1.20.1-1] - 2025-12-12
 - Errors that were incorrectly reported by the user REST API as Authentication errors are now correctly reported as internal server errors . For instance, these could be lack of CAS connectivity, throttling, or LDAP timeouts.
 
