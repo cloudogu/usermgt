@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- [#204] CVE fixed: [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
+
 ## [v1.20.1-1] - 2025-12-12
 ### Fixed
 - [#202] Reduce false-positive `HTTP 401 Unauthorized` status codes in the User REST API
