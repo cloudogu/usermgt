@@ -17,6 +17,8 @@ include build/make/prerelease.mk
 include build/make/bats.mk
 include build/make/k8s-dogu.mk
 
+BATS_TAG=1.13.0
+
 default: dogu-release
 
 .PHONY info:
