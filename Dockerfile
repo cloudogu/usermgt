@@ -40,7 +40,7 @@ RUN set -eux && \
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
 
-FROM registry.cloudogu.com/official/java:8.452.09-2 AS binaryConcentrator
+FROM registry.cloudogu.com/official/java:8u402-6 AS binaryConcentrator
 # Prepare all file system actions here to achieve a simpler dogu build below.
 # Also this allows the developers to act on a finer granularity when it comes to file system changes
 ARG TOMCAT_VERSION
