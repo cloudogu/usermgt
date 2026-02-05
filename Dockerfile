@@ -1,6 +1,6 @@
 ARG TOMCAT_MAJOR_VERSION=9
 ARG TOMCAT_VERSION=9.0.115
-ARG TOMCAT_TARGZ_SHA512=3d200773e3c53855cd349cfd4785aa3662f496badfc6f8b419a33db6084f6784
+ARG TOMCAT_TARGZ_SHA512=5a165bb121a69e69bfa3c50c4f999a7d1e48120d625b6f5df8383b90a7bbbb98
 
 FROM timbru31/java-node:8-jdk-18 as builder
 
@@ -17,7 +17,7 @@ COPY app/ .
 RUN ./mvnw package -DskipTests
 
 
-FROM registry.cloudogu.com/official/base:3.21.0-1 as tomcat
+FROM registry.cloudogu.com/official/base:3.23.3-2 AS tomcat
 
 ARG TOMCAT_MAJOR_VERSION
 ARG TOMCAT_VERSION
@@ -40,7 +40,7 @@ RUN set -eux && \
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
 
-FROM registry.cloudogu.com/official/java:8u402-6 AS binaryConcentrator
+FROM registry.cloudogu.com/official/java:8.452.09-2 AS binaryConcentrator
 # Prepare all file system actions here to achieve a simpler dogu build below.
 # Also this allows the developers to act on a finer granularity when it comes to file system changes
 ARG TOMCAT_VERSION
@@ -70,7 +70,7 @@ RUN set -eux \
 RUN chown -R tomcat:tomcat /opt/apache-tomcat
 
 
-FROM registry.cloudogu.com/official/java:8u432-1
+FROM registry.cloudogu.com/official/java:8.452.09-2
 
 ARG TOMCAT_VERSION
 
