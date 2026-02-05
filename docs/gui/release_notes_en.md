@@ -5,9 +5,10 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+### Security
+- [#206] fixed [cve-2026-24515](https://avd.aquasec.com/nvd/2026/cve-2026-24515/)
 
 ## [v1.20.1-2] - 2026-01-29
-
 ### Security
 - [#204] fixed [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
 
