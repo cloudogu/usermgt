@@ -7,7 +7,7 @@ ADDITIONAL_LDFLAGS=""
 NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
-MAKEFILES_VERSION=9.9.0
+MAKEFILES_VERSION=10.6.0
 .DEFAULT_GOAL:=default
 
 include build/make/variables.mk
