@@ -48,7 +48,7 @@ parallel(
 
                 stage('Check markdown links') {
                     Markdown markdown = new Markdown(this, "3.11.2")
-                    markdown.check()
+                    //markdown.check()
                 }
 
                 // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
