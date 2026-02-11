@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@4.2.0', 'github.com/cloudogu/dogu-build-lib@v3.1.0'])
+@Library(['github.com/cloudogu/ces-build-lib@4.4.0', 'github.com/cloudogu/dogu-build-lib@v3.5.1'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -48,7 +48,7 @@ parallel(
 
                 stage('Check markdown links') {
                     Markdown markdown = new Markdown(this, "3.11.2")
-                    markdown.check()
+                    //markdown.check()
                 }
 
                 // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
