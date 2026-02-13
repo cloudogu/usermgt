@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.20.1-3] - 2026-02-13
 ### Security
 - [#212] Update base images to fix [cve-2025-68121](https://avd.aquasec.com/nvd/2025/cve-2025-68121/)
 - [#206] CVE fixed [cve-2026-24515](https://avd.aquasec.com/nvd/2026/cve-2026-24515/)
