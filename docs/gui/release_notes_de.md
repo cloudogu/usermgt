@@ -6,6 +6,7 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 ### Security
+- [#212] Sicherheitslücke geschlossen [cve-2025-68121](https://avd.aquasec.com/nvd/2026/CVE-2025-68121)
 - [#204] Sicherheitslücke geschlossen [cve-2026-24515](https://avd.aquasec.com/nvd/2026/cve-2026-24515/)
 
 ## [v1.20.1-2] - 2026-01-29
