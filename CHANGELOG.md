@@ -6,8 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v1.20.1-2] - 2026-01-29
+## [v1.20.1-3] - 2026-02-13
+### Security
+- [#212] Update base images to fix [cve-2025-68121](https://avd.aquasec.com/nvd/2025/cve-2025-68121/)
+- [#206] CVE fixed [cve-2026-24515](https://avd.aquasec.com/nvd/2026/cve-2026-24515/)
+### Changed
+- [#206] Update Java base-image to v8.452.09-2
+- [#206] Update Tomcat to v9.0.115
 
+## [v1.20.1-2] - 2026-01-29
 ### Security
 - [#204] CVE fixed: [cve-2025-15467](https://avd.aquasec.com/nvd/2025/cve-2025-15467/)
 

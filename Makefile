@@ -1,6 +1,6 @@
 # Set these to the desired values
 ARTIFACT_ID=usermgt
-VERSION=1.20.1-2
+VERSION=1.20.1-3
 # overwrite ADDITIONAL_LDFLAGS to disable static compilation
 # this should fix https://github.com/golang/go/issues/13470
 ADDITIONAL_LDFLAGS=""
@@ -16,6 +16,8 @@ include build/make/release.mk
 include build/make/prerelease.mk
 include build/make/bats.mk
 include build/make/k8s-dogu.mk
+
+BATS_TAG=1.13.0
 
 default: dogu-release
 
