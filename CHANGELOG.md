@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Security
+- [#212] Upgrade base-image to 3.23.3-3 and Java base image to 8.452.09-3 to fix CVE-68121
 - [#206] CVE fixed [cve-2026-24515](https://avd.aquasec.com/nvd/2026/cve-2026-24515/)
 ### Changed
 - [#206] Update Java base-image to v8.452.09-2
