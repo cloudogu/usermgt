@@ -6,6 +6,9 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.20.1-4] - 2026-02-18
+- We have only made technical changes. You can find more details in the changelogs.
+
 ## [v1.20.1-3] - 2026-02-13
 ### Security
 - [#206] fixed [cve-2025-68121](https://avd.aquasec.com/nvd/2025/cve-2025-68121/)

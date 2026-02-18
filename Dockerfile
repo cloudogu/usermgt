@@ -17,7 +17,7 @@ COPY app/ .
 RUN ./mvnw package -DskipTests
 
 
-FROM registry.cloudogu.com/official/base:3.23.3-3 AS tomcat
+FROM registry.cloudogu.com/official/base:3.23.3-4 AS tomcat
 
 ARG TOMCAT_MAJOR_VERSION
 ARG TOMCAT_VERSION
@@ -40,7 +40,7 @@ RUN set -eux && \
   && rm "apache-tomcat-${TOMCAT_VERSION}.tar"
 
 
-FROM registry.cloudogu.com/official/java:8.452.09-3 AS binaryConcentrator
+FROM registry.cloudogu.com/official/java:8.452.09-4 AS binaryConcentrator
 # Prepare all file system actions here to achieve a simpler dogu build below.
 # Also this allows the developers to act on a finer granularity when it comes to file system changes
 ARG TOMCAT_VERSION
@@ -70,12 +70,12 @@ RUN set -eux \
 RUN chown -R tomcat:tomcat /opt/apache-tomcat
 
 
-FROM registry.cloudogu.com/official/java:8.452.09-3
+FROM registry.cloudogu.com/official/java:8.452.09-4
 
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.20.1-3" \
+   VERSION="1.20.1-4" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
