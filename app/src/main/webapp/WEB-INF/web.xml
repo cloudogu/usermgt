@@ -64,6 +64,7 @@
   <!-- session -->
   
   <session-config>
+    <tracking-mode>COOKIE</tracking-mode>
     <session-timeout>
       30
     </session-timeout>
