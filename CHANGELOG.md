@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.20.1-5] - 2026-03-13
 ### Fixed
 - [#218] Force session handling via cookie
     - This allows the user management to accept even the first redirect from cas without a valid session cookie
