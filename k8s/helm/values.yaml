@@ -4,12 +4,19 @@
 global:
   imagePullSecrets:
     - name: ces-container-registries
+
 replicas: 1
+
 image:
   registry: registry.cloudogu.com
   repository: official/usermgt
   tag: 1.20.1-4
 imagePullPolicy: IfNotPresent
+
+additionalImages:
+  # chownInitImage will be used to change file permissions on writeable volumes
+  chownInitImage: busybox:1.36
+
 networkPolicies:
   enabled: true
   ldap:
