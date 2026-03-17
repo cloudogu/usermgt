@@ -1,0 +1,9 @@
+apiVersion: k8s.cloudogu.com/v1
+kind: AuthRegistration
+metadata:
+  name: {{ include "usermgt.name" . }}-authregistration
+  labels:
+    {{- include "usermgt.labels" . | nindent 4 }}
+spec:
+  consumer: {{ include "usermgt.name" . }}
+  protocol: CAS

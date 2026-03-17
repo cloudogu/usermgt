@@ -1,0 +1,11 @@
+apiVersion: v1
+values:
+  images:
+    usermgt: registry.cloudogu.com/official/usermgt:1.20.1-4
+patches:
+  values.yaml:
+    usermgt:
+      image:
+        registry: "{{ registryFrom .images.usermgt }}"
+        repository: "{{ repositoryFrom .images.usermgt }}"
+        tag: "{{ tagFrom .images.usermgt }}"

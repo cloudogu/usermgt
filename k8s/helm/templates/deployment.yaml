@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "usermgt.name" . }}
+  labels:
+    {{- include "usermgt.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "usermgt.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: {{ include "usermgt.name" . }}
+      labels:
+        {{- include "usermgt.labels" . | nindent 8 }}
+    spec:
+      hostname: {{ include "usermgt.name" . }}
+
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      restartPolicy: Always
+
+      securityContext:
+        {{- .Values.podSecurityContext | toYaml | nindent 8 }}
+
+      containers:
+        - name: {{ include "usermgt.name" . }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+
+          env:
+            - name: ECOSYSTEM_MULTINODE
+              value: "true"
+            - name: COMPONENT
+              value: "true"
+            - name: LDAP_BIND_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.ldap.secret.name }}
+                  key: {{ .Values.ldap.secret.usernameKey }}
+            - name: LDAP_BIND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.ldap.secret.name }}
+                  key: {{ .Values.ldap.secret.passwordKey }}
+
+          resources:
+            {{- .Values.resources | toYaml | nindent 12 }}
+
+          securityContext:
+            {{- .Values.containerSecurityContext | toYaml | nindent 12 }}
+
+          ports:
+            - name: http-web-svc
+              protocol: TCP
+              containerPort: 8080
+
+          livenessProbe:
+            tcpSocket:
+              port: http-web-svc
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 2
+
+          readinessProbe:
+            tcpSocket:
+              port: http-web-svc
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+
+          volumeMounts:
+            - mountPath: /etc/ces/config
+              name: ces-config
+              readOnly: true
+            - mountPath: /etc/ces/dogu_json/usermgt
+              name: usermgt-dogu-json
+              readOnly: true
+            - mountPath: /var/lib/usermgt
+              name: usermgt-ephemeral
+              subPath: data
+            - mountPath: /var/lib/usermgt/importHistory
+              name: usermgt-data
+              subPath: importHistory
+
+      initContainers:
+        - name: init-persistence-layout
+          image: busybox:1.36
+          imagePullPolicy: IfNotPresent
+
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -e
+              mkdir -p /var/lib/usermgt/importHistory
+              chown -R {{ .Values.podSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.runAsUser }} /var/lib/usermgt
+
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - CHOWN
+                - FOWNER
+              drop:
+                - ALL
+
+          volumeMounts:
+            - mountPath: /var/lib/usermgt
+              name: usermgt-ephemeral
+              subPath: data
+            - mountPath: /var/lib/usermgt/importHistory
+              name: usermgt-data
+              subPath: importHistory
+
+      volumes:
+        - name: usermgt-ephemeral
+          emptyDir: {}
+
+        - name: ces-config
+          projected:
+            defaultMode: 420
+            sources:
+              - configMap:
+                  name: global-config
+                  items:
+                    - key: config.yaml
+                      path: global/config.yaml
+              - configMap:
+                  name: {{ include "usermgt.name" . }}-config
+                  items:
+                    - key: config.yaml
+                      path: normal/config.yaml
+                    - key: sensitive-config.yaml
+                      path: sensitive/config.yaml
+
+        - name: usermgt-dogu-json
+          configMap:
+            name: {{ include "usermgt.name" . }}-spec
+
+        - name: usermgt-data
+          persistentVolumeClaim:
+            claimName: {{ include "usermgt.name" . }}
