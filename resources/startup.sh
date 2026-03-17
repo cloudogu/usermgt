@@ -37,8 +37,27 @@ printCloudoguLogo() {
 }
 
 encryptLdapPassword() {
-  LDAP_BIND_PASSWORD="$(${CIPHER_SH} encrypt "$(doguctl config -e sa-ldap/password)" | tail -1)"
-  export LDAP_BIND_PASSWORD
+  local raw_pass="${LDAP_BIND_PASSWORD:-}"
+
+  if [[ -z "${raw_pass}" ]]; then
+    echo "Reading ldap password from doguctl..."
+    raw_pass=$(doguctl config -e sa-ldap/password)
+  fi
+
+  LDAP_BIND_PASSWORD_ENC="$(${CIPHER_SH} encrypt "${raw_pass}" | tail -1)"
+  export LDAP_BIND_PASSWORD_ENC
+
+  echo "Encrypted ldap password..."
+}
+
+setLdapUser() {
+  if [[ -z "${LDAP_BIND_USER}" ]]; then
+    echo "Reading ldap user from doguctl..."
+    LDAP_BIND_USER=$(doguctl config -e sa-ldap/username)
+    export LDAP_BIND_USER
+  fi
+
+  echo "Set ldap user..."
 }
 
 copyConfigurationResources() {
@@ -48,13 +67,24 @@ copyConfigurationResources() {
 }
 
 renderTemplates() {
+  echo "Running renderTemplates"
   determinePwdMinLength
 
+  echo "determined pwd min length..."
+
   doguctl template "${UNIVERSEADM_HOME}/cas.xml.tpl" "${UNIVERSEADM_HOME}/cas.xml"
+  echo "rendered cas config..."
+
+
+
   doguctl template "${UNIVERSEADM_HOME}/ldap.xml.tpl" "${UNIVERSEADM_HOME}/ldap.xml"
+  echo "rendered ldap config..."
   doguctl template "${UNIVERSEADM_HOME}/application-configuration.xml.tpl" "${UNIVERSEADM_HOME}/application-configuration.xml"
+  echo "rendered app config..."
   doguctl template "${UNIVERSEADM_HOME}/mail.xml.tpl" "${UNIVERSEADM_HOME}/mail.xml"
+  echo "rendered mail config..."
   doguctl template "${UNIVERSEADM_HOME}/password_policy.tpl" "${OPTIONAL_CONFIG_PATH}"
+  echo "rendered pwd policy config..."
 
   renderLoggingFiles
 }
@@ -98,14 +128,17 @@ startTomcat() {
 
 runMain() {
   printCloudoguLogo
-
   encryptLdapPassword
+  setLdapUser
   copyConfigurationResources
   renderTemplates
   createGuiConfiguration
   createTrustStore
 
-  waitForLDAPDogu
+  if [[ -z ${COMPONENT:-} ]]; then
+    waitForLDAPDogu
+  fi
+
   migrateLDAPEntries
 
   startTomcat

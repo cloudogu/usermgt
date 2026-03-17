@@ -31,7 +31,7 @@ teardown() {
 @test "encryptLdapPassword() should set env var with LDAP password" {
   export UNIVERSEADM_HOME=""
   source /workspace/resources/startup.sh
-  export LDAP_BIND_PASSWORD=""
+  export LDAP_BIND_PASSWORD_ENC=""
   export CIPHER_SH=${cipher}
   mock_set_status "${doguctl}" 0
   mock_set_output "${doguctl}" "Password1!"
@@ -45,5 +45,5 @@ teardown() {
   assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config -e sa-ldap/password"
   assert_equal "$(mock_get_call_num "${cipher}")" "1"
   assert_equal "$(mock_get_call_args "${cipher}" "1")" "encrypt Password1!"
-  assert_equal "${LDAP_BIND_PASSWORD}" "YmFzZTY0IGlzIG5vdCBlbmNyeXB0aW9u"
+  assert_equal "${LDAP_BIND_PASSWORD_ENC}" "YmFzZTY0IGlzIG5vdCBlbmNyeXB0aW9u"
 }
