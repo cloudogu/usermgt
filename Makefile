@@ -12,7 +12,7 @@ MAKEFILES_VERSION=10.7.1
 
 K8S_COMPONENT_SOURCE_VALUES = ${HELM_SOURCE_DIR}/values.yaml
 K8S_COMPONENT_TARGET_VALUES = ${HELM_TARGET_DIR}/values.yaml
-HELM_PRE_GENERATE_TARGETS = helm-values-update-image-version
+HELM_PRE_GENERATE_TARGETS = helm-values-update-image-version helm-copy-dogu-spec
 HELM_POST_GENERATE_TARGETS = helm-values-replace-image-repo template-image-pull-policy
 IMAGE_IMPORT_TARGET=image-import
 
@@ -23,8 +23,6 @@ include build/make/prerelease.mk
 include build/make/bats.mk
 include build/make/k8s-dogu.mk
 include build/make/k8s-controller.mk
-
-#IMAGE_DEV_VERSION=$(IMAGE_DEV):$(COMPONENT_DEV_VERSION)
 
 BATS_TAG=1.13.0
 
