@@ -23,7 +23,7 @@ String componentRegistry = "registry.cloudogu.com"
 String componentRegistryNamespace = "k8s"
 String componentChartTargetDir = "target/k8s/helm"
 String componentBuildImageRepository = "registry.cloudogu.com/official/usermgt"
-String componentReleaseName = "lop-idp-usermgt"
+String componentReleaseName = "usermgt"
 String buildToolsVersion = "1.26.0"
 
 parallel(
@@ -304,26 +304,6 @@ parallel(
                         def ldapUsername = ""
                         def ldapPassword = ""
 
-                        /*
-                        writeFile file: 'cas-config-temp.yaml', text: casSecretYaml
-
-                        try {
-                            k3d.doInYQContainer {
-                               ldapUsername = sh(
-                                    script: "yq eval '.sa-ldap.username' cas-config-temp.yaml",
-                                    returnStdout: true
-                               ).trim()
-
-                               ldapPassword = sh(
-                                    script: "yq eval '.sa-ldap.password' cas-config-temp.yaml",
-                                    returnStdout: true
-                               ).trim()
-                            }
-                        } finally {
-                            sh "rm -f cas-config-temp.yaml"
-                        }
-                        */
-
                         k3d.doInYQContainer {
                            ldapUsername = sh(
                                 script: "echo '${casSecretYaml}' | yq '.sa-ldap.username'",
@@ -338,6 +318,11 @@ parallel(
                         }
 
                         k3d.kubectl("create secret generic lop-idp-ldap-usermgt-sa --from-literal=username='${ldapUsername}' --from-literal=password='${ldapPassword}'")
+
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
+                            k3d.helm("registry login ${componentRegistry} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'")
+                            k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 0.1.1 --namespace default")
+                        }
 
                         echo "[Component k3d] Generate helm chart"
                         runMakeInGoContainer("helm-generate", buildToolsVersion)
@@ -360,6 +345,26 @@ parallel(
                         throw e
                     } finally {
                         k3d.deleteK3d()
+                    }
+                }
+
+                if (pipe.gitflow.isReleaseBranch()) {
+                    stage('Push Component Chart to Harbor') {
+                        sh "make helm-package"
+
+                        def componentChartFile = sh(returnStdout: true, script: "ls -1t ${componentChartTargetDir}/*.tgz 2>/dev/null | head -n 1").trim()
+                        if (!componentChartFile) {
+                            error("No packaged component chart found in ${componentChartTargetDir}")
+                        }
+
+                        withCredentials([usernamePassword(credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD')]) {
+                            try {
+                                sh ".bin/helm registry login ${componentRegistry} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'"
+                                sh ".bin/helm push ${componentChartFile} oci://${componentRegistry}/${componentRegistryNamespace}/"
+                            } finally {
+                                sh ".bin/helm registry logout ${componentRegistry}"
+                            }
+                        }
                     }
                 }
             }
