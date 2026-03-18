@@ -348,7 +348,7 @@ parallel(
                     }
                 }
 
-                if (pipe.gitflow.isReleaseBranch()) {
+                if (gitflow.isReleaseBranch()) {
                     stage('Push Component Chart to Harbor') {
                         sh "make helm-package"
 
