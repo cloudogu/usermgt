@@ -1,5 +1,7 @@
 # Set these to the desired values
 ARTIFACT_ID=usermgt
+COMPONENT_ARTIFACT_ID=lop-idp-usermgt
+
 VERSION=1.20.1-4
 # overwrite ADDITIONAL_LDFLAGS to disable static compilation
 # this should fix https://github.com/golang/go/issues/13470
@@ -9,6 +11,9 @@ NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandi
 UI_SRC=app/src/main/ui
 MAKEFILES_VERSION=10.7.1
 .DEFAULT_GOAL:=default
+
+BINARY_HELM_VERSION?=v3.20.0
+HELM_SOURCE_DIR=k8s/helm
 
 K8S_COMPONENT_SOURCE_VALUES = ${HELM_SOURCE_DIR}/values.yaml
 K8S_COMPONENT_TARGET_VALUES = ${HELM_TARGET_DIR}/values.yaml
@@ -23,6 +28,7 @@ include build/make/prerelease.mk
 include build/make/bats.mk
 include build/make/k8s-dogu.mk
 include build/make/k8s-controller.mk
+include build/make/k8s.mk
 
 BATS_TAG=1.13.0
 
