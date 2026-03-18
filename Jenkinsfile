@@ -252,7 +252,7 @@ parallel(
 
             }
         }
-    }
+    },
     "component-integration": {
         node('docker') {
             timestamps {
