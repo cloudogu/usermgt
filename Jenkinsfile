@@ -19,6 +19,13 @@ Changelog changelog = new Changelog(this)
 String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 String doguName = 'usermgt'
 
+def componentRegistry = "registry.cloudogu.com"
+def componentRegistryNamespace = "k8s"
+def componentChartTargetDir = "target/k8s/helm"
+def componentBuildImageRepository = "registry.cloudogu.com/official/usermgt"
+def componentReleaseName = "lop-idp-usermgt"
+def buildToolsVersion = "1.26.0"
+
 parallel(
      "source code": {
         node('docker') {
@@ -246,6 +253,29 @@ parallel(
             }
         }
     }
+    "component-integration": {
+        node('docker') {
+            timestamps {
+                stage('Checkout') {
+                    checkout scm
+                    //  Don't remove folders starting in "." like * .m2 (maven), .npm, .cache, .local (bower)
+                    git.clean('".*//*  *//* "')
+                    createNpmrcFile("jenkins")
+                }
+
+                stage('Component Test') {
+                    runMakeInGoContainer("helm-lint")
+                }
+
+                stage('Component build') {
+                    runMakeInGoContainer("install-yq")
+                    docker.withRegistry('https://registry.cloudogu.com/', 'cesmarvin-setup') {
+                        sh "make docker-build"
+                    }
+                }
+            }
+        }
+    }
 )
 
 void gitWithCredentials(String command) {
@@ -302,4 +332,13 @@ void stageStaticAnalysisSonarQube() {
             unstable("Pipeline unstable due to SonarQube quality gate failure")
         }
     }
+}
+
+def runMakeInGoContainer = { target ->
+    new Docker(this)
+        .image("golang:${buildToolsVersion}")
+        .mountJenkinsUser()
+        .inside("--volume ${WORKSPACE}:/workdir -w /workdir") {
+            sh "make ${target}"
+        }
 }
