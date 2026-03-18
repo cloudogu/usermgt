@@ -19,12 +19,12 @@ Changelog changelog = new Changelog(this)
 String defaultEmailRecipients = env.EMAIL_RECIPIENTS
 String doguName = 'usermgt'
 
-def componentRegistry = "registry.cloudogu.com"
-def componentRegistryNamespace = "k8s"
-def componentChartTargetDir = "target/k8s/helm"
-def componentBuildImageRepository = "registry.cloudogu.com/official/usermgt"
-def componentReleaseName = "lop-idp-usermgt"
-def buildToolsVersion = "1.26.0"
+String componentRegistry = "registry.cloudogu.com"
+String componentRegistryNamespace = "k8s"
+String componentChartTargetDir = "target/k8s/helm"
+String componentBuildImageRepository = "registry.cloudogu.com/official/usermgt"
+String componentReleaseName = "lop-idp-usermgt"
+String buildToolsVersion = "1.26.0"
 
 parallel(
      "source code": {
@@ -264,13 +264,102 @@ parallel(
                 }
 
                 stage('Component Test') {
-                    runMakeInGoContainer("helm-lint")
+                    runMakeInGoContainer("helm-lint", buildToolsVersion)
                 }
 
                 stage('Component build') {
-                    runMakeInGoContainer("install-yq")
+                    runMakeInGoContainer("install-yq", buildToolsVersion)
                     docker.withRegistry('https://registry.cloudogu.com/', 'cesmarvin-setup') {
                         sh "make docker-build"
+                    }
+                }
+
+                stage('Component Smoke Test (k3d)') {
+                    K3d k3d = new K3d(this, "${WORKSPACE}", "${WORKSPACE}/k3d", env.PATH)
+                    Makefile makefile = new Makefile(this)
+                    String releaseVersion = makefile.getVersion().trim()
+
+                    try {
+                        echo "[Component k3d] Start cluster"
+
+                        def myDependencies = [
+                            "official/ldap",
+                            "official/cas",
+                            "official/postfix"
+                        ]
+
+                        k3d.startK3d()
+                        k3d.setup([
+                            dependencies: myDependencies
+                        ])
+
+                        echo "[Component k3d] Prepare prerequisites"
+                        k3d.kubectl("delete secret lop-idp-ldap-usermgt-sa || true")
+                        // Steal username and password for ldap from cas dogu to use in component.
+                        // Once we have completely transitioned to the lop-idp component in ecosystem-core,
+                        // this will come from the ldap component and we don't need it anymore.
+                        String casSecretRaw = k3d.kubectl("get secret cas-config -o jsonpath='{.data.config\\.yaml}'", true)
+                        String casSecretYaml = new String(casSecretRaw.decodeBase64())
+
+                        def ldapUsername = ""
+                        def ldapPassword = ""
+
+                        /*
+                        writeFile file: 'cas-config-temp.yaml', text: casSecretYaml
+
+                        try {
+                            k3d.doInYQContainer {
+                               ldapUsername = sh(
+                                    script: "yq eval '.sa-ldap.username' cas-config-temp.yaml",
+                                    returnStdout: true
+                               ).trim()
+
+                               ldapPassword = sh(
+                                    script: "yq eval '.sa-ldap.password' cas-config-temp.yaml",
+                                    returnStdout: true
+                               ).trim()
+                            }
+                        } finally {
+                            sh "rm -f cas-config-temp.yaml"
+                        }
+                        */
+
+                        k3d.doInYQContainer {
+                           ldapUsername = sh(
+                                script: "echo '${casSecretYaml}' | yq '.sa-ldap.username'",
+                                returnStdout: true
+                           ).trim()
+                           ldapPassword = sh(
+                                script: "echo '${casSecretYaml}' | yq '.sa-ldap.password'",
+                                returnStdout: true
+                           ).trim()
+
+                           echo "Read ldap secret from cas config..."
+                        }
+
+                        k3d.kubectl("create secret generic lop-idp-ldap-usermgt-sa --from-literal=username='${ldapUsername}' --from-literal=password='${ldapPassword}'")
+
+                        echo "[Component k3d] Generate helm chart"
+                        runMakeInGoContainer("helm-generate", buildToolsVersion)
+
+                        echo "[Component k3d] Retag image for local smoke test"
+                        sh "docker tag ${componentBuildImageRepository}:${releaseVersion} local-smoke/usermgt:${releaseVersion}"
+
+                        echo "[Component k3d] Import previously built image"
+                        sh "sudo ${WORKSPACE}/k3d/.k3d/bin/k3d image import local-smoke/usermgt:${releaseVersion} -c ${k3d.registryName}"
+
+                        echo "[Component k3d] Deploy component via helm"
+                        k3d.helm("upgrade --install ${componentReleaseName} ${componentChartTargetDir} --namespace default --set image.registry=local-smoke --set image.repository=usermgt --set image.tag=${releaseVersion} --set imagePullPolicy=Never --wait --timeout 5m")
+
+                        echo "[Component k3d] Verify component startup"
+                        k3d.kubectl("rollout status deployment/${componentReleaseName} --timeout=300s")
+                        k3d.kubectl("wait --for=condition=ready pod -l app.kubernetes.io/instance=${componentReleaseName} --timeout=300s")
+
+                    } catch (Exception e) {
+                        k3d.collectAndArchiveLogs()
+                        throw e
+                    } finally {
+                        k3d.deleteK3d()
                     }
                 }
             }
@@ -334,7 +423,7 @@ void stageStaticAnalysisSonarQube() {
     }
 }
 
-def runMakeInGoContainer = { target ->
+void runMakeInGoContainer (String target, String buildToolsVersion) {
     new Docker(this)
         .image("golang:${buildToolsVersion}")
         .mountJenkinsUser()
