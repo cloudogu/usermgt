@@ -2,7 +2,10 @@ ARG TOMCAT_MAJOR_VERSION=9
 ARG TOMCAT_VERSION=9.0.115
 ARG TOMCAT_TARGZ_SHA512=8e6fa92883c161523269560a7dc9e8d58fd1199b29c630f681aa3ec2975b59d94674d2881331076b55f5ee0439748931d87c099c79d7bcea909303739e612e4b
 
-FROM eclipse-temurin:8-jdk as builder
+FROM eclipse-temurin:8-jdk-alpine as builder
+
+# libgcc is needed because of missing ciphers in 8-jdk-alpine image
+RUN apk add --no-cache libgcc
 
 WORKDIR /usermgt
 
@@ -10,7 +13,7 @@ COPY app/pom.xml pom.xml
 COPY app/mvnw mvnw
 COPY app/.mvn .mvn
 
-RUN ./mvnw dependency:go-offline -B -Dhttps.protocols=TLSv1.2
+RUN ./mvnw dependency:go-offline -B
 COPY app/ .
 RUN ./mvnw package -DskipTests -B
 

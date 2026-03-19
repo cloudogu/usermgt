@@ -51,6 +51,12 @@ parallel(
                     markdown.check()
                 }
 
+                def builderImage
+                stage('docker-build') {
+                    builderImage = new Docker(this).build('usermgt-builder','--target builder .')
+                }
+
+
                 // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
                 // builds run concurrently (e.g. feature branch, PR and develop)
                 new Docker(this).image('timbru31/java-node:8-jdk-18')
