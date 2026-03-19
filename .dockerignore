@@ -6,3 +6,13 @@
 docs/
 .idea/
 .code/
+.git/
+.gitignore
+integrationTests/
+batsTests/
+cypress/
+*.md
+build/
+k8s/
+.env
+.bin
