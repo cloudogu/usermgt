@@ -56,6 +56,18 @@ parallel(
                     builderImage = new Docker(this).build('usermgt-builder','--target builder .')
                 }
 
+                builderImage.mountJenkinsUser().inside {
+                    dir('app') {
+                        stage('ES Lint') {
+                            sh './mvnw frontend:yarn -Darguments="lint" -B'
+                        }
+
+                        stage('Unit Test') {
+                            sh './mvnw test jacoco:report'
+                        }
+                    }
+                }
+
 
                 // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
                 // builds run concurrently (e.g. feature branch, PR and develop)
