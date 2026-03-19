@@ -57,14 +57,12 @@ parallel(
                 }
 
                 builderImage.mountJenkinsUser().inside {
-                    dir('app') {
-                        stage('ES Lint') {
-                            sh './mvnw frontend:yarn -Darguments="lint" -B'
-                        }
+                    stage('ES Lint') {
+                        sh './mvnw frontend:yarn -Darguments="lint" -B'
+                    }
 
-                        stage('Unit Test') {
-                            sh './mvnw test jacoco:report'
-                        }
+                    stage('Unit Test') {
+                        sh './mvnw test jacoco:report'
                     }
                 }
 
