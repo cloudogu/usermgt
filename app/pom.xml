@@ -633,7 +633,6 @@
                                 <goals>
                                     <goal>yarn</goal>
                                 </goals>
-                                <phase>test</phase>
                                 <configuration>
                                     <arguments>lint</arguments>
                                 </configuration>
