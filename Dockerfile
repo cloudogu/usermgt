@@ -12,7 +12,7 @@ COPY app/pom.xml pom.xml
 COPY app/mvnw mvnw
 COPY app/.mvn .mvn
 
-RUN ./mvnw dependency:go-offline -B
+RUN ./mvnw dependency:go-offline -B -Dhttps.protocols=TLSv1.2
 COPY app/ .
 RUN ./mvnw package -DskipTests -B
 
