@@ -2,7 +2,7 @@ ARG TOMCAT_MAJOR_VERSION=9
 ARG TOMCAT_VERSION=9.0.115
 ARG TOMCAT_TARGZ_SHA512=8e6fa92883c161523269560a7dc9e8d58fd1199b29c630f681aa3ec2975b59d94674d2881331076b55f5ee0439748931d87c099c79d7bcea909303739e612e4b
 
-FROM eclipse-temurin:8-jdk-alpine as builder
+FROM eclipse-temurin:8-jdk-alpine AS builder
 
 # builder dependency to run node.js
 RUN apk add --no-cache \
