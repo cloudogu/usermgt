@@ -59,7 +59,7 @@ parallel(
                 builderImage.inside("-u 0:0") {
                     dir('app') {
                         stage('ES Lint') {
-                            sh './mvnw frontend:yarn -Darguments="lint" -B'
+                            sh './mvnw frontend:yarn@yarn-lint -B'
                         }
 
                         stage('Unit Test') {
