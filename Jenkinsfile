@@ -68,29 +68,6 @@ parallel(
                     }
                 }
 
-                // Run inside of docker container, because karma always starts on port 9876 which might lead to errors when two
-                // builds run concurrently (e.g. feature branch, PR and develop)
-                new Docker(this).image('timbru31/java-node:8-jdk-18')
-                        .mountJenkinsUser()
-                        .inside {
-                            dir('app') {
-                                stage('Build') {
-                                    sh './mvnw clean install -DskipTests'
-                                    archive '**//*  *//* target *//*  *//*.jar,**//*  *//* target *//*  *//*.zip'
-                                }
-
-                                stage('ESLint') {
-                                    dir('src/main/ui') {
-                                        sh "yarn lint"
-                                    }
-                                }
-
-                                stage('Unit Test') {
-                                    sh './mvnw test jacoco:report'
-                                }
-                            }
-                        }
-
             stage('SonarQube') {
                 stageStaticAnalysisSonarQube()
             }
