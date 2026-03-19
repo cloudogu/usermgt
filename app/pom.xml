@@ -454,23 +454,6 @@
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.6</version>
             </plugin>
-            <!-- maven wrapper -->
-            <plugin>
-                <groupId>com.rimerosolutions.maven.plugins</groupId>
-                <artifactId>wrapper-maven-plugin</artifactId>
-                <version>0.0.2</version>
-                <configuration>
-                    <!-- optional base distribution url -->
-                    <baseDistributionUrl>http://mirrors.ibiblio.org/maven2/org/apache/maven/apache-maven
-                    </baseDistributionUrl>
-                    <!-- optional folder for generated scripts -->
-                    <wrapperScriptDirectory>${basedir}</wrapperScriptDirectory>
-                    <!-- optional wrapper support folder - subfolder of wrapperScriptDirectory -->
-                    <wrapperDirectory>${basedir}/wrapper</wrapperDirectory>
-                    <!-- optional specific maven version - autodetected -->
-                    <mavenVersion>3.2.3</mavenVersion>
-                </configuration>
-            </plugin>
             <!-- reporting -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
