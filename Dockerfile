@@ -4,8 +4,12 @@ ARG TOMCAT_TARGZ_SHA512=8e6fa92883c161523269560a7dc9e8d58fd1199b29c630f681aa3ec2
 
 FROM eclipse-temurin:8-jdk-alpine as builder
 
-# libgcc is needed because of missing ciphers in 8-jdk-alpine image
-RUN apk add --no-cache libgcc libc6-compat
+# builder dependency to run node.js
+RUN apk add --no-cache \
+    bash \
+    libstdc++ \
+    gcompat \
+    libc6-compat
 
 WORKDIR /usermgt
 
