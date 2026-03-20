@@ -58,11 +58,7 @@ parallel(
 
                 builderImage.inside("-u 0:0") {
                     dir('app') {
-                        stage('ES Lint') {
-                            sh './mvnw frontend:yarn@yarn-lint -B'
-                        }
-
-                        stage('Unit Test') {
+                        stage('Unit Test & ES Lint') {
                             sh './mvnw test jacoco:report'
                         }
                     }
