@@ -12,7 +12,7 @@ COPY app/.mvn .mvn
 
 RUN ./mvnw dependency:go-offline -B
 COPY app/ .
-RUN ./mvnw package -DskipTests -B
+RUN ./mvnw package -DskipTests -Dskip.yarn.lint=true -B
 
 FROM alpine:3.23 AS binaryConcentrator
 ARG TOMCAT_VERSION
