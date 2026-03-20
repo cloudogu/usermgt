@@ -87,6 +87,7 @@ parallel(
                         parameters([
                                 booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
                                 string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
+                                booleanParam(defaultValue: (env.CHANGE_TARGET != null), description: 'Run integration tests, automatically enabled on pull requests', name: 'RunIntegrationTests'),
                                 booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
                                 booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
                                 choice(name: 'TrivySeverityLevels', choices: [TrivySeverityLevel.CRITICAL, TrivySeverityLevel.HIGH_AND_ABOVE, TrivySeverityLevel.MEDIUM_AND_ABOVE, TrivySeverityLevel.ALL], description: 'The levels to scan with trivy', defaultValue: TrivySeverityLevel.CRITICAL),
@@ -151,51 +152,60 @@ parallel(
                         ecoSystem.verify("/dogu")
                     }
 
-                    stage('Integration Tests') {
-                        echo "setup mailhog"
-                        ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
-                        ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
-                        echo "wait for postfix"
-                        timeout(15) {
-                            ecoSystem.waitForDogu("postfix")
-                        }
-                        echo "run integration tests."
-                        ecoSystem.runCypressIntegrationTests([
+                    def isPullRequest = env.CHANGE_TARGET != null
+                    def runTests = params.RunIntegrationTests || isPullRequest
+
+                    if (runTests) {
+                        stage('Integration Tests') {
+                            echo "setup mailhog"
+                            ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
+                            ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
+                            echo "wait for postfix"
+                            timeout(15) {
+                                ecoSystem.waitForDogu("postfix")
+                            }
+                            echo "run integration tests."
+                            ecoSystem.runCypressIntegrationTests([
                                 cypressImage     : "cypress/included:12.9.0",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
-                        ])
-                    }
-
-                    if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {
-                        stage('Upgrade dogu') {
-                            // Remove new dogu that has been built and tested above
-                            ecoSystem.purgeDogu(doguName)
-
-                            if (params.OldDoguVersionForUpgradeTest != '' && !params.OldDoguVersionForUpgradeTest.contains('v')) {
-                                println "Installing user defined version of dogu: " + params.OldDoguVersionForUpgradeTest
-                                ecoSystem.installDogu("official/" + doguName + " " + params.OldDoguVersionForUpgradeTest)
-                            } else {
-                                println "Installing latest released version of dogu..."
-                                ecoSystem.installDogu("official/" + doguName)
-                            }
-                            ecoSystem.startDogu(doguName)
-                            ecoSystem.waitForDogu(doguName)
-                            ecoSystem.upgradeDogu(ecoSystem)
-
-                            // Wait for upgraded dogu to get healthy
-                            ecoSystem.waitForDogu(doguName)
+                            ])
                         }
 
-                        stage('Integration Tests - After Upgrade') {
-                            echo "run integration tests."
-                            ecoSystem.runCypressIntegrationTests([
-                                    cypressImage     : "cypress/included:12.9.0",
-                                    enableVideo      : params.EnableVideoRecording,
-                                    enableScreenshots: params.EnableScreenshotRecording,
-                                    timeoutInMinutes : 45,
-                            ])
+                            if (params.TestDoguUpgrade != null && params.TestDoguUpgrade) {
+                                stage('Upgrade dogu') {
+                                    // Remove new dogu that has been built and tested above
+                                    ecoSystem.purgeDogu(doguName)
+
+                                    if (params.OldDoguVersionForUpgradeTest != '' && !params.OldDoguVersionForUpgradeTest.contains('v')) {
+                                        println "Installing user defined version of dogu: " + params.OldDoguVersionForUpgradeTest
+                                        ecoSystem.installDogu("official/" + doguName + " " + params.OldDoguVersionForUpgradeTest)
+                                    } else {
+                                        println "Installing latest released version of dogu..."
+                                        ecoSystem.installDogu("official/" + doguName)
+                                    }
+                                    ecoSystem.startDogu(doguName)
+                                    ecoSystem.waitForDogu(doguName)
+                                    ecoSystem.upgradeDogu(ecoSystem)
+
+                                    // Wait for upgraded dogu to get healthy
+                                    ecoSystem.waitForDogu(doguName)
+                                }
+
+                                stage('Integration Tests - After Upgrade') {
+                                    echo "run integration tests."
+                                    ecoSystem.runCypressIntegrationTests([
+                                            cypressImage     : "cypress/included:12.9.0",
+                                            enableVideo      : params.EnableVideoRecording,
+                                            enableScreenshots: params.EnableScreenshotRecording,
+                                            timeoutInMinutes : 45,
+                                    ])
+                                }
+                            }
+                    } else {
+                        stage('Integration Tests (skipped)') {
+                            echo "Skipped integration tests: No pull request and parameter 'RunIntegrationTests' is false."
                         }
                     }
 
