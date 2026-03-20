@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.20.1-5] - 2026-03-13
+- Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+
 ## [v1.20.1-4] - 2026-02-18
 - Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs. 
 
