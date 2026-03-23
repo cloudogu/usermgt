@@ -53,7 +53,7 @@ ENV SERVICE_TAGS=webapp \
     CATALINA_SH=/opt/apache-tomcat/bin/catalina.sh \
     STARTUP_DIR=/
 
-# dendencies xmlstarlet and openldap-clients are required for givenname migration
+# dependencies xmlstarlet and openldap-clients are required for givenname migration
 RUN set -eux && \
     apk update && apk upgrade && \
     addgroup -S -g 1000 tomcat && \

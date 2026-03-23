@@ -15,4 +15,5 @@ cypress/
 build/
 k8s/
 .env
+.env.template
 .bin
