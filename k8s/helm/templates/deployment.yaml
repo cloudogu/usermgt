@@ -18,7 +18,7 @@ spec:
       labels:
         {{- include "usermgt.labels" . | nindent 8 }}
     spec:
-      hostname: {{ include "usermgt.name" . }}
+      hostname: usermgt
 
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
@@ -36,10 +36,22 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
 
           env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: ECOSYSTEM_MULTINODE
               value: "true"
             - name: COMPONENT
               value: "true"
+            - name: LDAP_HOST
+              value: {{ .Values.ldap.host }}
+            - name: LDAP_PORT
+              value: {{ .Values.ldap.port }}
             - name: LDAP_BIND_USER
               valueFrom:
                 secretKeyRef:

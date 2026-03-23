@@ -51,13 +51,30 @@ encryptLdapPassword() {
 }
 
 setLdapUser() {
-  if [[ -z "${LDAP_BIND_USER}" ]]; then
+  if [[ -z "${LDAP_BIND_USER:-}" ]]; then
     echo "Reading ldap user from doguctl..."
     LDAP_BIND_USER=$(doguctl config -e sa-ldap/username)
     export LDAP_BIND_USER
   fi
 
   echo "Set ldap user..."
+}
+
+configureLDAP() {
+  if [[ -z "${LDAP_HOST:-}" ]]; then
+    echo "Setting ldap host to default 'ldap'"
+    export LDAP_HOST="ldap"
+  fi
+
+  if [[ -z "${LDAP_PORT:-}" ]]; then
+    echo "Setting ldap port to default '389'"
+    export LDAP_PORT="389"
+  fi
+
+  encryptLdapPassword
+  setLdapUser
+
+  echo "Configured ldap..."
 }
 
 copyConfigurationResources() {
@@ -128,8 +145,7 @@ startTomcat() {
 
 runMain() {
   printCloudoguLogo
-  encryptLdapPassword
-  setLdapUser
+  configureLDAP
   copyConfigurationResources
   renderTemplates
   createGuiConfiguration
