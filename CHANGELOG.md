@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.20.1-5] - 2026-03-13
+### Fixed
+- [#218] Force session handling via cookie
+    - This allows the user management to accept even the first redirect from cas without a valid session cookie
+
 ## [v1.20.1-4] - 2026-02-18
 ### Fixed
 - [#215] Upgrade base-image to 8.452.09-4
