@@ -148,6 +148,9 @@ runMain() {
   configureLDAP
   copyConfigurationResources
   renderTemplates
+
+  cat /var/lib/usermgt/conf2/ldap.xml
+
   createGuiConfiguration
   createTrustStore
 
