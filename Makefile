@@ -27,7 +27,7 @@ include build/make/release.mk
 include build/make/prerelease.mk
 include build/make/bats.mk
 include build/make/k8s-dogu.mk
-include build/make/k8s-controller.mk
+include build/make/k8s-component.mk
 include build/make/k8s.mk
 
 BATS_TAG=1.13.0
