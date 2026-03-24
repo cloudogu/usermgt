@@ -51,7 +51,7 @@ spec:
             - name: LDAP_HOST
               value: {{ .Values.ldap.host }}
             - name: LDAP_PORT
-              value: {{ .Values.ldap.port }}
+              value: {{ .Values.ldap.port | quote }}
             - name: LDAP_BIND_USER
               valueFrom:
                 secretKeyRef:
