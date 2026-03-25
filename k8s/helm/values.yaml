@@ -1,0 +1,71 @@
+# Default values for usermgt.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+global:
+  imagePullSecrets:
+    - name: ces-container-registries
+replicas: 1
+image:
+  registry: registry.cloudogu.com
+  repository: official/usermgt
+  tag: 1.21.0-1
+imagePullPolicy: IfNotPresent
+additionalImages:
+  # chownInitImage will be used to change file permissions on writeable volumes
+  chownInitImage: busybox:1.36
+networkPolicies:
+  enabled: true
+  gateway:
+    enabled: true
+    matchLabels:
+      k8s.cloudogu.com/component.name: k8s-ces-gateway
+ingress:
+  enabled: true
+  class: k8s-ecosystem-ces-service
+resources:
+  requests:
+    cpu: 50m
+    memory: 400Mi
+  limits:
+    memory: 400Mi
+persistence:
+  size: 2Gi
+  # If empty, Default StorageClass will be used
+  storageClass: ""
+ldap:
+  host: ldap
+  port: 389
+  secret:
+    name: "lop-idp-ldap-usermgt-sa"
+    usernameKey: username
+    passwordKey: password
+service:
+  port: 8080
+podSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  runAsNonRoot: true
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+config:
+  logging:
+    root: WARN
+  pwd_reset_selected_by_default: "false"
+  mail:
+    sender: no-reply@cloudogu.com
+    import:
+      subject: "Ihr neuer Cloudogu Ecosystem Account"
+      message: "Willkommen im Cloudogu Ecosystem!\n\nDies ist Ihr Benutzeraccount:\n\nBenutzername: ${username}\nPasswort: ${password}\n\nBei der ersten Anmeldung müssen Sie das Passwort ändern."
+      max_retries: "10"
+      max_retry_delay: "3600"
+      retry_interval: "30"
+  container_config:
+    memory_limit: 400m
+    java_max_ram_percentage: "70.0"
+    java_min_ram_percentage: "70.0"

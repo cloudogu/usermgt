@@ -6,6 +6,9 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.21.0-1] - 2026-03-25
+- The UserMgt-Dogu can be installed via helm using the helm chart.
+
 ## [v1.20.1-5] - 2026-03-13
 - We have only made technical changes. You can find more details in the changelogs.
 

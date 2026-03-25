@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.21.0-1] - 2026-03-25
+### Added
+- [#217] Add helm chart to deploy dogu via helm
+
+###  Changed
+- [#217] Adjust shell scripts to use environment variables in favor of doguctl - use doguctl as wrapper around env vars.
+
 ## [v1.20.1-5] - 2026-03-13
 ### Fixed
 - [#218] Force session handling via cookie
