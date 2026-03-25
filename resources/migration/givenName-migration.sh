@@ -17,9 +17,6 @@ LDAP_PORT=$(xmlstarlet sel -t -v "//ldap/port" "${xml_file}")
 BIND_DN=$(xmlstarlet sel -t -v "//ldap/bind-dn" "${xml_file}")
 USER_BASE_DN=$(xmlstarlet sel -t -v "//ldap/user-base-dn" "${xml_file}")
 
-# Retrieve LDAP bind password from doguctl
-BIND_PASSWORD=$(doguctl config -e sa-ldap/password)
-
 # Default value for the givenName attribute
 DEFAULT_GIVEN_NAME="Unknown"
 
@@ -27,6 +24,13 @@ LDAP_SERVER="ldap://${LDAP_HOST}:${LDAP_PORT}"
 
 # Search filter for users without a given name
 SEARCH_FILTER="(&(objectClass=person)(!(givenName=*)))"
+
+BIND_PASSWORD="${LDAP_BIND_PASSWORD:-}"
+
+if [[ -z "${BIND_PASSWORD}" ]]; then
+  echo "Reading ldap password from doguctl..."
+  BIND_PASSWORD=$(doguctl config -e sa-ldap/password)
+fi
 
 # Retrieve DNs of users without a given name
 USER_DNS=$(ldapsearch -o ldif-wrap=no -x -H "${LDAP_SERVER}" -b "${USER_BASE_DN}" -D "${BIND_DN}" -w "${BIND_PASSWORD}" -LLL "${SEARCH_FILTER}" dn | awk '/^dn: / {print $2}')

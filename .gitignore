@@ -491,3 +491,5 @@ app/.project
 **/build/tmp/**
 .npmrc
 .bin/
+k8s/helm/dogu.json
+
