@@ -23,20 +23,6 @@ networkPolicies:
       #app.kubernetes.io/name: ldap
       #app.kubernetes.io/instance: ldap
       dogu.name: ldap
-  postfix:
-    enabled: true
-    matchLabels:
-      # set to `dogu.name: postfix` if you want compatability with the postfix dogu
-      #app.kubernetes.io/name: postfix
-      #app.kubernetes.io/instance: postfix
-      dogu.name: postfix
-  cas:
-    enabled: true
-    matchLabels:
-      # set to `dogu.name: cas` if you want compatability with the cas dogu
-      #app.kubernetes.io/name: cas
-      #app.kubernetes.io/instance: cas
-      dogu.name: cas
   gateway:
     enabled: true
     matchLabels:
