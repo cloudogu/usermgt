@@ -1,6 +1,5 @@
 # Set these to the desired values
 ARTIFACT_ID=usermgt
-COMPONENT_ARTIFACT_ID=lop-idp-usermgt
 
 VERSION=1.20.1-5
 # overwrite ADDITIONAL_LDFLAGS to disable static compilation
