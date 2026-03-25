@@ -325,26 +325,26 @@ parallel(
                         echo "Apply network policy for ldap..."
 
                         writeFile file: 'ldap-netpol.yaml', text: """
-                        apiVersion: networking.k8s.io/v1
-                        kind: NetworkPolicy
-                        metadata:
-                          name: usermgt-dependency-ldap
-                          namespace: default
-                        spec:
-                          podSelector:
-                            matchLabels:
-                              dogu.name: ldap
-                          policyTypes:
-                            - Ingress
-                          ingress:
-                            - from:
-                                - namespaceSelector:
-                                    matchLabels:
-                                      kubernetes.io/metadata.name: default
-                                  podSelector:
-                                    matchLabels:
-                                      app.kubernetes.io/name: usermgt
-                        """.stripIndent()
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: usermgt-dependency-ldap
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      dogu.name: ldap
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: default
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: usermgt
+""".stripIndent()
 
                         k3d.kubectl("apply -f ldap-netpol.yaml")
                         sh "rm ldap-netpol.yaml"
