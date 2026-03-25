@@ -324,7 +324,7 @@ parallel(
 
                         echo "Apply network policy for ldap..."
 
-                        k3d.kubectl("""apply -f - <<EOF
+                        writeFile file: 'ldap-netpol.yaml', text: """
                         apiVersion: networking.k8s.io/v1
                         kind: NetworkPolicy
                         metadata:
@@ -341,8 +341,13 @@ parallel(
                                 - namespaceSelector:
                                     matchLabels:
                                       kubernetes.io/metadata.name: default
-                        EOF
-                        """);
+                                  podSelector:
+                                    matchLabels:
+                                      app.kubernetes.io/name: usermgt
+                        """.stripIndent()
+
+                        k3d.kubectl("apply -f ldap-netpol.yaml")
+                        sh "rm ldap-netpol.yaml"
 
                         echo "[Component k3d] Generate helm chart"
                         runMakeInGoContainer("helm-generate", buildToolsVersion)
