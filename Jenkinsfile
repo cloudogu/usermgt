@@ -322,6 +322,28 @@ parallel(
                             k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 0.1.1 --namespace default")
                         }
 
+                        echo "Apply network policy for ldap..."
+
+                        k3d.kubectl("apply -f - <<EOF
+                        apiVersion: networking.k8s.io/v1
+                        kind: NetworkPolicy
+                        metadata:
+                          name: usermgt-dependency-ldap
+                          namespace: default
+                        spec:
+                          podSelector:
+                            matchLabels:
+                              dogu.name: ldap
+                          policyTypes:
+                            - Ingress
+                          ingress:
+                            - from:
+                                - namespaceSelector:
+                                    matchLabels:
+                                      kubernetes.io/metadata.name: default
+                        EOF
+                        ");
+
                         echo "[Component k3d] Generate helm chart"
                         runMakeInGoContainer("helm-generate", buildToolsVersion)
 

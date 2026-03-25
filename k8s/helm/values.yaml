@@ -15,14 +15,6 @@ additionalImages:
   chownInitImage: busybox:1.36
 networkPolicies:
   enabled: true
-  ldap:
-    # you can disable this if ldap is hosted externally
-    enabled: true
-    matchLabels:
-      # set to `dogu.name: ldap` if you want compatability with the ldap dogu
-      #app.kubernetes.io/name: ldap
-      #app.kubernetes.io/instance: ldap
-      dogu.name: ldap
   gateway:
     enabled: true
     matchLabels:
