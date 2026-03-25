@@ -324,7 +324,7 @@ parallel(
 
                         echo "Apply network policy for ldap..."
 
-                        k3d.kubectl("apply -f - <<EOF
+                        k3d.kubectl("""apply -f - <<EOF
                         apiVersion: networking.k8s.io/v1
                         kind: NetworkPolicy
                         metadata:
@@ -342,7 +342,7 @@ parallel(
                                     matchLabels:
                                       kubernetes.io/metadata.name: default
                         EOF
-                        ");
+                        """);
 
                         echo "[Component k3d] Generate helm chart"
                         runMakeInGoContainer("helm-generate", buildToolsVersion)
