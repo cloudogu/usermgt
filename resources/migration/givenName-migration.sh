@@ -38,7 +38,7 @@ USER_DNS=$(ldapsearch -o ldif-wrap=no -x -H "${LDAP_SERVER}" -b "${USER_BASE_DN}
 # Iterate through user DNs and update the givenName attribute
 for USER_DN in ${USER_DNS}; do
     echo "Updating ${USER_DN}"
-    ldapmodify -x -H "${LDAP_SERVER}" -D "${BIND_DN}" -w "${LDAP_BIND_PASSWORD}" <<EOF
+    ldapmodify -x -H "${LDAP_SERVER}" -D "${BIND_DN}" -w "${BIND_PASSWORD}" <<EOF
 dn: ${USER_DN}
 changetype: modify
 replace: givenName
