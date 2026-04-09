@@ -292,7 +292,7 @@ parallel(
                         ])
 
                         echo "[Component k3d] Prepare prerequisites"
-                        k3d.kubectl("delete secret lop-idp-ldap-usermgt-sa || true")
+                        k3d.kubectl("delete secret ldap-usermgt-sa || true")
                         // Steal username and password for ldap from cas dogu to use in component.
                         // Once we have completely transitioned to the lop-idp component in ecosystem-core,
                         // this will come from the ldap component and we don't need it anymore.
@@ -315,11 +315,11 @@ parallel(
                            echo "Read ldap secret from cas config..."
                         }
 
-                        k3d.kubectl("create secret generic lop-idp-ldap-usermgt-sa --from-literal=username='${ldapUsername}' --from-literal=password='${ldapPassword}'")
+                        k3d.kubectl("create secret generic ldap-usermgt-sa --from-literal=username='${ldapUsername}' --from-literal=password='${ldapPassword}'")
 
                         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
                             k3d.helm("registry login ${componentRegistry} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'")
-                            k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 0.1.1 --namespace default")
+                            k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 0.1.1 --namespace default --set ldap.host=ldap")
                         }
 
                         echo "Apply network policy for ldap..."
