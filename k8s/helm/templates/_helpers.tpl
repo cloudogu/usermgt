@@ -29,3 +29,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/name: {{ include "usermgt.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "usermgt.backupLabels"  -}}
+k8s.cloudogu.com/backup-scope: usermgt
+{{- end }}
