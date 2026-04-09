@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "usermgt.name" . }}
+  name: {{ include "usermgt.fullname" . }}
   labels:
     {{- include "usermgt.labels" . | nindent 4 }}
 spec:
@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/default-container: {{ include "usermgt.name" . }}
+        kubectl.kubernetes.io/default-container: {{ include "usermgt.fullname" . }}
       labels:
         {{- include "usermgt.labels" . | nindent 8 }}
     spec:
@@ -31,7 +31,7 @@ spec:
         {{- .Values.podSecurityContext | toYaml | nindent 8 }}
 
       containers:
-        - name: {{ include "usermgt.name" . }}
+        - name: {{ include "usermgt.fullname" . }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
 
@@ -155,7 +155,7 @@ spec:
                     - key: config.yaml
                       path: global/config.yaml
               - configMap:
-                  name: {{ include "usermgt.name" . }}-config
+                  name: {{ include "usermgt.fullname" . }}-config
                   items:
                     - key: config.yaml
                       path: normal/config.yaml
@@ -164,8 +164,8 @@ spec:
 
         - name: usermgt-dogu-json
           configMap:
-            name: {{ include "usermgt.name" . }}-spec
+            name: {{ include "usermgt.fullname" . }}-spec
 
         - name: usermgt-data
           persistentVolumeClaim:
-            claimName: {{ include "usermgt.name" . }}
+            claimName: {{ include "usermgt.fullname" . }}

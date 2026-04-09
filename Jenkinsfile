@@ -359,7 +359,7 @@ spec:
                         sh "sudo ${WORKSPACE}/k3d/.k3d/bin/k3d image import local-smoke/usermgt:${releaseVersion} -c ${k3d.registryName}"
 
                         echo "[Component k3d] Deploy component via helm"
-                        k3d.helm("upgrade --install ${componentReleaseName} ${componentChartTargetDir} --namespace default --set image.registry=local-smoke --set image.repository=usermgt --set image.tag=${releaseVersion} --set imagePullPolicy=Never --wait --timeout 5m")
+                        k3d.helm("upgrade --install ${componentReleaseName} ${componentChartTargetDir} --namespace default --set fullnameOverride=${componentReleaseName} --set image.registry=local-smoke --set image.repository=usermgt --set image.tag=${releaseVersion} --set imagePullPolicy=Never --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
                         k3d.kubectl("rollout status deployment/${componentReleaseName} --timeout=300s")
