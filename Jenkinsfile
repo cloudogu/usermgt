@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@5.3.0', 'github.com/cloudogu/dogu-build-lib@v3.1.0'])
+@Library(['github.com/cloudogu/ces-build-lib@5.3.1', 'github.com/cloudogu/dogu-build-lib@v3.1.0'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -276,7 +276,8 @@ parallel(
                     K3d k3d = new K3d(this, "${WORKSPACE}", "${WORKSPACE}/k3d", env.PATH)
                     Makefile makefile = new Makefile(this)
                     String releaseVersion = makefile.getVersion().trim()
-                    String ldapComponentTestChart = "oci://registry.cloudogu.com/testing/k8s/lop-idp-ldap"
+                    String ldapComponentTestChart = "oci://registry.cloudogu.com/k8s/ldap"
+                    String ldapComponentTestChartVersion = "2.6.10-6"
 
                     try {
                         echo "[Component k3d] Start cluster"
@@ -284,22 +285,36 @@ parallel(
 
                         echo "[Component k3d] Prepare prerequisites"
                         k3d.kubectl("delete configmap global-config || true")
-                        k3d.kubectl("create configmap global-config --from-literal=config.yaml='domain: \"ces.test\"'")
+                        sh("openssl req -x509 -nodes -newkey rsa:2048 -keyout global-config.key -out global-config.crt -days 1 -subj '/CN=ces.test'")
+                        String serverCertificate = readFile("global-config.crt").trim()
+                        String indentedServerCertificate = serverCertificate.readLines().collect { "    ${it}" }.join("\n")
+                        writeFile file: "global-config.yaml", text: """domain: "ces.test"
+fqdn: "ces.test"
+admin_group: "cesAdmin"
+certificate:
+  server.crt: |
+${indentedServerCertificate}
+"""
+                        k3d.kubectl("create configmap global-config --from-file=config.yaml=global-config.yaml")
+                        k3d.kubectl("get configmap global-config -o yaml")
 
                         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
                             try {
+                                k3d.helm("registry login ${componentRegistry} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'")
+
                                 echo "[Component k3d] Deploy k8s-auth-registration-crd component via helm"
-                                k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --namespace default --set ldap.host=ldap")
+                                k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 1.0.0 --namespace default --set ldap.host=ldap")
 
                                 echo "[Component k3d] Deploy LDAP component via helm"
-                                k3d.helm("registry login ${componentRegistry} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'")
                                 k3d.helm("upgrade --install lop-idp-ldap ${ldapComponentTestChart}"
                                     + " --namespace default"
+                                    + " --version ${ldapComponentTestChartVersion}"
+                                    + " --set fullnameOverride=lop-idp-ldap"
                                     + " --set migration.enabled=false"
+                                    + " --set networkPolicies.consumers.usermgt.enabled=true"
+                                    + " --set-string 'networkPolicies.consumers.usermgt.matchLabels.app\\.kubernetes\\.io/instance=${componentReleaseName}'"
+                                    + " --set-string 'networkPolicies.consumers.usermgt.matchLabels.app\\.kubernetes\\.io/name=${componentReleaseName}'"
                                     + " --wait --timeout 5m")
-
-                                k3d.kubectl("rollout status statefulset/lop-idp-ldap --timeout=300s")
-                                k3d.kubectl("wait --for=condition=ready pod -l app.kubernetes.io/instance=lop-idp-ldap --timeout=300s")
                             } finally {
                                 k3d.helm("registry logout ${componentRegistry}")
                             }
