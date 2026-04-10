@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.21.0-2] - 2026-04-10
+- Es wurden nur technische Änderungen durchgeführt in Vorbereitung für die Integration des Usermgt in die LOP-IdP-Komponente.
+
 ## [v1.21.0-1] - 2026-03-25
 - Das UserMgt-Dogu kann durch Nutzung des Helm-Charts mittels Helm installiert werden.
 

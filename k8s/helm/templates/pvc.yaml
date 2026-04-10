@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "usermgt.name" . }}
+  name: {{ include "usermgt.fullname" . }}
   labels:
     {{- include "usermgt.labels" . | nindent 4 }}
 spec:

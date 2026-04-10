@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.21.0-2] - 2026-04-10
+### Changed
+- [#223] Add helm release-name to component-name in helm-templates
+
 ## [v1.21.0-1] - 2026-03-25
 ### Added
 - [#217] Add helm chart to deploy dogu via helm
