@@ -33,10 +33,10 @@ persistence:
   # If empty, Default StorageClass will be used
   storageClass: ""
 ldap:
-  host: ldap
+  host: lop-idp-ldap
   port: 389
   secret:
-    name: "lop-idp-ldap-usermgt-sa"
+    name: "ldap-usermgt-sa"
     usernameKey: username
     passwordKey: password
 service:

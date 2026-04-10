@@ -1,7 +1,7 @@
 apiVersion: k8s.cloudogu.com/v1
 kind: AuthRegistration
 metadata:
-  name: {{ include "usermgt.name" . }}-authregistration
+  name: {{ include "usermgt.fullname" . }}-authregistration
   labels:
     {{- include "usermgt.labels" . | nindent 4 }}
 spec:
