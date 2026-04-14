@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@5.3.1', 'github.com/cloudogu/dogu-build-lib@v3.1.0'])
+@Library(['github.com/cloudogu/ces-build-lib@5.3.1', 'github.com/cloudogu/dogu-build-lib@v3.5.2'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -9,7 +9,6 @@ currentBranch = "${env.BRANCH_NAME}"
 
 EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
 
-Maven mvn = new MavenWrapper(this)
 Git git = new Git(this, "cesmarvin")
 git.committerName = 'cesmarvin'
 git.committerEmail = 'cesmarvin@cloudogu.com'
@@ -284,16 +283,14 @@ parallel(
                         k3d.startK3d()
 
                         echo "[Component k3d] Prepare prerequisites"
-                        k3d.kubectl("delete configmap global-config || true")
                         sh("openssl req -x509 -nodes -newkey rsa:2048 -keyout global-config.key -out global-config.crt -days 1 -subj '/CN=ces.test'")
                         String serverCertificate = readFile("global-config.crt").trim()
-                        String indentedServerCertificate = serverCertificate.readLines().collect { "    ${it}" }.join("\n")
                         writeFile file: "global-config.yaml", text: """domain: "ces.test"
 fqdn: "ces.test"
 admin_group: "cesAdmin"
 certificate:
-  server.crt: |
-${indentedServerCertificate}
+  server.crt: |8
+${serverCertificate}
 """
                         k3d.kubectl("create configmap global-config --from-file=config.yaml=global-config.yaml")
                         k3d.kubectl("get configmap global-config -o yaml")
