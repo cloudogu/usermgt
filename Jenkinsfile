@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@5.3.0', 'github.com/cloudogu/dogu-build-lib@v3.1.0'])
+@Library(['github.com/cloudogu/ces-build-lib@5.3.1', 'github.com/cloudogu/dogu-build-lib@v3.5.2'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -9,7 +9,6 @@ currentBranch = "${env.BRANCH_NAME}"
 
 EcoSystem ecoSystem = new EcoSystem(this, "gcloud-ces-operations-internal-packer", "jenkins-gcloud-ces-operations-internal")
 
-Maven mvn = new MavenWrapper(this)
 Git git = new Git(this, "cesmarvin")
 git.committerName = 'cesmarvin'
 git.committerEmail = 'cesmarvin@cloudogu.com'
@@ -276,78 +275,47 @@ parallel(
                     K3d k3d = new K3d(this, "${WORKSPACE}", "${WORKSPACE}/k3d", env.PATH)
                     Makefile makefile = new Makefile(this)
                     String releaseVersion = makefile.getVersion().trim()
+                    String ldapComponentTestChart = "oci://registry.cloudogu.com/k8s/ldap"
+                    String ldapComponentTestChartVersion = "2.6.10-6"
 
                     try {
                         echo "[Component k3d] Start cluster"
-
-                        def myDependencies = [
-                            "official/ldap",
-                            "official/cas",
-                            "official/postfix"
-                        ]
-
                         k3d.startK3d()
-                        k3d.setup([
-                            dependencies: myDependencies
-                        ])
 
                         echo "[Component k3d] Prepare prerequisites"
-                        k3d.kubectl("delete secret ldap-usermgt-sa || true")
-                        // Steal username and password for ldap from cas dogu to use in component.
-                        // Once we have completely transitioned to the lop-idp component in ecosystem-core,
-                        // this will come from the ldap component and we don't need it anymore.
-                        String casSecretRaw = k3d.kubectl("get secret cas-config -o jsonpath='{.data.config\\.yaml}'", true)
-                        String casSecretYaml = new String(casSecretRaw.decodeBase64())
-
-                        def ldapUsername = ""
-                        def ldapPassword = ""
-
-                        k3d.doInYQContainer {
-                           ldapUsername = sh(
-                                script: "echo '${casSecretYaml}' | yq '.sa-ldap.username'",
-                                returnStdout: true
-                           ).trim()
-                           ldapPassword = sh(
-                                script: "echo '${casSecretYaml}' | yq '.sa-ldap.password'",
-                                returnStdout: true
-                           ).trim()
-
-                           echo "Read ldap secret from cas config..."
-                        }
-
-                        k3d.kubectl("create secret generic ldap-usermgt-sa --from-literal=username='${ldapUsername}' --from-literal=password='${ldapPassword}'")
+                        sh("openssl req -x509 -nodes -newkey rsa:2048 -keyout global-config.key -out global-config.crt -days 1 -subj '/CN=ces.test'")
+                        String serverCertificate = readFile("global-config.crt").trim()
+                        String indentedServerCertificate = serverCertificate.readLines().collect { "    ${it}" }.join("\n")
+                        writeFile file: "global-config.yaml", text: """domain: "ces.test"
+fqdn: "ces.test"
+admin_group: "cesAdmin"
+certificate:
+  server.crt: |
+${indentedServerCertificate}
+"""
+                        k3d.kubectl("create configmap global-config --from-file=config.yaml=global-config.yaml")
 
                         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
-                            k3d.helm("registry login ${componentRegistry} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'")
-                            k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 0.1.1 --namespace default --set ldap.host=ldap")
+                            try {
+                                k3d.helm("registry login ${componentRegistry} --username '${HARBOR_USERNAME}' --password '${HARBOR_PASSWORD}'")
+
+                                echo "[Component k3d] Deploy k8s-auth-registration-crd component via helm"
+                                k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 1.0.0 --namespace default --set ldap.host=ldap")
+
+                                echo "[Component k3d] Deploy LDAP component via helm"
+                                k3d.helm("upgrade --install lop-idp-ldap ${ldapComponentTestChart}"
+                                    + " --namespace default"
+                                    + " --version ${ldapComponentTestChartVersion}"
+                                    + " --set fullnameOverride=lop-idp-ldap"
+                                    + " --set migration.enabled=false"
+                                    + " --set networkPolicies.consumers.usermgt.enabled=true"
+                                    + " --set-string 'networkPolicies.consumers.usermgt.matchLabels.app\\.kubernetes\\.io/instance=${componentReleaseName}'"
+                                    + " --set-string 'networkPolicies.consumers.usermgt.matchLabels.app\\.kubernetes\\.io/name=${componentReleaseName}'"
+                                    + " --wait --timeout 5m")
+                            } finally {
+                                k3d.helm("registry logout ${componentRegistry}")
+                            }
                         }
-
-                        echo "Apply network policy for ldap..."
-
-                        writeFile file: 'ldap-netpol.yaml', text: """
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: usermgt-dependency-ldap
-  namespace: default
-spec:
-  podSelector:
-    matchLabels:
-      dogu.name: ldap
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: default
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: usermgt
-""".stripIndent()
-
-                        k3d.kubectl("apply -f ldap-netpol.yaml")
-                        sh "rm ldap-netpol.yaml"
 
                         echo "[Component k3d] Generate helm chart"
                         runMakeInGoContainer("helm-generate", buildToolsVersion)
@@ -358,8 +326,15 @@ spec:
                         echo "[Component k3d] Import previously built image"
                         sh "sudo ${WORKSPACE}/k3d/.k3d/bin/k3d image import local-smoke/usermgt:${releaseVersion} -c ${k3d.registryName}"
 
-                        echo "[Component k3d] Deploy component via helm"
-                        k3d.helm("upgrade --install ${componentReleaseName} ${componentChartTargetDir} --namespace default --set fullnameOverride=${componentReleaseName} --set image.registry=local-smoke --set image.repository=usermgt --set image.tag=${releaseVersion} --set imagePullPolicy=Never --wait --timeout 5m")
+                        echo "[Component k3d] Deploy usermgt component via helm"
+                        k3d.helm("upgrade --install ${componentReleaseName} ${componentChartTargetDir}"
+                            + " --namespace default"
+                            + " --set fullnameOverride=${componentReleaseName}"
+                            + " --set image.registry=local-smoke"
+                            + " --set image.repository=usermgt"
+                            + " --set image.tag=${releaseVersion}"
+                            + " --set imagePullPolicy=Never"
+                            + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
                         k3d.kubectl("rollout status deployment/${componentReleaseName} --timeout=300s")

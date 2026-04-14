@@ -1,6 +1,6 @@
 ARG TOMCAT_MAJOR_VERSION=9
-ARG TOMCAT_VERSION=9.0.115
-ARG TOMCAT_TARGZ_SHA512=8e6fa92883c161523269560a7dc9e8d58fd1199b29c630f681aa3ec2975b59d94674d2881331076b55f5ee0439748931d87c099c79d7bcea909303739e612e4b
+ARG TOMCAT_VERSION=9.0.117
+ARG TOMCAT_TARGZ_SHA512=82b15278a7bfa2685c80e07963c43246df4fd742d574b608a68f5ce67c6ffde0eff3e224cc9809925cc6bf7002a190c3bf420f50c0e4052467d3e665efc84a54
 
 FROM eclipse-temurin:8-jdk AS builder
 
@@ -35,12 +35,12 @@ RUN unzip usermgt.war \
     && rm usermgt.war \
     && chmod +x WEB-INF/cipher.sh
 
-FROM registry.cloudogu.com/official/java:8.452.09-4
+FROM registry.cloudogu.com/official/java:8.452.09-6
 
 ARG TOMCAT_VERSION
 
 LABEL NAME="official/usermgt" \
-   VERSION="1.21.0-2" \
+   VERSION="1.21.0-3" \
    maintainer="hello@cloudogu.com"
 
 # mark as webapp for nginx
