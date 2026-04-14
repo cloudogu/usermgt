@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.21.0-3] - 2026-04-14
+Dieses Release behebt Tomcat CVE-2026-29145.
+
 ## [v1.21.0-2] - 2026-04-10
 - Es wurden nur technische Änderungen durchgeführt in Vorbereitung für die Integration des Usermgt in die LOP-IdP-Komponente.
 
