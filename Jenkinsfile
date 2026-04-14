@@ -294,7 +294,6 @@ certificate:
 ${indentedServerCertificate}
 """
                         k3d.kubectl("create configmap global-config --from-file=config.yaml=global-config.yaml")
-                        k3d.kubectl("get configmap global-config -o yaml")
 
                         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harborhelmchartpush', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD']]) {
                             try {
