@@ -285,12 +285,13 @@ parallel(
                         echo "[Component k3d] Prepare prerequisites"
                         sh("openssl req -x509 -nodes -newkey rsa:2048 -keyout global-config.key -out global-config.crt -days 1 -subj '/CN=ces.test'")
                         String serverCertificate = readFile("global-config.crt").trim()
+                        String indentedServerCertificate = serverCertificate.readLines().collect { "    ${it}" }.join("\n")
                         writeFile file: "global-config.yaml", text: """domain: "ces.test"
 fqdn: "ces.test"
 admin_group: "cesAdmin"
 certificate:
-  server.crt: |8
-${serverCertificate}
+  server.crt: |
+${indentedServerCertificate}
 """
                         k3d.kubectl("create configmap global-config --from-file=config.yaml=global-config.yaml")
                         k3d.kubectl("get configmap global-config -o yaml")
