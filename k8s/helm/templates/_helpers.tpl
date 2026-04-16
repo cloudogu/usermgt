@@ -33,3 +33,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "usermgt.backupLabels"  -}}
 k8s.cloudogu.com/backup-scope: usermgt
 {{- end }}
+
+{{- define "cas.backupScaleDownLabels"  -}}
+k8s.cloudogu.com/restore-scaledown-scope: usermgt
+{{- end }}
