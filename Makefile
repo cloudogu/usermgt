@@ -1,7 +1,7 @@
 # Set these to the desired values
 ARTIFACT_ID=usermgt
 
-VERSION=1.21.0-3
+VERSION=1.21.0-4
 # overwrite ADDITIONAL_LDFLAGS to disable static compilation
 # this should fix https://github.com/golang/go/issues/13470
 ADDITIONAL_LDFLAGS=""
