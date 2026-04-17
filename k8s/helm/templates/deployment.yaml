@@ -3,7 +3,8 @@ kind: Deployment
 metadata:
   name: {{ include "usermgt.fullname" . }}
   labels:
-    {{- include "usermgt.labels" . | nindent 4 }}
+    {{ include "usermgt.labels" . | nindent 4 }}
+    {{ include "cas.backupScaleDownLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   strategy:

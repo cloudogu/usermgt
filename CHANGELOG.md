@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.21.0-4] - 2026-04-17
+### Added
+- [#225] Added label `k8s.cloudogu.com/backup-scope` to include necessary k8s ressources in the backup for the usermgt Helm-based component.
+
 ## [v1.21.0-3] - 2026-04-14
 ### Security
 - Fixed CVE-2026-29145 in Tomcat
