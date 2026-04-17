@@ -5,6 +5,7 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
 ## [v1.21.0-3] - 2026-04-14
 Dieses Release behebt Tomcat CVE-2026-29145.
