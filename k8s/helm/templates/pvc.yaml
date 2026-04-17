@@ -4,6 +4,7 @@ metadata:
   name: {{ include "usermgt.fullname" . }}
   labels:
     {{- include "usermgt.labels" . | nindent 4 }}
+    {{- include "usermgt.backupLabels" . | nindent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce

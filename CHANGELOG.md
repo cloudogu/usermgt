@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- [#225] Added label `k8s.cloudogu.com/backup-scope` to include necessary k8s ressources in the backup for the usermgt Helm-based component.
 
 ## [v1.21.0-3] - 2026-04-14
 ### Security

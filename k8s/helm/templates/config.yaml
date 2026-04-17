@@ -4,6 +4,7 @@ metadata:
   name: {{ include "usermgt.fullname" . }}-config
   labels:
     {{- include "usermgt.labels" . | nindent 4 }}
+    {{- include "usermgt.backupLabels" . | nindent 4 }}
 data:
   config.yaml: |
     {{- .Values.config | toYaml | nindent 4 }}
