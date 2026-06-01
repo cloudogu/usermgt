@@ -302,6 +302,9 @@ ${indentedServerCertificate}
                                 echo "[Component k3d] Deploy k8s-auth-registration-crd component via helm"
                                 k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 1.0.0 --namespace default --set ldap.host=ldap")
 
+                                echo "[Component k3d] Deploy k8s-exposition-crd component via helm"
+                                k3d.helm("upgrade --install k8s-exposition-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-exposition-crd --version 1.0.0 --namespace default")
+
                                 echo "[Component k3d] Deploy LDAP component via helm"
                                 k3d.helm("upgrade --install lop-idp-ldap ${ldapComponentTestChart}"
                                     + " --namespace default"
