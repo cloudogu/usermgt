@@ -19,9 +19,8 @@ networkPolicies:
     enabled: true
     matchLabels:
       k8s.cloudogu.com/component.name: k8s-ces-gateway
-ingress:
+exposition:
   enabled: true
-  class: k8s-ecosystem-ces-service
 resources:
   requests:
     cpu: 50m
