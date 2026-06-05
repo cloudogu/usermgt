@@ -5,7 +5,7 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
-- Sicherheitslücken [CVE-2026-41293](https://nvd.nist.gov/vuln/detail/cve-2026-24515), [CVE-2026-43512](https://nvd.nist.gov/vuln/detail/cve-2026-24512), [CVE-2026-43515](https://nvd.nist.gov/vuln/detail/cve-2026-43515) geschlossen
+- Sicherheitslücken [CVE-2026-41293](https://nvd.nist.gov/vuln/detail/cve-2026-41293), [CVE-2026-43512](https://nvd.nist.gov/vuln/detail/cve-2026-43512), [CVE-2026-43515](https://nvd.nist.gov/vuln/detail/cve-2026-43515) geschlossen
 
 ## [v1.21.0-4] - 2026-04-17
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
