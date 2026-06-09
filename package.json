@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "cypress": "^13.13.1",
+    "cypress": "^12.9.0",
     "yarn": "^1.22.22"
   },
   "version": "1.21.0-4"
