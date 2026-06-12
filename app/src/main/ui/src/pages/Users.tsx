@@ -10,6 +10,7 @@ import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirec
 import usePaginationTableState from "../hooks/usePaginationTableState";
 import {UsersService} from "../services/Users";
 import type {User} from "../services/Users";
+import {useMfa} from "../hooks/useMfa";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
@@ -25,8 +26,11 @@ export default function Users() {
 
     const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<User>(UsersService);
 
+    const { mfaList, isMfaLoading } = useMfa();
+    console.log("mfaList", mfaList);
+    console.log("isMfaLoading", isMfaLoading);
+
     const hasExternal = useMemo(() => {
-        console.log(items);
         return items.reduce((a,b) => a || b.external, false);
     }, [items]);
 
