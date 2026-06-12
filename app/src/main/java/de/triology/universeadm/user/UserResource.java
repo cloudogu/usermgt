@@ -238,7 +238,7 @@ public class UserResource extends AbstractManagerResource<User> {
 
         try {
             UUID importUUID = UUID.fromString(importID);
-            Result result = this.importHandler.getResult(importUUID);
+            de.triology.universeadm.user.imports.Result result = this.importHandler.getResult(importUUID);
 
             return Response.status(Response.Status.OK).entity(result).build();
         } catch (IllegalArgumentException e) {
