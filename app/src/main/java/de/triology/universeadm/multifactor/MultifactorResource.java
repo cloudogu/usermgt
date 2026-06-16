@@ -41,10 +41,11 @@ public class MultifactorResource {
     }
 
     @GET
-    public Response listMfa() {
+    @Path("/{username}")
+    public Response getMfa(@PathParam("username") String username) {
         try {
-            String jsonResponse = callCasMfaListApi();
-            List<MfaDTO> credentials = parse(jsonResponse);
+            String jsonResponse = callCasMfaGetApi(username);
+            MfaDTO credentials = parse(jsonResponse);
             return Response.ok(credentials, MediaType.APPLICATION_JSON).build();
         } catch (IOException e) {
             LOG.error("Failed to load MFA data from CAS", e);
@@ -73,8 +74,8 @@ public class MultifactorResource {
     /**
      * Parses the JSON response from the CAS API and extracts only username and (device-)name.
      */
-    private List<MfaDTO> parse(String jsonResponse) {
-        List<MfaDTO> result = new ArrayList<>();
+    private MfaDTO parse(String jsonResponse) {
+        MfaDTO result = new MfaDTO();
 
         try {
             JsonArray jsonArray = GSON.fromJson(jsonResponse, JsonArray.class);
@@ -85,7 +86,8 @@ public class MultifactorResource {
                 String username = obj.has("username") ? obj.get("username").getAsString() : null;
                 String name = obj.has("name") ? obj.get("name").getAsString() : null;
 
-                result.add(new MfaDTO(username, name));
+                result.setUsername(username);
+                result.setName(name);
             }
         } catch (Exception e) {
             LOG.error("Failed to parse MFA credentials JSON", e);
@@ -97,10 +99,10 @@ public class MultifactorResource {
     /**
      * Calls the CAS MFA API to list all MFA credentials.
      */
-    private String callCasMfaListApi() throws IOException {
+    private String callCasMfaGetApi(String username) throws IOException {
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(CAS_MFA_ENDPOINT);
+            URL url = new URL(CAS_MFA_ENDPOINT + "/" + username);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -165,5 +167,17 @@ public class MultifactorResource {
                 .encodeToString((user + ":" + password).getBytes(StandardCharsets.UTF_8));
             connection.setRequestProperty("Authorization", "Basic " + basicAuth);
         }
+    }
+
+    private HttpURLConnection createConnection(String username, String method) throws IOException {
+        HttpURLConnection connection = null;
+        String urlString = CAS_MFA_ENDPOINT + "/" + username;
+        URL url = new URL(urlString);
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+
+        addBasicAuthentication(connection);
+
+        return connection;
     }
 }
