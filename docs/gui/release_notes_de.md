@@ -5,6 +5,8 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+- Multifaktor-Management: Admin-User können über eine neue UI den zweiten Faktor eines Benutzers deaktivieren.
+- Externer LDAP: externe LDAPs können an das Usermgt angeschlossen werden, haben aber nur READ-Access.
 
 ## [v1.21.0-4] - 2026-04-17
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
