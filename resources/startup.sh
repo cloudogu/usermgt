@@ -139,6 +139,18 @@ migrateLDAPEntries() {
   source /migration/givenName-migration.sh
 }
 
+# these env are used by the frontend to connect to the cas mfa api
+setMfaEnv() {
+    # Set Java system properties for backend
+    MFA_API_USER=$(doguctl config experimental/totp/api_user_name)
+    MFA_API_PASSWORD=$(doguctl config experimental/totp/api_user_password)
+    FQDN=$(doguctl config -g fqdn)
+
+    export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.user=${MFA_API_USER}"
+    export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.password=${MFA_API_PASSWORD}"
+    export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
+}
+
 startTomcat() {
   "${CATALINA_SH}" run
 }
@@ -150,10 +162,7 @@ runMain() {
   renderTemplates
   createGuiConfiguration
   createTrustStore
-
-  if [[ -z ${COMPONENT:-} ]]; then
-    waitForLDAPDogu
-  fi
+  setMfaEnv
 
   migrateLDAPEntries
 
