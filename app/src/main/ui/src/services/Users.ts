@@ -21,7 +21,6 @@ export type User = {
     pwdReset: boolean,
     external: boolean,
     memberOf: string[];
-    hasMfa?: boolean;
 };
 
 export type UsersModel = PagedModel & {
