@@ -40,7 +40,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const [formDisabled, setFormDisabled] = useState(false);
     useEffect(() => hasEmptyRequiredFields(), []);
 
-    const {mfa, isMfaLoading} = useMfa(props.initialUser.username);
+    const {mfa, isMfaLoading, reloadMfa} = useMfa(props.initialUser.username);
     const {notification: mfaNotification, notify: mfaNotify} = useAlertNotification();
 
     const {admin} = useApplicationContext().casUser;
@@ -108,6 +108,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         }
         try {
             await MfaService.delete(username);
+            reloadMfa();
         } catch (error) {
             mfaNotify(t("users.mfa.delete.notification.error", { username }), "danger");
             return;

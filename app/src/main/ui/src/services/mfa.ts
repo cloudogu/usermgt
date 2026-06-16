@@ -12,7 +12,6 @@ export const MfaService = {
         const response = await Axios.get<Mfa>(`/mfa/${username}`, {
             signal: signal,
         } as any);
-        console.log("response", response.data);
 
         if (response.status < 200 || response.status > 299) {
             throw new Error("failed to load mfa credentials: " + response.status);
