@@ -8,8 +8,8 @@ export type Mfa = {
 
 // MfaService provides methods for managing multifactor authentication (MFA) credentials.
 export const MfaService = {
-    async list(signal?: AbortSignal): Promise<Mfa[]> {
-        const response = await Axios.get<Mfa[]>("/mfa", {
+    async get(username: string, signal?: AbortSignal): Promise<Mfa> {
+        const response = await Axios.get<Mfa>(`/mfa/${username}`, {
             signal: signal,
         } as any);
         console.log("response", response.data);
@@ -21,14 +21,14 @@ export const MfaService = {
         return response.data;
     },
 
-    async deleteByUserName(userName: string): Promise<void> {
+    async delete(username: string): Promise<void> {
 
-        if (!userName) {
+        if (!username) {
             throw new Error("the user name must not be empty");
         }
 
         const response = await Axios.delete<void>(
-            `/cas/actuator/gauthCredentialRepository/${encodeURIComponent(userName)}`,
+            `/mfa/${username}`,
             {}
         );
 

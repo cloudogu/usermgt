@@ -195,5 +195,14 @@
   "usersImportResult.table.success.username": "Username",
   "users.steps.title": "Additional Information",
   "users.steps.link" : "Documentation",
-  "users.steps.text" : "When creating accounts and groups in the User Management, please note that modified or newly created accounts, groups and group assignments are not directly known in other dogus, but will be made known the next time the user logs in to the respective Dogu. There are exceptions for Jira and Confluence. Please refer to the linked documentation."
+  "users.steps.text" : "When creating accounts and groups in the User Management, please note that modified or newly created accounts, groups and group assignments are not directly known in other dogus, but will be made known the next time the user logs in to the respective Dogu. There are exceptions for Jira and Confluence. Please refer to the linked documentation.",
+  "users.mfa.title": "Two-Factor Authentication",
+  "users.mfa.status.enabled": "Two-Factor Authentication for {{username}} is active and configured.",
+  "users.mfa.status.disabled": "Two-Factor Authentication for {{username}} is active and not configured. {{username}} must configure the second factor on the next login.",
+  "users.mfa.device.name": "Device name",
+  "users.mfa.buttons.delete": "Reset two-factor authentication",
+  "users.mfa.delete.confirmation.title": "Reset two-factor authentication",
+  "users.mfa.delete.confirmation.message": "Reset the two-factor authentication for {{username}}? {{username}} must configure the second factor on the next login.",
+  "users.mfa.delete.notification.error": "The two-factor authentication for '{{username}}' could not be reset.",
+  "users.mfa.delete.notification.success": "The two-factor authentication for '{{username}}' was reset successfully."
 }

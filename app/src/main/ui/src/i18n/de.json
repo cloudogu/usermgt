@@ -195,5 +195,14 @@
   "usersImportResult.table.success.username": "Nutzername",
   "users.steps.title": "Zusätzliche Hinweise",
   "users.steps.link" : "Dokumentation",
-  "users.steps.text" : "Beachten Sie beim Anlegen von Accounts und Gruppen im User Management, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen nicht direkt in anderen Dogus bekannt sind, sondern bei der nächsten Anmeldung des Accounts im jeweiligen Dogu bekannt gemacht werden. Ausnahmen bestehen bei Jira und Confluence. Bitte betrachten Sie dazu die verlinkte Dokumentation."
+  "users.steps.text" : "Beachten Sie beim Anlegen von Accounts und Gruppen im User Management, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen nicht direkt in anderen Dogus bekannt sind, sondern bei der nächsten Anmeldung des Accounts im jeweiligen Dogu bekannt gemacht werden. Ausnahmen bestehen bei Jira und Confluence. Bitte betrachten Sie dazu die verlinkte Dokumentation.",
+  "users.mfa.title": "Zwei-Faktor-Authentifizierung",
+  "users.mfa.status.enabled": "Zwei-Faktor-Authentifizierung für {{username}} ist aktiv und konfiguriert.",
+  "users.mfa.status.disabled": "Zwei-Faktor-Authentifizierung für {{username}} ist aktiv und nicht konfiguriert. {{username}} muss den zweiten Faktor beim nächsten Login konfigurieren.",
+  "users.mfa.device.name": "Gerätename",
+  "users.mfa.buttons.delete": "2. Faktor zurücksetzen",
+  "users.mfa.delete.confirmation.title": "Zweiten Faktor zurücksetzen",
+  "users.mfa.delete.confirmation.message": "Zweiten Faktor für {{username}} wirklich zurücksetzen? {{username}} muss beim nächsten Login einen neuen 2. Faktor einrichten.",
+  "users.mfa.delete.notification.error": "Der zweite Faktor für '{{username}}' konnte nicht zurückgesetzt werden.",
+  "users.mfa.delete.notification.success": "Der zweite Faktor für '{{username}}' wurde erfolgreich zurückgesetzt."
 }
