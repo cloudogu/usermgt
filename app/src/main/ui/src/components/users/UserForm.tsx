@@ -32,6 +32,8 @@ export interface UserFormProps<T extends User> {
     groupsReadonly?: boolean;
     passwordReset?: boolean;
     twoFADisabled?: boolean;
+    // for testing, will depend on internal/external ldap
+    editingEnabled?: false;
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
@@ -134,6 +136,8 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         return;
     };
 
+    const isInputDisabled = props.initialUser.external || !props.editingEnabled;
+
     return (
         <>
             <ConfirmationDialog
@@ -157,19 +161,19 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 <Form.ValidatedTextInput required type={"text"} name={"username"} disabled={props.disableUsernameField ?? true} data-testid="username" placeholder={t("users.placeholder.username")} hint={t("users.hint.username")}>
                     {t("editUser.labels.username")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"givenname"} data-testid="givenname" placeholder={t("users.placeholder.givenname")}>
+                <Form.ValidatedTextInput required disabled={isInputDisabled } type={"text"} name={"givenname"} data-testid="givenname" placeholder={t("users.placeholder.givenname")}>
                     {t("editUser.labels.givenName")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"surname"} data-testid="surname" placeholder={t("users.placeholder.surname")}>
+                <Form.ValidatedTextInput required disabled={isInputDisabled} type={"text"} name={"surname"} data-testid="surname" placeholder={t("users.placeholder.surname")}>
                     {t("editUser.labels.surname")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"displayName"} data-testid="displayName" placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
+                <Form.ValidatedTextInput required disabled={isInputDisabled} type={"text"} name={"displayName"} data-testid="displayName" placeholder={t("users.placeholder.displayName")} hint={t("users.hint.displayName")}>
                     {t("editUser.labels.displayName")}
                 </Form.ValidatedTextInput>
-                <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"text"} name={"mail"} data-testid="mail" placeholder={t("users.placeholder.mail")}>
+                <Form.ValidatedTextInput required disabled={isInputDisabled} type={"text"} name={"mail"} data-testid="mail" placeholder={t("users.placeholder.mail")}>
                     {t("editUser.labels.email")}
                 </Form.ValidatedTextInput>
-                {!props.initialUser.external &&
+                {!isInputDisabled &&
                     <>
                         <Form.ValidatedTextInput required disabled={props.initialUser.external} type={"password"} name={"password"} data-testid="password" placeholder={t("users.placeholder.password")}>
                             {t("editUser.labels.password")}
@@ -181,7 +185,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 }
 
                 <>
-                    {(props.passwordReset && !props.initialUser.external) && (
+                    {(props.passwordReset && !isInputDisabled) && (
                         <>
                             <Form.ValidatedCheckboxLabelRight name={"pwdReset"} data-testid="pwdReset">
                                 {t("editUser.labels.mustChangePassword")}
@@ -195,7 +199,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     )}
                 </>
 
-                {props.groupsReadonly ? (
+                {props.groupsReadonly || !props.editingEnabled ? (
                     <></>
                 ) : (
                     <>
@@ -214,7 +218,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 </div>
             </Form>
             {
-                props.groupsReadonly ? (
+                props.groupsReadonly || !props.editingEnabled ? (
                     <>
                         <H2>
                             {t("users.labels.myGroups")} ({handler.values.memberOf.length})
@@ -225,7 +229,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     <></>
                 )
             }
-            {props.twoFADisabled ? (
+            {props.twoFADisabled || !props.editingEnabled ? (
                 <></>
             ) : (<div>
                 <hr className={"mb-4"}/>
