@@ -32,8 +32,6 @@ export interface UserFormProps<T extends User> {
     groupsReadonly?: boolean;
     passwordReset?: boolean;
     twoFADisabled?: boolean;
-    // for testing, will depend on internal/external ldap
-    editingEnabled?: false;
 }
 
 export default function UserForm<T extends User>(props: UserFormProps<T>) {
@@ -46,6 +44,8 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const {notification: mfaNotification, notify: mfaNotify} = useAlertNotification();
 
     const {admin} = useApplicationContext().casUser;
+    const editingDisabled  = useApplicationContext().externalLdap;
+
 
     const originalChangeFunction = handler.handleChange;
 
@@ -136,7 +136,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
         return;
     };
 
-    const isInputDisabled = props.initialUser.external || !props.editingEnabled;
+    const isInputDisabled = props.initialUser.external || editingDisabled;
 
     return (
         <>
@@ -199,7 +199,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     )}
                 </>
 
-                {props.groupsReadonly || !props.editingEnabled ? (
+                {props.groupsReadonly || editingDisabled ? (
                     <></>
                 ) : (
                     <>
@@ -211,14 +211,14 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 )}
 
                 <div className={"my-4"}>
-                    <Button variant={"primary"} type={"submit"} disabled={formDisabled} data-testid="save-button">
+                    <Button variant={"primary"} type={"submit"} disabled={formDisabled || editingDisabled } data-testid="save-button">
                         {t("editUser.buttons.save")}
                     </Button>
                     {props.additionalButtons as JSX.Element}
                 </div>
             </Form>
             {
-                props.groupsReadonly || !props.editingEnabled ? (
+                props.groupsReadonly || editingDisabled ? (
                     <>
                         <H2>
                             {t("users.labels.myGroups")} ({handler.values.memberOf.length})
@@ -229,7 +229,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     <></>
                 )
             }
-            {props.twoFADisabled || !props.editingEnabled ? (
+            {props.twoFADisabled ? (
                 <></>
             ) : (<div>
                 <hr className={"mb-4"}/>

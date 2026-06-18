@@ -74,6 +74,14 @@ configureLDAP() {
   encryptLdapPassword
   setLdapUser
 
+  # Set EXTERNAL_LDAP to true if LDAP_HOST is not "ldap" or "lop-idp-ldap"
+  if [[ "${LDAP_HOST}" != "ldap" && "${LDAP_HOST}" != "lop-idp-ldap" ]]; then
+    EXTERNAL_LDAP="true"
+  else
+    EXTERNAL_LDAP="false"
+  fi
+  echo "External LDAP is: ${EXTERNAL_LDAP} (LDAP_HOST: ${LDAP_HOST})"
+
   echo "Configured ldap..."
 }
 
@@ -110,6 +118,7 @@ createGuiConfiguration() {
   echo "Read configuration fof preselection of password reset attribute checkbox"
   PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_RESET_DEFAULT_VALUE_KEY}" --default 'false')"
   echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
+
   echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" >"${GUI_CONFIG_PATH}"
 }
 

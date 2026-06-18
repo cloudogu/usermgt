@@ -108,7 +108,7 @@ export type ApplicationContainerProps = {
 
 function ApplicationContainer({children}: ApplicationContainerProps) {
     const {user: casUser} = useCasUser();
-    return <ApplicationContext.Provider value={{casUser: casUser}}>
+    return <ApplicationContext.Provider value={{casUser: casUser, externalLdap: true}}>
         <Nav/>
         <Main>
             {children}
