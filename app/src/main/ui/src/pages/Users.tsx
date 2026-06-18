@@ -26,9 +26,7 @@ export default function Users() {
 
     const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<User>(UsersService);
 
-    const hasExternal = useMemo(() => {
-        return items.reduce((a,b) => a || b.external, false);
-    }, [items]);
+    const hasExternal = useMemo(() => items.reduce((a,b) => a || b.external, false), [items]);
 
     return <>
         <div className="flex flex-wrap justify-between">

@@ -1,5 +1,5 @@
 import {Button, H1, LoadingIcon} from "@cloudogu/deprecated-ces-theme-tailwind";
-import React, {useContext, useMemo} from "react";
+import React, {useContext} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {ApplicationContext} from "../components/contexts/ApplicationContext";
 import UserForm from "../components/users/UserForm";
