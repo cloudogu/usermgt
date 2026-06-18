@@ -173,7 +173,11 @@ runMain() {
   createTrustStore
   setMfaEnv
 
-  migrateLDAPEntries
+  if [[ "${EXTERNAL_LDAP}" != "true" ]]; then
+    migrateLDAPEntries
+  else
+    echo "Skipping LDAP migration because external LDAP is configured"
+  fi
 
   startTomcat
 }
