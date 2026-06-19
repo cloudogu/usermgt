@@ -43,6 +43,7 @@ encryptLdapPassword() {
     echo "Reading ldap password from doguctl..."
     raw_pass=$(doguctl config -e sa-ldap/password)
   fi
+  raw_pass=$(doguctl config ldap/bind_password)
 
   LDAP_BIND_PASSWORD_ENC="$(${CIPHER_SH} encrypt "${raw_pass}" | tail -1)"
   export LDAP_BIND_PASSWORD_ENC
@@ -62,13 +63,20 @@ setLdapUser() {
 
 configureLDAP() {
   if [[ -z "${LDAP_HOST:-}" ]]; then
-    echo "Setting ldap host to default 'ldap'"
-    export LDAP_HOST="ldap"
+    LDAP_HOST=$(doguctl config ldap/host)
+    echo $LDAP_HOST
+    if [[ -z "${LDAP_HOST:-}" ]]; then
+      echo "No ldap host set, setting ldap host to default 'ldap'"
+      export LDAP_HOST="ldap"
+    fi
   fi
 
   if [[ -z "${LDAP_PORT:-}" ]]; then
-    echo "Setting ldap port to default '389'"
-    export LDAP_PORT="389"
+    LDAP_PORT=$(doguctl config ldap/port)
+    if [[ -z "${LDAP_PORT:-}" ]]; then
+      echo "No ldap port set, setting ldap port to default '389'"
+      export LDAP_PORT="389"
+    fi
   fi
 
   encryptLdapPassword
