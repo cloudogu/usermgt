@@ -37,13 +37,19 @@ printCloudoguLogo() {
 }
 
 encryptLdapPassword() {
-  local raw_pass="${LDAP_BIND_PASSWORD:-}"
+  local raw_pass=""
 
-  if [[ -z "${raw_pass}" ]]; then
-    echo "Reading ldap password from doguctl..."
+  if [[ "${EXTERNAL_LDAP}" == "true" ]]; then
+    # External LDAP: Use ENV variable for multinode, otherwise use doguctl
+    if [[ -n "${LDAP_BIND_PASSWORD:-}" ]]; then
+      raw_pass="${LDAP_BIND_PASSWORD}"
+    else
+      raw_pass=$(doguctl config -e ldap/bind_password)
+    fi
+  else
+    # LDAP Dogu: Use service account from doguctl
     raw_pass=$(doguctl config -e sa-ldap/password)
   fi
-  raw_pass=$(doguctl config ldap/bind_password)
 
   LDAP_BIND_PASSWORD_ENC="$(${CIPHER_SH} encrypt "${raw_pass}" | tail -1)"
   export LDAP_BIND_PASSWORD_ENC
@@ -52,19 +58,25 @@ encryptLdapPassword() {
 }
 
 setLdapUser() {
-  if [[ -z "${LDAP_BIND_USER:-}" ]]; then
-    echo "Reading ldap user from doguctl..."
+  if [[ "${EXTERNAL_LDAP}" == "true" ]]; then
+    # External LDAP: Use ENV variable for multinode, otherwise use doguctl
+    if [[ -z "${LDAP_BIND_USER:-}" ]]; then
+      LDAP_BIND_USER=$(doguctl config ldap/bind_user)
+    fi
+  else
+    # LDAP Dogu: Use service account from doguctl
     LDAP_BIND_USER=$(doguctl config -e sa-ldap/username)
-    export LDAP_BIND_USER
   fi
 
+  export LDAP_BIND_USER
   echo "Set ldap user..."
 }
 
 configureLDAP() {
   # host
   if [[ -z "${LDAP_HOST:-}" ]]; then
-    LDAP_HOST=$(doguctl config ldap/host)
+    export LDAP_HOST=$(doguctl config ldap/host)
+    echo $LDAP_HOST
     if [[ -z "${LDAP_HOST:-}" ]]; then
       echo "No ldap host set, setting ldap host to default 'ldap'"
       export LDAP_HOST="ldap"
@@ -73,7 +85,7 @@ configureLDAP() {
 
   # port
   if [[ -z "${LDAP_PORT:-}" ]]; then
-    LDAP_PORT=$(doguctl config ldap/port)
+    export LDAP_PORT=$(doguctl config ldap/port)
     if [[ -z "${LDAP_PORT:-}" ]]; then
       echo "No ldap port set, setting ldap port to default '389'"
       export LDAP_PORT="389"
@@ -92,9 +104,6 @@ configureLDAP() {
   fi
   export LDAP_GROUP_BASE_DN
 
-  encryptLdapPassword
-  setLdapUser
-
   # Set EXTERNAL_LDAP to true if LDAP_HOST is not "ldap" or "lop-idp-ldap"
   if [[ "${LDAP_HOST}" != "ldap" && "${LDAP_HOST}" != "lop-idp-ldap" ]]; then
     EXTERNAL_LDAP="true"
@@ -102,8 +111,10 @@ configureLDAP() {
     EXTERNAL_LDAP="false"
   fi
 
-  echo "External LDAP is: ${EXTERNAL_LDAP} (LDAP_HOST: ${LDAP_HOST})"
+  encryptLdapPassword
+  setLdapUser
 
+  echo "LDAP_HOST: ${LDAP_HOST}"
   echo "Configured ldap..."
 }
 
