@@ -7,7 +7,7 @@ import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from
 import usermgtIcon from "./assets/usermgt_icon_detailed.svg";
 import ProtectedResource from "./components/ProtectedResource";
 import TitledPage from "./components/TitledPage";
-import { ApplicationContext, useApplicationContext } from "./components/contexts/ApplicationContext";
+import {ApplicationContext, useApplicationContext} from "./components/contexts/ApplicationContext";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import Account from "./pages/Account";
@@ -119,7 +119,7 @@ function ApplicationContainer({children}: ApplicationContainerProps) {
 function Nav() {
     const location = useLocation();
     const {t} = useTranslation();
-    const {casUser} = useApplicationContext();
+    const {casUser, externalLdap} = useApplicationContext();
     return (
         <>
             <Navbar currentPath={location?.pathname ?? ""}>
@@ -142,14 +142,14 @@ function Nav() {
                                 <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
                                 {t("pages.groups")}
                             </Navbar.ListItem>
-                            <Navbar.ListItem path={"/users/import"}>
+                            {!externalLdap ?? (<><Navbar.ListItem path={"/users/import"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.usersImport")}
                             </Navbar.ListItem>
                             <Navbar.ListItem path={"/summaries"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.summaries")}
-                            </Navbar.ListItem>
+                            </Navbar.ListItem></>)}
                         </> :
                         <></>
                     }
@@ -160,5 +160,6 @@ function Nav() {
                 </Navbar.RightAlignedList>
             </Navbar>
         </>
-    );
+    )
+    ;
 }
