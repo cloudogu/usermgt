@@ -11,6 +11,17 @@
       de.triology.universeadm.BootstrapContextListener
     </listener-class>
   </listener>
+
+  <!-- first start uri session filter -->
+  <filter>
+    <filter-name>casSessionValidationFilter</filter-name>
+    <filter-class>de.triology.universeadm.CasSessionValidationFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>casSessionValidationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
   
   <!-- cas sso -->
   
@@ -67,6 +78,5 @@
     <session-timeout>
       30
     </session-timeout>
-    <tracking-mode>COOKIE</tracking-mode>
   </session-config>
 </web-app>

@@ -78,3 +78,9 @@ template-image-pull-policy: $(BINARY_YQ)
           echo "Setting pull policy to always!" ; \
           $(BINARY_YQ) -i e ".imagePullPolicy=\"Always\"" "${K8S_COMPONENT_TARGET_VALUES}" ; \
     fi
+
+
+.PHONY: kill-pod
+kill-pod:
+	@echo "Restarting ${ARTIFACT_ID} Dogu!"
+	@kubectl -n ${NAMESPACE} delete pods -l "dogu.name=${ARTIFACT_ID}"
