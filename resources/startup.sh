@@ -62,15 +62,16 @@ setLdapUser() {
 }
 
 configureLDAP() {
+  # host
   if [[ -z "${LDAP_HOST:-}" ]]; then
     LDAP_HOST=$(doguctl config ldap/host)
-    echo $LDAP_HOST
     if [[ -z "${LDAP_HOST:-}" ]]; then
       echo "No ldap host set, setting ldap host to default 'ldap'"
       export LDAP_HOST="ldap"
     fi
   fi
 
+  # port
   if [[ -z "${LDAP_PORT:-}" ]]; then
     LDAP_PORT=$(doguctl config ldap/port)
     if [[ -z "${LDAP_PORT:-}" ]]; then
@@ -78,6 +79,18 @@ configureLDAP() {
       export LDAP_PORT="389"
     fi
   fi
+
+  # user base dn
+  if [[ -z "${LDAP_USER_BASE_DN:-}" ]]; then
+    LDAP_USER_BASE_DN=$(doguctl config ldap/user_base_dn)
+  fi
+  export LDAP_USER_BASE_DN
+
+  # group base dn
+  if [[ -z "${LDAP_GROUP_BASE_DN:-}" ]]; then
+    LDAP_GROUP_BASE_DN=$(doguctl config ldap/group_base_dn)
+  fi
+  export LDAP_GROUP_BASE_DN
 
   encryptLdapPassword
   setLdapUser
@@ -88,6 +101,7 @@ configureLDAP() {
   else
     EXTERNAL_LDAP="false"
   fi
+
   echo "External LDAP is: ${EXTERNAL_LDAP} (LDAP_HOST: ${LDAP_HOST})"
 
   echo "Configured ldap..."
@@ -182,6 +196,9 @@ runMain() {
   setMfaEnv
 
   if [[ "${EXTERNAL_LDAP}" != "true" ]]; then
+    if [[ -z ${COMPONENT:-} ]]; then
+      waitForLDAPDogu
+    fi
     migrateLDAPEntries
   else
     echo "Skipping LDAP migration because external LDAP is configured"
