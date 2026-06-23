@@ -204,5 +204,6 @@
   "users.mfa.delete.confirmation.title": "Zweiten Faktor zurücksetzen",
   "users.mfa.delete.confirmation.message": "Zweiten Faktor für {{username}} wirklich zurücksetzen? {{username}} muss beim nächsten Login einen neuen 2. Faktor einrichten.",
   "users.mfa.delete.notification.error": "Der zweite Faktor für '{{username}}' konnte nicht zurückgesetzt werden.",
-  "users.mfa.delete.notification.success": "Der zweite Faktor für '{{username}}' wurde erfolgreich zurückgesetzt."
+  "users.mfa.delete.notification.success": "Der zweite Faktor für '{{username}}' wurde erfolgreich zurückgesetzt.",
+  "general.ldap.external.message": "Das Usermanagement ist an einen externen LDAP angeschlossen. Das Anlegen und Bearbeiten von Ressourcen wurde deaktiviert."
 }

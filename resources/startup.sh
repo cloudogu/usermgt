@@ -110,6 +110,7 @@ configureLDAP() {
   else
     EXTERNAL_LDAP="false"
   fi
+  export EXTERNAL_LDAP
 
   encryptLdapPassword
   setLdapUser
@@ -148,11 +149,11 @@ renderTemplates() {
 }
 
 createGuiConfiguration() {
-  echo "Read configuration fof preselection of password reset attribute checkbox"
+  echo "Read configuration of preselection of password reset attribute checkbox"
   PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_RESET_DEFAULT_VALUE_KEY}" --default 'false')"
   echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
 
-  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" >"${GUI_CONFIG_PATH}"
+  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}, \"externalLdap\": ${EXTERNAL_LDAP}}" >"${GUI_CONFIG_PATH}"
 }
 
 createTrustStore() {

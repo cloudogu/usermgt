@@ -1,4 +1,5 @@
 import {Main, Navbar} from "@cloudogu/deprecated-ces-theme-tailwind";
+import {Alert} from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -10,6 +11,7 @@ import TitledPage from "./components/TitledPage";
 import {ApplicationContext, useApplicationContext} from "./components/contexts/ApplicationContext";
 import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
+import {useGuiConfig} from "./hooks/useGuiConfig";
 import Account from "./pages/Account";
 import {EditGroup} from "./pages/EditGroup";
 import EditUser from "./pages/EditUser";
@@ -19,9 +21,9 @@ import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
 import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
+
 import UsersImport from "./pages/UsersImport";
 import UsersImportResult from "./pages/UsersImportResult";
-
 import "./i18n";
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
@@ -108,14 +110,18 @@ export type ApplicationContainerProps = {
 
 function ApplicationContainer({children}: ApplicationContainerProps) {
     const {user: casUser} = useCasUser();
-    return <ApplicationContext.Provider value={{casUser: casUser, externalLdap: true}}>
+    const {guiConfig} = useGuiConfig();
+    const {t} = useTranslation();
+    return <ApplicationContext.Provider value={{casUser: casUser, externalLdap: guiConfig.externalLdap}}>
         <Nav/>
         <Main>
+            {guiConfig.externalLdap && (<Alert className={"mt-2"} onClose={() => {
+            }} severity={"info"}>{t("general.ldap.external.message")}</Alert>)}
             {children}
         </Main>
     </ApplicationContext.Provider>;
-}
 
+}
 function Nav() {
     const location = useLocation();
     const {t} = useTranslation();
@@ -142,14 +148,18 @@ function Nav() {
                                 <Navbar.ListItem.Icon type={"groups"} className={"md:hidden"}/>
                                 {t("pages.groups")}
                             </Navbar.ListItem>
-                            {!externalLdap ?? (<><Navbar.ListItem path={"/users/import"}>
-                                <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
-                                {t("pages.usersImport")}
-                            </Navbar.ListItem>
-                            <Navbar.ListItem path={"/summaries"}>
-                                <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
-                                {t("pages.summaries")}
-                            </Navbar.ListItem></>)}
+                            {!externalLdap && (
+                                <>
+                                    <Navbar.ListItem path={"/users/import"}>
+                                        <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
+                                        {t("pages.usersImport")}
+                                    </Navbar.ListItem>
+                                    <Navbar.ListItem path={"/summaries"}>
+                                        <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
+                                        {t("pages.summaries")}
+                                    </Navbar.ListItem>
+                                </>
+                            )}
                         </> :
                         <></>
                     }
