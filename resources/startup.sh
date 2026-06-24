@@ -75,34 +75,37 @@ setLdapUser() {
 configureLDAP() {
   # host
   if [[ -z "${LDAP_HOST:-}" ]]; then
-    export LDAP_HOST=$(doguctl config ldap/host)
-    echo $LDAP_HOST
-    if [[ -z "${LDAP_HOST:-}" ]]; then
-      echo "No ldap host set, setting ldap host to default 'ldap'"
-      export LDAP_HOST="ldap"
-    fi
+    export LDAP_HOST=$(doguctl config ldap/host --default "ldap")
   fi
 
   # port
   if [[ -z "${LDAP_PORT:-}" ]]; then
-    export LDAP_PORT=$(doguctl config ldap/port)
-    if [[ -z "${LDAP_PORT:-}" ]]; then
-      echo "No ldap port set, setting ldap port to default '389'"
-      export LDAP_PORT="389"
+    export LDAP_PORT=$(doguctl config ldap/port --default "389")
+  fi
+
+# user base dn
+  if [[ -z "${LDAP_USER_BASE_DN:-}" ]]; then
+    LDAP_USER_BASE_DN=""
+
+    if user_base_dn="$(doguctl config ldap/user_base_dn 2>/dev/null)"; then
+      if [[ -n "${user_base_dn}" ]]; then
+        LDAP_USER_BASE_DN="${user_base_dn}"
+        export LDAP_USER_BASE_DN
+      fi
     fi
   fi
 
-  # user base dn
-  if [[ -z "${LDAP_USER_BASE_DN:-}" ]]; then
-    LDAP_USER_BASE_DN=$(doguctl config ldap/user_base_dn)
-  fi
-  export LDAP_USER_BASE_DN
-
   # group base dn
   if [[ -z "${LDAP_GROUP_BASE_DN:-}" ]]; then
-    LDAP_GROUP_BASE_DN=$(doguctl config ldap/group_base_dn)
+    LDAP_GROUP_BASE_DN=""
+
+    if group_base_dn="$(doguctl config ldap/group_base_dn 2>/dev/null)"; then
+      if [[ -n "${group_base_dn}" ]]; then
+        LDAP_GROUP_BASE_DN="${group_base_dn}"
+        export LDAP_GROUP_BASE_DN
+      fi
+    fi
   fi
-  export LDAP_GROUP_BASE_DN
 
   # Set EXTERNAL_LDAP to true if LDAP_HOST is not "ldap" or "lop-idp-ldap"
   if [[ "${LDAP_HOST}" != "ldap" && "${LDAP_HOST}" != "lop-idp-ldap" ]]; then
