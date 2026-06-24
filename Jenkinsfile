@@ -340,6 +340,15 @@ ${indentedServerCertificate}
                         k3d.kubectl("wait --for=condition=ready pod -l app.kubernetes.io/instance=${componentReleaseName} --timeout=300s")
 
                     } catch (Exception e) {
+                        echo "[Component k3d] Smoke test failed - collecting diagnostics for ${componentReleaseName}"
+                        try {
+                            k3d.kubectl("get pods -o wide")
+                            k3d.kubectl("describe pod -l app.kubernetes.io/instance=${componentReleaseName}")
+                            k3d.kubectl("get events --sort-by=.lastTimestamp")
+                            k3d.kubectl("logs -l app.kubernetes.io/instance=${componentReleaseName} --all-containers --tail=200 --prefix")
+                        } catch (ignored) {
+                            echo "[Component k3d] Diagnostics collection failed: ${ignored}"
+                        }
                         k3d.collectAndArchiveLogs()
                         throw e
                     } finally {
