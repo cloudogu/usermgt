@@ -333,6 +333,9 @@ ${indentedServerCertificate}
                             + " --set image.registry=${k3d.registry.imageRegistryInternalWithPort}"
                             + " --set image.repository=local-smoke/usermgt"
                             + " --set image.tag=${releaseVersion}"
+                            // 400Mi (dogu default) gets OOMKilled on k8s with MaxRAMPercentage=70%; give the smoke test headroom
+                            + " --set resources.requests.memory=512Mi"
+                            + " --set resources.limits.memory=512Mi"
                             + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
