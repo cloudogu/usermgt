@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@5.3.1', 'github.com/cloudogu/dogu-build-lib@v3.5.2'])
+@Library(['github.com/cloudogu/ces-build-lib@5.5.0', 'github.com/cloudogu/dogu-build-lib@v3.5.2'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -323,20 +323,16 @@ ${indentedServerCertificate}
                         echo "[Component k3d] Generate helm chart"
                         runMakeInGoContainer("helm-generate", buildToolsVersion)
 
-                        echo "[Component k3d] Retag image for local smoke test"
-                        sh "docker tag ${componentBuildImageRepository}:${releaseVersion} local-smoke/usermgt:${releaseVersion}"
-
-                        echo "[Component k3d] Import previously built image"
-                        sh "sudo ${WORKSPACE}/k3d/.k3d/bin/k3d image import local-smoke/usermgt:${releaseVersion} -c ${k3d.registryName}"
+                        echo "[Component k3d] Push image to k3d registry"
+                        k3d.registry.pushToLocalRegistry("${componentBuildImageRepository}:${releaseVersion}", "local-smoke/usermgt", releaseVersion)
 
                         echo "[Component k3d] Deploy usermgt component via helm"
                         k3d.helm("upgrade --install ${componentReleaseName} ${componentChartTargetDir}"
                             + " --namespace default"
                             + " --set fullnameOverride=${componentReleaseName}"
-                            + " --set image.registry=local-smoke"
-                            + " --set image.repository=usermgt"
+                            + " --set image.registry=${k3d.registry.imageRegistryInternalWithPort}"
+                            + " --set image.repository=local-smoke/usermgt"
                             + " --set image.tag=${releaseVersion}"
-                            + " --set imagePullPolicy=Never"
                             + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
