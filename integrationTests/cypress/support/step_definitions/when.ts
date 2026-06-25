@@ -253,11 +253,10 @@ When("deletes the entry for the user import", function () {
 
 When("the user {string} tries to log in with his generated password", function (username: string) {
     cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
-        let strings: string[]
-        strings = body.split(" ")
-        let passwordWithLineBreak = strings[8]
-        let passwordSplitted = passwordWithLineBreak.split("\\r\\n")
-        let password = passwordSplitted[0]
+        // Extract the generated password from the "Passwort:" line of the import mail.
+        const match = body.match(/Passwort:\s*([^\s\\]+)/)
+        expect(match, "generated password found in import mail").to.not.be.null
+        const password = match[1]
 
         cy.clearCookies()
 
