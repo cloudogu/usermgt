@@ -333,9 +333,9 @@ ${indentedServerCertificate}
                             + " --set image.registry=${k3d.registry.imageRegistryInternalWithPort}"
                             + " --set image.repository=local-smoke/usermgt"
                             + " --set image.tag=${releaseVersion}"
-                            // 400Mi (dogu default) gets OOMKilled on k8s with MaxRAMPercentage=70%; give the smoke test headroom
-                            + " --set resources.requests.memory=512Mi"
-                            + " --set resources.limits.memory=512Mi"
+                            // 70% MaxRAMPercentage OOMKills the pod at the 400Mi default limit; lower the JVM heap percentage so it fits
+                            + " --set-string config.container_config.java_max_ram_percentage=50.0"
+                            + " --set-string config.container_config.java_min_ram_percentage=50.0"
                             + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
