@@ -8,7 +8,7 @@ ADDITIONAL_LDFLAGS=""
 NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
-MAKEFILES_VERSION=10.7.1
+MAKEFILES_VERSION=10.9.1
 .DEFAULT_GOAL:=default
 
 BINARY_HELM_VERSION?=v3.20.0
