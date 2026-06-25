@@ -263,6 +263,7 @@ When("the user {string} tries to log in with his generated password", function (
         cy.visit("/cas/login", {failOnStatusCode: false})
         cy.get('input[data-testid="login-username-input-field"]').type(username)
         cy.get('input[data-testid="login-password-input-field"]').type(password)
+        cy.get('button[type="submit"]').click();
     })
 })
 
