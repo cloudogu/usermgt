@@ -333,44 +333,15 @@ ${indentedServerCertificate}
                             + " --set image.registry=${k3d.registry.imageRegistryInternalWithPort}"
                             + " --set image.repository=local-smoke/usermgt"
                             + " --set image.tag=${releaseVersion}"
-                            // INVESTIGATION: generous headroom so the pod can start; actual peak memory is measured below
-                            + " --set resources.requests.memory=1024Mi"
-                            + " --set resources.limits.memory=1024Mi"
-                            + " --set-string config.container_config.java_max_ram_percentage=50.0"
-                            + " --set-string config.container_config.java_min_ram_percentage=50.0"
+                            // The default 400Mi are not enough in the pipeline.
+                            + " --set resources.requests.memory=512Mi"
+                            + " --set resources.limits.memory=512Mi"
                             + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
                         k3d.kubectl("rollout status deployment/${componentReleaseName} --timeout=300s")
                         k3d.kubectl("wait --for=condition=ready pod -l app.kubernetes.io/instance=${componentReleaseName} --timeout=300s")
-
-                        // INVESTIGATION: measure actual memory footprint so the limit can be right-sized
-                        echo "[Component k3d] Measure memory usage"
-                        try {
-                            echo "[Component k3d] Configured container resources:"
-                            k3d.kubectl("get deploy ${componentReleaseName} -o jsonpath='{.spec.template.spec.containers[0].resources}'")
-                            echo "[Component k3d] Applied JVM memory settings (grep startup log for MaxRAMPercentage):"
-                            k3d.kubectl("logs deploy/${componentReleaseName} --tail=300")
-                            sh "sleep 60"
-                            k3d.kubectl("top pod -l app.kubernetes.io/instance=${componentReleaseName}")
-                            echo "[Component k3d] cgroup memory.peak (bytes):"
-                            k3d.kubectl("exec deploy/${componentReleaseName} -- cat /sys/fs/cgroup/memory.peak")
-                            echo "[Component k3d] cgroup memory.current (bytes):"
-                            k3d.kubectl("exec deploy/${componentReleaseName} -- cat /sys/fs/cgroup/memory.current")
-                        } catch (ignored) {
-                            echo "[Component k3d] Memory measurement failed: ${ignored}"
-                        }
-
                     } catch (Exception e) {
-                        echo "[Component k3d] Smoke test failed - collecting diagnostics for ${componentReleaseName}"
-                        try {
-                            k3d.kubectl("get pods -o wide")
-                            k3d.kubectl("describe pod -l app.kubernetes.io/instance=${componentReleaseName}")
-                            k3d.kubectl("get events --sort-by=.lastTimestamp")
-                            k3d.kubectl("logs -l app.kubernetes.io/instance=${componentReleaseName} --all-containers --tail=200 --prefix")
-                        } catch (ignored) {
-                            echo "[Component k3d] Diagnostics collection failed: ${ignored}"
-                        }
                         k3d.collectAndArchiveLogs()
                         throw e
                     } finally {
