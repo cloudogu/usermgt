@@ -268,15 +268,24 @@ When("the user {string} tries to log in with his generated password", function (
 })
 
 When("the user configures the new password to {string}", function (password: string) {
+    cy.get('input[data-testid="currentPassword-input"]').clear().type(password);
     cy.get('input[data-testid="password-input"]').clear().type(password);
     cy.get('input[data-testid="confirmPassword-input"]').clear().type(password);
     cy.get('button[data-testid="save-button"]').click()
 })
 
 When("the user sets the new password to {string}", function (password: string) {
-    cy.get('input[data-testid="password-input"]').clear().type(password);
-    cy.get('input[data-testid="confirmedPassword-input"]').clear().type(password);
-    cy.get('button[id="submit"]').click()
+    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
+        // Extract the generated password from the "Passwort:" line of the import mail.
+        const match = body.match(/Passwort:\s*([^\s\\]+)/)
+        expect(match, "generated password found in import mail").to.not.be.null
+        const currentPassword = match[1]
+
+        cy.get('input[data-testid="currentPassword-input"]').clear().type(currentPassword);
+        cy.get('input[data-testid="password-input"]').clear().type(password);
+        cy.get('input[data-testid="confirmedPassword-input"]').clear().type(password);
+        cy.get('button[id="submit"]').click()
+    })
 })
 
 When("the user {string} with password {string} logs in", function (username: string, password: string) {
