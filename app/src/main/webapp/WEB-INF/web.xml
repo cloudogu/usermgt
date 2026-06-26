@@ -11,6 +11,17 @@
       de.triology.universeadm.BootstrapContextListener
     </listener-class>
   </listener>
+
+  <!-- first start uri session filter -->
+  <filter>
+    <filter-name>casSessionValidationFilter</filter-name>
+    <filter-class>de.triology.universeadm.CasSessionValidationFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>casSessionValidationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
   
   <!-- cas sso -->
   
@@ -29,6 +40,42 @@
     <filter-name>CAS Single Sign Out Filter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+
+    <filter>
+        <filter-name>CAS Authentication Filter</filter-name>
+        <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
+
+        <!-- 👉 URL deines CAS Servers -->
+        <init-param>
+            <param-name>casServerLoginUrl</param-name>
+            <param-value>https://34.179.169.73/cas/login</param-value>
+        </init-param>
+
+        <!-- 👉 WICHTIG: Session nicht vertrauen -->
+        <init-param>
+            <param-name>useSession</param-name>
+            <param-value>false</param-value>
+        </init-param>
+
+        <!-- 👉 WICHTIG: immer echten Login erzwingen -->
+        <init-param>
+            <param-name>renew</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+        <!-- 👉 optional, aber explizit gut -->
+        <init-param>
+            <param-name>gateway</param-name>
+            <param-value>false</param-value>
+        </init-param>
+
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CAS Authentication Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
   
   <!-- guice -->
   
@@ -67,6 +114,5 @@
     <session-timeout>
       30
     </session-timeout>
-    <tracking-mode>COOKIE</tracking-mode>
   </session-config>
 </web-app>
