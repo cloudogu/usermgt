@@ -6,6 +6,9 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.21.0-5] - 2026-06-26
+- Only technical changes were made in preparation for integrating Usermgt into the LOP-IdP component.
+
 ## [v1.21.0-4] - 2026-04-17
 We have only made technical changes. You can find more details in the changelogs.
 
