@@ -1,0 +1,14 @@
+{{- if .Values.exposition.enabled }}
+apiVersion: k8s.cloudogu.com/v1
+kind: Exposition
+metadata:
+  name: {{ include "usermgt.name" . }}
+  labels:
+    {{- include "usermgt.labels" . | nindent 4 }}
+spec:
+  http:
+    - name: {{ include "usermgt.name" . }}
+      service: {{ include "usermgt.fullname" . }}
+      port: {{ .Values.service.port }}
+      path: /{{ include "usermgt.name" . }}
+{{- end }}
