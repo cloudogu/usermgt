@@ -197,6 +197,7 @@
   "users.steps.link" : "Dokumentation",
   "users.steps.text" : "Beachten Sie beim Anlegen von Accounts und Gruppen im User Management, dass geänderte oder neu angelegte Accounts, Gruppen und Gruppenzuordnungen nicht direkt in anderen Dogus bekannt sind, sondern bei der nächsten Anmeldung des Accounts im jeweiligen Dogu bekannt gemacht werden. Ausnahmen bestehen bei Jira und Confluence. Bitte betrachten Sie dazu die verlinkte Dokumentation.",
   "users.mfa.title": "Zwei-Faktor-Authentifizierung",
+  "users.mfa.load.error": "Die Zwei-Faktor-Authentifizierung konnte nicht geladen werden.",
   "users.mfa.status.enabled": "Zwei-Faktor-Authentifizierung für {{username}} ist aktiv und konfiguriert.",
   "users.mfa.status.disabled": "Zwei-Faktor-Authentifizierung für {{username}} ist aktiv und nicht konfiguriert. {{username}} muss den zweiten Faktor beim nächsten Login konfigurieren.",
   "users.mfa.device.name": "Gerätename",

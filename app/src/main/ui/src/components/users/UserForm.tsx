@@ -40,7 +40,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const [formDisabled, setFormDisabled] = useState(false);
     useEffect(() => hasEmptyRequiredFields(), []);
 
-    const {mfa, isMfaLoading, reloadMfa} = useMfa(props.initialUser.username);
+    const {mfa, isMfaLoading, mfaError, reloadMfa} = useMfa(props.initialUser.username);
     const {notification: mfaNotification, notify: mfaNotify} = useAlertNotification();
 
     const {admin} = useApplicationContext().casUser;
@@ -235,12 +235,20 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                 <hr className={"mb-4"}/>
                 {mfaNotification}
                 <H2 className="mb-4">{t("users.mfa.title")}</H2>
-                {isMfaLoading ? <LoadingIcon className={"w-16 h-16"}/> : <MfaManagement
-                    username={props.initialUser.username}
-                    mfa={mfa}
-                    onDelete={on2FADelete}
-                    className={"mb-4"}
-                />}
+                {mfaError ? (
+                    <p className={"mb-4 text-danger"} role="alert">
+                        {t("users.mfa.load.error")}
+                    </p>
+                ) : isMfaLoading ? (
+                    <LoadingIcon className={"w-16 h-16"}/>
+                ) : (
+                    <MfaManagement
+                        username={props.initialUser.username}
+                        mfa={mfa}
+                        onDelete={on2FADelete}
+                        className={"mb-4"}
+                    />
+                )}
             </div>)}
             {
                 admin ? (
