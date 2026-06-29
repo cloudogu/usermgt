@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#234] enable external ldap configuration
   - external ldap allows read access
 
+## [v1.21.0-5] - 2026-06-26
+### Changed
+- [#230] Use the exposition api in kubernetes instead of the ingress api.
+  - Added the exposition-crd as a component dependency
+
 ## [v1.21.0-4] - 2026-04-17
 ### Added
 - [#225] Added label `k8s.cloudogu.com/backup-scope` to include necessary k8s ressources in the backup for the usermgt Helm-based component.

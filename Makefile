@@ -1,17 +1,16 @@
 # Set these to the desired values
 ARTIFACT_ID=usermgt
 
-VERSION=1.21.0-4
+VERSION=1.21.0-5
 # overwrite ADDITIONAL_LDFLAGS to disable static compilation
 # this should fix https://github.com/golang/go/issues/13470
 ADDITIONAL_LDFLAGS=""
 NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
-MAKEFILES_VERSION=10.7.1
+MAKEFILES_VERSION=10.9.0
 .DEFAULT_GOAL:=default
 
-BINARY_HELM_VERSION?=v3.20.0
 HELM_SOURCE_DIR=k8s/helm
 
 K8S_COMPONENT_SOURCE_VALUES = ${HELM_SOURCE_DIR}/values.yaml

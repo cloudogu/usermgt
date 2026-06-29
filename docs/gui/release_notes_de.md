@@ -8,6 +8,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 - Multifaktor-Management: Admin-User können über eine neue UI den zweiten Faktor eines Benutzers deaktivieren.
 - Externer LDAP: externe LDAPs können an das Usermgt angeschlossen werden, haben aber nur READ-Access.
 
+## [v1.21.0-5] - 2026-06-26
+- Es wurden nur technische Änderungen durchgeführt in Vorbereitung für die Integration des Usermgt in die LOP-IdP-Komponente.
+
 ## [v1.21.0-4] - 2026-04-17
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
