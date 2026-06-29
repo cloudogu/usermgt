@@ -1,5 +1,6 @@
 // mfaService.ts
 import {Axios} from "../api/axios";
+import {isSuccessStatus} from "../helpers/api";
 
 export type Mfa = {
     username: string;
@@ -13,7 +14,7 @@ export const MfaService = {
             signal: signal,
         } as any);
 
-        if (response.status < 200 || response.status > 299) {
+        if (isSuccessStatus(response.status)) {
             throw new Error("failed to load mfa credentials: " + response.status);
         }
 
@@ -31,7 +32,7 @@ export const MfaService = {
             {}
         );
 
-        if (response.status < 200 || response.status > 299) {
+        if (isSuccessStatus(response.status)) {
             throw new Error("failed to delete mfa credentials: " + response.status);
         }
     }

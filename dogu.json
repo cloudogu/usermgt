@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.21.0-511",
+  "Version": "1.21.0-4",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -171,14 +171,12 @@
     {
       "Name": "experimental/totp/api_user_name",
       "Description": "Warning: Experimental Feature. Username for totp administration. Supply the same username to the usermgt dogu.",
-      "Default": "admin123",
       "Optional": true,
       "Encrypted": true
     },
     {
       "Name": "experimental/totp/api_user_password",
       "Description": "Warning: Experimental Feature. API password for totp administration. Supply the same password to the usermgt dogu.",
-      "Default": "password123",
       "Optional": true,
       "Encrypted": true
     },

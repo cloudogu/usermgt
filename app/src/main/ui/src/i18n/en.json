@@ -203,7 +203,7 @@
   "users.mfa.buttons.delete": "Reset two-factor authentication",
   "users.mfa.delete.confirmation.title": "Reset two-factor authentication",
   "users.mfa.delete.confirmation.message": "Reset the two-factor authentication for {{username}}? {{username}} must configure the second factor on the next login.",
-  "users.mfa.delete.notification.error": "The two-factor authentication for '{{username}}' could not be reset.",
-  "users.mfa.delete.notification.success": "The two-factor authentication for '{{username}}' was reset successfully.",
+  "users.mfa.delete.notification.error": "The two-factor authentication for {{username}} could not be reset.",
+  "users.mfa.delete.notification.success": "The two-factor authentication for {{username}} was reset successfully.",
   "general.ldap.external.message": "The Usermanagement is connected to an external LDAP. Creating and editing resources is disabled."
 }

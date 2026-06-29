@@ -89,7 +89,7 @@ public class MultifactorResource {
                 result.setUsername(username);
                 result.setName(name);
             }
-        } catch (Exception e) {
+        } catch (JsonParseException | IllegalStateException e) {
             LOG.error("Failed to parse MFA credentials JSON", e);
         }
 
