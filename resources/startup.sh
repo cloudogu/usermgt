@@ -189,14 +189,30 @@ migrateLDAPEntries() {
 
 # these env are used by the frontend to connect to the cas mfa api
 setMfaEnv() {
-    # Set Java system properties for backend
-    MFA_API_USER=$(doguctl config experimental/totp/api_user_name)
-    MFA_API_PASSWORD=$(doguctl config experimental/totp/api_user_password)
-    FQDN=$(doguctl config -g fqdn)
+      local mfaApiUser=""
+      local mfaApiPassword=""
 
-    export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.user=${MFA_API_USER}"
-    export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.password=${MFA_API_PASSWORD}"
-    export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
+      if ! mfaApiUser="$(doguctl config experimental/totp/api_user_name 2>/dev/null)"; then
+        echo "Skipping MFA env setup because experimental/totp/api_user_name is not configured"
+        return
+      fi
+
+      if ! mfaApiPassword="$(doguctl config experimental/totp/api_user_password 2>/dev/null)"; then
+        echo "Skipping MFA env setup because experimental/totp/api_user_password is not configured"
+        return
+      fi
+
+      if [[ -z "${mfaApiUser}" || -z "${mfaApiPassword}" ]]; then
+        echo "Skipping MFA env setup because TOTP API config is empty"
+        return
+      fi
+
+      FQDN=$(doguctl config -g fqdn)
+
+      # Set Java system properties for backend
+      export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.user=${mfaApiUser}"
+      export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.password=${mfaApiPassword}"
+      export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
 }
 
 startTomcat() {
