@@ -75,12 +75,14 @@ setLdapUser() {
 configureLDAP() {
   # host
   if [[ -z "${LDAP_HOST:-}" ]]; then
-    export LDAP_HOST=$(doguctl config ldap/host --default "ldap")
+    LDAP_HOST=$(doguctl config ldap/host --default "ldap")
+    export LDAP_HOST
   fi
 
   # port
   if [[ -z "${LDAP_PORT:-}" ]]; then
-    export LDAP_PORT=$(doguctl config ldap/port --default "389")
+    LDAP_PORT=$(doguctl config ldap/port --default "389")
+    export LDAP_PORT
   fi
 
 # user base dn
