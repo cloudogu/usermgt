@@ -39,15 +39,11 @@ printCloudoguLogo() {
 encryptLdapPassword() {
   local raw_pass=""
 
-  if [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
-    # External LDAP: Use ENV variable for multinode, otherwise use doguctl
-    if [[ -n "${LDAP_BIND_PASSWORD:-}" ]]; then
-      raw_pass="${LDAP_BIND_PASSWORD}"
-    else
-      raw_pass=$(doguctl config -e ldap/bind_password)
-    fi
+  if [[ -n "${LDAP_BIND_PASSWORD:-}" ]]; then
+    raw_pass="${LDAP_BIND_PASSWORD}"
+  elif [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
+    raw_pass=$(doguctl config -e ldap/bind_password)
   else
-    # LDAP Dogu: Use service account from doguctl
     raw_pass=$(doguctl config -e sa-ldap/password)
   fi
 
@@ -58,13 +54,11 @@ encryptLdapPassword() {
 }
 
 setLdapUser() {
-  if [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
-    # External LDAP: Use ENV variable for multinode, otherwise use doguctl
-    if [[ -z "${LDAP_BIND_USER:-}" ]]; then
-      LDAP_BIND_USER=$(doguctl config ldap/bind_user)
-    fi
+  if [[ -n "${LDAP_BIND_USER:-}" ]]; then
+    LDAP_BIND_USER="${LDAP_BIND_USER}"
+  elif [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
+    LDAP_BIND_USER=$(doguctl config ldap/bind_user)
   else
-    # LDAP Dogu: Use service account from doguctl
     LDAP_BIND_USER=$(doguctl config -e sa-ldap/username)
   fi
 
