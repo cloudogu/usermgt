@@ -170,7 +170,7 @@ parallel(
                             }
                             echo "run integration tests."
                             ecoSystem.runCypressIntegrationTests([
-                                cypressImage     : "cypress/included:12.9.0",
+                                cypressImage     : "cypress/included:13.13.1",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
