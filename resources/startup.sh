@@ -39,7 +39,7 @@ printCloudoguLogo() {
 encryptLdapPassword() {
   local raw_pass=""
 
-  if [[ "${EXTERNAL_LDAP}" == "true" ]]; then
+  if [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
     # External LDAP: Use ENV variable for multinode, otherwise use doguctl
     if [[ -n "${LDAP_BIND_PASSWORD:-}" ]]; then
       raw_pass="${LDAP_BIND_PASSWORD}"
@@ -58,7 +58,7 @@ encryptLdapPassword() {
 }
 
 setLdapUser() {
-  if [[ "${EXTERNAL_LDAP}" == "true" ]]; then
+  if [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
     # External LDAP: Use ENV variable for multinode, otherwise use doguctl
     if [[ -z "${LDAP_BIND_USER:-}" ]]; then
       LDAP_BIND_USER=$(doguctl config ldap/bind_user)
