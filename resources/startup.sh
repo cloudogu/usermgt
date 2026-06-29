@@ -55,7 +55,7 @@ encryptLdapPassword() {
 
 setLdapUser() {
   if [[ -n "${LDAP_BIND_USER:-}" ]]; then
-    LDAP_BIND_USER="${LDAP_BIND_USER}"
+    return
   elif [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
     LDAP_BIND_USER=$(doguctl config ldap/bind_user)
   else
