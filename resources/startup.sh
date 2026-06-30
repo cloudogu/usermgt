@@ -186,12 +186,12 @@ setMfaEnv() {
       local mfaApiUser=""
       local mfaApiPassword=""
 
-      if ! mfaApiUser="$(doguctl config experimental/totp/api_user_name 2>/dev/null)"; then
+      if ! mfaApiUser="$(doguctl config -e experimental/totp/api_user_name 2>/dev/null)"; then
         echo "Skipping MFA env setup because experimental/totp/api_user_name is not configured"
         return
       fi
 
-      if ! mfaApiPassword="$(doguctl config experimental/totp/api_user_password 2>/dev/null)"; then
+      if ! mfaApiPassword="$(doguctl config -e experimental/totp/api_user_password 2>/dev/null)"; then
         echo "Skipping MFA env setup because experimental/totp/api_user_password is not configured"
         return
       fi
