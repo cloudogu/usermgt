@@ -14,7 +14,7 @@ export const MfaService = {
             signal: signal,
         } as any);
 
-        if (isSuccessStatus(response.status)) {
+        if (!isSuccessStatus(response.status)) {
             throw new Error("failed to load mfa credentials: " + response.status);
         }
 
@@ -32,7 +32,7 @@ export const MfaService = {
             {}
         );
 
-        if (isSuccessStatus(response.status)) {
+        if (!isSuccessStatus(response.status)) {
             throw new Error("failed to delete mfa credentials: " + response.status);
         }
     }

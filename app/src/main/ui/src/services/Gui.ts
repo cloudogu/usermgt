@@ -12,7 +12,7 @@ export const GuiService = {
             signal: signal
         });
 
-        if (isSuccessStatus(response.status)) {
+        if (!isSuccessStatus(response.status)) {
             throw new Error("failed to load gui config: " + response.status);
         }
 
