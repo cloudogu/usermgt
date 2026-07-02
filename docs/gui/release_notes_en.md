@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+- Multi-factor authentication management: Admin users can disable a user's second factor via a new UI.
+- External LDAP: External LDAP servers can be connected to User Management, but they only have read access.
 
 ## [v1.21.0-5] - 2026-06-26
 - Only technical changes were made in preparation for integrating Usermgt into the LOP-IdP component.

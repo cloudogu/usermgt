@@ -1,9 +1,10 @@
 import {ActionTable, ActionTableRoot, ConfirmDialog, translate,} from "@cloudogu/ces-theme-tailwind";
 import {Button, H1, Searchbar, useAlertNotification} from "@cloudogu/deprecated-ces-theme-tailwind";
-import React , {useMemo}from "react";
+import React, {useContext, useMemo} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {DeleteButton} from "../components/DeleteButton";
 import EditLink from "../components/EditLink";
+import { ApplicationContext } from "../components/contexts/ApplicationContext";
 import {t} from "../helpers/i18nHelpers";
 import {useNotificationAfterRedirect} from "../hooks/useNotificationAfterRedirect";
 import usePaginationTableState from "../hooks/usePaginationTableState";
@@ -15,6 +16,7 @@ export default function Groups() {
     const location = useLocation();
     const navigate = useNavigate();
     const {notification, notify} = useAlertNotification();
+    const editingDisabled = useContext(ApplicationContext).externalLdap;
     useNotificationAfterRedirect(notify);
     const backUrlParams = useMemo((): string => {
         const backURL = `/groups${location.search}`;
@@ -32,7 +34,7 @@ export default function Groups() {
                 <Button
                     variant={"secondary"} className="mt-5 mb-2.5 mr-5"
                     data-testid="group-create"
-                    disabled={isLoading} onClick={() => navigate("/groups/new")}>
+                    disabled={isLoading || editingDisabled} onClick={() => navigate("/groups/new")}>
                     {t("groups.buttons.create")}</Button>
                 <Searchbar
                     placeholder={"Filter"} clearOnSearch={false} onSearch={updateSearchQuery}

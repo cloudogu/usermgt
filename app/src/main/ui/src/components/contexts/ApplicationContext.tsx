@@ -1,8 +1,12 @@
 import { createContext, useContext } from "react";
 import type { CasUser } from "../../services/CasUser";
 
+const isExternalLdap = process.env.EXTERNAL_LDAP || "false";
+
+
 export type ApplicationContextProps = {
     casUser: CasUser;
+    externalLdap: boolean;
 }
 export const ApplicationContext = createContext<ApplicationContextProps>({
     casUser: {
@@ -10,6 +14,7 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
         admin: false,
         loading: true
     },
+    externalLdap: isExternalLdap === "true",
 });
 
 export function useApplicationContext() {
