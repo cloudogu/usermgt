@@ -119,6 +119,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- RESTEasy's builtin MimeMultipartProvider needs javax.mail.MessagingException on the classpath
+             at startup or the webapp fails to deploy; this API-only jar provides it without the mailcap above. -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.6.2</version>
+        </dependency>
         <!-- ldap -->
         <dependency>
             <groupId>com.unboundid</groupId>
