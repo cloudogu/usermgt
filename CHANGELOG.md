@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - [#240] Fixed a bug where the initial-password mails of the CSV user import were silently never sent, because the legacy `com.sun.mail` jar (pulled in transitively by RESTEasy) broke message serialization of the Jakarta Mail stack.
 - [#240] Fixed the whole app failing to start after excluding that legacy jar, because RESTEasy's builtin multipart provider reflectively needs `javax.mail.MessagingException` at deployment time; added the API-only `javax.mail:javax.mail-api` jar to supply it without reintroducing the broken mailcap.
+- [#240] Raised the component memory limit from 400Mi to 768Mi; on JDK 8 the app was OOM-killed during Tomcat startup (heap + metaspace + native exceeded 400Mi), leaving the pod in CrashLoopBackOff.
 
 ## [v1.21.0-4] - 2026-04-17
 ### Added
