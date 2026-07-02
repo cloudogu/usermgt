@@ -6,6 +6,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.22.0-1] - 2026-07-02
+- Multi-factor authentication management: Admin users can disable a user's second factor via a new UI.
+- External LDAP: External LDAP servers can be connected to User Management, but they only have read access.
+
 ## [v1.21.0-5] - 2026-06-26
 - Only technical changes were made in preparation for integrating Usermgt into the LOP-IdP component.
 

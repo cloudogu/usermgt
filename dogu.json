@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.21.0-5",
+  "Version": "1.22.0-1",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -20,16 +20,17 @@
     },
     {
       "Type": "dogu",
-      "Name": "ldap",
-      "Version": ">=2.6.2-7"
-    },
-    {
-      "Type": "dogu",
       "Name": "nginx"
     },
     {
       "Type": "dogu",
       "Name": "postfix"
+    }
+  ],
+  "OptionalDependencies": [
+    {
+      "Type": "dogu",
+      "Name": "ldap"
     }
   ],
   "Volumes": [
@@ -99,6 +100,39 @@
       }
     },
     {
+      "Name": "ldap/host",
+      "Description": "The host of the LDAP (without protocol and without port), e.g. ldap if LDAP dogu is used.",
+      "Default": "ldap",
+      "Optional": true
+    },
+    {
+      "Name": "ldap/port",
+      "Description": "The port of the LDAP, e.g. 389",
+      "Default": "389",
+      "Optional": true
+    },
+    {
+      "Name": "ldap/user_base_dn",
+      "Description": "Base DN of users to be authenticated, e.g.: ou=users,o=ces.local,dc=cloudogu,dc=com",
+      "Optional": true
+    },
+    {
+      "Name": "ldap/group_base_dn",
+      "Description": "Settings for ldap group search by member. Base dn for group search e.g.: ou=groups,o=ces.local,dc=cloudogu,dc=com",
+      "Optional": true
+    },
+    {
+      "Name": "ldap/bind_user",
+      "Description": "Username of the account to use to authenticate to the LDAP",
+      "Optional": true
+    },
+    {
+      "Name": "ldap/bind_password",
+      "Description": "Password for the account to use to authenticate to the LDAP",
+      "Optional": true,
+      "Encrypted": true
+    },
+    {
       "Name": "mail/sender",
       "Description": "Email address to use as sender of the User Management dogu",
       "Default": "no-reply@cloudogu.com",
@@ -133,6 +167,18 @@
       "Description": "The interval in which failed mails will be checked to be sent again.",
       "Default": "30",
       "Optional": true
+    },
+    {
+      "Name": "experimental/totp/api_user_name",
+      "Description": "Warning: Experimental Feature. Username for totp administration. Supply the same username to the usermgt dogu.",
+      "Optional": true,
+      "Encrypted": true
+    },
+    {
+      "Name": "experimental/totp/api_user_password",
+      "Description": "Warning: Experimental Feature. API password for totp administration. Supply the same password to the usermgt dogu.",
+      "Optional": true,
+      "Encrypted": true
     },
     {
       "Name": "container_config/memory_limit",

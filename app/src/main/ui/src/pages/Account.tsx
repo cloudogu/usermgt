@@ -19,6 +19,7 @@ export default function Account() {
             <UserForm<User>
                 initialUser={account}
                 groupsReadonly={true}
+                twoFADisabled={true}
                 onSubmit={(account, notify, handler) => AccountService.update(account)
                     .then((msg: string) => {
                         notify(msg, "primary");

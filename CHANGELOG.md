@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.22.0-1] - 2026-07-02
+- [#234] add multifactor management for admin users
+- [#234] enable external ldap configuration
+  - external ldap allows read access
+
 ## [v1.21.0-5] - 2026-06-26
 ### Changed
 - [#230] Use the exposition api in kubernetes instead of the ingress api.

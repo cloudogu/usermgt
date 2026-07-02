@@ -1,7 +1,7 @@
 apiVersion: v1
 values:
   images:
-    usermgt: registry.cloudogu.com/official/usermgt:1.21.0-5
+    usermgt: registry.cloudogu.com/official/usermgt:1.22.0-1
     chownInitImage: busybox:1.36
 patches:
   values.yaml:
