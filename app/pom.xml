@@ -111,6 +111,20 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>${resteasy.version}</version>
+            <!-- Exclude legacy javax.mail (com.sun.mail:jakarta.mail) so only the Jakarta Mail 2.1 / Angus stack remains -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.mail</groupId>
+                    <artifactId>jakarta.mail</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- RESTEasy's builtin MimeMultipartProvider needs javax.mail.MessagingException on the classpath
+             at startup or the webapp fails to deploy; this API-only jar provides it without the mailcap above. -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.6.2</version>
         </dependency>
         <!-- ldap -->
         <dependency>
@@ -277,6 +291,31 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>ban-legacy-mail</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <!-- Keep only the Jakarta Mail 2.1 / Angus stack; the legacy com.sun.mail
+                                     stack ships a mailcap that breaks message serialization when both are present. -->
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>com.sun.mail:jakarta.mail</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>

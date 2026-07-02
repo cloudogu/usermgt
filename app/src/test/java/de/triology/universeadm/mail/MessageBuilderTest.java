@@ -8,8 +8,8 @@ import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import org.junit.*;
 
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
