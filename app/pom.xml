@@ -285,6 +285,31 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>ban-legacy-mail</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <!-- Keep only the Jakarta Mail 2.1 / Angus stack; the legacy com.sun.mail
+                                     stack ships a mailcap that breaks message serialization when both are present. -->
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>com.sun.mail:jakarta.mail</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
                 <version>1.23</version>
