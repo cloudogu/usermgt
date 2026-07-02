@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- [#240] Raised the component memory limit from 400Mi to 768Mi; on JDK 8 the app was OOM-killed during Tomcat startup (heap + metaspace + native exceeded 400Mi), leaving the pod in CrashLoopBackOff.
 
 ## [v1.21.0-4] - 2026-04-17
 ### Added
