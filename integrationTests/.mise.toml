@@ -1,3 +1,4 @@
 [tools]
 node = "20"
-yarn = "latest"
+# Yarn 1.x to match the CI image (cypress/included), which can't read a Berry lockfile.
+yarn = "1.22.22"
