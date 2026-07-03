@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@5.3.1', 'github.com/cloudogu/dogu-build-lib@v3.5.2'])
+@Library(['github.com/cloudogu/ces-build-lib@5.5.0', 'github.com/cloudogu/dogu-build-lib@v3.5.2'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
@@ -94,7 +94,7 @@ parallel(
                                 booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
                                 string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
                                 booleanParam(defaultValue: (env.CHANGE_TARGET != null), description: 'Run integration tests, automatically enabled on pull requests', name: 'RunIntegrationTests'),
-                                booleanParam(defaultValue: false, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
+                                booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
                                 booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
                                 choice(name: 'TrivySeverityLevels', choices: [TrivySeverityLevel.CRITICAL, TrivySeverityLevel.HIGH_AND_ABOVE, TrivySeverityLevel.MEDIUM_AND_ABOVE, TrivySeverityLevel.ALL], description: 'The levels to scan with trivy', defaultValue: TrivySeverityLevel.CRITICAL),
                                 choice(name: 'TrivyStrategy', choices: [TrivyScanStrategy.UNSTABLE, TrivyScanStrategy.FAIL, TrivyScanStrategy.IGNORE], description: 'Define whether the build should be unstable, fail or whether the error should be ignored if any vulnerability was found.', defaultValue: TrivyScanStrategy.UNSTABLE),
@@ -170,7 +170,7 @@ parallel(
                             }
                             echo "run integration tests."
                             ecoSystem.runCypressIntegrationTests([
-                                cypressImage     : "cypress/included:12.9.0",
+                                cypressImage     : "cypress/included:13.13.1",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
@@ -200,7 +200,7 @@ parallel(
                                 stage('Integration Tests - After Upgrade') {
                                     echo "run integration tests."
                                     ecoSystem.runCypressIntegrationTests([
-                                            cypressImage     : "cypress/included:12.9.0",
+                                            cypressImage     : "cypress/included:13.13.1",
                                             enableVideo      : params.EnableVideoRecording,
                                             enableScreenshots: params.EnableScreenshotRecording,
                                             timeoutInMinutes : 45,
@@ -302,6 +302,9 @@ ${indentedServerCertificate}
                                 echo "[Component k3d] Deploy k8s-auth-registration-crd component via helm"
                                 k3d.helm("upgrade --install k8s-auth-registration-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-auth-registration-crd --version 1.0.0 --namespace default --set ldap.host=ldap")
 
+                                echo "[Component k3d] Deploy k8s-exposition-crd component via helm"
+                                k3d.helm("upgrade --install k8s-exposition-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-exposition-crd --version 1.0.0 --namespace default")
+
                                 echo "[Component k3d] Deploy LDAP component via helm"
                                 k3d.helm("upgrade --install lop-idp-ldap ${ldapComponentTestChart}"
                                     + " --namespace default"
@@ -320,26 +323,24 @@ ${indentedServerCertificate}
                         echo "[Component k3d] Generate helm chart"
                         runMakeInGoContainer("helm-generate", buildToolsVersion)
 
-                        echo "[Component k3d] Retag image for local smoke test"
-                        sh "docker tag ${componentBuildImageRepository}:${releaseVersion} local-smoke/usermgt:${releaseVersion}"
-
-                        echo "[Component k3d] Import previously built image"
-                        sh "sudo ${WORKSPACE}/k3d/.k3d/bin/k3d image import local-smoke/usermgt:${releaseVersion} -c ${k3d.registryName}"
+                        echo "[Component k3d] Push image to k3d registry"
+                        k3d.registry.pushToLocalRegistry("${componentBuildImageRepository}:${releaseVersion}", "local-smoke/usermgt", releaseVersion)
 
                         echo "[Component k3d] Deploy usermgt component via helm"
                         k3d.helm("upgrade --install ${componentReleaseName} ${componentChartTargetDir}"
                             + " --namespace default"
                             + " --set fullnameOverride=${componentReleaseName}"
-                            + " --set image.registry=local-smoke"
-                            + " --set image.repository=usermgt"
+                            + " --set image.registry=${k3d.registry.imageRegistryInternalWithPort}"
+                            + " --set image.repository=local-smoke/usermgt"
                             + " --set image.tag=${releaseVersion}"
-                            + " --set imagePullPolicy=Never"
+                            // The default 400Mi are not enough in the pipeline.
+                            + " --set resources.requests.memory=512Mi"
+                            + " --set resources.limits.memory=512Mi"
                             + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
                         k3d.kubectl("rollout status deployment/${componentReleaseName} --timeout=300s")
                         k3d.kubectl("wait --for=condition=ready pod -l app.kubernetes.io/instance=${componentReleaseName} --timeout=300s")
-
                     } catch (Exception e) {
                         k3d.collectAndArchiveLogs()
                         throw e

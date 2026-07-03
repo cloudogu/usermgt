@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#240] Fixed the whole app failing to start after excluding that legacy jar, because RESTEasy's builtin multipart provider reflectively needs `javax.mail.MessagingException` at deployment time; added the API-only `javax.mail:javax.mail-api` jar to supply it without reintroducing the broken mailcap.
 - [#240] Raised the component memory limit from 400Mi to 768Mi; on JDK 8 the app was OOM-killed during Tomcat startup (heap + metaspace + native exceeded 400Mi), leaving the pod in CrashLoopBackOff.
 
+## [v1.22.0-1] - 2026-07-02
+- [#234] add multifactor management for admin users
+- [#234] enable external ldap configuration
+  - external ldap allows read access
+
+## [v1.21.0-5] - 2026-06-26
+### Changed
+- [#230] Use the exposition api in kubernetes instead of the ingress api.
+  - Added the exposition-crd as a component dependency
+
 ## [v1.21.0-4] - 2026-04-17
 ### Added
 - [#225] Added label `k8s.cloudogu.com/backup-scope` to include necessary k8s ressources in the backup for the usermgt Helm-based component.

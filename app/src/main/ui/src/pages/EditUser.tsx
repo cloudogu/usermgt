@@ -25,6 +25,7 @@ export default function EditUser() {
             <UserForm<User>
                 initialUser={user}
                 groupsReadonly={false}
+                twoFADisabled={false}
                 passwordReset={casUser.principal !== username}
                 onSubmit={(user, notify, handler) => UsersService.update(user)
                     .then((msg: string) => {
