@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Security
+- Fixed CVE-2026-41293, CVE-2026-43512 and CVE-2026-43515 in Tomcat by updating from 9.0.117 to 9.0.118.
+
 ### Fixed
 - [#240] Fixed a bug where the initial-password mails of the CSV user import were silently never sent, because the legacy `com.sun.mail` jar (pulled in transitively by RESTEasy) broke message serialization of the Jakarta Mail stack.
 - [#240] Fixed the whole app failing to start after excluding that legacy jar, because RESTEasy's builtin multipart provider reflectively needs `javax.mail.MessagingException` at deployment time; added the API-only `javax.mail:javax.mail-api` jar to supply it without reintroducing the broken mailcap.
