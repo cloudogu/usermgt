@@ -42,6 +42,11 @@ export default defineConfig({
             "AdminGroup":  "CesAdministrators",
             "groups" : 0,
             "users" : 0,
+            // Disable @bahmutov/cy-api's server-log feature. There is no
+            // /__messages__ endpoint on the dogu; the CES proxy hangs on that
+            // path instead of returning 404, so every cy.api() call would time
+            // out after the 30s responseTimeout.
+            "API_MESSAGES": false,
         },
         videoCompression: false,
         experimentalRunAllSpecs: true,
