@@ -270,4 +270,24 @@ fi
 
 Es muss sichergestellt werden, dass die Variablen in der Produktions- (z. B. `Dockerfile`) und Testumgebung richtig gesetzt sind (hierzu eignen sich Umgebungsvariablen im Test).
 
+#### Konfiguration eines externen LDAPs
+
+Um einen externen LDAP im Usermanagment verwenden zu können, muss neben der Konfiguration im [cas](https://github.com/cloudogu/cas/blob/develop/docs/development/external_ldap_for_test_purpose_de.md)
+auch die Konfiguration für das Usermgt angepasst werden.
+
+```yaml
+    ldap/host: "openldap.default.svc.cluster.local"
+    ldap/port: "389"
+    ldap/user_base_dn: "ou=users,dc=example,dc=org"
+    ldap/group_base_dn: "ou=groups,dc=example,dc=org"
+    ldap/bind_user: "cn=admin,dc=example,dc=org"
+```
+
+verschlüsselt muss zusätzlich noch das Admin-Passwort hinterlegt werden:
+```yaml
+   ldap:                                                                                                                                                                                                                          │
+       bind_password: <adminpassword>
+```
+
+Der `ldap/bind_user` muss mit dem `ldap/connection_dn` des cas-Dogus übereinstimmen.
 

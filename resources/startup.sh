@@ -37,10 +37,13 @@ printCloudoguLogo() {
 }
 
 encryptLdapPassword() {
-  local raw_pass="${LDAP_BIND_PASSWORD:-}"
+  local raw_pass=""
 
-  if [[ -z "${raw_pass}" ]]; then
-    echo "Reading ldap password from doguctl..."
+  if [[ -n "${LDAP_BIND_PASSWORD:-}" ]]; then
+    raw_pass="${LDAP_BIND_PASSWORD}"
+  elif [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
+    raw_pass=$(doguctl config -e ldap/bind_password)
+  else
     raw_pass=$(doguctl config -e sa-ldap/password)
   fi
 
@@ -51,29 +54,67 @@ encryptLdapPassword() {
 }
 
 setLdapUser() {
-  if [[ -z "${LDAP_BIND_USER:-}" ]]; then
-    echo "Reading ldap user from doguctl..."
-    LDAP_BIND_USER=$(doguctl config -e sa-ldap/username)
+  if [[ -n "${LDAP_BIND_USER:-}" ]]; then
     export LDAP_BIND_USER
+  elif [[ "${EXTERNAL_LDAP:-false}" == "true" ]]; then
+    LDAP_BIND_USER=$(doguctl config ldap/bind_user)
+  else
+    LDAP_BIND_USER=$(doguctl config -e sa-ldap/username)
   fi
 
+  export LDAP_BIND_USER
   echo "Set ldap user..."
 }
 
 configureLDAP() {
+  # host
   if [[ -z "${LDAP_HOST:-}" ]]; then
-    echo "Setting ldap host to default 'ldap'"
-    export LDAP_HOST="ldap"
+    LDAP_HOST=$(doguctl config ldap/host --default "ldap")
+    export LDAP_HOST
   fi
 
+  # port
   if [[ -z "${LDAP_PORT:-}" ]]; then
-    echo "Setting ldap port to default '389'"
-    export LDAP_PORT="389"
+    LDAP_PORT=$(doguctl config ldap/port --default "389")
+    export LDAP_PORT
   fi
+
+# user base dn
+  if [[ -z "${LDAP_USER_BASE_DN:-}" ]]; then
+    LDAP_USER_BASE_DN=""
+
+    if user_base_dn="$(doguctl config ldap/user_base_dn 2>/dev/null)"; then
+      if [[ -n "${user_base_dn}" ]]; then
+        LDAP_USER_BASE_DN="${user_base_dn}"
+        export LDAP_USER_BASE_DN
+      fi
+    fi
+  fi
+
+  # group base dn
+  if [[ -z "${LDAP_GROUP_BASE_DN:-}" ]]; then
+    LDAP_GROUP_BASE_DN=""
+
+    if group_base_dn="$(doguctl config ldap/group_base_dn 2>/dev/null)"; then
+      if [[ -n "${group_base_dn}" ]]; then
+        LDAP_GROUP_BASE_DN="${group_base_dn}"
+        export LDAP_GROUP_BASE_DN
+      fi
+    fi
+  fi
+
+  # Set EXTERNAL_LDAP to true if LDAP_HOST is not "ldap" or "lop-idp-ldap"
+  if [[ "${LDAP_HOST}" != "ldap" && "${LDAP_HOST}" != "lop-idp-ldap" ]]; then
+    EXTERNAL_LDAP="true"
+  else
+    EXTERNAL_LDAP="false"
+  fi
+  export EXTERNAL_LDAP
 
   encryptLdapPassword
   setLdapUser
 
+  echo "LDAP_HOST: ${LDAP_HOST}"
   echo "Configured ldap..."
 }
 
@@ -107,10 +148,11 @@ renderTemplates() {
 }
 
 createGuiConfiguration() {
-  echo "Read configuration fof preselection of password reset attribute checkbox"
+  echo "Read configuration of preselection of password reset attribute checkbox"
   PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_RESET_DEFAULT_VALUE_KEY}" --default 'false')"
   echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
-  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}}" >"${GUI_CONFIG_PATH}"
+
+  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}, \"externalLdap\": ${EXTERNAL_LDAP}}" >"${GUI_CONFIG_PATH}"
 }
 
 createTrustStore() {
@@ -139,6 +181,34 @@ migrateLDAPEntries() {
   source /migration/givenName-migration.sh
 }
 
+# these env are used by the frontend to connect to the cas mfa api
+setMfaEnv() {
+      local mfaApiUser=""
+      local mfaApiPassword=""
+
+      if ! mfaApiUser="$(doguctl config -e experimental/totp/api_user_name 2>/dev/null)"; then
+        echo "Skipping MFA env setup because experimental/totp/api_user_name is not configured"
+        return
+      fi
+
+      if ! mfaApiPassword="$(doguctl config -e experimental/totp/api_user_password 2>/dev/null)"; then
+        echo "Skipping MFA env setup because experimental/totp/api_user_password is not configured"
+        return
+      fi
+
+      if [[ -z "${mfaApiUser}" || -z "${mfaApiPassword}" ]]; then
+        echo "Skipping MFA env setup because TOTP API config is empty"
+        return
+      fi
+
+      FQDN=$(doguctl config -g fqdn)
+
+      # Set Java system properties for backend
+      export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.user=${mfaApiUser}"
+      export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.password=${mfaApiPassword}"
+      export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
+}
+
 startTomcat() {
   "${CATALINA_SH}" run
 }
@@ -150,12 +220,16 @@ runMain() {
   renderTemplates
   createGuiConfiguration
   createTrustStore
+  setMfaEnv
 
-  if [[ -z ${COMPONENT:-} ]]; then
-    waitForLDAPDogu
+  if [[ "${EXTERNAL_LDAP}" != "true" ]]; then
+    if [[ -z ${COMPONENT:-} ]]; then
+      waitForLDAPDogu
+    fi
+    migrateLDAPEntries
+  else
+    echo "Skipping LDAP migration because external LDAP is configured"
   fi
-
-  migrateLDAPEntries
 
   startTomcat
 }

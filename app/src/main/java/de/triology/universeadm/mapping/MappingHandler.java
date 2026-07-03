@@ -228,6 +228,22 @@ public class MappingHandler<T extends Comparable<T>> {
     private PaginationResult<T> doQuery(PaginationQuery query) throws LDAPException {
         final List<T> entities = Lists.newArrayList();
 
+        // Check if VLV is supported, otherwise fall back to simple paged results
+        try {
+            return doQueryWithVLV(query);
+        } catch (LDAPException ex) {
+            // If VLV fails with "critical extension is not recognized", fall back to simple pagination
+            if (ex.getMessage() != null && ex.getMessage().contains("critical extension is not recognized")) {
+                logger.warn("VLV not supported by LDAP server, falling back to simple paged results");
+                return doQueryWithSimplePaging(query);
+            }
+            throw ex;
+        }
+    }
+
+    private PaginationResult<T> doQueryWithVLV(PaginationQuery query) throws LDAPException {
+        final List<T> entities = Lists.newArrayList();
+
         int vlvOffset = query.getOffset() + 1;
         int vlvLimit = query.getPageSize() - 1;
         int vlvContentCount = 0;
@@ -248,6 +264,57 @@ public class MappingHandler<T extends Comparable<T>> {
         vlvContextID = vlvResponseControl.getContextID();
 
         return new PaginationResult<>(entities, vlvContentCount, encodeContextId(vlvContextID));
+    }
+
+    private PaginationResult<T> doQueryWithSimplePaging(PaginationQuery query) throws LDAPException {
+        final List<T> allEntities = Lists.newArrayList();
+
+        SearchRequest searchRequest = new SearchRequest(
+            mapper.getParentDN(),
+            SearchScope.SUB,
+            createFilter(query.getQuery(), query.getExcludes()),
+            returningAttributes
+        );
+
+        // Use simple paged results to get all entries
+        ASN1OctetString resumeCookie = null;
+        LDAPInterface connection = strategy.get();
+
+        while (true) {
+            searchRequest.setControls(new SimplePagedResultsControl(100, resumeCookie, false));
+            SearchResult searchResult = connection.search(searchRequest);
+
+            for (SearchResultEntry e : searchResult.getSearchEntries()) {
+                T object = consume(e, mapper.convert(e));
+                if (object != null) {
+                    allEntities.add(object);
+                }
+            }
+
+            SimplePagedResultsControl responseControl = SimplePagedResultsControl.get(searchResult);
+            if (responseControl != null && responseControl.moreResultsToReturn()) {
+                resumeCookie = responseControl.getCookie();
+            } else {
+                break;
+            }
+        }
+
+        // Sort the results manually
+        Collections.sort(allEntities);
+        if (query.isReverse()) {
+            Collections.reverse(allEntities);
+        }
+
+        // Apply pagination manually
+        int totalCount = allEntities.size();
+        int fromIndex = Math.min(query.getOffset(), totalCount);
+        int toIndex = Math.min(fromIndex + query.getPageSize(), totalCount);
+
+        List<T> pageEntities = (fromIndex < totalCount)
+            ? allEntities.subList(fromIndex, toIndex)
+            : Collections.emptyList();
+
+        return new PaginationResult<>(pageEntities, totalCount, null);
     }
 
     private ServerSideSortRequestControl createSortControl(PaginationQuery query) {

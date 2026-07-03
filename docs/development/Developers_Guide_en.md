@@ -265,3 +265,23 @@ fi
 ```
 
 At least make sure that the variables are properly set into the production (f. i. `Dockerfile`)and test environment (set-up an env var in your test).
+
+#### Configuration of an External LDAP
+
+To use an external LDAP in the user management, you need to configure not only the CAS, but also adjust the user management configuration.
+
+```yaml
+    ldap/host: "openldap.default.svc.cluster.local"
+    ldap/port: "389"
+    ldap/user_base_dn: "ou=users,dc=example,dc=org"
+    ldap/group_base_dn: "ou=groups,dc=example,dc=org"
+    ldap/bind_user: "cn=admin,dc=example,dc=org"
+```
+
+Additionally, the administrator password must be stored in the encrypted configuration:
+```yaml
+   ldap:                                                                                                                                                                                                                          │
+       bind_password: <adminpassword>
+```
+
+The `ldap/bind_user` must match the `ldap/connection_dn` of the CAS Dogu.
