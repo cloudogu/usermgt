@@ -254,7 +254,7 @@ When("deletes the entry for the user import", function () {
 When("the user {string} tries to log in with his generated password", function (username: string) {
     cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
         // Extract the generated password from the "Passwort:" line of the import mail.
-        const match = body.match(/Passwort:\s*([^\s\\]+)/)
+        const match = body.match(/Passwort:\s*(\S+)/)
         expect(match, "generated password found in import mail").to.not.be.null
         const password = match[1]
 
@@ -262,28 +262,28 @@ When("the user {string} tries to log in with his generated password", function (
 
         cy.visit("/cas/login", {failOnStatusCode: false})
         cy.get('input[data-testid="login-username-input-field"]').type(username)
-        cy.get('input[data-testid="login-password-input-field"]').type(password)
+        cy.get('input[data-testid="login-password-input-field"]').type(password, {parseSpecialCharSequences: false})
         cy.get('button[type="submit"]').click();
     })
 })
 
 When("the user configures the new password to {string}", function (password: string) {
-    cy.get('input[data-testid="currentPassword-input"]').clear().type(password);
-    cy.get('input[data-testid="password-input"]').clear().type(password);
-    cy.get('input[data-testid="confirmPassword-input"]').clear().type(password);
+    cy.get('input[data-testid="currentPassword-input"]').clear().type(password, {parseSpecialCharSequences: false});
+    cy.get('input[data-testid="password-input"]').clear().type(password, {parseSpecialCharSequences: false});
+    cy.get('input[data-testid="confirmPassword-input"]').clear().type(password, {parseSpecialCharSequences: false});
     cy.get('button[data-testid="save-button"]').click()
 })
 
 When("the user sets the new password to {string}", function (password: string) {
     cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
         // Extract the generated password from the "Passwort:" line of the import mail.
-        const match = body.match(/Passwort:\s*([^\s\\]+)/)
+        const match = body.match(/Passwort:\s*(\S+)/)
         expect(match, "generated password found in import mail").to.not.be.null
         const currentPassword = match[1]
 
-        cy.get('input[data-testid="currentPassword-input"]').clear().type(currentPassword);
-        cy.get('input[data-testid="password-input"]').clear().type(password);
-        cy.get('input[data-testid="confirmedPassword-input"]').clear().type(password);
+        cy.get('input[data-testid="currentPassword-input"]').clear().type(currentPassword, {parseSpecialCharSequences: false});
+        cy.get('input[data-testid="password-input"]').clear().type(password, {parseSpecialCharSequences: false});
+        cy.get('input[data-testid="confirmedPassword-input"]').clear().type(password, {parseSpecialCharSequences: false});
         cy.get('button[id="submit"]').click()
     })
 })
