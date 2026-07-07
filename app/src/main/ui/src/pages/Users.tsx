@@ -13,6 +13,7 @@ import type {User} from "../services/Users";
 
 export default function Users() {
     const {casUser} = useContext(ApplicationContext);
+    const editingDisabled = useContext(ApplicationContext).externalLdap;
     const location = useLocation();
     const {notification, notify } = useAlertNotification();
     useNotificationAfterRedirect(notify);
@@ -25,10 +26,7 @@ export default function Users() {
 
     const {items, isLoading, paginationControl, updateSearchQuery, searchQuery, onDelete} = usePaginationTableState<User>(UsersService);
 
-    const hasExternal = useMemo(() => {
-        console.log(items);
-        return items.reduce((a,b) => a || b.external, false);
-    }, [items]);
+    const hasExternal = useMemo(() => items.reduce((a,b) => a || b.external, false), [items]);
 
     return <>
         <div className="flex flex-wrap justify-between">
@@ -39,7 +37,7 @@ export default function Users() {
                         variant={"secondary"}
                         className="mt-5 mb-2.5 mr-5"
                         data-testid="user-create"
-                        disabled={isLoading}>{t("users.create")}
+                        disabled={isLoading || editingDisabled}>{t("users.create")}
                     </Button>
                 </Link>
                 <Searchbar
@@ -98,7 +96,7 @@ export default function Users() {
                                     >
                                         <DeleteButton
                                             id={`${user?.username}-delete-button`}
-                                            disabled={user.username === casUser.principal}
+                                            disabled={user.username === casUser.principal || editingDisabled}
                                             title={t("users.table.actions.delete")}
                                         />
                                     </ConfirmDialog>
