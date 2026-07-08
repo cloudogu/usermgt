@@ -111,7 +111,9 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>${resteasy.version}</version>
-            <!-- Exclude legacy javax.mail (com.sun.mail:jakarta.mail) so only the Jakarta Mail 2.1 / Angus stack remains -->
+            <!-- Exclude the legacy com.sun.mail:jakarta.mail (breaks Angus/Jakarta Mail 2.1
+                 serialization). The jakarta.mail.* package used by this app and its tests is provided
+                 by angus-mail above. -->
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.mail</groupId>
