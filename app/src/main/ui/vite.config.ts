@@ -19,6 +19,16 @@ export default defineConfig(({command, mode}) => {
         base: "/usermgt/",
         build: {
             chunkSizeWarningLimit: 2048,
+            rollupOptions: {
+                // MUI v5 "use client" directives flood the log with
+                // MODULE_LEVEL_DIRECTIVE warnings; silence only those.
+                onwarn(warning, defaultHandler) {
+                    if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+                        return;
+                    }
+                    defaultHandler(warning);
+                },
+            },
         }
     };
 

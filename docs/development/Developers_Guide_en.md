@@ -285,3 +285,17 @@ Additionally, the administrator password must be stored in the encrypted configu
 ```
 
 The `ldap/bind_user` must match the `ldap/connection_dn` of the CAS Dogu.
+
+#### Mail stack / classpath layout
+
+The webapp ships only the Angus Jakarta Mail stack; the legacy `com.sun.mail:jakarta.mail:1.6.5` (pulled in transitively by `resteasy-multipart-provider`) is excluded by `app/pom.xml` and banned by a `maven-enforcer` rule. The four mail jars on the classpath play these roles:
+
+```
+usermgt-Code  →  jakarta.mail-api   (interfaces, jakarta.*)
+                          |
+                  angus-mail         (the actual SMTP engine + handlers)
+                          |
+                  angus-activation   (MIME→handler resolution, jakarta.activation)
+
+RESTEasy MimeMultipartProvider  →  javax.mail-api   (only javax.mail.MessagingException for startup)
+```

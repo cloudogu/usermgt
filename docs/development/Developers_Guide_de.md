@@ -291,3 +291,17 @@ verschlüsselt muss zusätzlich noch das Admin-Passwort hinterlegt werden:
 
 Der `ldap/bind_user` muss mit dem `ldap/connection_dn` des cas-Dogus übereinstimmen.
 
+#### Mail-Stack / Classpath-Aufbau
+
+Die Webapp liefert nur den Angus-Jakarta-Mail-Stack; das Legacy-`com.sun.mail:jakarta.mail:1.6.5` (transitiv über `resteasy-multipart-provider` reingezogen) ist in `app/pom.xml` exkludiert und wird über eine `maven-enforcer`-Regel verboten. Die vier Mail-Jars auf dem Classpath haben folgende Rollen:
+
+```
+usermgt-Code  →  jakarta.mail-api   (Schnittstellen, jakarta.*)
+                          |
+                  angus-mail         (die eigentliche SMTP-Engine + Handler)
+                          |
+                  angus-activation   (MIME→Handler-Auflösung, jakarta.activation)
+
+RESTEasy MimeMultipartProvider  →  javax.mail-api   (nur javax.mail.MessagingException für den Startup)
+```
+
