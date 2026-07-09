@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.22.1-1] - 2026-07-09
+- Dieses Release behebt ein Problem mit dem Mailversand, das gelegentlich auftreten kann. Außerdem wurden einige CVEs behoben. 
+
 ## [v1.22.0-1] - 2026-07-02
 - Multifaktor-Management: Admin-User können über eine neue UI den zweiten Faktor eines Benutzers deaktivieren.
 - Externer LDAP: externe LDAPs können an das Usermgt angeschlossen werden, haben aber nur READ-Access.

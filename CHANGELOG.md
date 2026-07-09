@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.22.1-1] - 2026-07-09
 ### Security
 - Fixed CVE-2026-41293, CVE-2026-43512 and CVE-2026-43515 in Tomcat by updating from 9.0.117 to 9.0.118.
 
