@@ -24,9 +24,9 @@ exposition:
 resources:
   requests:
     cpu: 50m
-    memory: 400Mi
+    memory: 768Mi
   limits:
-    memory: 400Mi
+    memory: 768Mi
 persistence:
   size: 2Gi
   # If empty, Default StorageClass will be used
@@ -65,6 +65,6 @@ config:
       max_retry_delay: "3600"
       retry_interval: "30"
   container_config:
-    memory_limit: 400m
+    memory_limit: 768m
     java_max_ram_percentage: "70.0"
     java_min_ram_percentage: "70.0"

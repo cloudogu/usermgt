@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Security
+- Fixed CVE-2026-41293, CVE-2026-43512 and CVE-2026-43515 in Tomcat by updating from 9.0.117 to 9.0.118.
+
+### Fixed
+- [#240] Fixed failing application starts by providing a consistent mail Jar without reintroducing the broken mailcap. Affected versions: `v1.14.0-1` through `v1.22.0-1`.
+- [#240] Raised the component memory limit from 400Mi to 768Mi to avoid OOM-kills during Tomcat startup on JDK 8.
 
 ## [v1.22.0-1] - 2026-07-02
 - [#234] add multifactor management for admin users
