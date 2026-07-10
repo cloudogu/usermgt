@@ -5,6 +5,7 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+- Only technical changes were made in preparation for integrating Usermgt into the LOP-IdP component.
 
 ## [v1.22.1-1] - 2026-07-09
 - This release resolves a mail sending problem, which may happen occasionally. Also, this release also removes some CVEs.
@@ -52,7 +53,7 @@ This release fixes the Tomcat CVE-2026-29145.
 
 ## [v1.20.0-4] - 2025-04-10
 ### Security
-* This release fixes the critical security vulnerability [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
+* This release fixes the critical security vulnerability [CVE-2025-24813](https://avd.aquasec.com/nvd/2025/cve-2025-24813/).
   An update is therefore recommended.
 
 ## [v1.20.0-3] - 2025-02-21
