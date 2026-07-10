@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.22.1-2] - 2026-07-10
 - Only technical changes were made in preparation for integrating Usermgt into the LOP-IdP component.
 
 ## [v1.22.1-1] - 2026-07-09
