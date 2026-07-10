@@ -13,6 +13,10 @@ import java.util.Properties;
 @Singleton
 public class SessionFactory {
     private static final Logger logger = LoggerFactory.getLogger(SessionFactory.class);
+
+    /** SMTP connect/read/write timeout (ms); without it JavaMail blocks forever on a stalled server. */
+    private static final String SMTP_TIMEOUT_MS = "5000";
+
     private final MailConfiguration mailConfiguration;
     private Session session;
     @Inject
@@ -33,7 +37,9 @@ public class SessionFactory {
         Properties properties = new Properties();
         properties.put("mail.smtp.host", mailConfiguration.getHost());
         properties.put("mail.smtp.port", mailConfiguration.getPort());
-
+        properties.put("mail.smtp.connectiontimeout", SMTP_TIMEOUT_MS);
+        properties.put("mail.smtp.timeout", SMTP_TIMEOUT_MS);
+        properties.put("mail.smtp.writetimeout", SMTP_TIMEOUT_MS);
 
         session = Session.getInstance(properties, null);
 
