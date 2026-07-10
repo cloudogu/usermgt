@@ -150,7 +150,7 @@ const cleanupTestUsers = () => {
     }).then((response) => {
         expect(response.status).to.eq(200);
         // @ts-ignore
-        return response.body.data.filter(el => el.displayName.startsWith("Tester") || el.displayName.endsWith("Test") || el.username.startsWith("testUser") || el.username.endsWith("test")) || el.username.contains("new");
+        return response.body.data.filter(el => el.displayName.startsWith("Tester") || el.displayName.endsWith("Test") || el.username.startsWith("testUser") || el.username.endsWith("test") || el.username.includes("new"));
     }).then(testUsers => {
         cy.log("testUsers: ", testUsers);
         testUsers.filter(testUser => {
