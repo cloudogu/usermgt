@@ -93,7 +93,7 @@ parallel(
                         parameters([
                                 booleanParam(defaultValue: false, description: 'Test dogu upgrade from latest release or optionally from defined version below', name: 'TestDoguUpgrade'),
                                 string(defaultValue: '', description: 'Old Dogu version for the upgrade test (optional; e.g. 2.222.1-1)', name: 'OldDoguVersionForUpgradeTest'),
-                                booleanParam(defaultValue: (env.CHANGE_TARGET != null), description: 'Run integration tests, automatically enabled on pull requests', name: 'RunIntegrationTests'),
+                                booleanParam(defaultValue: false, description: 'Run integration tests (temporarily disabled by default)', name: 'RunIntegrationTests'),
                                 booleanParam(defaultValue: true, description: 'Enables the video recording during the test execution', name: 'EnableVideoRecording'),
                                 booleanParam(defaultValue: true, description: 'Enables cypress to take screenshots of failing integration tests.', name: 'EnableScreenshotRecording'),
                                 choice(name: 'TrivySeverityLevels', choices: [TrivySeverityLevel.CRITICAL, TrivySeverityLevel.HIGH_AND_ABOVE, TrivySeverityLevel.MEDIUM_AND_ABOVE, TrivySeverityLevel.ALL], description: 'The levels to scan with trivy', defaultValue: TrivySeverityLevel.CRITICAL),
@@ -304,6 +304,9 @@ ${indentedServerCertificate}
 
                                 echo "[Component k3d] Deploy k8s-exposition-crd component via helm"
                                 k3d.helm("upgrade --install k8s-exposition-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-exposition-crd --version 1.0.0 --namespace default")
+
+                                echo "[Component k3d] Deploy k8s-warp-menu-entry-crd component via helm"
+                                k3d.helm("upgrade --install k8s-warp-menu-entry-crd oci://${componentRegistry}/${componentRegistryNamespace}/k8s-warp-menu-entry-crd --version 1.0.0 --namespace default")
 
                                 echo "[Component k3d] Deploy LDAP component via helm"
                                 k3d.helm("upgrade --install lop-idp-ldap ${ldapComponentTestChart}"

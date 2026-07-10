@@ -1,1 +1,12 @@
-# TODO: Write WARP-CR
+apiVersion: k8s.cloudogu.com/v1
+kind: WarpMenuEntry
+metadata:
+  name: {{ include "usermgt.name" . }}
+  labels:
+    {{- include "usermgt.labels" . | nindent 4 }}
+spec:
+  category: Administration Apps
+  displayName:
+    de: User Management
+    en: User Management
+  path: /{{ include "usermgt.name" . }}

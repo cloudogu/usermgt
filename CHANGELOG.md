@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.22.1-2] - 2026-07-10
+### Added
+- [#244] Add Warp-Menu-Entry when installing as a component
+### Fixed
+- [#240] Set SMTP connect/read/write timeouts to prevent mail sending from blocking usermgt
+
 ## [v1.22.1-1] - 2026-07-09
 ### Security
 - Fixed CVE-2026-41293, CVE-2026-43512 and CVE-2026-43515 in Tomcat by updating from 9.0.117 to 9.0.118.
