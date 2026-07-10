@@ -53,7 +53,7 @@ Dieses Release behebt Tomcat CVE-2026-29145.
 
 ## [v1.20.0-4] - 2025-04-10
 ### Security
-* Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://nvd.nist.gov/vuln/detail/CVE-2025-24813).
+* Das Release behebt die kritische Sicherheitslücke [CVE-2025-24813](https://avd.aquasec.com/nvd/2025/cve-2025-24813/).
   Ein Update ist daher empfohlen.
 
 ## [v1.20.0-3] - 2025-02-21
