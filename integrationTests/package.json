@@ -1,6 +1,10 @@
 {
+  "name": "usermgt-integration-tests",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
   "dependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^16.0.0",
+    "@badeball/cypress-cucumber-preprocessor": "^20.0.0",
     "@bahmutov/cy-api": "2.2.6",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
     "@cloudogu/dogu-integration-test-library": "^6.1.1",
@@ -16,5 +20,8 @@
   },
   "devDependencies": {
     "cypress-mailhog": "^2.4.0"
+  },
+  "resolutions": {
+    "@badeball/cypress-cucumber-preprocessor": "^20.0.0"
   }
 }
