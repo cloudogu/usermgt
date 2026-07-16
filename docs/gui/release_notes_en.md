@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.22.1-3] - 2026-07-16
 ### Fixed
 - Expand caching to fix errors during the CAS auth flow.
 
