@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.22.1-3] - 2026-07-16
+### Fixed
+- Das Caching wurde erweitert, um Fehler im CAS-Authentifizierungs-Flow zu beheben.
+
 ## [v1.22.1-2] - 2026-07-10
 - Es wurden nur technische Änderungen durchgeführt in Vorbereitung für die Integration des Usermgt in die LOP-IdP-Komponente.
 

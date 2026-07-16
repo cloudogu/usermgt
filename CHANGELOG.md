@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.22.1-3] - 2026-07-16
+### Fixed
+- [#238] Fix a bug where caching prevented the cas redirect flow.
+  - Convert the disable cache filter to a servlet filter and use it for every request and not only for jax-rs endpoints.
+
 ## [v1.22.1-2] - 2026-07-10
 ### Added
 - [#244] Add Warp-Menu-Entry when installing as a component
