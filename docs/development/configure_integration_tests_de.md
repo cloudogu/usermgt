@@ -58,6 +58,8 @@ Die Integrationstests können auf zwei Arten gestartet werden:
 2. Mit `yarn cypress run` starten die Tests nur in der Konsole ohne visuelles Feedback.
    Dieser Modus ist hilfreich, wenn die Ausführung im Vordergrund steht.
    Beispielsweise bei einer Jenkins-Pipeline.
+   Sollte es hier zu Fehlern kommen, weil die Oberfläche deutsche Texte anzeigt, können die Tests mit
+   "ELECTRON_EXTRA_LAUNCH_ARGS="--lang=en-US" yarn cypress run" gestartet werden.
 3. Mit `yarn cypress open` startet ein interaktives Fenster, wo man die Tests ausführen, visuell beobachten und debuggen kann.
    Dieser Modus ist besonders hilfreich bei der Entwicklung neuer Tests und beim Finden von Fehlern.
 
