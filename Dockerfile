@@ -1,6 +1,5 @@
-ARG TOMCAT_MAJOR_VERSION=9
-ARG TOMCAT_VERSION=9.0.118
-ARG TOMCAT_TARGZ_SHA512=737367433486757ccd687329d99b1188506cdec57a53a29b415173909c38cdf9da4fc9fd73b8cd17cd0a8def8610ad43bab8e84393dc904a0bd1121da8cab2fc
+ARG TOMCAT_VERSION=9.0.121
+ARG TOMCAT_SHA256=d1a804502cddfd1c1436c1c37809ed4cb807a9c64a8a35fe1747d3ba9a0edeab
 
 FROM eclipse-temurin:8-jdk AS builder
 
@@ -16,14 +15,13 @@ RUN ./mvnw package -DskipTests -B
 
 FROM alpine:3.23 AS binaryConcentrator
 ARG TOMCAT_VERSION
-ARG TOMCAT_MAJOR_VERSION
-ARG TOMCAT_TARGZ_SHA512
+ARG TOMCAT_SHA256
 
 RUN apk add --no-cache wget unzip
 
 # Download and extract Tomcat
-RUN wget -q -O /tmp/tomcat.tar.gz "http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
-    && echo "${TOMCAT_TARGZ_SHA512}  /tmp/tomcat.tar.gz" | sha512sum -c - \
+RUN wget -q -O /tmp/tomcat.tar.gz "http://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_VERSION%%.*}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz" \
+    && echo "${TOMCAT_SHA256}  /tmp/tomcat.tar.gz" | sha256sum -c - \
     && mkdir -p /opt/apache-tomcat \
     && tar -xzf /tmp/tomcat.tar.gz -C /opt/apache-tomcat --strip-components=1 \
     && rm -rf /tmp/tomcat.tar.gz /opt/apache-tomcat/webapps/*
