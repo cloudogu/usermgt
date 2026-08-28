@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+### Security
+- This Release fixes Tomcat WID-SEC-2026-3007 (CVE-2026-65182, CVE-2026-65183, CVE-2026-65637, CVE-2026-65905, CVE-2026-65927, CVE-2026-66422, CVE-2026-68525, CVE-2026-68569, CVE-2026-68763, CVE-2026-73180).
 
 ## [v1.22.1-3] - 2026-07-16
 ### Fixed
