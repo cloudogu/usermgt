@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.22.1-4] - 2026-08-28
+### Security
+- Fixed WID-SEC-2026-3007 (CVE-2026-65182, CVE-2026-65183, CVE-2026-65637, CVE-2026-65905, CVE-2026-65927, CVE-2026-66422, CVE-2026-68525, CVE-2026-68569, CVE-2026-68763, CVE-2026-73180) by updating Tomcat to v9.0.121.
+
 ## [v1.22.1-3] - 2026-07-16
 ### Fixed
 - [#238] Fix a bug where caching prevented the cas redirect flow.
@@ -19,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v1.22.1-1] - 2026-07-09
 ### Security
-- Fixed CVE-2026-41293, CVE-2026-43512 and CVE-2026-43515 in Tomcat by updating from 9.0.117 to 9.0.118.
+- Fixed CVE-2026-41293, CVE-2026-43512 and CVE-2026-43515 by updating Tomcat from 9.0.117 to 9.0.118.
 
 ### Fixed
 - [#240] Fixed failing application starts by providing a consistent mail Jar without reintroducing the broken mailcap. Affected versions: `v1.14.0-1` through `v1.22.0-1`.
@@ -41,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v1.21.0-3] - 2026-04-14
 ### Security
-- Fixed CVE-2026-29145 in Tomcat
+- Fixed CVE-2026-29145 by updating Tomcat.
 
 ### Changed
 - Update the Java base image to 8.452.09-6

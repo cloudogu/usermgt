@@ -241,14 +241,20 @@ When("the user opens the menu in the functions column", function () {
 })
 
 When("deletes the entry for the user import", function () {
-    cy.get('table').find('tr').then((row) => {
-        let i: number = 1;
-        for (i; i < row.length; i++) {
-            cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").find('button').click()
-            cy.get('div').find('span').contains("Delete").click()
-            cy.get('button').find('span').contains("OK").click()
-        }
-    })
+    function deleteFirstRowIfPresent() {
+        // wait for the table to settle (loading skeleton/pending refetch) before counting rows,
+        // otherwise a stale snapshot can either overcount (skeleton rows) or undercount (pre-refetch)
+        cy.wait(500)
+        cy.get('body').then(($body) => {
+            if ($body.find('tbody tr').length > 0) {
+                cy.get('tbody').find('tr:nth-of-type(1)').invoke('find', "td:nth-of-type(4)").find('button').click()
+                cy.get('div').find('span').contains("Delete").click()
+                cy.get('button').find('span').contains("OK").click()
+                deleteFirstRowIfPresent()
+            }
+        })
+    }
+    deleteFirstRowIfPresent()
 })
 
 When("the user {string} tries to log in with his generated password", function (username: string) {
