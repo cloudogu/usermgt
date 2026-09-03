@@ -19,6 +19,7 @@ import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
+import Security from "./pages/Security";
 import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
 
@@ -42,6 +43,12 @@ const router = createBrowserRouter([
                 path: "account",
                 element: <TitledPage pageName={t("pages.account")}>
                     <Account/>
+                </TitledPage>
+            },
+            {
+                path: "security",
+                element: <TitledPage pageName={t("pages.security")}>
+                    <Security/>
                 </TitledPage>
             },
             {
@@ -138,6 +145,9 @@ function Nav() {
                         </div>
                         <Navbar.HomeLink.LinkText>{"User Management"}</Navbar.HomeLink.LinkText>
                     </Navbar.HomeLink>
+                    <Navbar.ListItem path={"/security"}>
+                        {t("pages.security")}
+                    </Navbar.ListItem>
                     {casUser.admin ?
                         <>
                             <Navbar.ListItem path={"/users"}>

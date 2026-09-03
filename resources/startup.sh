@@ -200,13 +200,13 @@ setMfaEnv() {
         echo "Skipping MFA env setup because TOTP API config is empty"
         return
       fi
-
       FQDN=$(doguctl config -g fqdn)
 
       # Set Java system properties for backend
       export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.user=${mfaApiUser}"
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.password=${mfaApiPassword}"
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
+      echo "${CATALINA_OPTS}"
 }
 
 setCesControlEnv() {
