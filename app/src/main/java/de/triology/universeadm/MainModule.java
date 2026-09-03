@@ -9,6 +9,9 @@ import com.google.inject.servlet.ServletModule;
 import de.triology.universeadm.configuration.ApplicationConfiguration;
 import de.triology.universeadm.configuration.I18nConfiguration;
 import de.triology.universeadm.configuration.MailConfiguration;
+import de.triology.universeadm.dogu.CesControlDoguProvider;
+import de.triology.universeadm.dogu.DoguProvider;
+import de.triology.universeadm.dogu.DoguResource;
 import de.triology.universeadm.multifactor.MultifactorResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +81,8 @@ public class MainModule extends ServletModule {
         bind(SubjectResource.class);
         bind(LogoutResource.class);
         bind(MultifactorResource.class);
+        bind(DoguProvider.class).to(CesControlDoguProvider.class);
+        bind(DoguResource.class);
 
         // filter
         filter("/*").through(LDAPConnectionStrategyBindFilter.class);

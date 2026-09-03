@@ -1,8 +1,9 @@
 {
-  "/usermgt/api/subject":  "/subject",
-  "/usermgt/api/account":  "/account",
-  "/usermgt/api/account/passwordpolicy":  "/passwordpolicy",
+  "/usermgt/api/subject": "/subject",
+  "/usermgt/api/account": "/account",
+  "/usermgt/api/account/passwordpolicy": "/passwordpolicy",
   "/usermgt/api/groups": "/groups",
   "/usermgt/api/users": "/users",
-  "/usermgt/api/groups/undeletable": "/groups_undeletable"
+  "/usermgt/api/groups/undeletable": "/groups_undeletable",
+  "/usermgt/api/dogus": "/dogus"
 }

@@ -209,6 +209,18 @@ setMfaEnv() {
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
 }
 
+setCesControlEnv() {
+  local cesControlHost=""
+
+  if [[ -n "${POD_NAMESPACE:-}" ]]; then
+    cesControlHost="k8s-ces-control.${POD_NAMESPACE}"
+  else
+    cesControlHost="$(cat /etc/ces/node_master)"
+  fi
+
+  export CATALINA_OPTS="${CATALINA_OPTS:-} -Dces.control.host=${cesControlHost} -Dces.control.port=50051"
+}
+
 startTomcat() {
   "${CATALINA_SH}" run
 }
@@ -221,6 +233,7 @@ runMain() {
   createGuiConfiguration
   createTrustStore
   setMfaEnv
+  setCesControlEnv
 
   if [[ "${EXTERNAL_LDAP}" != "true" ]]; then
     if [[ -z ${COMPONENT:-} ]]; then

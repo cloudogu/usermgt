@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package doguAdministration;
+
+import "response.proto";
+
+option java_multiple_files = true;
+option java_package = "com.cloudogu.cescontrol.dogu";
+
+service DoguAdministration {
+  rpc GetDoguList(DoguListRequest) returns (DoguListResponse);
+  rpc GetBlueprintId(DoguBlueprinitIdRequest) returns (DoguBlueprintIdResponse);
+  rpc StartDogu(DoguAdministrationRequest) returns (types.BasicResponse);
+  rpc StopDogu(DoguAdministrationRequest) returns (types.BasicResponse);
+  rpc RestartDogu(DoguAdministrationRequest) returns (types.BasicResponse);
+}
+
+message DoguListRequest {
+}
+
+message DoguListResponse {
+  repeated Dogu dogus = 1;
+}
+
+message DoguAdministrationRequest {
+  string dogu_name = 1;
+}
+
+message Dogu {
+  string name = 1;
+  string display_name = 2;
+  string version = 3;
+  string description = 4;
+  repeated string tags = 5;
+  string log_level = 6;
+}
+
+message DoguBlueprinitIdRequest {
+}
+
+message DoguBlueprintIdResponse {
+  string blueprint_id = 1;
+}
