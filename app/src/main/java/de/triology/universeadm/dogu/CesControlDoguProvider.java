@@ -29,7 +29,7 @@ public class CesControlDoguProvider implements DoguProvider {
 
             List<Dogu> dogus = new ArrayList<>();
             for (com.cloudogu.cescontrol.dogu.Dogu dogu : response.getDogusList()) {
-                dogus.add(new Dogu(dogu.getName(), dogu.getDisplayName()));
+                dogus.add(new Dogu(dogu.getName(), dogu.getDisplayName(), dogu.getTagsList()));
             }
             return dogus;
         } finally {

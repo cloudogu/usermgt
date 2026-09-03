@@ -17,8 +17,8 @@ public class DoguResourceTest {
     public void shouldReturnDogus() throws Exception {
         DoguProvider provider = mock(DoguProvider.class);
         when(provider.getDogus()).thenReturn(Arrays.asList(
-                new Dogu("jenkins", "Jenkins"),
-                new Dogu("scm", "SCM-Manager")
+                new Dogu("jenkins", "Jenkins", Arrays.asList("development", "continuous-integration")),
+                new Dogu("scm", "SCM-Manager", Arrays.asList("development"))
         ));
 
         MockHttpResponse response = Resources.dispatch(
@@ -31,5 +31,7 @@ public class DoguResourceTest {
         assertEquals(2, json.size());
         assertEquals("jenkins", json.get(0).path("name").asText());
         assertEquals("Jenkins", json.get(0).path("displayName").asText());
+        assertEquals("development", json.get(0).path("tags").get(0).asText());
+        assertEquals("continuous-integration", json.get(0).path("tags").get(1).asText());
     }
 }

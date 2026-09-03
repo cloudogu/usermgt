@@ -1,3 +1,4 @@
+import {Button} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useApplicationContext} from "../components/contexts/ApplicationContext";
 import {PTAManagement} from "../components/security/Pat";
@@ -9,7 +10,12 @@ export default function Security() {
 
     return (
         <>
-            <h1 className="mt-5 mb-2.5 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">{t("pages.security")}</h1>
+            <div className="flex flex-wrap items-start justify-between gap-default-2x">
+                <h1 className="mt-5 mb-2.5 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">{t("pages.security")}</h1>
+                <Button className="mt-5 rounded-sm" color="brand" variant="primary">
+                    + Schlüssel anlegen
+                </Button>
+            </div>
             {!casUser.loading && <SecurityContent username={casUser.principal}/>}
         </>
     );

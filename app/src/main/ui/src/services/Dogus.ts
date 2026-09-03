@@ -4,11 +4,13 @@ import {isSuccessStatus} from "../helpers/api";
 export type Dogu = {
     name: string;
     displayName: string;
+    tags: string[];
 };
 
 export type DoguOption = {
     value: string;
     label: string;
+    tags: string[];
 };
 
 export const DogusService = {
@@ -22,5 +24,5 @@ export const DogusService = {
 };
 
 export const toDoguOptions = (dogus: Dogu[]): DoguOption[] => dogus
-    .map(dogu => ({value: dogu.name, label: dogu.displayName || dogu.name}))
+    .map(dogu => ({value: dogu.name, label: dogu.displayName || dogu.name, tags: dogu.tags}))
     .sort((left, right) => left.label.localeCompare(right.label));
