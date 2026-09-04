@@ -3,6 +3,10 @@ ARG TOMCAT_SHA256=d1a804502cddfd1c1436c1c37809ed4cb807a9c64a8a35fe1747d3ba9a0ede
 
 FROM eclipse-temurin:8-jdk AS builder
 
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y git \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /usermgt
 
 COPY app/pom.xml pom.xml

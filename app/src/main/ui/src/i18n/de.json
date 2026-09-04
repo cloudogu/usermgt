@@ -216,5 +216,9 @@
   "security.pta.table.status": "Status",
   "security.pta.table.createdAt": "Erstellt am",
   "security.pta.table.expiresAt": "Ablauf am",
-  "security.pta.table.action": "Aktion"
+  "security.pta.table.action": "Aktion",
+  "pta.table.status.active": "Aktiv",
+  "pta.table.status.inactive": "Abgelaufen",
+  "pta.table.date.never": "nie",
+  "security.pta.button.createkey":"Schlüssel anlegen"
 }

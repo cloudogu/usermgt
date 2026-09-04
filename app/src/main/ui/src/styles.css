@@ -1,0 +1,75 @@
+/* Generated from node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css. Run make generate-tailwind-wrapper-css to update. */
+.tailwind-wrapper .ces-focused {
+        -webkit-box-shadow: 0 0 0 2px var(--ces-color-default-focus-inner), 0 0 0 4px var(--ces-color-default-focus-outer);
+        box-shadow: 0 0 0 2px var(--ces-color-default-focus-inner), 0 0 0 4px var(--ces-color-default-focus-outer);
+        z-index: 1;
+    }
+
+.tailwind-wrapper .ces-font-sans {
+        font-family: Calibri, Gill Sans, Gill Sans MT, Liberation Sans, Carlito, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+    }
+
+.tailwind-wrapper .ces-font-serif {
+        font-family: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, serif;
+    }
+
+.tailwind-wrapper .ces-font-mono {
+        font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+    }
+
+.tailwind-wrapper {
+        font-family: Calibri, Gill Sans, Gill Sans MT, Liberation Sans, Carlito, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+    }
+
+.tailwind-wrapper h1 {
+        @apply desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand mb-default-2x;
+    }
+
+.tailwind-wrapper h2 {
+        @apply desktop:text-desktop-5xl mobile:text-mobile-5xl mb-default-2x;
+    }
+
+.tailwind-wrapper h3 {
+        @apply desktop:text-desktop-4xl mobile:text-mobile-4xl mb-default;
+    }
+
+.tailwind-wrapper h4 {
+        @apply font-bold desktop:text-desktop-3xl mobile:text-mobile-3xl mb-default;
+    }
+
+.tailwind-wrapper h5 {
+        @apply desktop:text-desktop-2xl mobile:text-mobile-2xl mb-default;
+    }
+
+.tailwind-wrapper h6 {
+        @apply font-bold desktop:text-desktop-xl mobile:text-mobile-xl mb-default;
+    }
+
+.tailwind-wrapper a {
+        @apply text-brand underline decoration-brand decoration-dashed decoration-1
+        hover:decoration-solid
+        active:decoration-2 active:decoration-solid
+        focus-visible:ces-focused focus-visible:outline-none focus-visible:text-default-text focus-visible:no-underline
+    }
+
+.tailwind-wrapper a.ces-unstyled {
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        @apply no-underline
+    }
+
+.tailwind-wrapper hr {
+        @apply text-brand border-solid desktop:my-8 mobile:mx-0 mobile:my-6;
+    }
+
+.tailwind-wrapper p {
+        @apply desktop:text-desktop-regular mobile:text-mobile-regular;
+    }
+
+.tailwind-wrapper label {
+        @apply desktop:text-desktop-regular mobile:text-mobile-regular;
+    }
+
+.tailwind-wrapper legend {
+        @apply text-brand desktop:text-desktop-xl mobile:text-mobile-xl
+    }

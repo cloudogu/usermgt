@@ -1,3 +1,4 @@
+import {ApplicationContainer as TailwindContainer} from "@cloudogu/ces-theme-tailwind";
 import {Main, Navbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {Alert} from "@mui/material";
 import React from "react";
@@ -47,9 +48,8 @@ const router = createBrowserRouter([
             },
             {
                 path: "security",
-                element: <TitledPage pageName={t("pages.security")}>
+                element:
                     <Security/>
-                </TitledPage>
             },
             {
                 path: "users",

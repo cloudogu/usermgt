@@ -8,6 +8,8 @@ ADDITIONAL_LDFLAGS=""
 NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
+CES_THEME_CONFIG=${UI_SRC}/node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css
+TAILWIND_WRAPPER_CSS=${UI_SRC}/src/styles.css
 MAKEFILES_VERSION=10.10.0
 .DEFAULT_GOAL:=default
 
@@ -31,6 +33,14 @@ include build/make/k8s-component.mk
 BATS_TAG=1.13.0
 
 default: dogu-release
+
+.PHONY: generate-tailwind-wrapper-css
+generate-tailwind-wrapper-css: ## Generate scoped CSS for the new Tailwind theme
+	@test -f ${CES_THEME_CONFIG} || (echo "Missing ${CES_THEME_CONFIG}; run yarn install first." && exit 1)
+	@cd ${UI_SRC} && node scripts/scope-ces-theme-css.mjs \
+	  node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css \
+	  src/styles.css \
+	  .tailwind-wrapper
 
 .PHONY info:
 info:

@@ -216,5 +216,8 @@
   "security.pta.table.status": "Status",
   "security.pta.table.createdAt": "Created at",
   "security.pta.table.expiresAt": "Expires at",
-  "security.pta.table.action": "Action"
+  "security.pta.table.action": "Action",
+  "pta.table.status.active": "Active",
+  "pta.table.status.inactive": "Expired",
+  "pta.table.date.never": "never"
 }

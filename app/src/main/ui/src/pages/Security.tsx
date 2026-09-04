@@ -1,23 +1,19 @@
-import {Button} from "@cloudogu/ces-theme-tailwind";
+import {ApplicationContainer as TailwindContainer, Button, CesIconPlus} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useApplicationContext} from "../components/contexts/ApplicationContext";
 import {PTAManagement} from "../components/security/Pat";
 import {t} from "../helpers/i18nHelpers";
 import {usePAT} from "../hooks/usePAT";
+import {pageTitle} from "../helpers/pageTitle";
+import "../styles.css";
 
 export default function Security() {
     const {casUser} = useApplicationContext();
 
     return (
-        <>
-            <div className="flex flex-wrap items-start justify-between gap-default-2x">
-                <h1 className="mt-5 mb-2.5 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">{t("pages.security")}</h1>
-                <Button className="mt-5 rounded-sm" color="brand" variant="primary">
-                    + Schlüssel anlegen
-                </Button>
-            </div>
+        <div className="tailwind-wrapper">
             {!casUser.loading && <SecurityContent username={casUser.principal}/>}
-        </>
+        </div>
     );
 }
 
@@ -25,10 +21,19 @@ function SecurityContent({username}: {username: string}) {
     const {pat, isPATLoading, patError} = usePAT(username);
 
     return (
-        <div>
-            <h2 className="mt-5 mb-4 desktop:text-desktop-5xl mobile:text-mobile-5xl text-default-text">{t("security.pta.title")}</h2>
-            <p className="mb-4 text-neutral">{t("security.pta.title.discription")}</p>
-            {pat && <PTAManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
-        </div>
+        <TailwindContainer.ContentContainer.EmptyLargePage
+            applicationTitle={pageTitle("pages.security")}
+        >
+            <div className="mt-5 mb-2.5 flex items-center justify-between">
+                <h1 className="mt-5 mb-2.5 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">{t("pages.security")}</h1>
+                <Button className="flex items-center justify-center gap-1 rounded-sm border-4 h-6 pl-0.5 pr-2.5 py-1" color="brand" variant="primary">
+                    <CesIconPlus/>
+                    <span>{t("security.pta.button.createkey")}</span>
+                </Button>
+            </div>
+            <section className="pb-[2rem]">
+                {pat && <PTAManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
+            </section>
+        </TailwindContainer.ContentContainer.EmptyLargePage>
     );
 }
