@@ -92,6 +92,7 @@
   "pages.usersImportResult": "Nutzerimport",
   "pages.usersNew": "Nutzer anlegen",
   "pages.security": "Sicherheit",
+  "pages.createPAT": "Neuen persönlichen Zugriffsschlüssel anlegen",
   "summaries.delete.confirmation.message": "Soll die Importübersicht der CSV-Datei '{{summaryId}}' gelöscht werden?",
   "summaries.delete.confirmation.title": "Importübersicht löschen",
   "summaries.delete.error": "Die Importübersicht konnte nicht gelöscht werden.",

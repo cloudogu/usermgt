@@ -92,6 +92,7 @@
   "pages.usersImportResult": "Userimport",
   "pages.usersNew": "New user",
   "pages.security": "Security",
+  "pages.createPAT": "Create key",
   "summaries.delete.confirmation.message": "Should the import summary of file '{{summaryId}}' be deleted?",
   "summaries.delete.confirmation.title": "Delete import summary",
   "summaries.delete.error": "The import overview could not be cleared.",

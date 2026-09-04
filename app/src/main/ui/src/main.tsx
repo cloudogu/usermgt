@@ -1,4 +1,3 @@
-import {ApplicationContainer as TailwindContainer} from "@cloudogu/ces-theme-tailwind";
 import {Main, Navbar} from "@cloudogu/deprecated-ces-theme-tailwind";
 import {Alert} from "@mui/material";
 import React from "react";
@@ -14,6 +13,7 @@ import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import {useGuiConfig} from "./hooks/useGuiConfig";
 import Account from "./pages/Account";
+import CreatePAT from "./pages/CreatePAT";
 import {EditGroup} from "./pages/EditGroup";
 import EditUser from "./pages/EditUser";
 import ErrorPage from "./pages/Error";
@@ -50,6 +50,10 @@ const router = createBrowserRouter([
                 path: "security",
                 element:
                     <Security/>
+            },
+            {
+                path: "security/createPAT",
+                element: <CreatePAT/>
             },
             {
                 path: "users",
