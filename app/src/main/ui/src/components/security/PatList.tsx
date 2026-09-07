@@ -5,7 +5,7 @@ import {
 } from "@cloudogu/ces-theme-tailwind";
 import i18n from "i18next";
 import React, {useMemo, useState} from "react";
-import StatusIndicator from "../../helpers/StatusIndicator";
+import StatusIndicator from "./StatusIndicator";
 import {t} from "../../helpers/i18nHelpers";
 import type {PersonalAccessToken} from "../../hooks/usePAT";
 import "./PatList.css";
@@ -19,12 +19,12 @@ type SortDirection = "ascending" | "descending";
 
 function formatDate(value: string): string {
     if (!value || value === "-") {
-        return t("pta.table.date.never");
+        return t("security.overview.table.status.noexpiration.option");
     }
 
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
-        return t("pta.table.date.never");
+        return t("security.overview.table.status.noexpiration.option");
     }
 
     return new Intl.DateTimeFormat(i18n.language, {
@@ -88,19 +88,19 @@ export function PatList({tokens}: PatListProps) {
                     <>
                         <ActionTableFrontendPaginated.HeadWithOneRow>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                                {sortableHeader("displayName", t("security.pta.table.displayName"))}
+                                {sortableHeader("displayName", t("security.overview.table.displayName"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                                {sortableHeader("status", t("security.pta.table.status"))}
+                                {sortableHeader("status", t("security.overview.table.status"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                                {sortableHeader("createdAt", t("security.pta.table.createdAt"))}
+                                {sortableHeader("createdAt", t("security.overview.table.createdAt"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                                {sortableHeader("expiresAt", t("security.pta.table.expiresAt"))}
+                                {sortableHeader("expiresAt", t("security.overview.table.expiresAt"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column align="center">
-                                {t("security.pta.table.action")}
+                                {t("security.overview.table.action")}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                         </ActionTableFrontendPaginated.HeadWithOneRow>
                         <ActionTableFrontendPaginated.Body>

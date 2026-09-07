@@ -1,12 +1,43 @@
-import {ApplicationContainer as TailwindContainer} from "@cloudogu/ces-theme-tailwind";
-import React from "react";
+import {ApplicationContainer as TailwindContainer, InputField, Select, Label} from "@cloudogu/ces-theme-tailwind";
+import React, {useState} from "react";
+import {createUseStyles} from "react-jss";
 import Breadcrumb from "../components/Breadcrumb";
+import DoguSelection from "../components/security/DoguSelection"
 import {t} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
-import "../styles.css";
+import "../ces-styles-wrapper.css";
 
+
+const useStyles = createUseStyles({
+    boldLabel: {
+        "& label > span:first-of-type": {
+            fontWeight: 700,
+        },
+    },
+    dangerLabel: {
+        "& label.text-danger > span": {
+            color: "#CC3333"
+        },
+    },
+});
 
 export default function CreatePAT() {
+
+    const [patName, setPatName] = useState<string>("");
+    const classes = useStyles();
+
+    const [touched, setTouched] = useState(false);
+    const [, setSelectedOption] = useState<string>("0");
+
+    const nameError =
+        patName.trim().length === 0
+            ? "Bitte einen Namen eingeben."
+            : patName.trim().length < 3
+                ? "Der Name muss mindestens 3 Zeichen enthalten."
+                : "";
+
+    const showError = touched && nameError !== "";
+
     return (
         <div className="tailwind-wrapper">
             <TailwindContainer.ContentContainer.EmptyLargePage
@@ -21,6 +52,42 @@ export default function CreatePAT() {
                 <h1 className="mb-0 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">
                     {t("pages.createPAT")}
                 </h1>
+                <div className={[classes.boldLabel,classes.dangerLabel, "mb-4"].join(" ")}>
+                    <InputField type={"text"}
+                        variant={showError ? "danger" : undefined}
+                        label={t("security.createpat.input.name.label")}
+                        hint={t("security.createpat.input.name.hint")}
+                        value={patName}
+                        required={true}
+                        onChange={(e) => {
+                            setPatName(e.target.value);
+                            setTouched(true);
+                        }}
+                        onBlur={() => setTouched(true)}
+                        aria-invalid={showError}
+                        aria-describedby={showError ? "pat-name-error" : undefined}
+                        data-testid={"security-create-pat-name-input"}
+                    />
+                </div>
+                <div className={[classes.boldLabel, "mb-4"].join(" ")}>
+                    <Label
+                        text={t("security.createpat.input.expires.label")}
+                    >
+                        <Select
+                            data-testid={"debug-mode-duration-select"}
+                            id={"debug-mode-duration"}
+                            onValueChange={setSelectedOption}
+                            placeholder={t("security.createpat.select.expires.placeholder")}
+                        >
+                            <Select.Item value="7" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.sevendays")}</Select.Item>
+                            <Select.Item value="30" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.thirtydays")}</Select.Item>
+                            <Select.Item value="60" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.sixtydays")}</Select.Item>
+                            <Select.Item value="90" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.nintydays")}</Select.Item>
+                            <Select.Item value="0" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.never")}</Select.Item>
+                        </Select>
+                    </Label>
+                </div>
+                <DoguSelection label={t("security.createpat.scopes.appliedto.label")} />
             </TailwindContainer.ContentContainer.EmptyLargePage>
         </div>
     );

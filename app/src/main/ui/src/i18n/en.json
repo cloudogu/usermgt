@@ -209,16 +209,24 @@
   "users.mfa.delete.notification.error": "The two-factor authentication for {{username}} could not be reset.",
   "users.mfa.delete.notification.success": "The two-factor authentication for {{username}} was reset successfully.",
   "general.ldap.external.message": "The Usermanagement is connected to an external LDAP. Creating and editing resources is disabled.",
-  "security.pta.title": "Personal Access Tokens",
-  "security.pta.title.discription": "Personal access tokens allow external applications to connect to this system and the Dogu APIs.",
-  "security.pta.load.error": "The personal access tokens could not be loaded.",
-  "security.labels.myPats": "Meine Schlüssel",
-  "security.pta.table.displayName": "Display name",
-  "security.pta.table.status": "Status",
-  "security.pta.table.createdAt": "Created at",
-  "security.pta.table.expiresAt": "Expires at",
-  "security.pta.table.action": "Action",
-  "pta.table.status.active": "Active",
-  "pta.table.status.inactive": "Expired",
-  "pta.table.date.never": "never"
+
+  "security.overview.title": "Personal Access Tokens",
+  "security.overview.title.discription": "External applications can connect to this system and the Dogus APIs using personal access tokens.",
+  "security.overview.headline": "My tokens",
+  "security.overview.button.createkey":"Create token",
+  "security.overview.table.displayName": "Display name",
+  "security.overview.table.status": "Status",
+  "security.overview.table.createdAt": "Created on",
+  "security.overview.table.expiresAt": "Expiry on",
+  "security.overview.table.action": "Action",
+  "security.overview.table.sort.arialabel": "Sort by",
+  "security.overview.table.sort.arrow.asc": "Sort ascending",
+  "security.overview.table.sort.arrow.des": "Sort descending",
+  "security.overview.table.statustype.active": "Activ",
+  "security.overview.table.statustype.expired": "Expired",
+  "security.overview.table.status.noexpiration.option": "Never",
+  "security.overview.table.action.delete": "Delete",
+  "security.overview.table.footer": "Rows"
+
+
 }

@@ -15,7 +15,7 @@ export type PTAManagementProps = {
 export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps) {
     if (isPATLoading) {
         return <CesIconSpinner
-            aria-label={t("security.pta.title")}
+            aria-label={t("security.overview.title")}
             className="h-16 w-16 animate-spin text-divider-primary-border"
             role="status"
         />;
@@ -29,10 +29,10 @@ export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps)
 
     return (
         <>
-            <h2>{t("security.pta.title")}</h2>
-            <Label text={t("security.pta.title.discription")}/>
+            <h2>{t("security.overview.title")}</h2>
+            <Label text={t("security.overview.title.discription")}/>
             <hr className="my-4 border-0 border-t border-neutral-300" />
-            <h3>{t("security.pta.headline")}</h3>
+            <h3>{t("security.overview.headline")}</h3>
             <PatList tokens={pat.tokens}/>
         </>
     );
