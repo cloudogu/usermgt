@@ -23,15 +23,29 @@ function radioButton(label: React.ReactNode, checked: boolean, onChange: () => v
         <div
             role="radio"
             aria-checked={checked}
-            tabIndex={0}
+            tabIndex={checked ? 0 : -1}
             onClick={() => { if (!checked) onChange(); }}
             onKeyDown={(event) => {
+                const direction = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1
+                    : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
+                if (direction !== 0) {
+                    event.preventDefault();
+                    const group = event.currentTarget.closest('[role="radiogroup"]');
+                    if (!group) return;
+                    const radios = Array.from(group.querySelectorAll<HTMLElement>('[role="radio"]'))
+                        .filter(radio => radio.closest('[role="radiogroup"]') === group);
+                    const index = radios.indexOf(event.currentTarget);
+                    const nextRadio = radios[(index + direction + radios.length) % radios.length];
+                    nextRadio.focus();
+                    nextRadio.click();
+                    return;
+                }
                 if (event.key === " " || event.key === "Enter") {
                     event.preventDefault();
                     if (!checked) onChange();
                 }
             }}
-            className="focus-visible:outline focus-visible:outline-2 cursor-pointer pt-3 pr-2 pb-3 pl-2 flex flex-row gap-2 items-start justify-start flex-1 min-h-[40px] relative overflow-hidden" >
+            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] cursor-pointer pt-3 pr-2 pb-3 pl-2 flex flex-row gap-2 items-start justify-start flex-1 min-h-[40px] relative overflow-hidden" >
             <div className="flex flex-row gap-0 items-start justify-start shrink-0 relative overflow-hidden" >
                 <div className="shrink-0 w-6 h-6 relative">
                     <div className={`bg-default-background rounded-[50%] border-solid ${checked ? "border-brand border-2" : "border-neutral border"} w-6 h-6 absolute left-0 top-0`} />
@@ -61,9 +75,9 @@ function checkBox(label: string, checked: boolean, disabled: boolean, onChange: 
                     if (!disabled) onChange();
                 }
             }}
-            className="focus-visible:outline focus-visible:outline-2 cursor-pointer aria-disabled:cursor-default pr-2 flex flex-row gap-0 items-center justify-start shrink-0 min-h-[40px] relative overflow-hidden" >
+            className="group focus-visible:outline-none cursor-pointer aria-disabled:cursor-default pr-2 flex flex-row gap-0 items-center justify-start shrink-0 min-h-[40px] relative overflow-hidden" >
             <div className="p-2 flex flex-row gap-0 items-center justify-center shrink-0 min-h-[40px] relative overflow-hidden" >
-                <div className="shrink-0 w-6 h-6 relative">
+                <div className="shrink-0 w-6 h-6 relative rounded group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--ces-color-default-focus-outer)]">
                     <div className={`${checked ? "bg-brand border-brand" : "bg-neutral-colors-neutral-0 border-neutral"} rounded border-solid border w-6 h-6 absolute left-0 top-0`} />
                     {checked && <CesIconCheck className="text-inverted-text w-6 h-6 absolute left-0 top-0 overflow-visible" />}
                 </div>
@@ -146,10 +160,12 @@ function RadioGroup({label, children, className = ""}: {
     children?: React.ReactNode;
     className?: string;
 }) {
+    const labelId = React.useId();
+
     return (
-        <div className={`desktop:text-desktop-regular mobile:text-mobile-regular flex flex-col gap-1 items-start justify-start self-stretch shrink-0 relative ${className}`} >
+        <div role="radiogroup" aria-labelledby={labelId} className={`desktop:text-desktop-regular mobile:text-mobile-regular flex flex-col gap-1 items-start justify-start self-stretch shrink-0 relative ${className}`} >
             <div className="flex flex-row gap-15 items-center justify-start shrink-0 relative overflow-hidden" >
-                <div className="text-default-text text-left font-lable-label-font-family text-lable-label-font-size leading-lable-label-line-height font-lable-label-font-weight relative" >
+                <div id={labelId} className="text-default-text text-left font-lable-label-font-family text-lable-label-font-size leading-lable-label-line-height font-lable-label-font-weight relative" >
                     {label}
                 </div>
             </div>
