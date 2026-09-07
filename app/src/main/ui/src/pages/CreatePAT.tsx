@@ -11,7 +11,7 @@ import "../ces-styles-wrapper.css";
 const useStyles = createUseStyles({
     boldLabel: {
         "& label > span:first-of-type": {
-            fontWeight: 700,
+            fontWeight: 600,
         },
     },
     dangerLabel: {
@@ -24,6 +24,7 @@ const useStyles = createUseStyles({
 export default function CreatePAT() {
 
     const [patName, setPatName] = useState<string>("");
+    const [selectedDogus, setSelectedDogus] = useState<string[]>([]);
     const classes = useStyles();
 
     const [touched, setTouched] = useState(false);
@@ -87,7 +88,7 @@ export default function CreatePAT() {
                         </Select>
                     </Label>
                 </div>
-                <DoguSelection label={t("security.createpat.scopes.appliedto.label")} />
+                <DoguSelection label={t("security.createpat.scopes.appliedto.label")} value={selectedDogus} onChange={setSelectedDogus} />
             </TailwindContainer.ContentContainer.EmptyLargePage>
         </div>
     );
