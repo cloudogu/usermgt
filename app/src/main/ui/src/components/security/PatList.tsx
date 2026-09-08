@@ -108,6 +108,7 @@ export function PatList({tokens}: PatListProps) {
                                 <ActionTableFrontendPaginated.Body.Row
                                     key={token.id}
                                     data-testid={`personal-access-token-row-${token.id}`}
+                                    className={token.status == "active" ? "" : "bg-neutral-weaker text-neutral"}
                                 >
                                     <ActionTableFrontendPaginated.Body.Row.Column className="break-all">
                                         {token.displayName}

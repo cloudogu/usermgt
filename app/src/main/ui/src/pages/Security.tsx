@@ -30,9 +30,10 @@ function SecurityContent({username}: {username: string}) {
             <div className="flex items-baseline items- justify-between">
                 <h1 className="desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand mb-0">{t("pages.security")}</h1>
                 <Button
-                    className="flex items-center justify-center gap-1 rounded-sm border-4 h-6 pl-0.5 pr-2.5 py-1"
+                    className="flex items-center justify-center gap-1"
                     color="brand"
                     variant="primary"
+                    size="small"
                     onClick={() => navigate("/security/createPAT")}
                 >
                     <CesIconPlus/>

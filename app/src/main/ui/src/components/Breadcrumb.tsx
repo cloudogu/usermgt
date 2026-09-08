@@ -16,7 +16,7 @@ export function Breadcrumb({items}: BreadcrumpProps) {
                         {index > 0 && <li aria-hidden="true">/</li>}
                         <li>
                             {path ? (
-                                <Link className="text-brand hover:underline" to={path}>
+                                <Link className="text-brand hover:underline" to={path} tabIndex={0}>
                                     {text}
                                 </Link>
                             ) : text}

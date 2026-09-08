@@ -1,30 +1,9 @@
-import {CesIconCheck, CesIconX} from "@cloudogu/ces-theme-tailwind";
+import {Button, CheckboxField, CesIconX} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
-import {createUseStyles} from "react-jss";
 import {useDogus} from "../../hooks/useDogus";
+import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
 import {DoguOption} from "../../services/Dogus";
-
-const useStyles = createUseStyles({
-    fontBold600: {
-        fontWeight: 600,
-    },
-    fontDefault400: {
-        fontWeight: 400,
-    },
-    doguSelectionHover: {
-        "&:hover .hover-dark-bg": {
-            backgroundColor: "var(--ces-color-brand-stronger)",
-        },
-        "&:hover .hover-dark-border": {
-            borderColor: "var(--ces-color-brand-strongery)",
-        },
-        "&:hover .hover-neutral-border": {
-            borderWidth: "2px",
-        },
-
-    },
-
-});
+import {t, tWithParams} from "../../helpers/i18nHelpers";
 
 export type DoguSelectionProps = {
     label: string;
@@ -75,36 +54,6 @@ function radioButton(label: React.ReactNode, checked: boolean, onChange: () => v
     );
 }
 
-function checkBox(label: string, checked: boolean, disabled: boolean, onChange: () => void) {
-    return (
-        <div
-            role="checkbox"
-            aria-checked={checked}
-            aria-disabled={disabled}
-            tabIndex={disabled ? -1 : 0}
-            onClick={() => { if (!disabled) onChange(); }}
-            onKeyDown={(event) => {
-                if (event.key === " " || event.key === "Enter") {
-                    event.preventDefault();
-                    if (!disabled) onChange();
-                }
-            }}
-            className="group focus-visible:outline-none cursor-pointer aria-disabled:cursor-default pr-2 flex flex-row gap-0 items-center justify-start shrink-0 min-h-[40px] relative overflow-hidden" >
-            <div className="p-2 flex flex-row gap-0 items-center justify-center shrink-0 min-h-[40px] relative overflow-hidden" >
-                <div className="shrink-0 w-6 h-6 relative rounded group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--ces-color-default-focus-outer)]">
-                    <div className={`${checked ? "bg-brand border-brand" : "bg-neutral-colors-neutral-0 border-neutral"} rounded border-solid border w-6 h-6 absolute left-0 top-0`} />
-                    {checked && <CesIconCheck className="text-inverted-text w-6 h-6 absolute left-0 top-0 overflow-visible" />}
-                </div>
-            </div>
-            <div className="flex flex-row gap-0 items-center justify-start shrink-0 relative overflow-hidden" >
-                <div className="text-default-text text-left font-lable-label-font-family text-lable-label-font-size leading-lable-label-line-height font-lable-label-font-weight relative">
-                    {label}
-                </div>
-            </div>
-        </div>
-    );
-}
-
 function CheckBoxGroup({label, children, className = ""}: {
     label: React.ReactNode;
     children: React.ReactNode;
@@ -135,7 +84,7 @@ function RadioGroupEntry({label, checked, onChange, selectedCount = 0, totalCoun
     className?: string;
 }) {
     const hasChildren = React.Children.toArray(children).length > 0;
-    const classes = useStyles();
+    const classes = useDoguSelectionStyles();
 
     return (
         <div className={`rounded border-solid border ${checked ? "border-brand" : "border-neutral"} flex flex-col gap-0 items-start justify-start self-stretch shrink-0 relative ${className}`} >
@@ -150,19 +99,15 @@ function RadioGroupEntry({label, checked, onChange, selectedCount = 0, totalCoun
                     <div className="flex flex-row gap-4 gap-y-0 items-center justify-end flex-wrap content-center self-stretch shrink-0 relative" >
                         <div className="flex flex-row gap-2 items-center justify-start shrink-0 relative" >
                             <div className={`${classes.fontDefault400} text-neutral text-left font-copy-paragraph-regular-font-family text-copy-paragraph-regular-font-size leading-copy-paragraph-regular-line-height font-copy-paragraph-regular-font-weight relative`} >
-                                {selectedCount} von {totalCount} ausgewählt
+                                {tWithParams("security.createpat.selectdogus.hint", selectedCount, totalCount)}
                             </div>
                         </div>
-                        <button type="button" disabled={!checked} onClick={onClear} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ces-color-default-focus-outer)] rounded border-solid border-brand border-2 text-brand pt-1 pr-2 pb-1 pl-2 flex flex-row gap-05 items-center justify-center shrink-0 min-w-[40px] min-h-[40px] relative overflow-hidden" >
-                            <div className="shrink-0 w-4 h-4 relative">
-                                <CesIconX />
-                            </div>
-                            <div className="pr-2 pl-2 flex flex-row gap-0 items-center justify-center shrink-0 relative" >
-                                <div className="text-brand text-left font-copy-paragraph-bold-font-family text-copy-paragraph-bold-font-size leading-copy-paragraph-bold-line-height font-copy-paragraph-bold-font-weight relative" >
-                                    Auswahl aufheben
-                                </div>
-                            </div>
-                        </button>
+
+                        <Button type="button" variant="secondary" color="brand" disabled={!checked}
+                            onClick={onClear}
+                            className={`${classes.checkboxFocus} flex flex-row items-center gap-1 whitespace-nowrap`}>
+                                <CesIconX /> {t("security.createpat.selectdogus.clearselection")}
+                        </Button>
                     </div>
                 </div>
             )}
@@ -192,7 +137,7 @@ function RadioGroup({label, children, className = ""}: {
 }
 
 export function DoguSelection({label, value, onChange}: DoguSelectionProps) {
-    const classes = useStyles();
+    const classes = useDoguSelectionStyles();
     const {doguOptions} = useDogus();
     const administrationDogus: DoguOption[] = [];
     const developmentDogus: DoguOption[] = [];
@@ -215,26 +160,32 @@ export function DoguSelection({label, value, onChange}: DoguSelectionProps) {
             : [...selectedDogus, dogu]);
     };
     const renderDogu = (dogu: DoguOption) => (
-        <React.Fragment key={dogu.value}>
-            {checkBox(dogu.label, selectedDogus.includes(dogu.value), allDogus, () => toggleDogu(dogu.value))}
-        </React.Fragment>
+        <CheckboxField
+            key={dogu.value}
+            checked={selectedDogus.includes(dogu.value)}
+            disabled={allDogus}
+            onCheckedChange={() => toggleDogu(dogu.value)}
+            className={`p-2 min-h-[40px] items-center ${classes.checkboxFocus} text-default-text`}
+        >
+            {dogu.label}
+        </CheckboxField>
     );
     return (
         <RadioGroup label={label} className={classes.fontBold600}>
             <RadioGroupEntry label="Auswahl an Dogus" checked={!allDogus}
                 onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguOptions.length} onClear={() => onChange([])}>
                 {basicDogus.length > 0 && (
-                    <CheckBoxGroup label="Basis">
+                    <CheckBoxGroup label={t("security.createpat.check.base")}>
                         {basicDogus.map(renderDogu)}
                     </CheckBoxGroup>
                 )}
                 {developmentDogus.length > 0 && (
-                    <CheckBoxGroup label="Entwicklung">
+                    <CheckBoxGroup label={t("security.createpat.check.development")}>
                         {developmentDogus.map(renderDogu)}
                     </CheckBoxGroup>
                 )}
                 {administrationDogus.length > 0 && (
-                    <CheckBoxGroup label="Administration" className="pr-4">
+                    <CheckBoxGroup label={t("security.createpat.check.administration")} className="pr-4">
                         {administrationDogus.map(renderDogu)}
                     </CheckBoxGroup>
                 )}
@@ -244,9 +195,9 @@ export function DoguSelection({label, value, onChange}: DoguSelectionProps) {
                 onChange={() => onChange(["/*"])}
                 label={
                     <span>
-                        <span>Alle Dogus</span>
+                        <span>{t("security.createpat.scopes.selectdogus.all.label.dogus")}</span>
                         <span className={classes.fontDefault400}>
-                            &nbsp;(inklusive nachträglich installierter)
+                            &nbsp;({t("security.createpat.scopes.selectdogus.all.label.hint")})
                         </span>
                     </span>
                 }

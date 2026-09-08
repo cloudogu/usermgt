@@ -239,12 +239,14 @@
   "security.createpat.select.expires.option.never": "Nie",
   "security.createpat.scopes.appliedto.label": "Wird angewendet auf*",
   "security.createpat.scopes.selectdogus.label": "Auswahl an Dogus",
-  "security.createpat.scopes.selectdogus.all.label": "Alle Dogus (inklusive nachträglich installierter)",
+  "security.createpat.scopes.selectdogus.all.label.dogus": "Alle Dogus",
+  "security.createpat.scopes.selectdogus.all.label.hint": "inklusive nachträglich installierter",
   "security.createpat.check.base": "Basis",
   "security.createpat.check.development": "Entwicklung",
-  "security.createpat.check.Administration": "Administration",
-  "security.createpat.selectdogus.hint": "%d von % ausgewählt",
+  "security.createpat.check.administration": "Administration",
+  "security.createpat.selectdogus.hint": "%d von %d ausgewählt",
   "security.createpat.selectdogus.clearselection": "Auswahl aufheben",
   "security.createpat.selectdogus.createkey": "Schlüssel anlegen",
-  "security.createpat.selectdogus.cancel": "Abbrechen"
+  "security.createpat.selectdogus.cancel": "Abbrechen",
+  "security.createpat.legend": "* Pflichtfeld"
 }

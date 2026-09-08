@@ -1,4 +1,4 @@
-import {ApplicationContainer as TailwindContainer, InputField, Select, Label} from "@cloudogu/ces-theme-tailwind";
+import {ApplicationContainer as TailwindContainer, Button, InputField, Select, Label} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import {createUseStyles} from "react-jss";
 import Breadcrumb from "../components/Breadcrumb";
@@ -89,6 +89,17 @@ export default function CreatePAT() {
                     </Label>
                 </div>
                 <DoguSelection label={t("security.createpat.scopes.appliedto.label")} value={selectedDogus} onChange={setSelectedDogus} />
+                <div className="mt-6 flex flex-row items-end justify-between">
+                    <div className="flex flex-row items-center justify-start gap-4">
+                        <Button color="brand" variant="primary" size="regular" type="button">
+                            Schlüssel anlegen
+                        </Button>
+                        <Button color="neutral" variant="secondary" size="regular" type="button">
+                            Abbrechen
+                        </Button>
+                    </div>
+                    <span className="text-sm text-neutral">* Pflichtfeld</span>
+                </div>
             </TailwindContainer.ContentContainer.EmptyLargePage>
         </div>
     );

@@ -6,6 +6,7 @@ VERSION=1.22.1-4
 # this should fix https://github.com/golang/go/issues/13470
 ADDITIONAL_LDFLAGS=""
 NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+NPM_REGISTRY_INTERNAL=https://ecosystem.cloudogu.com/nexus/repository/npm-internal/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
 CES_THEME_CONFIG=${UI_SRC}/node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css

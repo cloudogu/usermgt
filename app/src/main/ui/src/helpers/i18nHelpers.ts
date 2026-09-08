@@ -11,3 +11,29 @@ export function t(key: string, options?: any) {
     // eslint-disable-next-line import/no-named-as-default-member
     return i18n.t(key) as string;
 }
+
+/**
+ * Translates a key and replaces printf-style placeholders in the translated
+ * text with the supplied parameters.
+ */
+export function tWithParams(key: string, ...params: unknown[]): string {
+    let parameterIndex = 0;
+
+    return t(key).replace(/%[sdif]/g, placeholder => {
+        const parameter = params[parameterIndex++];
+        if (parameter === undefined) {
+            return placeholder;
+        }
+
+        switch (placeholder) {
+            case "%d":
+            case "%i":
+                return String(Number.parseInt(String(parameter), 10));
+            case "%f":
+                return String(Number.parseFloat(String(parameter)));
+            case "%s":
+            default:
+                return String(parameter);
+        }
+    });
+}
