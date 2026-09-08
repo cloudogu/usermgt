@@ -1,6 +1,7 @@
 import {ApplicationContainer as TailwindContainer, Button, InputField, Select, Label} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import {createUseStyles} from "react-jss";
+import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
 import DoguSelection from "../components/security/DoguSelection"
 import {t} from "../helpers/i18nHelpers";
@@ -23,6 +24,7 @@ const useStyles = createUseStyles({
 
 export default function CreatePAT() {
 
+    const navigate = useNavigate();
     const [patName, setPatName] = useState<string>("");
     const [selectedDogus, setSelectedDogus] = useState<string[]>([]);
     const classes = useStyles();
@@ -94,7 +96,8 @@ export default function CreatePAT() {
                         <Button color="brand" variant="primary" size="regular" type="button">
                             Schlüssel anlegen
                         </Button>
-                        <Button color="neutral" variant="secondary" size="regular" type="button">
+                        <Button color="neutral" variant="secondary" size="regular" type="button"
+                            onClick={() => navigate("/security")}>
                             Abbrechen
                         </Button>
                     </div>
