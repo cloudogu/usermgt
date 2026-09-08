@@ -23,7 +23,7 @@ function radioButton(label: React.ReactNode, checked: boolean, onChange: () => v
         <div
             role="radio"
             aria-checked={checked}
-            tabIndex={checked ? 0 : -1}
+            tabIndex={0}
             onClick={() => { if (!checked) onChange(); }}
             onKeyDown={(event) => {
                 const direction = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1
@@ -45,9 +45,9 @@ function radioButton(label: React.ReactNode, checked: boolean, onChange: () => v
                     if (!checked) onChange();
                 }
             }}
-            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] cursor-pointer pt-3 pr-2 pb-3 pl-2 flex flex-row gap-2 items-start justify-start flex-1 min-h-[40px] relative overflow-hidden" >
-            <div className="flex flex-row gap-0 items-start justify-start shrink-0 relative overflow-hidden" >
-                <div className="shrink-0 w-6 h-6 relative">
+            className="group focus-visible:outline-none cursor-pointer pt-3 pr-2 pb-3 pl-2 flex flex-row gap-2 items-start justify-start flex-1 min-h-[40px] relative overflow-hidden" >
+            <div className="flex flex-row gap-0 items-start justify-start shrink-0 relative overflow-visible" >
+                <div className="shrink-0 w-6 h-6 relative rounded-full group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--ces-color-default-focus-outer)]">
                     <div className={`bg-default-background rounded-[50%] border-solid ${checked ? "border-brand border-2" : "border-neutral border"} w-6 h-6 absolute left-0 top-0`} />
                     {checked && <div className="bg-brand rounded-[50%] w-3.5 h-3.5 absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2" />}
                 </div>
@@ -138,7 +138,7 @@ function RadioGroupEntry({label, checked, onChange, selectedCount = 0, onClear, 
                                 {selectedCount} von 14 ausgewählt
                             </div>
                         </div>
-                        <button type="button" disabled={!checked} onClick={onClear} className="rounded border-solid border-brand border-2 text-brand pt-1 pr-2 pb-1 pl-2 flex flex-row gap-05 items-center justify-center shrink-0 min-w-[40px] min-h-[40px] relative overflow-hidden" >
+                        <button type="button" disabled={!checked} onClick={onClear} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ces-color-default-focus-outer)] rounded border-solid border-brand border-2 text-brand pt-1 pr-2 pb-1 pl-2 flex flex-row gap-05 items-center justify-center shrink-0 min-w-[40px] min-h-[40px] relative overflow-hidden" >
                             <div className="shrink-0 w-4 h-4 relative">
                                 <CesIconX />
                             </div>
@@ -216,8 +216,8 @@ export function DoguSelection({label, value, onChange}: DoguSelectionProps) {
                 onChange={() => onChange(["/*"])}
                 label={
                     <span>
-                        <span className="label-4-span">Alle Dogus</span>
-                        <span className={`label-4-span2 ${classes.fontDefault400}`}>
+                        <span>Alle Dogus</span>
+                        <span className={classes.fontDefault400}>
                             &nbsp;(inklusive nachträglich installierter)
                         </span>
                     </span>
