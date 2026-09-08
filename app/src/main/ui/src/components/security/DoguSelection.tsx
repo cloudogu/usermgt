@@ -1,7 +1,8 @@
 import {CesIconCheck, CesIconX} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
-import "./DoguSelection.css";
 import {createUseStyles} from "react-jss";
+import {useDogus} from "../../hooks/useDogus";
+import {DoguOption} from "../../services/Dogus";
 
 const useStyles = createUseStyles({
     fontBold600: {
@@ -10,6 +11,19 @@ const useStyles = createUseStyles({
     fontDefault400: {
         fontWeight: 400,
     },
+    doguSelectionHover: {
+        "&:hover .hover-dark-bg": {
+            backgroundColor: "var(--ces-color-brand-stronger)",
+        },
+        "&:hover .hover-dark-border": {
+            borderColor: "var(--ces-color-brand-strongery)",
+        },
+        "&:hover .hover-neutral-border": {
+            borderWidth: "2px",
+        },
+
+    },
+
 });
 
 export type DoguSelectionProps = {
@@ -48,8 +62,8 @@ function radioButton(label: React.ReactNode, checked: boolean, onChange: () => v
             className="group focus-visible:outline-none cursor-pointer pt-3 pr-2 pb-3 pl-2 flex flex-row gap-2 items-start justify-start flex-1 min-h-[40px] relative overflow-hidden" >
             <div className="flex flex-row gap-0 items-start justify-start shrink-0 relative overflow-visible" >
                 <div className="shrink-0 w-6 h-6 relative rounded-full group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--ces-color-default-focus-outer)]">
-                    <div className={`bg-default-background rounded-[50%] border-solid ${checked ? "border-brand border-2" : "border-neutral border"} w-6 h-6 absolute left-0 top-0`} />
-                    {checked && <div className="bg-brand rounded-[50%] w-3.5 h-3.5 absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2" />}
+                    <div className={`bg-default-background rounded-[50%] border-solid ${checked ? "border-brand border-2 hover-dark-border" : "border-neutral border hover-neutral-border"} w-6 h-6 absolute left-0 top-0`} />
+                    {checked && <div className="bg-brand rounded-[50%] w-3.5 h-3.5 absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 hover-dark-bg" />}
                 </div>
             </div>
             <div className="flex flex-row gap-0 items-center justify-start shrink-0 relative overflow-hidden" >
@@ -110,11 +124,12 @@ function CheckBoxGroup({label, children, className = ""}: {
     );
 }
 
-function RadioGroupEntry({label, checked, onChange, selectedCount = 0, onClear, children, className = ""}: {
+function RadioGroupEntry({label, checked, onChange, selectedCount = 0, totalCount = 0, onClear, children, className = ""}: {
     label: React.ReactNode;
     checked: boolean;
     onChange: () => void;
     selectedCount?: number;
+    totalCount?: number;
     onClear?: () => void;
     children?: React.ReactNode;
     className?: string;
@@ -124,7 +139,7 @@ function RadioGroupEntry({label, checked, onChange, selectedCount = 0, onClear, 
 
     return (
         <div className={`rounded border-solid border ${checked ? "border-brand" : "border-neutral"} flex flex-col gap-0 items-start justify-start self-stretch shrink-0 relative ${className}`} >
-            <div className={`${checked ? "bg-brand-weaker" : ""} rounded-tl-[5px] rounded-tr-[5px] ${hasChildren ? "pr-2" : "rounded"} flex flex-row gap-0 items-center justify-start self-stretch shrink-0 min-h-[40px] relative overflow-hidden`} >
+            <div className={`${checked ? "bg-brand-weaker" : ""} rounded-tl-[5px] rounded-tr-[5px] ${hasChildren ? "pr-2" : "rounded"} flex flex-row gap-0 items-center justify-start self-stretch shrink-0 min-h-[40px] relative overflow-hidden ${classes.doguSelectionHover}`} >
                 {radioButton(label, checked, onChange)}
             </div>
             {checked && hasChildren && (
@@ -135,7 +150,7 @@ function RadioGroupEntry({label, checked, onChange, selectedCount = 0, onClear, 
                     <div className="flex flex-row gap-4 gap-y-0 items-center justify-end flex-wrap content-center self-stretch shrink-0 relative" >
                         <div className="flex flex-row gap-2 items-center justify-start shrink-0 relative" >
                             <div className={`${classes.fontDefault400} text-neutral text-left font-copy-paragraph-regular-font-family text-copy-paragraph-regular-font-size leading-copy-paragraph-regular-line-height font-copy-paragraph-regular-font-weight relative`} >
-                                {selectedCount} von 14 ausgewählt
+                                {selectedCount} von {totalCount} ausgewählt
                             </div>
                         </div>
                         <button type="button" disabled={!checked} onClick={onClear} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ces-color-default-focus-outer)] rounded border-solid border-brand border-2 text-brand pt-1 pr-2 pb-1 pl-2 flex flex-row gap-05 items-center justify-center shrink-0 min-w-[40px] min-h-[40px] relative overflow-hidden" >
@@ -178,6 +193,19 @@ function RadioGroup({label, children, className = ""}: {
 
 export function DoguSelection({label, value, onChange}: DoguSelectionProps) {
     const classes = useStyles();
+    const {doguOptions} = useDogus();
+    const administrationDogus: DoguOption[] = [];
+    const developmentDogus: DoguOption[] = [];
+    const basicDogus: DoguOption[] = [];
+    doguOptions.forEach(dogu => {
+        if (dogu.category === "Administration" || dogu.category === "Administration Apps") {
+            administrationDogus.push(dogu);
+        } else if (dogu.category === "Development" || dogu.category === "Development Apps") {
+            developmentDogus.push(dogu);
+        } else {
+            basicDogus.push(dogu);
+        }
+    });
     const allDogus = value.includes("/*");
     const selectedDogus = allDogus ? [] : value;
     const toggleDogu = (dogu: string) => {
@@ -186,30 +214,30 @@ export function DoguSelection({label, value, onChange}: DoguSelectionProps) {
             ? selectedDogus.filter(selected => selected !== dogu)
             : [...selectedDogus, dogu]);
     };
+    const renderDogu = (dogu: DoguOption) => (
+        <React.Fragment key={dogu.value}>
+            {checkBox(dogu.label, selectedDogus.includes(dogu.value), allDogus, () => toggleDogu(dogu.value))}
+        </React.Fragment>
+    );
     return (
         <RadioGroup label={label} className={classes.fontBold600}>
             <RadioGroupEntry label="Auswahl an Dogus" checked={!allDogus}
-                onChange={() => onChange([])} selectedCount={selectedDogus.length} onClear={() => onChange([])}>
-                <CheckBoxGroup label="Basis">
-                    {checkBox("BlueSpice", selectedDogus.includes("BlueSpice"), allDogus, () => toggleDogu("BlueSpice"))}
-                    {checkBox("Cockpit", selectedDogus.includes("Cockpit"), allDogus, () => toggleDogu("Cockpit"))}
-                    {checkBox("Easy Redmine", selectedDogus.includes("Easy Redmine"), allDogus, () => toggleDogu("Easy Redmine"))}
-                    {checkBox("LOP-Assistent", selectedDogus.includes("LOP-Assistent"), allDogus, () => toggleDogu("LOP-Assistent"))}
-                    {checkBox("PMflexFLOW", selectedDogus.includes("PMflexFLOW"), allDogus, () => toggleDogu("PMflexFLOW"))}
-                    {checkBox("Redmine", selectedDogus.includes("Redmine"), allDogus, () => toggleDogu("Redmine"))}
-                </CheckBoxGroup>
-                <CheckBoxGroup label="Entwicklung">
-                    {checkBox("Grafana", selectedDogus.includes("Grafana"), allDogus, () => toggleDogu("Grafana"))}
-                    {checkBox("Jenkins CI", selectedDogus.includes("Jenkins CI"), allDogus, () => toggleDogu("Jenkins CI"))}
-                    {checkBox("SCM-Manager", selectedDogus.includes("SCM-Manager"), allDogus, () => toggleDogu("SCM-Manager"))}
-                    {checkBox("Smeagol", selectedDogus.includes("Smeagol"), allDogus, () => toggleDogu("Smeagol"))}
-                    {checkBox("SonarQube", selectedDogus.includes("SonarQube"), allDogus, () => toggleDogu("SonarQube"))}
-                    {checkBox("Sonatype Nexus", selectedDogus.includes("Sonatype Nexus"), allDogus, () => toggleDogu("Sonatype Nexus"))}
-                </CheckBoxGroup>
-                <CheckBoxGroup label="Administration" className="pr-4">
-                    {checkBox("Administration", selectedDogus.includes("Administration"), allDogus, () => toggleDogu("Administration"))}
-                    {checkBox("User Management", selectedDogus.includes("User Management"), allDogus, () => toggleDogu("User Management"))}
-                </CheckBoxGroup>
+                onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguOptions.length} onClear={() => onChange([])}>
+                {basicDogus.length > 0 && (
+                    <CheckBoxGroup label="Basis">
+                        {basicDogus.map(renderDogu)}
+                    </CheckBoxGroup>
+                )}
+                {developmentDogus.length > 0 && (
+                    <CheckBoxGroup label="Entwicklung">
+                        {developmentDogus.map(renderDogu)}
+                    </CheckBoxGroup>
+                )}
+                {administrationDogus.length > 0 && (
+                    <CheckBoxGroup label="Administration" className="pr-4">
+                        {administrationDogus.map(renderDogu)}
+                    </CheckBoxGroup>
+                )}
             </RadioGroupEntry>
             <RadioGroupEntry
                 checked={allDogus}

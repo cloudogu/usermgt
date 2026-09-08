@@ -33,6 +33,7 @@ message Dogu {
   string description = 4;
   repeated string tags = 5;
   string log_level = 6;
+  string category = 7;
 }
 
 message DoguBlueprinitIdRequest {

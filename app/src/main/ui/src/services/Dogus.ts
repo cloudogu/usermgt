@@ -5,12 +5,14 @@ export type Dogu = {
     name: string;
     displayName: string;
     tags: string[];
+    category: string;
 };
 
 export type DoguOption = {
     value: string;
     label: string;
     tags: string[];
+    category: string;
 };
 
 export const DogusService = {
@@ -24,5 +26,5 @@ export const DogusService = {
 };
 
 export const toDoguOptions = (dogus: Dogu[]): DoguOption[] => dogus
-    .map(dogu => ({value: dogu.name, label: dogu.displayName || dogu.name, tags: dogu.tags}))
+    .map(dogu => ({value: dogu.name, label: dogu.displayName || dogu.name, tags: dogu.tags, category: dogu.category}))
     .sort((left, right) => left.label.localeCompare(right.label));
