@@ -21,6 +21,7 @@ import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
 import Security from "./pages/Security";
+import PATDetails from "./pages/PATDetails";
 import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
 
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
                 path: "security",
                 element:
                     <Security/>
+            },
+            {
+                path: "security/pats/:id",
+                element: <PATDetails/>
             },
             {
                 path: "security/createPAT",

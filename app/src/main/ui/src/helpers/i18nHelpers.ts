@@ -37,3 +37,20 @@ export function tWithParams(key: string, ...params: unknown[]): string {
         }
     });
 }
+
+export function formatDate(value: string): string {
+    if (!value || value === "-") {
+        return t("security.overview.table.status.noexpiration.option");
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return t("security.overview.table.status.noexpiration.option");
+    }
+
+    return new Intl.DateTimeFormat(i18n.language, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    }).format(date);
+}

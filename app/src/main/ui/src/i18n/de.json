@@ -93,6 +93,7 @@
   "pages.usersNew": "Nutzer anlegen",
   "pages.security": "Sicherheit",
   "pages.createPAT": "Neuen persönlichen Zugriffsschlüssel anlegen",
+  "pages.patDetails": "Persönlicher Zugriffsschlüssel",
   "summaries.delete.confirmation.message": "Soll die Importübersicht der CSV-Datei '{{summaryId}}' gelöscht werden?",
   "summaries.delete.confirmation.title": "Importübersicht löschen",
   "summaries.delete.error": "Die Importübersicht konnte nicht gelöscht werden.",
@@ -248,5 +249,29 @@
   "security.createpat.selectdogus.clearselection": "Auswahl aufheben",
   "security.createpat.selectdogus.createkey": "Schlüssel anlegen",
   "security.createpat.selectdogus.cancel": "Abbrechen",
-  "security.createpat.legend": "* Pflichtfeld"
+  "security.createpat.legend": "* Pflichtfeld",
+
+  "security.createpat.modal.success.headline": "Zugriffsschlüssel angelegt",
+  "security.createpat.modal.success.hint": "Kopieren und speichern Sie den Schlüssel. Diese Ansicht wird nur einmal angezeigt.",
+  "security.createpat.modal.success.displayname.label": "Anzeigename",
+  "security.createpat.modal.success.expires.label": "Läuft ab in",
+  "security.createpat.modal.success.expires.text": "%d Tagen (%s)",
+  "security.createpat.modal.success.pat.label": "Zugriffsschlüssel",
+  "security.createpat.modal.success.pat.arialabel": "Schlüssel kopieren",
+  "security.createpat.modal.success.pat.button": "Schließen",
+
+  "security.createpat.modal.delete.headline": "Zugriffsschlüssel löschen",
+  "security.createpat.modal.delete.hint.top": "Möchten Sie den folgenden persönlichen Zugriffsschlüssel wirklich löschen?",
+  "security.createpat.modal.delete.hint.bottom": "Anwendungen, die diesen Schlüssel nutzen, haben danach keinen Zugriff mehr auf das System. Gelöschte Schlüssel können nicht wiederhergestellt werden.",
+  "security.createpat.modal.delete.confirm": "Löschen",
+  "security.createpat.modal.delete.cancel": "Abbrechen",
+
+  "security.pat.details.delete": "Schlüssel löschen",
+  "security.pat.details.notFound": "Dieser Zugriffsschlüssel wurde nicht gefunden.",
+  "security.pat.details.loadError": "Die Schlüsseldetails konnten nicht geladen werden.",
+  "security.pat.details.back": "Zurück zur Übersicht",
+  "security.pat.details.scope": "Dogus",
+  "security.pat.details.dogusLoadError": "Die Dogu-Liste konnte nicht geladen werden.",
+  "security.pat.details.unknownDogus": "Mindestens ein zugehöriges Dogu ist nicht in der aktuellen Dogu-Liste enthalten.",
+  "security.pat.details.neverExpires": "Läuft nicht ab"
 }

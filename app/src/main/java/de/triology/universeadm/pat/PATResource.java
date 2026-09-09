@@ -8,13 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -78,6 +83,94 @@ public class PATResource {
             if (connection != null) {
                 connection.disconnect();
             }
+        }
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createPAT(String requestBody) {
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated() || subject.getPrincipal() == null) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        String username = subject.getPrincipal().toString();
+        HttpURLConnection connection = null;
+        try {
+            String encodedUsername = URLEncoder.encode(username, StandardCharsets.UTF_8.name())
+                .replace("+", "%20");
+            URL url = new URL(casPATEndpoint + "/" + encodedUsername + "/pats");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
+            connection.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON);
+            addBasicAuthentication(connection);
+            try (OutputStream output = connection.getOutputStream()) {
+                output.write(requestBody.getBytes(StandardCharsets.UTF_8));
+            }
+
+            int status = connection.getResponseCode();
+            String responseBody = readResponseBody(connection, status);
+            return Response.status(status)
+                .entity(responseBody)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+        } catch (IOException e) {
+            LOG.error("Failed to create PAT in CAS for current user", e);
+            return Response.status(Response.Status.BAD_GATEWAY)
+                .entity("{\"message\":\"Failed to create PAT in CAS\"}")
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deletePAT(@PathParam("id") String id) {
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated() || subject.getPrincipal() == null) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        String username = subject.getPrincipal().toString();
+        HttpURLConnection connection = null;
+        try {
+            String encodedUsername = URLEncoder.encode(username, StandardCharsets.UTF_8.name())
+                .replace("+", "%20");
+            URL url = new URL(casPATEndpoint + "/" + encodedUsername + "/pats/" + id);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+            connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
+            addBasicAuthentication(connection);
+            return Response.status(connection.getResponseCode()).build();
+        } catch (IOException e) {
+            LOG.error("Failed to delete PAT in CAS for current user", e);
+            return Response.status(Response.Status.BAD_GATEWAY)
+                .entity("{\"message\":\"Failed to delete PAT in CAS\"}")
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    private String readResponseBody(HttpURLConnection connection, int status) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+            status >= 200 && status < 300 ? connection.getInputStream() : connection.getErrorStream(),
+            StandardCharsets.UTF_8))) {
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            return response.toString();
         }
     }
 

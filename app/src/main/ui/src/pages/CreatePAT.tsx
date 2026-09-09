@@ -2,6 +2,7 @@ import {ApplicationContainer as TailwindContainer, Button, InputField, Select, L
 import React, {useState} from "react";
 import {createUseStyles} from "react-jss";
 import {useNavigate} from "react-router-dom";
+import {PATService} from "../services/PATs";
 import Breadcrumb from "../components/Breadcrumb";
 import DoguSelection from "../components/security/DoguSelection"
 import {t} from "../helpers/i18nHelpers";
@@ -30,7 +31,20 @@ export default function CreatePAT() {
     const classes = useStyles();
 
     const [touched, setTouched] = useState(false);
-    const [, setSelectedOption] = useState<string>("0");
+    const [selectedOption, setSelectedOption] = useState<string>("0");
+
+    const createPAT = async () => {
+        const expiresInDays = Number(selectedOption);
+        const expiresAt = expiresInDays > 0
+            ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString()
+            : undefined;
+        const response = await PATService.create({
+            displayName: patName.trim(),
+            expiresAt,
+            scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.join(","),
+        });
+        navigate("/security", {state: {createdPAT: response}});
+    };
 
     const nameError =
         patName.trim().length === 0
@@ -93,7 +107,7 @@ export default function CreatePAT() {
                 <DoguSelection label={t("security.createpat.scopes.appliedto.label")} value={selectedDogus} onChange={setSelectedDogus} />
                 <div className="mt-6 flex flex-row items-end justify-between">
                     <div className="flex flex-row items-center justify-start gap-4">
-                        <Button color="brand" variant="primary" size="regular" type="button">
+                        <Button color="brand" variant="primary" size="regular" type="button" onClick={createPAT}>
                             Schlüssel anlegen
                         </Button>
                         <Button color="neutral" variant="secondary" size="regular" type="button"

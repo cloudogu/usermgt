@@ -226,7 +226,16 @@
   "security.overview.table.statustype.expired": "Expired",
   "security.overview.table.status.noexpiration.option": "Never",
   "security.overview.table.action.delete": "Delete",
-  "security.overview.table.footer": "Rows"
-
-
+  "security.overview.delete.dialog.title": "Delete access key",
+  "security.overview.delete.dialog.message": "Do you really want to delete the access key '{{displayName}}'?",
+  "security.overview.delete.dialog.confirm": "Delete",
+  "security.overview.table.footer": "Rows",
+  "pages.patDetails": "Token details",
+  "security.pat.details.notFound": "This access token was not found.",
+  "security.pat.details.loadError": "The token details could not be loaded.",
+  "security.pat.details.back": "Back to overview",
+  "security.pat.details.scope": "Dogus",
+  "security.pat.details.dogusLoadError": "The Dogu list could not be loaded.",
+  "security.pat.details.unknownDogus": "At least one associated Dogu is missing from the current Dogu list.",
+  "security.pat.details.neverExpires": "Does not expire"
 }
