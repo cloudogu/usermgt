@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- [#248] update docs for multinode
+- [#248] Update docs for multinode
+
+### Changed
+- [#253] Update base image to v8.492.09-1
+
+### Security
+- [#253] Fix [CVE-2026-56854](https://avd.aquasec.com/nvd/2026/cve-2026-56854/)
 
 ## [v1.22.1-4] - 2026-08-28
 ### Security
