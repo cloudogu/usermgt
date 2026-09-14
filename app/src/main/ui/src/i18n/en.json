@@ -237,5 +237,11 @@
   "security.pat.details.scope": "Dogus",
   "security.pat.details.dogusLoadError": "The Dogu list could not be loaded.",
   "security.pat.details.unknownDogus": "At least one associated Dogu is missing from the current Dogu list.",
-  "security.pat.details.neverExpires": "Does not expire"
+  "security.pat.details.neverExpires": "Does not expire",
+  "security.pta.load.error": "Failed to load personal access tokens.",
+  "security.createpat.error.expireat.select": "Please select a validity period.",
+  "security.createpat.error.displayname.empty": "Please enter a name.",
+  "security.createpat.error.displayname.length": "The name must not exceed 64 characters.",
+  "security.createpat.error.displayname.exists": "This name is already in use. Choose another name.",
+  "security.createpat.error.displayname.invalidchars": "The name contains unsupported characters. Remove whitespace or other invisible special characters."
 }

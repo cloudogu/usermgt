@@ -1,7 +1,9 @@
-import {ApplicationContainer as TailwindContainer, Button, InputField, Select, Label} from "@cloudogu/ces-theme-tailwind";
-import React, {useState} from "react";
+import {ApplicationContainer as TailwindContainer, Button, InputField, Select, Label, CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
+import React, {useRef, useState} from "react";
 import {createUseStyles} from "react-jss";
 import {useNavigate} from "react-router-dom";
+import {useAPI} from "../hooks/useAPI";
+import type {PATMetadata} from "../services/PATs";
 import {PATService} from "../services/PATs";
 import Breadcrumb from "../components/Breadcrumb";
 import DoguSelection from "../components/security/DoguSelection"
@@ -21,9 +23,28 @@ const useStyles = createUseStyles({
             color: "#CC3333"
         },
     },
+    defaultTextLabel: {
+        "& label > span": {
+            color: "#0D1C26",
+        },
+    },
 });
 
 export default function CreatePAT() {
+    const {data: tokens, isLoading, error} = useAPI(PATService.getAll);
+
+    if (error) {
+        return <p role="alert" className="my-4 text-danger">{t("security.pta.load.error")}</p>;
+    }
+    if (isLoading || !tokens) {
+        return <CesIconSpinner role="status" aria-label={t("pages.createPAT")}
+            className="h-16 w-16 animate-spin text-divider-primary-border"/>;
+    }
+
+    return <CreatePATForm tokens={tokens}/>;
+}
+
+export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName">[]}) {
 
     const navigate = useNavigate();
     const [patName, setPatName] = useState<string>("");
@@ -31,15 +52,22 @@ export default function CreatePAT() {
     const classes = useStyles();
 
     const [touched, setTouched] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<string>("0");
+    const [selectedOption, setSelectedOption] = useState<string>("");
+    const [expiryTouched, setExpiryTouched] = useState(false);
+    const [dogusTouched, setDogusTouched] = useState(false);
+    const expiryOpen = useRef(false);
 
     const createPAT = async () => {
+        setTouched(true);
+        setExpiryTouched(true);
+        setDogusTouched(true);
+        if (nameError || expiryError || selectedDogus.length === 0) return;
         const expiresInDays = Number(selectedOption);
         const expiresAt = expiresInDays > 0
             ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString()
             : undefined;
         const response = await PATService.create({
-            displayName: patName.trim(),
+            displayName: patName,
             expiresAt,
             scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.join(","),
         });
@@ -48,12 +76,18 @@ export default function CreatePAT() {
 
     const nameError =
         patName.trim().length === 0
-            ? "Bitte einen Namen eingeben."
-            : patName.trim().length < 3
-                ? "Der Name muss mindestens 3 Zeichen enthalten."
-                : "";
+            ? t("security.createpat.error.displayname.empty")
+            : patName.length > 64
+                ? t("security.createpat.error.displayname.length")
+                : /[\s\p{C}\p{Z}\p{Default_Ignorable_Code_Point}]/u.test(patName)
+                    ? t("security.createpat.error.displayname.invalidchars")
+                    : tokens.some(token => token.displayName === patName)
+                        ? t("security.createpat.error.displayname.exists")
+                        : "";
 
     const showError = touched && nameError !== "";
+    const expiryError = selectedOption === "" ? t("security.createpat.error.expireat.select") : "";
+    const showExpiryError = expiryTouched && expiryError !== "";
 
     return (
         <div className="tailwind-wrapper">
@@ -69,32 +103,46 @@ export default function CreatePAT() {
                 <h1 className="mb-0 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">
                     {t("pages.createPAT")}
                 </h1>
-                <div className={[classes.boldLabel,classes.dangerLabel, "mb-4"].join(" ")}>
+                <div className={[classes.boldLabel,classes.dangerLabel,classes.defaultTextLabel, "mb-4"].join(" ")}>
                     <InputField type={"text"}
                         variant={showError ? "danger" : undefined}
                         label={t("security.createpat.input.name.label")}
-                        hint={t("security.createpat.input.name.hint")}
+                        hint={showError ? nameError : t("security.createpat.input.name.hint")}
                         value={patName}
                         required={true}
                         onChange={(e) => {
                             setPatName(e.target.value);
                             setTouched(true);
                         }}
+                        className={classes.defaultTextLabel}
                         onBlur={() => setTouched(true)}
                         aria-invalid={showError}
-                        aria-describedby={showError ? "pat-name-error" : undefined}
                         data-testid={"security-create-pat-name-input"}
                     />
                 </div>
-                <div className={[classes.boldLabel, "mb-4"].join(" ")}>
+                <div
+                    className={[classes.boldLabel, classes.dangerLabel, "mb-4"].join(" ")}
+                    onBlur={(event) => {
+                        if (!expiryOpen.current && !event.currentTarget.contains(event.relatedTarget)) {
+                            setExpiryTouched(true);
+                        }
+                    }}
+                >
                     <Label
                         text={t("security.createpat.input.expires.label")}
+                        variant={showExpiryError ? "danger" : undefined}
+                        hint={showExpiryError ? expiryError : undefined}
+                        className={["desktop:text-desktop-regular", "mobile:text-mobile-regular", showExpiryError ? "text-danger": "text-default-text"].join(" ")}
                     >
                         <Select
                             data-testid={"debug-mode-duration-select"}
                             id={"debug-mode-duration"}
+                            value={selectedOption}
+                            required={true}
+                            onOpenChange={(open) => { expiryOpen.current = open; }}
                             onValueChange={setSelectedOption}
                             placeholder={t("security.createpat.select.expires.placeholder")}
+                            className={showExpiryError ? "border-danger text-default-text" : ""}
                         >
                             <Select.Item value="7" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.sevendays")}</Select.Item>
                             <Select.Item value="30" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.thirtydays")}</Select.Item>
@@ -104,7 +152,18 @@ export default function CreatePAT() {
                         </Select>
                     </Label>
                 </div>
-                <DoguSelection label={t("security.createpat.scopes.appliedto.label")} value={selectedDogus} onChange={setSelectedDogus} />
+                <div onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget)) {
+                        setDogusTouched(true);
+                    }
+                }}>
+                    <DoguSelection
+                        label={t("security.createpat.scopes.appliedto.label")}
+                        value={selectedDogus}
+                        onChange={setSelectedDogus}
+                        invalid={dogusTouched && selectedDogus.length === 0}
+                    />
+                </div>
                 <div className="mt-6 flex flex-row items-end justify-between">
                     <div className="flex flex-row items-center justify-start gap-4">
                         <Button color="brand" variant="primary" size="regular" type="button" onClick={createPAT}>

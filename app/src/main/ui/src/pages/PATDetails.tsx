@@ -1,10 +1,9 @@
-import {ApplicationContainer as TailwindContainer, Button, CesIconCheck, CesIconPlus, CesIconSpinner, CesIconTrash, Label} from "@cloudogu/ces-theme-tailwind";
+import {ApplicationContainer as TailwindContainer, Button, CesIconArrowLeft, CesIconCheck, CesIconSpinner, CesIconTrash, Label} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {Link, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
-import StatusIndicator from "../components/security/StatusIndicator";
-import {formatDate, t} from "../helpers/i18nHelpers";
+import {formatDate} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import {useAPI} from "../hooks/useAPI";
 import {useDogus} from "../hooks/useDogus";
@@ -14,6 +13,7 @@ import "../ces-styles-enforcing.css";
 
 export default function PATDetails() {
     const {id} = useParams<{id: string}>();
+    const navigate = useNavigate();
     const {t} = useTranslation();
     const {data: tokens, isLoading, error} = useAPI(PATService.getAll);
     const {doguOptions, isLoading: areDogusLoading, error: doguError} = useDogus();
@@ -69,51 +69,44 @@ export default function PATDetails() {
                             <span>{t("security.pat.details.delete")}</span>
                         </Button>
                         <hr className="my-4 border-0 border-t border-neutral-300" />
-                        <dl className="my-6 grid grid-cols-1 gap-2 desktop:grid-cols-2">
-                            <dt className="font-semibold">{t("security.overview.table.displayName")}</dt>
-                            <dd className="break-all">{pat.displayName}</dd>
-                            <dt className="font-semibold">{t("security.overview.table.status")}</dt>
-                            <dd><StatusIndicator text={pat.expiresAt && Date.parse(pat.expiresAt) <= Date.now() ? "expired" : "active"}/></dd>
-                            <dt className="font-semibold">{t("security.overview.table.createdAt")}</dt>
-                            <dd>{formatDate(pat.createdAt)}</dd>
-                            <dt className="font-semibold">{t("security.overview.table.expiresAt")}</dt>
-                            <dd>{pat.expiresAt ? formatDate(pat.expiresAt) : t("security.overview.table.status.noexpiration.option")}</dd>
-                            <dt className="font-semibold">{t("security.pat.details.scope")}</dt>
-                            <dd className="break-all">
-                                {allDogus ? (
-                                    <p>{t("security.createpat.scopes.selectdogus.all.label.dogus")} ({t("security.createpat.scopes.selectdogus.all.label.hint")})</p>
-                                ) : doguError ? (
-                                    <p role="alert" className="text-danger">{t("security.pat.details.dogusLoadError")}</p>
-                                ) : areDogusLoading ? (
-                                    <CesIconSpinner role="status" aria-label={t("security.pat.details.scope")}
-                                        className="h-6 w-6 animate-spin"/>
-                                ) : (
-                                    <>
-                                        {doguGroups.map(group => (
-                                            <section key={group.key} aria-labelledby={`pat-dogus-${group.key}`}
-                                                className="border-t border-neutral-weak pt-4 first:border-t-0 first:pt-0">
-                                                <h2 id={`pat-dogus-${group.key}`} className="mb-4 text-default-text font-semibold desktop:text-desktop-regular mobile:text-mobile-regular">
-                                                    {t(`security.createpat.check.${group.key}`)}
-                                                </h2>
-                                                <ul className="mb-4 flex list-none flex-col gap-2 p-0">
-                                                    {group.dogus.map(dogu => (
-                                                        <li key={dogu.value} className="flex items-center gap-2 p-2 text-default-text">
-                                                            <CesIconCheck className="h-6 w-6 shrink-0 text-brand" aria-hidden="true"/>
-                                                            <span>{dogu.label}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </section>
-                                        ))}
-                                        {hasUnknownDogus && <p>{t("security.pat.details.unknownDogus")}</p>}
-                                        {scopeParts.size === 0 && "—"}
-                                    </>
-                                )}
-                            </dd>
-                        </dl>
+                        <div className="my-6 break-all">
+                            {allDogus ? (
+                                <p>{t("security.createpat.scopes.selectdogus.all.label.dogus")} ({t("security.createpat.scopes.selectdogus.all.label.hint")})</p>
+                            ) : doguError ? (
+                                <p role="alert" className="text-danger">{t("security.pat.details.dogusLoadError")}</p>
+                            ) : areDogusLoading ? (
+                                <CesIconSpinner role="status" aria-label={t("security.pat.details.scope")}
+                                    className="h-6 w-6 animate-spin"/>
+                            ) : (
+                                <>
+                                    {doguGroups.map(group => (
+                                        <section key={group.key} aria-labelledby={`pat-dogus-${group.key}`}
+                                            className="border-t border-neutral-weak pt-4 first:border-t-0 first:pt-0">
+                                            <h2 id={`pat-dogus-${group.key}`} className="mb-4 text-default-text font-semibold desktop:text-desktop-regular mobile:text-mobile-regular">
+                                                {t(`security.createpat.check.${group.key}`)}
+                                            </h2>
+                                            <ul className="mb-4 flex list-none flex-col gap-2 p-0">
+                                                {group.dogus.map(dogu => (
+                                                    <li key={dogu.value} className="flex items-center gap-2 p-2 text-default-text">
+                                                        <CesIconCheck className="h-6 w-6 shrink-0 text-brand" aria-hidden="true"/>
+                                                        <span>{dogu.label}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </section>
+                                    ))}
+                                    {hasUnknownDogus && <p>{t("security.pat.details.unknownDogus")}</p>}
+                                    {scopeParts.size === 0 && "—"}
+                                </>
+                            )}
+                        </div>
                     </div>
                 )}
-                <Link to="/security" className="text-brand underline">{t("security.pat.details.back")}</Link>
+                <Button color="brand" variant="primary" type="button"
+                    className="flex items-center gap-2" onClick={() => navigate("/security")}>
+                    <CesIconArrowLeft aria-hidden="true"/>
+                    {t("security.pat.details.back")}
+                </Button>
             </TailwindContainer.ContentContainer.EmptyLargePage>
         </div>
     );
