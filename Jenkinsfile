@@ -1,5 +1,5 @@
 #!groovy
-@Library(['github.com/cloudogu/ces-build-lib@5.5.0', 'github.com/cloudogu/dogu-build-lib@v3.5.2'])
+@Library(['github.com/cloudogu/ces-build-lib@5.6.1', 'github.com/cloudogu/dogu-build-lib@v3.5.11'])
 import com.cloudogu.ces.cesbuildlib.*
 import com.cloudogu.ces.dogubuildlib.*
 
