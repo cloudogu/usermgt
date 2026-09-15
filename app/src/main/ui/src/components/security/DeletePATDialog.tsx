@@ -3,7 +3,7 @@ import {t} from "../../helpers/i18nHelpers";
 import type {PersonalAccessToken} from "../../hooks/usePAT";
 
 export type DeletePATDialogProps = {
-    pat: PersonalAccessToken;
+    pat: Pick<PersonalAccessToken, "displayName">;
     onClose: () => void;
     onConfirm: () => Promise<void>;
 };

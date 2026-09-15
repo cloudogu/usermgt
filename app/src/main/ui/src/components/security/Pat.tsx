@@ -1,11 +1,11 @@
 import {
     CesIconSpinner, Label
 } from "@cloudogu/ces-theme-tailwind";
-import React from "react";
+import React, {useState} from "react";
 import {t} from "../../helpers/i18nHelpers";
+import Badge from "../Badge";
 import PatList from "./PatList";
 import type {PAT} from "../../hooks/usePAT";
-import Badge from "../Badge";
 
 export type PTAManagementProps = {
     pat: PAT;
@@ -14,6 +14,8 @@ export type PTAManagementProps = {
 };
 
 export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps) {
+    const [deletedTokenIds, setDeletedTokenIds] = useState<string[]>([]);
+    const tokens = pat.tokens.filter(token => !deletedTokenIds.includes(token.id));
     if (isPATLoading) {
         return <CesIconSpinner
             aria-label={t("security.overview.title")}
@@ -28,7 +30,7 @@ export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps)
         </p>;
     }
 
-    const tokenCount = String(pat.tokens.length);
+    const tokenCount = String(tokens.length);
 
     return (
         <>
@@ -37,9 +39,12 @@ export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps)
             <hr className="my-4 border-0 border-t border-neutral-300" />
             <span className="inline-flex items-center gap-1.5">
                 <h3>{t("security.overview.headline")}</h3>
-                <Badge text={tokenCount} className={"mb-2"}/>
+                <Badge text={tokenCount} className={"mb-2 px-4"}/>
             </span>
-            <PatList tokens={pat.tokens}/>
+            <PatList
+                tokens={tokens}
+                onTokenDeleted={id => setDeletedTokenIds(current => [...current, id])}
+            />
         </>
     );
 }

@@ -15,30 +15,30 @@ import "./PatList.css";
 
 export type PatListProps = {
     tokens: PersonalAccessToken[];
+    onTokenDeleted: (id: string) => void;
 };
 
 type SortableColumn = "displayName" | "status" | "createdAt" | "expiresAt";
 type SortDirection = "ascending" | "descending";
 
-export function PatList({tokens}: PatListProps) {
+export function PatList({tokens, onTokenDeleted}: PatListProps) {
     const [sortColumn, setSortColumn] = useState<SortableColumn>("displayName");
     const [sortDirection, setSortDirection] = useState<SortDirection>("ascending");
     const [tokenToDelete, setTokenToDelete] = useState<PersonalAccessToken>();
-    const [deletedTokenIds, setDeletedTokenIds] = useState<string[]>([]);
 
-    const sortedTokens = useMemo(() => tokens.filter(token => !deletedTokenIds.includes(token.id)).sort((left, right) => {
+    const sortedTokens = useMemo(() => [...tokens].sort((left, right) => {
         const comparison = left[sortColumn].localeCompare(right[sortColumn], undefined, {
             numeric: true,
             sensitivity: "base",
         });
 
         return sortDirection === "ascending" ? comparison : -comparison;
-    }), [tokens, deletedTokenIds, sortColumn, sortDirection]);
+    }), [tokens, sortColumn, sortDirection]);
 
     const deleteToken = async () => {
         if (!tokenToDelete) return;
         await PATService.delete(tokenToDelete.id);
-        setDeletedTokenIds(current => [...current, tokenToDelete.id]);
+        onTokenDeleted(tokenToDelete.id);
         setTokenToDelete(undefined);
     };
 

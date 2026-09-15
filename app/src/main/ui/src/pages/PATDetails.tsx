@@ -1,9 +1,10 @@
 import {ApplicationContainer as TailwindContainer, Button, CesIconArrowLeft, CesIconCheck, CesIconSpinner, CesIconTrash, Label} from "@cloudogu/ces-theme-tailwind";
-import React from "react";
+import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
 import StatusIndicator from "../components/StatusIndicator";
+import DeletePATDialog from "../components/security/DeletePATDialog";
 import {formatDate} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import {useAPI} from "../hooks/useAPI";
@@ -19,6 +20,13 @@ export default function PATDetails() {
     const {data: tokens, isLoading, error} = useAPI(PATService.getAll);
     const {doguOptions, isLoading: areDogusLoading, error: doguError} = useDogus();
     const pat = tokens?.find(token => token.id === id);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const deleteToken = async () => {
+        if (!pat) return;
+        await PATService.delete(pat.id);
+        setDeleteDialogOpen(false);
+        navigate("/security", {replace: true});
+    };
     const timeHint = pat
         ? `${t("security.overview.table.createdAt")} ${formatDate(pat.createdAt)} - ${pat.expiresAt
             ? `${t("security.overview.table.expiresAt")} ${formatDate(pat.expiresAt)}`
@@ -76,6 +84,8 @@ export default function PATDetails() {
                             color="neutral"
                             variant="secondary"
                             size="small"
+                            type="button"
+                            onClick={() => setDeleteDialogOpen(true)}
                         >
                             <CesIconTrash/>
                             <span>{t("security.pat.details.delete")}</span>
@@ -120,6 +130,13 @@ export default function PATDetails() {
                     <CesIconArrowLeft aria-hidden="true"/>
                     {t("security.pat.details.back")}
                 </Button>
+                {deleteDialogOpen && pat && (
+                    <DeletePATDialog
+                        pat={pat}
+                        onClose={() => setDeleteDialogOpen(false)}
+                        onConfirm={deleteToken}
+                    />
+                )}
             </TailwindContainer.ContentContainer.EmptyLargePage>
         </div>
     );
