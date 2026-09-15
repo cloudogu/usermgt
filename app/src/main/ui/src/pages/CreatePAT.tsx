@@ -69,7 +69,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
         const response = await PATService.create({
             displayName: patName,
             expiresAt,
-            scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.join(","),
+            scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.map(dogu => `/${dogu}`).join(","),
         });
         navigate("/security", {state: {createdPAT: response}});
     };

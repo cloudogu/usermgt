@@ -26,7 +26,8 @@ export default function PATDetails() {
         : "";
     const scopeParts = new Set((pat?.scope ?? "").split(",").map(part => part.trim()).filter(Boolean));
     const allDogus = scopeParts.has("/*");
-    const selectedDogus = doguOptions.filter(dogu => scopeParts.has(dogu.value));
+    const scopedDoguNames = new Set([...scopeParts].map(scope => scope.replace(/^\//, "")));
+    const selectedDogus = doguOptions.filter(dogu => scopedDoguNames.has(dogu.value));
     const doguGroups = [
         {key: "base", dogus: selectedDogus.filter(dogu =>
             !["Administration", "Administration Apps", "Development", "Development Apps"].includes(dogu.category))},
@@ -35,7 +36,7 @@ export default function PATDetails() {
         {key: "administration", dogus: selectedDogus.filter(dogu =>
             dogu.category === "Administration" || dogu.category === "Administration Apps")},
     ].filter(group => group.dogus.length > 0);
-    const hasUnknownDogus = !allDogus && [...scopeParts].some(part =>
+    const hasUnknownDogus = !allDogus && [...scopedDoguNames].some(part =>
         !doguOptions.some(dogu => dogu.value === part));
 
 
