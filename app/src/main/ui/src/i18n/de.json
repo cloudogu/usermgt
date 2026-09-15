@@ -272,6 +272,7 @@
   "security.createpat.modal.delete.confirm": "Löschen",
   "security.createpat.modal.delete.cancel": "Abbrechen",
 
+  "security.pat-details.access.label": "Hat Zugriff auf diese Dogus",
   "security.pat.details.delete": "Schlüssel löschen",
   "security.pat.details.notFound": "Dieser Zugriffsschlüssel wurde nicht gefunden.",
   "security.pat.details.loadError": "Die Schlüsseldetails konnten nicht geladen werden.",

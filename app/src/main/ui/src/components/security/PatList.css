@@ -1,0 +1,3 @@
+.tailwind-wrapper a.text-default {
+    @apply desktop:text-desktop-regular mobile:text-mobile-regular;
+}

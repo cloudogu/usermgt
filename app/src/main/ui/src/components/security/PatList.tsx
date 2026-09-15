@@ -3,14 +3,14 @@ import {
     ActionTableRoot, CesIconArrowDown, CesIconArrowUp, CesIconTrash,
     usePaginationControl,
 } from "@cloudogu/ces-theme-tailwind";
-import i18n from "i18next";
-import {Link} from "react-router-dom";
+
 import React, {useMemo, useState} from "react";
-import StatusIndicator from "./StatusIndicator";
-import DeletePATDialog from "./DeletePATDialog";
+import {Link} from "react-router-dom";
 import {formatDate, t} from "../../helpers/i18nHelpers";
-import type {PersonalAccessToken} from "../../hooks/usePAT";
 import {PATService} from "../../services/PATs";
+import StatusIndicator from "../StatusIndicator";
+import DeletePATDialog from "./DeletePATDialog";
+import type {PersonalAccessToken} from "../../hooks/usePAT";
 import "./PatList.css";
 
 export type PatListProps = {
@@ -106,12 +106,12 @@ export function PatList({tokens}: PatListProps) {
                                     className={token.status == "active" ? "" : "bg-neutral-weaker text-neutral"}
                                 >
                                     <ActionTableFrontendPaginated.Body.Row.Column className="break-all">
-                                        <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-brand underline">
+                                        <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-default-text">
                                             {token.displayName}
                                         </Link>
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
-                                        <StatusIndicator text={token.status} />
+                                        <StatusIndicator text={token.status} variant="secondary"/>
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
                                         {formatDate(token.createdAt)}
@@ -124,7 +124,7 @@ export function PatList({tokens}: PatListProps) {
                                             type="button"
                                             aria-label={t("security.overview.table.action.delete")}
                                             onClick={() => setTokenToDelete(token)}
-                                            className="text-neutral w-6 h-6"
+                                            className="text-neutral w-6 h-6 focus-visible:ces-focused"
                                         >
                                             <CesIconTrash className="text-neutral w-6 h-6"/>
                                         </button>
