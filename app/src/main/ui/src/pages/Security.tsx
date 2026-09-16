@@ -40,6 +40,7 @@ function SecurityContent({username}: {username: string}) {
                     color="brand"
                     variant="primary"
                     size="small"
+                    data-testid="security-create-pat"
                     onClick={() => navigate("/security/createPAT")}
                 >
                     <CesIconPlus/>

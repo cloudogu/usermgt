@@ -135,8 +135,8 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                         className={["desktop:text-desktop-regular", "mobile:text-mobile-regular", showExpiryError ? "text-danger": "text-default-text"].join(" ")}
                     >
                         <Select
-                            data-testid={"debug-mode-duration-select"}
-                            id={"debug-mode-duration"}
+                            data-testid={"security-create-pat-expiry-select"}
+                            id={"security-create-pat-expiry"}
                             value={selectedOption}
                             required={true}
                             onOpenChange={(open) => { expiryOpen.current = open; }}
@@ -144,11 +144,11 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                             placeholder={t("security.createpat.select.expires.placeholder")}
                             className={showExpiryError ? "border-danger text-default-text" : ""}
                         >
-                            <Select.Item value="7" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.sevendays")}</Select.Item>
-                            <Select.Item value="30" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.thirtydays")}</Select.Item>
-                            <Select.Item value="60" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.sixtydays")}</Select.Item>
-                            <Select.Item value="90" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.nintydays")}</Select.Item>
-                            <Select.Item value="0" data-testid={"debug-mode-duration-15"}>{t("security.createpat.select.expires.option.never")}</Select.Item>
+                            <Select.Item value="7" data-testid={"security-create-pat-expiry-7"}>{t("security.createpat.select.expires.option.sevendays")}</Select.Item>
+                            <Select.Item value="30" data-testid={"security-create-pat-expiry-30"}>{t("security.createpat.select.expires.option.thirtydays")}</Select.Item>
+                            <Select.Item value="60" data-testid={"security-create-pat-expiry-60"}>{t("security.createpat.select.expires.option.sixtydays")}</Select.Item>
+                            <Select.Item value="90" data-testid={"security-create-pat-expiry-90"}>{t("security.createpat.select.expires.option.nintydays")}</Select.Item>
+                            <Select.Item value="0" data-testid={"security-create-pat-expiry-0"}>{t("security.createpat.select.expires.option.never")}</Select.Item>
                         </Select>
                     </Label>
                 </div>
@@ -166,7 +166,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                 </div>
                 <div className="mt-6 flex flex-row items-end justify-between">
                     <div className="flex flex-row items-center justify-start gap-4">
-                        <Button color="brand" variant="primary" size="regular" type="button" onClick={createPAT}>
+                        <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit" onClick={createPAT}>
                             Schlüssel anlegen
                         </Button>
                         <Button color="neutral" variant="secondary" size="regular" type="button"

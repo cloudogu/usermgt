@@ -87,7 +87,7 @@ export default function CreatedPATDialog({pat, onClose}: CreatedPATDialogProps) 
                 </SegmentedDialog.Content.Body>
                 <SegmentedDialog.Content.Footer className="bg-success-weaker">
                     <SegmentedDialog.Close asChild>
-                        <Button color="success" variant="primary" size="regular">
+                        <Button color="success" variant="primary" size="regular" data-testid="security-created-pat-close">
                             {t("security.createpat.modal.success.pat.button")}
                         </Button>
                     </SegmentedDialog.Close>

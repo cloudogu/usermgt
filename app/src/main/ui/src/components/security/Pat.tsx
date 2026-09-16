@@ -39,7 +39,7 @@ export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps)
             <hr className="my-4 border-0 border-t border-neutral-300" />
             <span className="inline-flex items-center gap-1.5">
                 <h3>{t("security.overview.headline")}</h3>
-                <Badge text={tokenCount} className={"mb-2 px-4"}/>
+                <span data-testid="security-pat-count"><Badge text={tokenCount} className={"mb-2 px-4"}/></span>
             </span>
             <PatList
                 tokens={tokens}

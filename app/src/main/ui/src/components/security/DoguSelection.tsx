@@ -12,10 +12,11 @@ export type DoguSelectionProps = {
     invalid?: boolean;
 };
 
-function radioButton(label: React.ReactNode, checked: boolean, onChange: () => void) {
+function radioButton(label: React.ReactNode, checked: boolean, onChange: () => void, testId?: string) {
     return (
         <div
             role="radio"
+            data-testid={testId}
             aria-checked={checked}
             tabIndex={0}
             onClick={() => { if (!checked) onChange(); }}
@@ -74,8 +75,9 @@ function CheckBoxGroup({label, children, className = ""}: {
     );
 }
 
-function RadioGroupEntry({label, checked, onChange, selectedCount = 0, totalCount = 0, onClear, children, className = ""}: {
+function RadioGroupEntry({testId, label, checked, onChange, selectedCount = 0, totalCount = 0, onClear, children, className = ""}: {
     label: React.ReactNode;
+    testId?: string;
     checked: boolean;
     onChange: () => void;
     selectedCount?: number;
@@ -90,7 +92,7 @@ function RadioGroupEntry({label, checked, onChange, selectedCount = 0, totalCoun
     return (
         <div className={`rounded border-solid border ${checked ? "border-brand" : "border-neutral"} flex flex-col gap-0 items-start justify-start self-stretch shrink-0 relative ${className}`} >
             <div className={`${checked ? "bg-brand-weaker" : ""} rounded-tl-[5px] rounded-tr-[5px] ${hasChildren ? "pr-2" : "rounded"} flex flex-row gap-0 items-center justify-start self-stretch shrink-0 min-h-[40px] relative overflow-hidden ${classes.doguSelectionHover}`} >
-                {radioButton(label, checked, onChange)}
+                {radioButton(label, checked, onChange, testId)}
             </div>
             {checked && hasChildren && (
                 <div className="p-6 flex flex-col gap-4 items-end justify-start self-stretch shrink-0 relative overflow-hidden" >
@@ -169,6 +171,7 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
     const renderDogu = (dogu: DoguOption) => (
         <CheckboxField
             key={dogu.value}
+            data-testid={`security-pat-dogu-${dogu.value}`}
             checked={selectedDogus.includes(dogu.value)}
             disabled={allDogus}
             onCheckedChange={() => toggleDogu(dogu.value)}
@@ -179,7 +182,7 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
     );
     return (
         <RadioGroup label={label} className={classes.fontBold600} invalid={invalid}>
-            <RadioGroupEntry label="Auswahl an Dogus" checked={!allDogus}
+            <RadioGroupEntry testId="security-pat-selected-dogus" label="Auswahl an Dogus" checked={!allDogus}
                 onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguOptions.length} onClear={() => onChange([])}>
                 {basicDogus.length > 0 && (
                     <CheckBoxGroup label={t("security.createpat.check.base")}>
@@ -198,6 +201,7 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
                 )}
             </RadioGroupEntry>
             <RadioGroupEntry
+                testId="security-pat-all-dogus"
                 checked={allDogus}
                 onChange={() => onChange(["/*"])}
                 label={
