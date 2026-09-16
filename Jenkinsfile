@@ -170,7 +170,11 @@ parallel(
                             }
                             echo "run integration tests."
                             ecoSystem.runCypressIntegrationTests([
-                                cypressImage     : "cypress/included:13.13.1",
+                                // Default cypress/included:13.17.0 bundles Node 22.13, too old for
+                                // cosmiconfig@10 (pulled in by @badeball/cypress-cucumber-preprocessor@28,
+                                // required for cypress@16 compatibility). Override to an image with a
+                                // newer bundled Node until the shared pipeline lib's own default catches up.
+                                cypressImage     : "cypress/included:16.0.0",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
                                 timeoutInMinutes : 45,
@@ -200,7 +204,7 @@ parallel(
                                 stage('Integration Tests - After Upgrade') {
                                     echo "run integration tests."
                                     ecoSystem.runCypressIntegrationTests([
-                                            cypressImage     : "cypress/included:13.13.1",
+                                            cypressImage     : "cypress/included:16.0.0",
                                             enableVideo      : params.EnableVideoRecording,
                                             enableScreenshots: params.EnableScreenshotRecording,
                                             timeoutInMinutes : 45,

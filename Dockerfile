@@ -33,7 +33,7 @@ RUN unzip usermgt.war \
     && rm usermgt.war \
     && chmod +x WEB-INF/cipher.sh
 
-FROM registry.cloudogu.com/official/java:8.482.08-2
+FROM registry.cloudogu.com/official/java:8.492.09-1
 
 ARG TOMCAT_VERSION
 
