@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.22.1-5] - 2026-09-16
 ### Changed
 - The documentation of old version was removed. References to Classic CES were replaced by MN CES.
 

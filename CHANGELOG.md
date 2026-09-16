@@ -5,11 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.22.1-5] - 2026-09-16
 ### Added
 - [#248] Update docs for multinode
 
 ### Changed
 - [#253] Update base image to v8.492.09-1
+- Update dogu-build-lib to 3.5.11 and ces-build-lib to 5.6.1
 
 ### Security
 - [#253] Fix [CVE-2026-56854](https://avd.aquasec.com/nvd/2026/cve-2026-56854/)
