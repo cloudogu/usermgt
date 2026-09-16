@@ -12,7 +12,7 @@ As a user of the Cloudogu EcoSystem you can change **your personal data** in the
 
 ![Image of page header with focus on navbar with logged in user](figures/usermanagement/CESUsermanagement_UserAccount_en.png)
 
-The personal account area is displayed directly when you open the **User Management**. Via the 
+The personal account area is displayed directly when you open the **User Management**. Via the
 form you can adjust your personal data like your e-mail address or your password. The adjustments you make will only be **updated** by clicking on the save button. The username cannot be changed.
 
 In the lower part of the account area you can see your assigned groups.
@@ -43,7 +43,7 @@ To change the data of an account, first click on the pencil icon in the row of t
 
 ![Change user data](figures/usermanagement/CESUsermanagement_EditUser_en.png)
 
-Afterwards, you can make changes and save them by clicking the "Save" button. 
+Afterwards, you can make changes and save them by clicking the "Save" button.
 Besides the account information like email address or display name, you can also change the password. In addition to that, the **User Management** offers the possibility to force the user to change the password at the next login.
 
 Note that you **cannot** change the username.
@@ -82,12 +82,12 @@ You create the account by clicking on the "Save" button.
 
 ![User newly created](figures/usermanagement/CESUsermanagement_NewUserCreated_en.png)
 
-After you have saved, the newly created account will be displayed on the "Users" page. 
+After you have saved, the newly created account will be displayed on the "Users" page.
 If you want to make further changes, click on the pencil icon in the last column.
 
 ### Password policies
 
-In the Cloudogu EcoSystem configuration, **password policies** can be configured to be validated when passwords are entered. 
+In the Cloudogu EcoSystem configuration, **password policies** can be configured to be validated when passwords are entered.
 By creating reasonable password policies, the security of passwords can be controlled globally.
 
 When you create a password, you will always see the password policies that are not satisfied. Once a password policy is satisfied, it will disappear.
@@ -116,30 +116,31 @@ Members of the **Manager Group** have **full access to the User Management** of 
 This gives users the authorization to create and manage additional users and groups.
 Beyond that, no other permissions are associated with the *Manager Group**.
 
-You can change the *Manager group* to be used by changing the entry `/config/_global/manager_group` in the configuration of the Cloudogu EcoSystem to the desired group:
+You can change the *Manager group* to be used by setting the desired group in the `manager_group` entry of the global configuration of the Cloudogu EcoSystem:
 
-```shell
-etcdctl set /config/_global/manager_group newManagerGroup
-```
-
-The **User Management** Dogu needs to be restarted to take the change into account.
+`kubectl edit configmap -n ecosystem global-config`
+````yaml
+    data:
+      config.yaml: |
+          manager_group: "cesManager"
+````
 
 **Admin Group**
 
-Members of this group have administrative rights in **all** Dogus of the Cloudogu EcoSystem. 
+Members of this group have administrative rights in **all** Dogus of the Cloudogu EcoSystem.
 These users can use the administrative functions in the individual Dogus and thus, for example, install plug-ins or make application settings.
 
 The usage of the **Backup & Restore** Dogu is restricted to the administrators.
 Consequently, only users who are members of the **Admin group** have access to the **Backup & Restore** Dogu.
 
-You can change the **Admin group** to be used by changing the entry
-`/config/_global/admin_group` in the configuration of the Cloudogu EcoSystem to the desired group:
+You can change the **Admin group** to be used by setting the desired group in the `admin_group` entry of the global configuration of the Cloudogu EcoSystem:
 
-```shell
-etcdctl set /config/_global/admin_group newAdminGroup
-```
-
-All Dogus needs to be restarted for the change to take effect.
+`kubectl edit configmap -n ecosystem global-config`
+````yaml
+    data:
+      config.yaml: |
+          admin_group: "cesAdmin"
+````
 
 ### Creating a new group
 
@@ -159,7 +160,7 @@ Then define the properties of the new group:
 
   \* The name of a group is a **unique property** and therefore may only be used for one group. When creating a group, the system checks if the name is unique. If it is not, you will get a meaningful error message and you will be able to change the name of the group.
 
-> Note that the group name is unchangeable after the group has been created. 
+> Note that the group name is unchangeable after the group has been created.
 
 Create the group by clicking on the "Save" button.
 
@@ -182,8 +183,8 @@ There are two ways to assign an account to a group:
 **Group assignment via editing a group:**.
 
 1. In the "Groups" tab, select the pencil icon for the corresponding group.
-2. In the "Members" area, you can add the user name of the desired member. A list of suggestions will appear automatically according to the input made. 
-3. Click on the desired user name in the list of suggestions to add the account to the group. 
+2. In the "Members" area, you can add the user name of the desired member. A list of suggestions will appear automatically according to the input made.
+3. Click on the desired user name in the list of suggestions to add the account to the group.
 
 ![](figures/usermanagement/CESUsermanagement_AssignUsers_en.png)
 
@@ -211,7 +212,7 @@ In addition to using the **User Management** provided by us, you have the option
 
 You can create the accounts for users of the Cloudogu EcoSystem centrally in the **User Management**. To simplify the permission configuration, you can create groups for different user purposes. A user can belong to more than one group. A group can have more than one member.
 
-Accounts and groups are **synchronized** with the Dogus, meaning in each Dogu you will find the accounts and groups created in the **User Management**. 
+Accounts and groups are **synchronized** with the Dogus, meaning in each Dogu you will find the accounts and groups created in the **User Management**.
 
 Since Dogus may be applications developed outside of the Cloudogu EcoSystem, the **permission concept in the Dogus may differ** - as you can see in the following diagram exemplary.
 
@@ -257,74 +258,3 @@ For this purpose, a CSV file must be created that contains all accounts to be im
 
 CSV according to [RFC 4180](https://datatracker.ietf.org/doc/html/rfc4180) is used as import format. The header of the file must be the following
 **7** defined columns:
-
-```csv
-username,displayname,givenname,surname,mail,pwdReset,external
-```
-The order of the columns can vary, but the names of the columns must be kept. 
-
-The columns describe the following information:
-* **username** - username of the account
-   * If the specified username already exists, this account will be updated with the specified information and no new account will be created.
-   * Cannot be changed after an account has been created
-* **displayname** - Display name of the account
-* **givenname** - First name of the user
-* **surname** - Last name of the user
-* **mail** - Mail address of the user
-* **pwdReset** - Indicates whether the password must be reset at the next login
-  * Specified using *false* or *true*, where *true* indicates that the password must be reset at the next login
-   * For newly created accounts, *pwdReset* is always automatically set to *true
-* **external** - Specifies whether the account has been imported from an external service
-   * Specification using *false* or *true*, where *true* indicates that the account comes from an external service
-   * The connection to an external service is currently still being implemented, therefore *external* is currently always set to *false
-
-An example of a working CSV file:
-```
-displayname,external,mail,pwdreset,surname,username,givenname
-Max Mustermann,TRUE,max@mustermann.de,TRUE,Mustermann,mmustermann,Max
-Maria Musterfrau,TRUE,maria@musterfrau.de,TRUE,Musterfrau,mmusterfrau,Maria
-Mark Muster,TRUE,mark@muster.de,TRUE,Muster,mmuster,Mark
-Claus,TRUE,claus@c.de,TRUE,Claus,,Claus
-Claus,TRUE,max@mustermann.de,TRUE,Claus,Claus,Carl
-Mark Muster,TRUE,mark@muster.de,TRUE,Muster,mmuster,Mark
-```
-
-To import this file, you need to navigate to the 'User Import' item via the navigation bar in User Management.
-The page should then look like this:
-
-![Userimport empty page](figures/usermanagement/UserImportPageEmpty_en.png)
-
-In the file input field that can be seen there, the previously created CSV file must be selected.
-If a CSV file was selected, the view of the page changes and the content of the CSV file is displayed in tabular form.
-
-![user import file selected](figures/usermanagement/UserImportFileSelected_en.png)
-
-By clicking on 'Import' the CSV file is sent and the user accounts are imported.
-
-Afterward the result page is displayed. There you can see if the import was successful.
-It is possible that new user accounts will be created, existing accounts will be updated or lines from the CSV file will be ignored
-because they contains invalid values. This can be the case, for example, if necessary columns were not present
-or a condition such as unique mails was not met.
-
-On the results page the results are displayed as follows:
-
-![UserImport Results Page Collapsed](figures/usermanagement/UserImportResultPageCollapsed_en.png)
-
-By clicking on the respective rows, more details about the added / updated user accounts as well as the
-skipped lines can be displayed.
-
-![User import result page uncollapsed](figures/usermanagement/UserImportResultPageUncollapsed_en.png)
-
-Also, by clicking on 'Download Import Summary' the result can be downloaded.
-
-### Managing past imports
-
-Past imports are stored in the file system that they can be retrieved again.
-The import overview is used for this purpose. Therefore, click in the navigation bar on the entry
-'Import overviews'. There, all past imports are displayed in tabular form with the name of the CSV file as well as the exact date.
-
-![Import History](figures/usermanagement/UserImportSummaries_en.png)
-
-By clicking on the selection field 'Functions' of the respective line a small submenu opened. There you can download the respective overview directly, delete it from the system or display it in detail with a click on 'Details'.
-
-![Import History Functions](figures/usermanagement/UserImportSummariesFunctions_en.png)

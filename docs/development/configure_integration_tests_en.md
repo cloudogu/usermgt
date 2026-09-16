@@ -1,15 +1,19 @@
 # Configuration for integration tests
 
-The integration tests expect a certain configuration to run successfully. Specifically certain values be set in the
-etcd. These are as follows:
+The integration tests expect a certain configuration to run successfully. Specifically, certain values must be set in the
+ConfigMap. These are as follows:
 
-```bash
-etcdctl set /config/_global/password-policy/must_contain_capital_letter true
-etcdctl set /config/_global/password-policy/must_contain_lower_case_letter true
-etcdctl set /config/_global/password-policy/must_contain_digit true
-etcdctl set /config/_global/password-policy/must_contain_special_character true
-etcdctl set /config/_global/password-policy/min_length 14
-```
+`kubectl edit configmap -n ecosystem global-config`
+````yaml
+    data:
+      config.yaml: |
+        password-policy:
+          must_contain_capital_letter: true
+          must_contain_lower_case_letter: true
+          must_contain_digit: true
+          must_contain_special_character: true
+          min_length: 14
+````
 
 In order for the set values to be taken into account, the Dogu must be restarted once.
 
@@ -45,7 +49,7 @@ An example `cypress.config.ts` looks like this:
     "MaxLoginRetries": 3,
     "AdminUsername": "ces-admin",
     "AdminPassword": "ecosystem2016",
-    "AdminGroup": "CesAdministrators" 
+    "AdminGroup": "CesAdministrators"
   }
 }
 ```
@@ -59,8 +63,8 @@ The integration tests can be started in two ways:
    This mode is helpful if the execution is in the foreground.
    For example, with a Jenkins pipeline.
    If errors occur because the interface displays German text, the tests can be run using
-   "ELECTRON_EXTRA_LAUNCH_ARGS="--lang=en-US" yarn cypress run".
-2. `yarn cypress open` starts an interactive window where you can execute, visually observe and debug the tests.
+   `ELECTRON_EXTRA_LAUNCH_ARGS="--lang=en-US" yarn cypress run`.
+3. `yarn cypress open` starts an interactive window where you can execute, visually observe and debug the tests.
    This mode is particularly helpful when developing new tests and finding errors.
 
 If an error based on the `badeball/cypress-cucumber-preprocessor` library appears in the Cypress UI (`yarn cypress open`) and refers to "Experimental Run All", then it is advisable to click through the tests individually. This may be a problem with the execution methodology that does not take place on the console (`yarn cypress run`).

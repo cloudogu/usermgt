@@ -80,30 +80,34 @@ Then("the password-confirm rules are displayed", function () {
 });
 
 Then("the user {string} was created",function (username:string) {
-    cy.api({
-        method: "GET",
-        url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
-        auth: {
-            'user': env.GetAdminUsername(),
-            'pass': env.GetAdminPassword()
-        },
-    }).then((response) => {
-        expect(response.status).to.eq(200)
+    env.GetAdminCredentials().then(({AdminUsername, AdminPassword}) => {
+        cy.api({
+            method: "GET",
+            url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
+            auth: {
+                user: AdminUsername,
+                pass: AdminPassword
+            },
+        }).then((response) => {
+            expect(response.status).to.eq(200)
+        })
     })
 })
 
 Then("the user {string} does not exists",function (username:string) {
     cy.clearCookies();
-    cy.request({
-        method: "GET",
-        url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
-        auth: {
-            'user': env.GetAdminUsername(),
-            'pass': env.GetAdminPassword()
-        },
-        failOnStatusCode: false,
-    }).then((response) => {
-        expect(response.status).to.eq(404)
+    env.GetAdminCredentials().then(({AdminUsername, AdminPassword}) => {
+        cy.request({
+            method: "GET",
+            url: Cypress.config().baseUrl + "/usermgt/api/users/" + username,
+            auth: {
+                user: AdminUsername,
+                pass: AdminPassword
+            },
+            failOnStatusCode: false,
+        }).then((response) => {
+            expect(response.status).to.eq(404)
+        })
     })
 })
 

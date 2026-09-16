@@ -36,15 +36,17 @@ Given("{string} test-users exist", (users: string) => {
 })})
 
 Given("the user {string} is member of the group {string}", function (username, group) {
-    cy.api({
-        method: "POST",
-        url: Cypress.config().baseUrl + "/usermgt/api/groups/" + group + "/members/" + username,
-        auth: {
-            'user': env.GetAdminUsername(),
-            'pass': env.GetAdminPassword()
-        }
-    }).then((response) => {
-        expect(response.status).to.eq(204)
+    env.GetAdminCredentials().then(({AdminUsername, AdminPassword}) => {
+        cy.api({
+            method: "POST",
+            url: Cypress.config().baseUrl + "/usermgt/api/groups/" + group + "/members/" + username,
+            auth: {
+                user: AdminUsername,
+                pass: AdminPassword
+            }
+        }).then((response) => {
+            expect(response.status).to.eq(204)
+        })
     })
 })
 

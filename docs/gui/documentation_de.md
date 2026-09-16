@@ -116,14 +116,15 @@ Mitglieder der **Manager-Gruppe** haben **vollen Zugriff auf das User Management
 Damit erhalten Nutzer:innen die Berechtigung, weitere Accounts und Gruppen anzulegen und zu verwalten.
 Darüber hinaus sind keine weiteren Berechtigungen mit der *Manager-Gruppe* verbunden.
 
-Sie können die zu verwendende *Manager-Gruppe* ändern, indem Sie in der Konfiguration des Cloudogu EcoSystem im Eintrag 
-`/config/_global/manager_group` die gewünschte Gruppe einstellen:
+Sie können die zu verwendende *Manager-Gruppe* ändern, indem Sie in der globalen Konfiguration des Cloudogu EcoSystem im Eintrag 
+`manager_group` die gewünschte Gruppe einstellen:
 
-```shell
-etcdctl set /config/_global/manager_group neueManagerGruppe
-```
-
-Das **User Management**-Dogu muss anschließend neu gestartet werden, damit die Änderung wirksam wird.
+`kubectl edit configmap -n ecosystem global-config`
+````yaml
+    data:
+      config.yaml: |
+          manager_group: "cesManager"
+````
 
 **Admin-Gruppe**
 
@@ -134,14 +135,15 @@ und so zum Beispiel Plugins installieren oder Anwendungseinstellungen vornehmen.
 Die Nutzung des **Backup & Restore**-Dogus ist ausschließlich Administrator:innen vorbehalten.
 Somit haben nur Nutzer:innen auf das **Backup & Restore**-Dogu Zugriff, die Mitglieder der **Admin-Gruppe** sind.
 
-Sie können die zu verwendende **Admin-Gruppe** ändern, indem Sie in der Konfiguration des Cloudogu EcoSystem im Eintrag
-`/config/_global/admin_group` die gewünschte Gruppe einstellen:
+Sie können die zu verwendende **Admin-Gruppe** ändern, indem Sie in der globalen Konfiguration des Cloudogu EcoSystem im Eintrag
+`admin_group` die gewünschte Gruppe einstellen:
 
-```shell
-etcdctl set /config/_global/admin_group neueAdminGruppe
-```
-
-Es müssen anschließend alle Dogus neu gestartet werden, damit die Änderung wirksam wird.
+`kubectl edit configmap -n ecosystem global-config`
+````yaml
+    data:
+      config.yaml: |
+          manager_group: "cesManager"
+````
 
 ### Anlegen einer neuen Gruppe
 

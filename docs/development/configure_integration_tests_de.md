@@ -1,15 +1,19 @@
 # Konfiguration für Integrations-Tests
 
 Die Integrationstests erwarten eine bestimmte Konfiguration, damit diese erfolgreich durchlaufen. Konkret müssen
-bestimmte Werte im etcd gesetzt sein. Dies sind folgende:
+bestimmte Werte in der Configmap gesetzt sein. Dies sind folgende:
 
-```bash
-etcdctl set /config/_global/password-policy/must_contain_capital_letter true
-etcdctl set /config/_global/password-policy/must_contain_lower_case_letter true
-etcdctl set /config/_global/password-policy/must_contain_digit true
-etcdctl set /config/_global/password-policy/must_contain_special_character true
-etcdctl set /config/_global/password-policy/min_length 14
-```
+`kubectl edit configmap -n ecosystem global-config`
+````yaml
+    data:
+      config.yaml: |
+        password-policy:
+          must_contain_capital_letter: true
+          must_contain_lower_case_letter: true
+          must_contain_digit: true
+          must_contain_special_character: true
+          min_length: 14
+````
 
 Damit die gesetzten Werte berücksichtigt werden, muss das Dogu einmal neu gestartet werden.
 

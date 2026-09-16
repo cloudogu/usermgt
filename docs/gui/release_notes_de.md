@@ -6,6 +6,13 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.22.1-5] - 2026-09-16
+### Changed
+- Die Dokumentation veralteter Versionen wurde entfernt. Referenzen auf Classic-CES wurden durch MN-CES ersetzt.
+
+### Security
+- Sicherheitslücke [CVE-2026-56854](https://avd.aquasec.com/nvd/2026/cve-2026-56854/) geschlossen
+
 ## [v1.22.1-4] - 2026-08-28
 ### Security
 - Dieses Release behebt Tomcat WID-SEC-2026-3007 (CVE-2026-65182, CVE-2026-65183, CVE-2026-65637, CVE-2026-65905, CVE-2026-65927, CVE-2026-66422, CVE-2026-68525, CVE-2026-68569, CVE-2026-68763, CVE-2026-73180).

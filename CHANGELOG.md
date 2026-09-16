@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.22.1-5] - 2026-09-16
+### Added
+- [#248] Update docs for multinode
+
+### Changed
+- [#253] Update base image to v8.492.09-1
+- Update dogu-build-lib to 3.5.11 and ces-build-lib to 5.6.1
+
+### Security
+- [#253] Fix [CVE-2026-56854](https://avd.aquasec.com/nvd/2026/cve-2026-56854/)
+
 ## [v1.22.1-4] - 2026-08-28
 ### Security
 - Fixed WID-SEC-2026-3007 (CVE-2026-65182, CVE-2026-65183, CVE-2026-65637, CVE-2026-65905, CVE-2026-65927, CVE-2026-66422, CVE-2026-68525, CVE-2026-68569, CVE-2026-68763, CVE-2026-73180) by updating Tomcat to v9.0.121.
