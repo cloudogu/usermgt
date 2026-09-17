@@ -403,9 +403,10 @@ void createNpmrcFile(credentialsId) {
                     )}""".trim()
                     writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
         @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+        //ecosystem.cloudogu.com/nexus/repository/npm-releases/:_auth=${NPM_TOKEN}
+        //ecosystem.cloudogu.com/nexus/repository/npm-internal/:_auth=${NPM_TOKEN}
         email=jenkins@cloudogu.com
         always-auth=true
-        _auth=${NPM_TOKEN}
         """.trim()
         }
     }
