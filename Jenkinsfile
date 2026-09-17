@@ -165,9 +165,9 @@ parallel(
                     }
 
 
-                    if (params.RunIntegrationTests) {
+                    if (params.RunIntegrationTests || git.getSimpleBranchName() == "develop") {
                         stage('Integration Tests') {
-                            echo "setup mailhog"
+                            echo "setup mailpit"
                             ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                             ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
                             echo "wait for postfix"

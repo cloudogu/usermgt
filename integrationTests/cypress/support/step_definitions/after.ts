@@ -19,10 +19,10 @@ After({tags: "@clean_after"}, () => {
 })
 
 After({tags: "@reduce_group_env"},() => {
-    Cypress.env("groups", Cypress.env("groups") - 1)
+    Cypress.expose("groups", Cypress.expose("groups") - 1)
 })
 After({tags: "@reduce_user_env"},() => {
-    Cypress.env("users", Cypress.env("users") - 1)
+    Cypress.expose("users", Cypress.expose("users") - 1)
 })
 
 function deleteFirstImportRowIfPresent() {

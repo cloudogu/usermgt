@@ -2,7 +2,7 @@ import {patCountBadge, firstPATPage, findPATRow} from "./pat-helpers";
 import '@bahmutov/cy-api'
 import {Then} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
-import 'cypress-mailhog';
+import {getLatestMailBodyForRecipient} from "./mailpit-helpers";
 
 Then("the user is asked to change his password", function () {
     //cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
@@ -443,10 +443,9 @@ Then("the user {string} has his mail updated to {string} and his display name to
 })
 
 Then("the user {string} receives an email with his user details", function (username: string) {
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").should('exist')
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
-      expect(body).contains("Benutzername: " + username)
-      expect(body).contains("Passwort")
+    getLatestMailBodyForRecipient("testmail@cloudogu.de").then(body => {
+        expect(body).contains("Benutzername: " + username)
+        expect(body).contains("Passwort")
     })
 })
 

@@ -25,13 +25,20 @@ async function setupNodeEvents(
 
     config = doguTestLibrary.configure(config)
 
-    config.env["mailHogUrl"] = `${config.baseUrl}/mailhog/`
+    config.expose = {
+        ...config.expose,
+        MAILPIT_URL: `${config.baseUrl}/mailhog`,
+    };
 
     // Make sure to return the config object as it might have been modified by the plugin.
     return config;
 }
 
 export default defineConfig({
+    expose: {
+        groups: 0,
+        users: 0,
+    },
     e2e: {
         baseUrl: 'https://192.168.56.2',
         env: {
@@ -40,8 +47,6 @@ export default defineConfig({
             "AdminUsername":  "ces-admin",
             "AdminPassword":  "Ecosystem2016!",
             "AdminGroup":  "CesAdministrators",
-            "groups" : 0,
-            "users" : 0,
             // Disable @bahmutov/cy-api's server-log feature. There is no
             // /__messages__ endpoint on the dogu; the CES proxy hangs on that
             // path instead of returning 404, so every cy.api() call would time

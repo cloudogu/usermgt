@@ -19,7 +19,7 @@ Given("the group {string} exists", (testGroup: string) => {
 Given("{string} test-users exist", (users: string) => {
     const userCount = parseInt(users);
     cy.withUser("testuser").then(userData => {
-        for(let i = Cypress.env("users") + 1; i <= userCount; i++){
+        for(let i = Cypress.expose("users") + 1; i <= userCount; i++){
             const testUser = {...userData};
             testUser.username += `_${i}`;
             testUser.givenname += `_${i}`;
@@ -31,8 +31,8 @@ Given("{string} test-users exist", (users: string) => {
             cy.usermgtCreateUser(testUser.username, testUser.givenname, testUser.surname, testUser.displayName, testUser.mail, testUser.password, testUser.pwdReset, testUser.groups)
     }
 }).then(() => {
-    if (userCount - Cypress.env("users") > 0) {
-        Cypress.env("users", userCount)
+    if (userCount - Cypress.expose("users") > 0) {
+        Cypress.expose("users", userCount)
     }
 })})
 
@@ -63,7 +63,7 @@ Given("{string} test-groups exist", (groups: string) => {
     const groupCount = parseInt(groups);
     console.log(groupCount)
     cy.withUser("testuser").then(() => {
-        for(let i = Cypress.env("groups") + 1; i <= groupCount; i++){
+        for(let i = Cypress.expose("groups") + 1; i <= groupCount; i++){
             const testGroup = {
                 name: `testGroup_${i}`,
                 description: `Test Group ${i}`,
@@ -74,8 +74,8 @@ Given("{string} test-groups exist", (groups: string) => {
             cy.usermgtCreateGroup(testGroup.name, testGroup.description)
         }
     }).then(() => {
-        if (groupCount - Cypress.env("groups") > 0) {
-            Cypress.env("groups", groupCount);
+        if (groupCount - Cypress.expose("groups") > 0) {
+            Cypress.expose("groups", groupCount);
         }
     })
 })

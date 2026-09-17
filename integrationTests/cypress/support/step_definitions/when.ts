@@ -2,6 +2,7 @@ import {findPATRow, firstPATPage, patElement, patCountBadge, selectPATScope} fro
 import '@bahmutov/cy-api'
 import {When} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
+import {getLatestMailBodyForRecipient} from "./mailpit-helpers";
 
 //Implement all necessary steps fore dogu integration test library
 When("the user clicks the dogu logout button", function () {
@@ -259,7 +260,7 @@ When("deletes the entry for the user import", function () {
 })
 
 When("the user {string} tries to log in with his generated password", function (username: string) {
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
+    getLatestMailBodyForRecipient("testmail@cloudogu.de").then(body => {
         // Extract the generated password from the "Passwort:" line of the import mail.
         const match = body.match(/Passwort:\s*(\S+)/)
         expect(match, "generated password found in import mail").to.not.be.null
@@ -282,7 +283,7 @@ When("the user configures the new password to {string}", function (password: str
 })
 
 When("the user sets the new password to {string}", function (password: string) {
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
+    getLatestMailBodyForRecipient("testmail@cloudogu.de").then(body => {
         // Extract the generated password from the "Passwort:" line of the import mail.
         const match = body.match(/Passwort:\s*(\S+)/)
         expect(match, "generated password found in import mail").to.not.be.null
