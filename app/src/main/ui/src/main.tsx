@@ -20,8 +20,8 @@ import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
-import Security from "./pages/Security";
 import PATDetails from "./pages/PATDetails";
+import Security from "./pages/Security";
 import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
 

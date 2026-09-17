@@ -2,13 +2,13 @@ import {ApplicationContainer as TailwindContainer, Button, InputField, Select, L
 import React, {useRef, useState} from "react";
 import {createUseStyles} from "react-jss";
 import {useNavigate} from "react-router-dom";
-import {useAPI} from "../hooks/useAPI";
-import type {PATMetadata} from "../services/PATs";
-import {PATService} from "../services/PATs";
 import Breadcrumb from "../components/Breadcrumb";
-import DoguSelection from "../components/security/DoguSelection"
+import DoguSelection from "../components/security/DoguSelection";
 import {t} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
+import {useAPI} from "../hooks/useAPI";
+import {PATService} from "../services/PATs";
+import type {PATMetadata} from "../services/PATs";
 import "../ces-styles-wrapper.css";
 
 

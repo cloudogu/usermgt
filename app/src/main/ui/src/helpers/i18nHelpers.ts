@@ -26,14 +26,14 @@ export function tWithParams(key: string, ...params: unknown[]): string {
         }
 
         switch (placeholder) {
-            case "%d":
-            case "%i":
-                return String(Number.parseInt(String(parameter), 10));
-            case "%f":
-                return String(Number.parseFloat(String(parameter)));
-            case "%s":
-            default:
-                return String(parameter);
+        case "%d":
+        case "%i":
+            return String(Number.parseInt(String(parameter), 10));
+        case "%f":
+            return String(Number.parseFloat(String(parameter)));
+        case "%s":
+        default:
+            return String(parameter);
         }
     });
 }

@@ -15,7 +15,7 @@ import "./PatList.css";
 
 export type PatListProps = {
     tokens: PersonalAccessToken[];
-    onTokenDeleted: (id: string) => void;
+    onTokenDeleted: (_id: string) => void;
 };
 
 type SortableColumn = "displayName" | "status" | "createdAt" | "expiresAt";

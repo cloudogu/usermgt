@@ -1,14 +1,14 @@
 import {Button, CheckboxField, CesIconX, CesIconWarning} from "@cloudogu/ces-theme-tailwind";
 import React from "react";
-import {useDogus} from "../../hooks/useDogus";
-import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
-import {DoguOption} from "../../services/Dogus";
 import {t, tWithParams} from "../../helpers/i18nHelpers";
+import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
+import {useDogus} from "../../hooks/useDogus";
+import type {DoguOption} from "../../services/Dogus";
 
 export type DoguSelectionProps = {
     label: string;
     value: string[];
-    onChange: (value: string[]) => void;
+    onChange: (_value: string[]) => void;
     invalid?: boolean;
 };
 
@@ -25,10 +25,10 @@ function radioButton(label: React.ReactNode, checked: boolean, onChange: () => v
                     : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
                 if (direction !== 0) {
                     event.preventDefault();
-                    const group = event.currentTarget.closest('[role="radiogroup"]');
+                    const group = event.currentTarget.closest("[role=\"radiogroup\"]");
                     if (!group) return;
-                    const radios = Array.from(group.querySelectorAll<HTMLElement>('[role="radio"]'))
-                        .filter(radio => radio.closest('[role="radiogroup"]') === group);
+                    const radios = Array.from(group.querySelectorAll<HTMLElement>("[role=\"radio\"]"))
+                        .filter(radio => radio.closest("[role=\"radiogroup\"]") === group);
                     const index = radios.indexOf(event.currentTarget);
                     const nextRadio = radios[(index + direction + radios.length) % radios.length];
                     nextRadio.focus();
@@ -109,7 +109,7 @@ function RadioGroupEntry({testId, label, checked, onChange, selectedCount = 0, t
                         <Button type="button" variant="secondary" color="brand" disabled={!checked}
                             onClick={onClear}
                             className={`${classes.checkboxFocus} flex flex-row items-center gap-1 whitespace-nowrap`}>
-                                <CesIconX /> {t("security.createpat.selectdogus.clearselection")}
+                            <CesIconX /> {t("security.createpat.selectdogus.clearselection")}
                         </Button>
                     </div>
                 </div>
@@ -125,7 +125,7 @@ function RadioGroup({label, children, className = "", invalid = false}: {
     className?: string;
 }) {
     const labelId = React.useId();
-    const classes = useDoguSelectionStyles()
+    const classes = useDoguSelectionStyles();
 
     return (
         <div role="radiogroup" aria-invalid={invalid} aria-labelledby={labelId} className={`desktop:text-desktop-regular mobile:text-mobile-regular flex flex-col gap-1 items-start justify-start self-stretch shrink-0 relative ${className}`} >

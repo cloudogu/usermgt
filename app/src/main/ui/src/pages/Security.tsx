@@ -2,8 +2,8 @@ import {ApplicationContainer as TailwindContainer, Button, CesIconPlus} from "@c
 import React from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useApplicationContext} from "../components/contexts/ApplicationContext";
-import {PTAManagement} from "../components/security/Pat";
 import CreatedPATDialog from "../components/security/CreatedPATDialog";
+import {PTAManagement} from "../components/security/Pat";
 import {t} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import {usePAT} from "../hooks/usePAT";
