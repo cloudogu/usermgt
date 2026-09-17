@@ -167,11 +167,11 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                 <div className="mt-6 flex flex-row items-end justify-between">
                     <div className="flex flex-row items-center justify-start gap-4">
                         <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit" onClick={createPAT}>
-                            Schlüssel anlegen
+                            {t("security.createpat.selectdogus.createkey")}
                         </Button>
                         <Button color="neutral" variant="secondary" size="regular" type="button"
                             onClick={() => navigate("/security")}>
-                            Abbrechen
+                            {t("security.createpat.selectdogus.cancel")}
                         </Button>
                     </div>
                     <span className="text-sm text-neutral">* Pflichtfeld</span>

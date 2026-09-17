@@ -1,3 +1,4 @@
+import {patCountBadge} from "./pat-helpers";
 import { Given } from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 Given("the user {string} exists", (username: string) => {
@@ -50,6 +51,7 @@ Given("the user {string} is member of the group {string}", function (username, g
 
 Given("the user {string} with password {string} is logged in", function (username: string, password: string){
     cy.clearAllCookies()
+    cy.wrap(username).as("loggedInUsername");
     cy.login(username, password, 3);
 });
 
@@ -82,3 +84,10 @@ Given("the file {string} is uploaded", (file: string) => {
     cy.get('input[type="file"]').selectFile("cypress/fixtures/" + file)
     cy.get('button[data-testid="upload-button"]').click()
 })
+
+/* PERSONAL ACCESS TOKENS */
+Given("the user remembers the current PAT count", () => {
+    patCountBadge().invoke("text").should("match", /^\d+$/).then(text => {
+        cy.wrap(Number(text)).as("initialPATCount");
+    });
+});

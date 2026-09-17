@@ -47,3 +47,7 @@ Before({tags: "@clear_mails"}, () => {
     cy.log("delete previous mails in Mailhog");
     cy.mhDeleteAll()
 })
+
+Before({tags: "@created_pats"}, () => {
+    cy.wrap([]).as("createdPATIds");
+});

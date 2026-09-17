@@ -118,6 +118,8 @@ parallel(
 
                     stage('Setup') {
                         ecoSystem.loginBackend('cesmarvin-setup')
+                        String casConfig = casConfigOverride()
+                        String secret = secretOverride()
                         ecoSystem.setup([registryConfig: """
                                         "_global": {
                                             "password-policy": {
@@ -127,7 +129,11 @@ parallel(
                                                 "must_contain_special_character": "true",
                                                 "min_length": "14"
                                             }
-                                        }
+                                        },
+                                        "cas": ${casConfig}
+                                        """, registryConfigEncrypted: """
+                                        "cas": ${secret},
+                                        "usermgt": ${secret}
                                         """])
                     }
 
@@ -439,4 +445,50 @@ void runMakeInGoContainer (String target, String buildToolsVersion) {
         .inside("--volume ${WORKSPACE}:/workdir -w /workdir") {
             sh "make ${target}"
         }
+}
+
+String casConfigOverride() {
+    return '''
+{
+  "pat": {
+    "enabled": "true"
+  }
+}
+'''.trim()
+}
+
+String secretOverride() {
+    return '''
+{
+  "experimental": {
+    "totp": {
+       "api_user_name": "pat-api",
+       "api_user_password": "securePassword"
+    }
+  }
+}
+'''.trim()
+}
+
+def mergeConfigMapYaml = { String configMapName, String overrideConfig ->
+    sh """
+       kubectl get configmap ${configMapName} -n ecosystem -o yaml | .bin/yq '
+         .data."config.yaml" |= (
+           (from_yaml) * ${overrideConfig}
+           | to_yaml
+         )
+       ' | tee ${configMapName}-output.yml | kubectl apply -f -
+       """
+}
+
+def mergeSecretYaml = { String secretName, String overrideConfig ->
+    sh """
+       kubectl get secret ${secretName} -n ecosystem -o yaml | .bin/yq '
+         .data."config.yaml" |= (
+           (. | @base64d | from_yaml) * ${overrideConfig}
+           | to_yaml
+           | @base64
+         )
+       ' | tee ${secretName}-output.yml | kubectl apply -f -
+       """
 }

@@ -55,3 +55,11 @@ cy.on('after:run', () => {
     cy.usermgtTryDeleteUser("testuser_new");
     cy.usermgtTryDeleteUser("newuser");
 })
+
+After({tags: "@created_pats"}, () => {
+    cy.get<string[]>("@createdPATIds").then(ids => {
+        ids.forEach(id => {
+            cy.request("DELETE", `/usermgt/api/pats/${encodeURIComponent(id)}`);
+        });
+    });
+});

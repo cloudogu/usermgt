@@ -33,12 +33,12 @@ async function setupNodeEvents(
 
 export default defineConfig({
     e2e: {
-        baseUrl: 'https://192.168.56.2',
+        baseUrl: 'https://34.185.221.93',
         env: {
             "DoguName": "usermgt",
             "MaxLoginRetries": 3,
-            "AdminUsername":  "ces-admin",
-            "AdminPassword":  "Ecosystem2016!",
+            "AdminUsername":  "mbergen",
+            "AdminPassword":  "u!4&E%CsSuU%uLDV",
             "AdminGroup":  "CesAdministrators",
             "groups" : 0,
             "users" : 0,
