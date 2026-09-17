@@ -54,7 +54,7 @@ gen-npmrc-release: info
 	@rm -f ${UI_SRC}/.npmrc
 	@echo "email=jenkins@cloudogu.com" >> ${UI_SRC}/.npmrc
 	@echo "always-auth=true" >> ${UI_SRC}/.npmrc
-	@echo "@cloudogu:registry=${NPM_REGISTRY_RELEASE}" >> ${UI_SRC}/.npmrc
+	@echo "@cloudogu:registry=${NPM_REGISTRY_INTERNAL}" >> ${UI_SRC}/.npmrc
 	@auth="$$(bash -c 'read -p "Username: " username; read -s -p "Password: " password; echo >&2; printf "%s" "$$username:$$password" | openssl base64 -A')"; \
 		echo "$(subst https:,,$(NPM_REGISTRY_RELEASE)):_auth=$$auth" >> ${UI_SRC}/.npmrc; \
 		echo "$(subst https:,,$(NPM_REGISTRY_INTERNAL)):_auth=$$auth" >> ${UI_SRC}/.npmrc

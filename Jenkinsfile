@@ -402,7 +402,7 @@ void createNpmrcFile(credentialsId) {
                             script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
                     )}""".trim()
                     writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
-        @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+        @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-internal/
         //ecosystem.cloudogu.com/nexus/repository/npm-releases/:_auth=${NPM_TOKEN}
         //ecosystem.cloudogu.com/nexus/repository/npm-internal/:_auth=${NPM_TOKEN}
         email=jenkins@cloudogu.com
