@@ -5,8 +5,13 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.22.1-5] - 2026-09-16
 ### Changed
 - Die Dokumentation veralteter Versionen wurde entfernt. Referenzen auf Classic-CES wurden durch MN-CES ersetzt.
+
+### Security
+- Sicherheitslücke [CVE-2026-56854](https://avd.aquasec.com/nvd/2026/cve-2026-56854/) geschlossen
 
 ## [v1.22.1-4] - 2026-08-28
 ### Security

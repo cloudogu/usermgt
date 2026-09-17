@@ -1,7 +1,7 @@
 # Set these to the desired values
 ARTIFACT_ID=usermgt
 
-VERSION=1.22.1-4
+VERSION=1.22.1-5
 # overwrite ADDITIONAL_LDFLAGS to disable static compilation
 # this should fix https://github.com/golang/go/issues/13470
 ADDITIONAL_LDFLAGS=""
@@ -9,6 +9,7 @@ NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-release
 NPM_REGISTRY_INTERNAL=https://ecosystem.cloudogu.com/nexus/repository/npm-internal/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
+MAKEFILES_VERSION=10.11.1
 CES_THEME_CONFIG=${UI_SRC}/node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css
 TAILWIND_WRAPPER_CSS=${UI_SRC}/src/styles.css
 MAKEFILES_VERSION=10.10.0
@@ -88,8 +89,3 @@ template-image-pull-policy: $(BINARY_YQ)
           echo "Setting pull policy to always!" ; \
           $(BINARY_YQ) -i e ".imagePullPolicy=\"Always\"" "${K8S_COMPONENT_TARGET_VALUES}" ; \
     fi
-
-.PHONY: kill-pod
-kill-pod:
-	@echo "Restarting ${ARTIFACT_ID} Dogu!"
-	@kubectl -n ${NAMESPACE} delete pods -l "dogu.name=${ARTIFACT_ID}"
