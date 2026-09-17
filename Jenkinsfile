@@ -347,8 +347,6 @@ ${indentedServerCertificate}
                             + " --set image.repository=local-smoke/usermgt"
                             + " --set image.tag=${releaseVersion}"
                             // The default 400Mi are not enough in the pipeline.
-                            + " --set resources.requests.memory=512Mi"
-                            + " --set resources.limits.memory=512Mi"
                             + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
