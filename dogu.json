@@ -25,6 +25,16 @@
     {
       "Type": "dogu",
       "Name": "postfix"
+    },
+    {
+      "Type": "package",
+      "Name": "cesappd",
+      "Version": ">=3.7.0"
+    },
+    {
+      "Type": "component",
+      "Name": "k8s-ces-control",
+      "Version": ">=1.9.0"
     }
   ],
   "OptionalDependencies": [

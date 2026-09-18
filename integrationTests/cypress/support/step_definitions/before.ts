@@ -44,6 +44,10 @@ Before({tags: "@add_user"}, () => {
 })
 
 Before({tags: "@clear_mails"}, () => {
-    cy.log("delete previous mails in Mailhog");
-    cy.mhDeleteAll()
+    cy.log("delete previous mails in Mailpit");
+    cy.mailpitDeleteAllEmails()
 })
+
+Before({tags: "@created_pats"}, () => {
+    cy.wrap([]).as("createdPATIds");
+});

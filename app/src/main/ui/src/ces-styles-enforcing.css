@@ -1,0 +1,30 @@
+.tailwind-wrapper .mb-0 {
+    margin-bottom: 0;
+}
+
+.tailwind-wrapper .mb-1 {
+    margin-bottom: .25rem;
+}
+
+.tailwind-wrapper .mb-2 {
+    margin-bottom: .5rem;
+}
+
+.tailwind-wrapper a.text-default-text {
+    color: var(--ces-color-default-text);
+    text-decoration: none;
+}
+
+.tailwind-wrapper a.text-default-text:hover {
+    color: var(--ces-color-brand);
+    text-decoration-line: underline;
+    text-decoration-color: var(--ces-color-brand);
+    text-decoration-style: solid;
+    text-decoration-thickness: 1px;
+}
+
+.tailwind-wrapper a.text-default-text:focus-visible {
+    outline: 2px solid var(--ces-color-default-focus-outer);
+    outline-offset: 2px;
+    border-radius: 2px;
+}

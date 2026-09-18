@@ -196,5 +196,15 @@
   "groups_undeletable": [
     "cesAdmin",
     "cesManager"
+  ],
+  "dogus": [
+    {
+      "name": "jenkins",
+      "displayName": "Jenkins"
+    },
+    {
+      "name": "scm",
+      "displayName": "SCM-Manager"
+    }
   ]
 }

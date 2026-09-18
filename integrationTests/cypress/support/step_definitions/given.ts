@@ -1,3 +1,4 @@
+import {patCountBadge} from "./pat-helpers";
 import { Given } from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 Given("the user {string} exists", (username: string) => {
@@ -18,7 +19,7 @@ Given("the group {string} exists", (testGroup: string) => {
 Given("{string} test-users exist", (users: string) => {
     const userCount = parseInt(users);
     cy.withUser("testuser").then(userData => {
-        for(let i = Cypress.env("users") + 1; i <= userCount; i++){
+        for(let i = Cypress.expose("users") + 1; i <= userCount; i++){
             const testUser = {...userData};
             testUser.username += `_${i}`;
             testUser.givenname += `_${i}`;
@@ -30,8 +31,8 @@ Given("{string} test-users exist", (users: string) => {
             cy.usermgtCreateUser(testUser.username, testUser.givenname, testUser.surname, testUser.displayName, testUser.mail, testUser.password, testUser.pwdReset, testUser.groups)
     }
 }).then(() => {
-    if (userCount - Cypress.env("users") > 0) {
-        Cypress.env("users", userCount)
+    if (userCount - Cypress.expose("users") > 0) {
+        Cypress.expose("users", userCount)
     }
 })})
 
@@ -52,6 +53,7 @@ Given("the user {string} is member of the group {string}", function (username, g
 
 Given("the user {string} with password {string} is logged in", function (username: string, password: string){
     cy.clearAllCookies()
+    cy.wrap(username).as("loggedInUsername");
     cy.login(username, password, 3);
 });
 
@@ -61,7 +63,7 @@ Given("{string} test-groups exist", (groups: string) => {
     const groupCount = parseInt(groups);
     console.log(groupCount)
     cy.withUser("testuser").then(() => {
-        for(let i = Cypress.env("groups") + 1; i <= groupCount; i++){
+        for(let i = Cypress.expose("groups") + 1; i <= groupCount; i++){
             const testGroup = {
                 name: `testGroup_${i}`,
                 description: `Test Group ${i}`,
@@ -72,8 +74,8 @@ Given("{string} test-groups exist", (groups: string) => {
             cy.usermgtCreateGroup(testGroup.name, testGroup.description)
         }
     }).then(() => {
-        if (groupCount - Cypress.env("groups") > 0) {
-            Cypress.env("groups", groupCount);
+        if (groupCount - Cypress.expose("groups") > 0) {
+            Cypress.expose("groups", groupCount);
         }
     })
 })
@@ -84,3 +86,10 @@ Given("the file {string} is uploaded", (file: string) => {
     cy.get('input[type="file"]').selectFile("cypress/fixtures/" + file)
     cy.get('button[data-testid="upload-button"]').click()
 })
+
+/* PERSONAL ACCESS TOKENS */
+Given("the user remembers the current PAT count", () => {
+    patCountBadge().invoke("text").should("match", /^\d+$/).then(text => {
+        cy.wrap(Number(text)).as("initialPATCount");
+    });
+});

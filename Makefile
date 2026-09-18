@@ -6,9 +6,13 @@ VERSION=1.22.1-5
 # this should fix https://github.com/golang/go/issues/13470
 ADDITIONAL_LDFLAGS=""
 NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+NPM_REGISTRY_INTERNAL=https://ecosystem.cloudogu.com/nexus/repository/npm-internal/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
 MAKEFILES_VERSION=10.11.1
+CES_THEME_CONFIG=${UI_SRC}/node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css
+TAILWIND_WRAPPER_CSS=${UI_SRC}/src/styles.css
+MAKEFILES_VERSION=10.10.0
 .DEFAULT_GOAL:=default
 
 HELM_SOURCE_DIR=k8s/helm
@@ -32,6 +36,14 @@ BATS_TAG=1.13.0
 
 default: dogu-release
 
+.PHONY: generate-tailwind-wrapper-css
+generate-tailwind-wrapper-css: ## Generate scoped CSS for the new Tailwind theme
+	@test -f ${CES_THEME_CONFIG} || (echo "Missing ${CES_THEME_CONFIG}; run yarn install first." && exit 1)
+	@cd ${UI_SRC} && node scripts/scope-ces-theme-css.mjs \
+	  node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css \
+	  src/styles.css \
+	  .tailwind-wrapper
+
 .PHONY info:
 info:
 	@echo Generating .npmrc file
@@ -42,16 +54,21 @@ gen-npmrc-release: info
 	@rm -f ${UI_SRC}/.npmrc
 	@echo "email=jenkins@cloudogu.com" >> ${UI_SRC}/.npmrc
 	@echo "always-auth=true" >> ${UI_SRC}/.npmrc
-	@echo "_auth=$(shell bash -c 'read -p "Username: " usrname;read -s -p "Password: " pwd;echo -n "$$usrname:$$pwd" | openssl base64')" >> ${UI_SRC}/.npmrc
-	@echo "@cloudogu:registry=${NPM_REGISTRY_RELEASE}" >> ${UI_SRC}/.npmrc
+	@echo "@cloudogu:registry=${NPM_REGISTRY_INTERNAL}" >> ${UI_SRC}/.npmrc
+	@auth="$$(bash -c 'read -p "Username: " username; read -s -p "Password: " password; echo >&2; printf "%s" "$$username:$$password" | openssl base64 -A')"; \
+		echo "$(subst https:,,$(NPM_REGISTRY_RELEASE)):_auth=$$auth" >> ${UI_SRC}/.npmrc; \
+		echo "$(subst https:,,$(NPM_REGISTRY_INTERNAL)):_auth=$$auth" >> ${UI_SRC}/.npmrc
 
 .PHONY gen-npmrc-prerelease:
 gen-npmrc-prerelease: info
 	@rm -f ${UI_SRC}/.npmrc
 	@echo "email=jenkins@cloudogu.com" >> ${UI_SRC}/.npmrc
 	@echo "always-auth=true" >> ${UI_SRC}/.npmrc
-	@echo "_auth=$(shell bash -c 'read -p "Username: " usrname;read -s -p "Password: " pwd;echo -n "$$usrname:$$pwd" | openssl base64')" >> ${UI_SRC}/.npmrc
 	@echo "@cloudogu:registry=${NPM_REGISTRY_RC}" >> ${UI_SRC}/.npmrc
+	@auth="$$(bash -c 'read -p "Username: " username; read -s -p "Password: " password; echo >&2; printf "%s" "$$username:$$password" | openssl base64 -A')"; \
+		echo "$(subst https:,,$(NPM_REGISTRY_RC)):_auth=$$auth" >> ${UI_SRC}/.npmrc; \
+		echo "$(subst https:,,$(NPM_REGISTRY_RELEASE)):_auth=$$auth" >> ${UI_SRC}/.npmrc; \
+		echo "$(subst https:,,$(NPM_REGISTRY_INTERNAL)):_auth=$$auth" >> ${UI_SRC}/.npmrc
 
 .PHONY: helm-values-update-image-version
 helm-values-update-image-version: $(BINARY_YQ)

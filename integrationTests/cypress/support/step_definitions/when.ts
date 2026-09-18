@@ -1,6 +1,8 @@
+import {findPATRow, firstPATPage, patElement, patCountBadge, selectPATScope} from "./pat-helpers";
 import '@bahmutov/cy-api'
 import {When} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
+import {getLatestMailBodyForRecipient} from "./mailpit-helpers";
 
 //Implement all necessary steps fore dogu integration test library
 When("the user clicks the dogu logout button", function () {
@@ -258,7 +260,7 @@ When("deletes the entry for the user import", function () {
 })
 
 When("the user {string} tries to log in with his generated password", function (username: string) {
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
+    getLatestMailBodyForRecipient("testmail@cloudogu.de").then(body => {
         // Extract the generated password from the "Passwort:" line of the import mail.
         const match = body.match(/Passwort:\s*(\S+)/)
         expect(match, "generated password found in import mail").to.not.be.null
@@ -281,7 +283,7 @@ When("the user configures the new password to {string}", function (password: str
 })
 
 When("the user sets the new password to {string}", function (password: string) {
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
+    getLatestMailBodyForRecipient("testmail@cloudogu.de").then(body => {
         // Extract the generated password from the "Passwort:" line of the import mail.
         const match = body.match(/Passwort:\s*(\S+)/)
         expect(match, "generated password found in import mail").to.not.be.null
@@ -306,3 +308,83 @@ When("the user enters an invalid password", function () {
 When("the user enters an invalid confirm-password", function () {
         cy.get('input[id="confirmPassword"]').clear().type(" ")
 })
+
+/* PERSONAL ACCESS TOKENS */
+When("the user opens the security page", () => {
+    cy.visit("/usermgt/security");
+    cy.clickWarpMenuCheckboxIfPossible();
+    patCountBadge();
+});
+
+When("the user creates a PAT named {string} for {string}", (alias: string, scope: string) => {
+    const name = `${alias}-${Date.now()}-${Cypress._.random(100000, 999999)}`;
+    cy.wrap(name).as(`patName-${alias}`);
+    cy.intercept("POST", "**/usermgt/api/pats").as("createPAT");
+    patElement("security-create-pat").click();
+    patElement("security-create-pat-name-input").type(name);
+    patElement("security-create-pat-expiry-select-trigger").click();
+    patElement("security-create-pat-expiry-7").click();
+    selectPATScope(scope);
+    patElement("security-create-pat-submit").click();
+    cy.wait("@createPAT").then(({request, response}) => {
+        expect(response?.statusCode).to.be.within(200, 299);
+        // Remember the ID before further assertions, so cleanup also runs on failures.
+        cy.wrap(response!.body.id).as(`patId-${alias}`);
+        cy.get<string[]>("@createdPATIds").then(ids => {
+            ids.push(response!.body.id);
+            expect(request.body.displayName).to.eq(name);
+            expect(request.body.scope).to.eq(scope === "Alle Dogus" ? "/*" : scope);
+        });
+    });
+    cy.get<HTMLInputElement>("#created-pat-token")
+        .should("be.visible")
+        .invoke("val")
+        .should("be.a", "string")
+        .and("not.be.empty")
+        .then(token => cy.wrap(token).as(`patToken-${alias}`));
+    patElement("security-created-pat-close").should("be.visible").click();
+    patCountBadge();
+});
+
+function rememberPATAsDeleted(alias: string): void {
+    cy.get<string>(`@patId-${alias}`).then(id => {
+        cy.get<string[]>("@createdPATIds").then(ids => {
+            const index = ids.indexOf(id);
+            if (index >= 0) ids.splice(index, 1);
+        });
+    });
+}
+
+function confirmPATDeletion(alias: string): void {
+    cy.intercept("DELETE", "**/usermgt/api/pats/*").as("deletePAT");
+    cy.contains("button", /^Delete$/).should("be.visible").click();
+    cy.wait("@deletePAT").its("response.statusCode").should("be.within", 200, 299);
+    rememberPATAsDeleted(alias);
+}
+
+When("the user deletes the PAT named {string} using the table action", (alias: string) => {
+    cy.get<string>(`@patName-${alias}`).then(name => {
+        firstPATPage();
+        findPATRow(name);
+        cy.get("@patRow").find("button").should("have.length", 1).click();
+        confirmPATDeletion(alias);
+    });
+});
+
+When("the user opens the details of the PAT named {string}", (alias: string) => {
+    cy.get<string>(`@patName-${alias}`).then(name => {
+        firstPATPage();
+        findPATRow(name);
+        cy.get("@patRow").find("a").contains(name).click();
+        cy.get("h2").contains(name).should("be.visible");
+        cy.wrap(alias).as("patToDeleteFromDetails");
+    });
+});
+
+When("the user deletes the PAT from the detail page", () => {
+    cy.get<string>("@patToDeleteFromDetails").then(alias => {
+        cy.contains("button", "Delete token").should("be.visible").click();
+        confirmPATDeletion(alias);
+        patCountBadge();
+    });
+});
