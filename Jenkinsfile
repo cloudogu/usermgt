@@ -165,7 +165,7 @@ parallel(
                     }
 
 
-                    if (params.RunIntegrationTests || git.getSimpleBranchName() == "develop") {
+                    if (params.RunIntegrationTests || gitflow.isReleaseBranch() || git.getSimpleBranchName() == "develop") {
                         stage('Integration Tests') {
                             echo "setup mailpit"
                             ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
@@ -219,7 +219,7 @@ parallel(
                             }
                     } else {
                         stage('Integration Tests (skipped)') {
-                            echo "Skipped integration tests: No pull request and parameter 'RunIntegrationTests' is false."
+                            echo "Skipped integration tests: not a release or development build and parameter 'RunIntegrationTests' is false."
                         }
                     }
 
