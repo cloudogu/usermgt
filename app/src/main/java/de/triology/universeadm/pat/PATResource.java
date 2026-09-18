@@ -37,91 +37,68 @@ public class PATResource {
 
     @Inject
     public PATResource(CasConfiguration casConfiguration) {
-        String casServerUrl = casConfiguration.getServerUrl().replaceAll("/+$", "");
+        String casServerUrl = removeTrailingSlashes(casConfiguration.getServerUrl());
         casPATEndpoint = casServerUrl + "/api/users";
+    }
+
+    static String removeTrailingSlashes(String value) {
+        int end = value.length();
+        while (end > 0 && value.charAt(end - 1) == '/') {
+            end--;
+        }
+        return value.substring(0, end);
     }
 
     @GET
     public Response getPATs() {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated() || subject.getPrincipal() == null) {
+        String username = getAuthenticatedUsername();
+        if (username == null) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-
-        String username = subject.getPrincipal().toString();
-        HttpURLConnection connection = null;
-        try {
-            String encodedUsername = URLEncoder.encode(username, StandardCharsets.UTF_8.name())
-                .replace("+", "%20");
-            URL url = new URL(casPATEndpoint + "/" + encodedUsername + "/pats");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
-            addBasicAuthentication(connection);
-
-            int status = connection.getResponseCode();
-            if (status < 200 || status > 299) {
-                throw new IOException("CAS PAT endpoint returned status " + status);
-            }
-
-            try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                return Response.ok(response.toString(), MediaType.APPLICATION_JSON).build();
-            }
-        } catch (IOException e) {
-            LOG.error("Failed to load PAT metadata from CAS for current user", e);
-            return Response.status(Response.Status.BAD_GATEWAY)
-                .entity("{\"message\":\"Failed to load PAT metadata from CAS\"}")
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
+        return executeRequest(username, "GET", "", null, ResponseMode.SUCCESS_BODY,
+            "Failed to load PAT metadata from CAS");
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createPAT(String requestBody) {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated() || subject.getPrincipal() == null) {
+        String username = getAuthenticatedUsername();
+        if (username == null) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+        return executeRequest(username, "POST", "", requestBody, ResponseMode.BODY,
+            "Failed to create PAT in CAS");
+    }
 
-        String username = subject.getPrincipal().toString();
+    @DELETE
+    @Path("/{id}")
+    public Response deletePAT(@PathParam("id") String id) {
+        String username = getAuthenticatedUsername();
+        if (username == null) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        return executeRequest(username, "DELETE", "/" + id, null, ResponseMode.STATUS_ONLY,
+            "Failed to delete PAT in CAS");
+    }
+
+    private String getAuthenticatedUsername() {
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated() || subject.getPrincipal() == null) {
+            return null;
+        }
+        return subject.getPrincipal().toString();
+    }
+
+    private Response executeRequest(String username, String method, String pathSuffix, String requestBody,
+                                    ResponseMode responseMode, String errorMessage) {
         HttpURLConnection connection = null;
         try {
-            String encodedUsername = URLEncoder.encode(username, StandardCharsets.UTF_8.name())
-                .replace("+", "%20");
-            URL url = new URL(casPATEndpoint + "/" + encodedUsername + "/pats");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
-            connection.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON);
-            addBasicAuthentication(connection);
-            try (OutputStream output = connection.getOutputStream()) {
-                output.write(requestBody.getBytes(StandardCharsets.UTF_8));
-            }
-
-            int status = connection.getResponseCode();
-            String responseBody = readResponseBody(connection, status);
-            return Response.status(status)
-                .entity(responseBody)
-                .type(MediaType.APPLICATION_JSON)
-                .build();
+            connection = openConnection(username, pathSuffix, method, requestBody != null);
+            writeRequestBody(connection, requestBody);
+            return createResponse(connection, responseMode);
         } catch (IOException e) {
-            LOG.error("Failed to create PAT in CAS for current user", e);
-            return Response.status(Response.Status.BAD_GATEWAY)
-                .entity("{\"message\":\"Failed to create PAT in CAS\"}")
-                .type(MediaType.APPLICATION_JSON)
-                .build();
+            LOG.error(errorMessage + " for current user", e);
+            return badGateway(errorMessage);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -129,36 +106,49 @@ public class PATResource {
         }
     }
 
-    @DELETE
-    @Path("/{id}")
-    public Response deletePAT(@PathParam("id") String id) {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated() || subject.getPrincipal() == null) {
-            return Response.status(Response.Status.FORBIDDEN).build();
+    private HttpURLConnection openConnection(String username, String pathSuffix, String method,
+                                             boolean hasRequestBody) throws IOException {
+        String encodedUsername = URLEncoder.encode(username, StandardCharsets.UTF_8.name())
+            .replace("+", "%20");
+        URL url = new URL(casPATEndpoint + "/" + encodedUsername + "/pats" + pathSuffix);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+        connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
+        connection.setDoOutput(hasRequestBody);
+        if (hasRequestBody) {
+            connection.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON);
         }
+        addBasicAuthentication(connection);
+        return connection;
+    }
 
-        String username = subject.getPrincipal().toString();
-        HttpURLConnection connection = null;
-        try {
-            String encodedUsername = URLEncoder.encode(username, StandardCharsets.UTF_8.name())
-                .replace("+", "%20");
-            URL url = new URL(casPATEndpoint + "/" + encodedUsername + "/pats/" + id);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
-            addBasicAuthentication(connection);
-            return Response.status(connection.getResponseCode()).build();
-        } catch (IOException e) {
-            LOG.error("Failed to delete PAT in CAS for current user", e);
-            return Response.status(Response.Status.BAD_GATEWAY)
-                .entity("{\"message\":\"Failed to delete PAT in CAS\"}")
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
+    private void writeRequestBody(HttpURLConnection connection, String requestBody) throws IOException {
+        if (requestBody != null) {
+            try (OutputStream output = connection.getOutputStream()) {
+                output.write(requestBody.getBytes(StandardCharsets.UTF_8));
             }
         }
+    }
+
+    private Response createResponse(HttpURLConnection connection, ResponseMode responseMode) throws IOException {
+        int status = connection.getResponseCode();
+        if (responseMode == ResponseMode.SUCCESS_BODY && (status < 200 || status > 299)) {
+            throw new IOException("CAS PAT endpoint returned status " + status);
+        }
+        if (responseMode == ResponseMode.STATUS_ONLY) {
+            return Response.status(status).build();
+        }
+        return Response.status(status)
+            .entity(readResponseBody(connection, status))
+            .type(MediaType.APPLICATION_JSON)
+            .build();
+    }
+
+    private Response badGateway(String message) {
+        return Response.status(Response.Status.BAD_GATEWAY)
+            .entity("{\"message\":\"" + message + "\"}")
+            .type(MediaType.APPLICATION_JSON)
+            .build();
     }
 
     private String readResponseBody(HttpURLConnection connection, int status) throws IOException {
@@ -180,5 +170,11 @@ public class PATResource {
                 .encodeToString((USER + ":" + PASSWORD).getBytes(StandardCharsets.UTF_8));
             connection.setRequestProperty("Authorization", "Basic " + basicAuth);
         }
+    }
+
+    private enum ResponseMode {
+        SUCCESS_BODY,
+        BODY,
+        STATUS_ONLY
     }
 }

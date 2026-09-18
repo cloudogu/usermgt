@@ -64,6 +64,12 @@ public class PATResourceTest {
     }
 
     @Test
+    public void shouldRemoveAllTrailingSlashesWithoutChangingTheRestOfTheUrl() {
+        assertEquals("https://cas.example.com", PATResource.removeTrailingSlashes("https://cas.example.com///"));
+        assertEquals("https://cas.example.com", PATResource.removeTrailingSlashes("https://cas.example.com"));
+    }
+
+    @Test
     @SubjectAware(username = "dent", password = "secret")
     public void shouldLoadPATsForCurrentUser() {
         responseBody = "[{\"id\":\"first\"}]";
