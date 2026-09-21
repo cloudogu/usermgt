@@ -23,9 +23,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 
 @Path("/mfa")
 @Produces(MediaType.APPLICATION_JSON)
@@ -33,6 +31,8 @@ public class MultifactorResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(MultifactorResource.class);
     private static final Gson GSON = new Gson();
+    private static final boolean MFA_ACTIVATED = Boolean.parseBoolean(
+        System.getProperty("cas.mfa.activate", "false"));
     private static final String FQDN = System.getProperty("cas.mfa.fqdn");
     private static final String user = System.getProperty("cas.mfa.user");
     private static final String password = System.getProperty("cas.mfa.password");
@@ -44,6 +44,9 @@ public class MultifactorResource {
     @GET
     @Path("/{username}")
     public Response getMfa(@PathParam("username") String username) {
+        if (!MFA_ACTIVATED) {
+            return mfaNotActivatedResponse();
+        }
         try {
             String jsonResponse = callCasMfaGetApi(username);
             MfaDTO credentials = parse(jsonResponse);
@@ -60,6 +63,9 @@ public class MultifactorResource {
     @DELETE
     @Path("/{username}")
     public Response deleteMfa(@PathParam("username") String username) {
+        if (!MFA_ACTIVATED) {
+            return mfaNotActivatedResponse();
+        }
         try {
             callCasMfaDeleteApi(username);
             return Response.noContent().build();
@@ -70,6 +76,13 @@ public class MultifactorResource {
                 .type(MediaType.APPLICATION_JSON)
                 .build();
         }
+    }
+
+    private Response mfaNotActivatedResponse() {
+        return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+            .entity("{\"message\":\"MFA is not activated\"}")
+            .type(MediaType.APPLICATION_JSON)
+            .build();
     }
 
     /**

@@ -179,6 +179,12 @@
       "Optional": true
     },
     {
+      "Name": "experimental/totp/activate",
+      "Description": "Warning: Experimental Feature. Enables two factor authentication with TOTP (Time-based One-Time Password) in Usermgmt. Set this value to 'true' to enable.",
+      "Default": "false",
+      "Optional": true
+    },
+    {
       "Name": "experimental/totp/api_user_name",
       "Description": "Warning: Experimental Feature. Username for totp administration. Supply the same username to the usermgt dogu.",
       "Optional": true,

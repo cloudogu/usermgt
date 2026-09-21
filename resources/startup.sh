@@ -183,8 +183,12 @@ migrateLDAPEntries() {
 
 # these env are used by the frontend to connect to the cas mfa api
 setMfaEnv() {
+      local mfaActivated=""
       local mfaApiUser=""
       local mfaApiPassword=""
+
+      mfaActivated="$(doguctl config experimental/totp/activate --default 'false')"
+      export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.activate=${mfaActivated}"
 
       if ! mfaApiUser="$(doguctl config -e experimental/totp/api_user_name 2>/dev/null)"; then
         echo "Skipping MFA env setup because experimental/totp/api_user_name is not configured"
@@ -203,7 +207,7 @@ setMfaEnv() {
       FQDN=$(doguctl config -g fqdn)
 
       # Set Java system properties for backend
-      export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.user=${mfaApiUser}"
+      export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.user=${mfaApiUser}"
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.password=${mfaApiPassword}"
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
       echo "${CATALINA_OPTS}"

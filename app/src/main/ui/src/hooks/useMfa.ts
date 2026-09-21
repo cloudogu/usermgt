@@ -1,4 +1,4 @@
-// useMfa.ts
+import {isAxiosError} from "axios";
 import {useState} from "react";
 import { MfaService} from "../services/mfa";
 import { useAPI } from "./useAPI";
@@ -8,6 +8,7 @@ export type mfaResult = {
     mfa: Mfa | undefined,
     isMfaLoading: boolean,
     mfaError: Error | undefined,
+    isMfaAvailable: boolean,
     reloadMfa: () => void,
 }
 
@@ -20,6 +21,7 @@ export function useMfa(username?: string): mfaResult {
             mfa: undefined,
             isMfaLoading: false,
             mfaError: new Error("no username given for useMfa"),
+            isMfaAvailable: true,
             reloadMfa: () => {},
         };
     }
@@ -33,6 +35,7 @@ export function useMfa(username?: string): mfaResult {
         mfa: mfaList,
         isMfaLoading,
         mfaError,
+        isMfaAvailable: !isAxiosError(mfaError) || mfaError.response?.status !== 503,
         reloadMfa: () => setReloadTrigger(prev => prev + 1),
     };
 }
