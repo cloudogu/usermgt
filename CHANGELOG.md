@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Group membership endpoints returned a 302 redirect to the CAS login instead of being handled by the API
+  - the Shiro filter chains used the single-segment Ant pattern `/api/users/*`, so nested paths like the following fell through to the CAS form login chain
+    - `/api/users/{user}/groups/{group}`
+    - `/api/groups/{group}/members/{user}`
+    - `/api/users/import/{importID}/download`
 
 ## [v1.22.1-5] - 2026-09-16
 ### Added

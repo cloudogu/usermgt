@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+### Fixed
+- The group membership API endpoints (e. g. `POST /api/users/{username}/groups/{groupname}`) responded with a redirect to the CAS login instead of handling the request.
 
 ## [v1.22.1-5] - 2026-09-16
 ### Changed
