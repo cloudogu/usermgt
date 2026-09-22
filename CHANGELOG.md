@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
-- Group membership endpoints returned a 302 redirect to the CAS login instead of being handled by the API
+- [#258] Group membership endpoints returned a 302 redirect to the CAS login instead of being handled by the API
   - the Shiro filter chains used the single-segment Ant pattern `/api/users/*`, so nested paths like the following fell through to the CAS form login chain
     - `/api/users/{user}/groups/{group}`
     - `/api/groups/{group}/members/{user}`
