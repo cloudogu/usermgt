@@ -36,11 +36,11 @@ export function PATManagement({pat, patError, isPATLoading}: PATManagementProps)
         <>
             <h2>{t("security.overview.title")}</h2>
             <Label text={t("security.overview.title.discription")}/>
-            <hr className="my-4 border-0 border-t border-neutral-300" />
-            <span className="inline-flex items-center gap-1.5">
+            <hr className="my-4 border-0 border-t border-neutral-300" aria-hidden="true" />
+            <div className="inline-flex items-center gap-3">
                 <h3>{t("security.overview.headline")}</h3>
                 <span data-testid="security-pat-count" className={"mb-2"}><Badge text={tokenCount} className={"px-4"}/></span>
-            </span>
+            </div>
             <PatList
                 tokens={tokens}
                 onTokenDeleted={id => setDeletedTokenIds(current => [...current, id])}

@@ -17,7 +17,7 @@ export function Badge({text, variant = 'primary', color = 'brand', className = '
         );
     }
     return (
-        <span className={`px-2 py-1 desktop:text-desktop mobile:text-mobile ${isActive ? 'bg-brand-weaker' : 'bg-neutral-weak'} ${className}`}>
+        <span className={`rounded-sm px-5 py-1 desktop:text-desktop-xl mobile:text-xl ${isActive ? 'bg-brand-weaker' : 'bg-neutral-weak'} ${className}`}>
             {text}
         </span>
     );

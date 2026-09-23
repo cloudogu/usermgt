@@ -17,11 +17,11 @@ export default function DeletePATDialog({pat, onClose, onConfirm}: DeletePATDial
                         {t("security.createpat.modal.delete.headline")}
                     </SegmentedDialog.Content.Header.Title>
                 </SegmentedDialog.Content.Header>
-                <SegmentedDialog.Content.Body className="text-default-text">
+                <SegmentedDialog.Content.Body className="text-default-text flex flex-col gap-4">
                     <p>{t("security.createpat.modal.delete.hint.top")}</p>
-                    <div className="rounded bg-neutral-weak">
-                        <h2 className="desktop:text-desktop-xl mobile:text-mobile-xl text-center">{pat.displayName}</h2>
-                    </div>
+                    <p className="rounded px-5 py-1 bg-neutral-weak text-lg  text-center">
+                        {pat.displayName}
+                    </p>
                     <p>{t("security.createpat.modal.delete.hint.bottom")}</p>
                 </SegmentedDialog.Content.Body>
                 <SegmentedDialog.Content.Footer className="bg-danger-weaker">

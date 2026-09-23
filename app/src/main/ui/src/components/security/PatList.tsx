@@ -56,7 +56,7 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
     const sortableHeader = (column: SortableColumn, label: string) => (
         <button
             type="button"
-            className={`flex items-center gap-1 text-left ${classes.focusable}`}
+            className={`flex items-center gap-2 text-left hover:underline ${classes.focusable}`}
             onClick={() => changeSorting(column)}
         >
             <span>{label}</span>
