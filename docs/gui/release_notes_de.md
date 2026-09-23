@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.22.2-1] - 2026-09-23
+### Behoben
+- Die API-Endpunkte zur Gruppenzugehörigkeit (z. B. `POST /api/users/{benutzer}/groups/{gruppe}`) antworteten mit einer Weiterleitung auf die CAS-Anmeldung statt die Anfrage zu verarbeiten.
+
 ## [v1.22.1-5] - 2026-09-16
 ### Changed
 - Die Dokumentation veralteter Versionen wurde entfernt. Referenzen auf Classic-CES wurden durch MN-CES ersetzt.

@@ -6,6 +6,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.22.2-1] - 2026-09-23
+### Fixed
+- The group membership API endpoints (e. g. `POST /api/users/{username}/groups/{groupname}`) responded with a redirect to the CAS login instead of handling the request.
+
 ## [v1.22.1-5] - 2026-09-16
 ### Changed
 - The documentation of old version was removed. References to Classic CES were replaced by MN CES.
