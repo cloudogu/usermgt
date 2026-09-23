@@ -3,7 +3,7 @@
 ## Guides
 
 - [Benutzerhandbuch](gui/documentation_de.md)
-- [Persönliche Zugriffsschlüssel (PATs)](development/personal_access_tokens_de.md)
+- [Persönliche Zugriffsschlüssel (PATs)](operations/personal_access_tokens_de.md)
 
 
 ## Informationen für Entwickler

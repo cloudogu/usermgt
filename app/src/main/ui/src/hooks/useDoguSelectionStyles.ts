@@ -28,6 +28,13 @@ const useDoguSelectionStyles = createUseStyles({
             borderWidth: "2px",
         },
     },
+    focusable: {
+        "&:focus-visible": {
+            border: "2px solid var(--ces-color-default-focus-outer)",
+            outline: "none",
+            borderRadius: "5px",
+        },
+    }
 });
 
 export default useDoguSelectionStyles;

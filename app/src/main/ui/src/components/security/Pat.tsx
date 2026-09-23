@@ -7,13 +7,13 @@ import Badge from "../Badge";
 import PatList from "./PatList";
 import type {PAT} from "../../hooks/usePAT";
 
-export type PTAManagementProps = {
+export type PATManagementProps = {
     pat: PAT;
     patError?: Error;
     isPATLoading: boolean;
 };
 
-export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps) {
+export function PATManagement({pat, patError, isPATLoading}: PATManagementProps) {
     const [deletedTokenIds, setDeletedTokenIds] = useState<string[]>([]);
     const tokens = pat.tokens.filter(token => !deletedTokenIds.includes(token.id));
     if (isPATLoading) {
@@ -39,7 +39,7 @@ export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps)
             <hr className="my-4 border-0 border-t border-neutral-300" />
             <span className="inline-flex items-center gap-1.5">
                 <h3>{t("security.overview.headline")}</h3>
-                <span data-testid="security-pat-count"><Badge text={tokenCount} className={"mb-2 px-4"}/></span>
+                <span data-testid="security-pat-count" className={"mb-2"}><Badge text={tokenCount} className={"px-4"}/></span>
             </span>
             <PatList
                 tokens={tokens}
@@ -49,4 +49,4 @@ export function PTAManagement({pat, patError, isPATLoading}: PTAManagementProps)
     );
 }
 
-export default PTAManagement;
+export default PATManagement;

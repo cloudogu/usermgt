@@ -11,7 +11,8 @@ import {PATService} from "../../services/PATs";
 import StatusIndicator from "../StatusIndicator";
 import DeletePATDialog from "./DeletePATDialog";
 import type {PersonalAccessToken} from "../../hooks/usePAT";
-import "./PatList.css";
+import {DeleteButton} from "../DeleteButton";
+import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
 
 export type PatListProps = {
     tokens: PersonalAccessToken[];
@@ -55,7 +56,7 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
     const sortableHeader = (column: SortableColumn, label: string) => (
         <button
             type="button"
-            className="flex w-full items-center gap-1 text-left"
+            className={`flex items-center gap-1 text-left ${classes.focusable}`}
             onClick={() => changeSorting(column)}
         >
             <span>{label}</span>
@@ -71,6 +72,8 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
         defaultStartPage: 1,
         defaultLinesPerPage: 25,
     });
+
+    const classes = useDoguSelectionStyles();
 
     return (
         <ActionTableRoot paginationControl={paginationControl}>
@@ -120,14 +123,11 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
                                         {formatDate(token.expiresAt)}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column className="text-center">
-                                        <button
-                                            type="button"
-                                            aria-label={t("security.overview.table.action.delete")}
+                                        <DeleteButton
+                                            title={t("security.overview.table.action.delete")}
                                             onClick={() => setTokenToDelete(token)}
-                                            className="text-neutral w-6 h-6 focus-visible:ces-focused"
-                                        >
-                                            <CesIconTrash className="text-neutral w-6 h-6"/>
-                                        </button>
+                                            className={`text-neutral ${classes.focusable}`}
+                                        />
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                 </ActionTableFrontendPaginated.Body.Row>
                             ))}

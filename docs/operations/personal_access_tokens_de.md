@@ -16,11 +16,11 @@ Für die Verwaltung von PATs müssen Sie am Cloudogu EcoSystem angemeldet sein. 
 
 Die Übersicht enthält den Anzeigenamen, Status, Erstellungszeitpunkt und Ablaufzeitpunkt eines Schlüssels. Aktive und abgelaufene Schlüssel sind entsprechend gekennzeichnet. Über die Spaltenüberschriften können Sie die Liste sortieren.
 
-![PAT-Übersicht im Bereich Sicherheit](figures/pat/OverviewPAT.png)
+![PAT-Übersicht im Bereich Sicherheit](figures/pat/de/OverviewPAT.png)
 
 Klicken Sie auf den Anzeigenamen eines Schlüssels, um dessen Details und die freigegebenen Dogus anzuzeigen. Der eigentliche Schlüsselwert kann nach der Erstellung nicht erneut angezeigt werden.
 
-![Detailansicht eines PATs](figures/pat/PATDetails.png)
+![Detailansicht eines PATs](figures/pat/de/PATDetails.png)
 
 ## PAT erstellen
 
@@ -35,13 +35,13 @@ Klicken Sie auf den Anzeigenamen eines Schlüssels, um dessen Details und die fr
 
 Wählen Sie aus Sicherheitsgründen nur die Dogus aus, die die Anwendung tatsächlich benötigt, und bevorzugen Sie eine begrenzte Gültigkeitsdauer.
 
-![Formular zum Erstellen eines PATs](figures/pat/PATCreate.png)
+![Formular zum Erstellen eines PATs](figures/pat/de/PATCreate.png)
 
 Nach der Erstellung erscheint ein Dialog mit dem neuen Zugriffsschlüssel. Kopieren Sie den vollständigen Schlüssel und speichern Sie ihn an einem sicheren Ort, beispielsweise in einem Secret Store oder Passwortmanager.
 
 > **Wichtig:** Der Schlüssel wird nur einmal angezeigt. Wenn er verloren geht, muss der PAT gelöscht und neu erstellt werden.
 
-![Einmalige Anzeige des neu erstellten PATs](figures/pat/PATCreated.png)
+![Einmalige Anzeige des neu erstellten PATs](figures/pat/de/PATCreate.png)
 
 ## PAT verwenden
 
@@ -77,7 +77,7 @@ Sie können einen PAT auf zwei Wegen löschen:
 
 Bestätigen Sie anschließend den Löschdialog.
 
-![Bestätigungsdialog zum Löschen eines PATs](figures/pat/PATDelete.png)
+![Bestätigungsdialog zum Löschen eines PATs](figures/pat/de/PATDelete.png)
 
 Nach dem Löschen wird der PAT sofort ungültig. Anwendungen, die diesen Schlüssel verwenden, können damit nicht mehr auf das System zugreifen. Ein gelöschter PAT kann nicht wiederhergestellt werden.
 

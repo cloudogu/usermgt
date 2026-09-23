@@ -3,13 +3,14 @@ import React from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useApplicationContext} from "../components/contexts/ApplicationContext";
 import CreatedPATDialog from "../components/security/CreatedPATDialog";
-import {PTAManagement} from "../components/security/Pat";
+import {PATManagement} from "../components/security/Pat";
 import {t} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import {usePAT} from "../hooks/usePAT";
 import type {CreatePATResponse} from "../services/PATs";
 import "../ces-styles-wrapper.css";
 import "../ces-styles-enforcing.css";
+import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
 
 export default function Security() {
     const {casUser} = useApplicationContext();
@@ -29,6 +30,8 @@ function SecurityContent({username}: {username: string}) {
     const dialogPAT = createdPAT;
     const closeCreatedPAT = () => navigate("/security", {replace: true, state: null});
 
+    const classes = useDoguSelectionStyles();
+
     return (
         <TailwindContainer.ContentContainer.EmptyLargePage
             applicationTitle={pageTitle("pages.security")}
@@ -36,7 +39,7 @@ function SecurityContent({username}: {username: string}) {
             <div className="flex items-baseline items- justify-between">
                 <h1 className="desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand mb-0">{t("pages.security")}</h1>
                 <Button
-                    className="flex items-center justify-center gap-1"
+                    className={`flex items-center justify-center gap-1 ${classes.focusable}`}
                     color="brand"
                     variant="primary"
                     size="small"
@@ -48,7 +51,7 @@ function SecurityContent({username}: {username: string}) {
                 </Button>
             </div>
             <section className="pb-[2rem]">
-                {pat && <PTAManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
+                {pat && <PATManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
             </section>
             {dialogPAT && <CreatedPATDialog pat={dialogPAT} onClose={closeCreatedPAT}/>}
         </TailwindContainer.ContentContainer.EmptyLargePage>
