@@ -54,7 +54,7 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
         </CheckboxField>
     );
     return (
-        <RadioGroup label={label} className={classes.fontBold600} invalid={invalid}>
+        <RadioGroup label={label} className="font-semibold" invalid={invalid}>
             <RadioGroupEntry testId="security-pat-selected-dogus" label="Auswahl an Dogus" checked={!allDogus}
                 onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguOptions.length} onClear={() => onChange([])}>
                 {basicDogus.length > 0 && (

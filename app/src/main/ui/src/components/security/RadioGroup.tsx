@@ -17,7 +17,7 @@ export function RadioGroup({label, children, className = "", invalid = false}: R
     return (
         <div role="radiogroup" aria-invalid={invalid} aria-labelledby={labelId} className={`desktop:text-desktop-regular mobile:text-mobile-regular flex flex-col gap-1 items-start justify-start self-stretch shrink-0 relative ${className}`} >
             <div className="flex flex-row gap-15 items-center justify-start shrink-0 relative overflow-hidden" >
-                <div id={labelId} className={`${invalid ? "text-danger" : "text-default-text"} text-left font-lable-label-font-family text-lable-label-font-size leading-lable-label-line-height font-lable-label-font-weight relative`}>
+                <div id={labelId} className={`${invalid ? "text-danger" : "text-default-text"} text-left`}>
                     <span className="inline-flex items-center gap-1.5">
                         {invalid ? <CesIconWarning/> : ""}
                         {label}

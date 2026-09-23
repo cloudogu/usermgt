@@ -50,7 +50,7 @@ function SecurityContent({username}: {username: string}) {
                     <span>{t("security.overview.button.createkey")}</span>
                 </Button>
             </div>
-            <section className="pb-[2rem]">
+            <section className="pb-8">
                 {pat && <PATManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
             </section>
             {dialogPAT && <CreatedPATDialog pat={dialogPAT} onClose={closeCreatedPAT}/>}

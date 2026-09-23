@@ -10,7 +10,7 @@ export function CheckBoxGroup({label, children, className = ""}: CheckBoxGroupPr
     return (
         <div className="self-stretch shrink-0 pt-4 first:pt-0 border-t first:border-t-0 border-neutral-weak">
             <div className="pr-2 pb-4 pl-2 flex flex-row items-center justify-between self-stretch shrink-0 relative overflow-hidden">
-                <div className="text-default-text text-left font-copy-paragraph-bold-font-family text-copy-paragraph-bold-font-size leading-copy-paragraph-bold-line-height font-copy-paragraph-bold-font-weight relative">
+                <div className="text-default-text text-left font-bold">
                     {label}
                 </div>
             </div>

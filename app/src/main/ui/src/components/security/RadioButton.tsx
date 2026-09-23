@@ -35,7 +35,7 @@ export function RadioButton({label, checked, onChange, testId}: RadioButtonProps
                     if (!checked) onChange();
                 }
             }}
-            className="group focus-visible:outline-none cursor-pointer pt-3 pr-2 pb-3 pl-2 flex flex-row gap-2 items-start justify-start flex-1 min-h-[40px] relative overflow-hidden" >
+            className="group focus-visible:outline-none cursor-pointer py-3 px-2 flex flex-row gap-2 items-start justify-start flex-1 min-h-[40px] relative overflow-hidden" >
             <div className="flex flex-row gap-0 items-start justify-start shrink-0 relative overflow-visible" >
                 <div className="shrink-0 w-6 h-6 relative rounded-full group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--ces-color-default-focus-outer)]">
                     <div className={`bg-default-background rounded-[50%] border-solid ${checked ? "border-brand border-2 hover-dark-border" : "border-neutral border hover-neutral-border"} w-6 h-6 absolute left-0 top-0`} />
@@ -43,7 +43,7 @@ export function RadioButton({label, checked, onChange, testId}: RadioButtonProps
                 </div>
             </div>
             <div className="flex flex-row gap-0 items-center justify-start shrink-0 relative overflow-hidden" >
-                <div className="text-default-text text-left font-lable-label-font-family text-lable-label-font-size leading-lable-label-line-height font-lable-label-font-weight relative" >
+                <div className="text-default-text text-left" >
                     {label}
                 </div>
             </div>
