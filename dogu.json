@@ -1,13 +1,14 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.22.1-5",
+  "Version": "1.22.1-6",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
   "Tags": [
     "warp",
     "users",
-    "groups"
+    "groups",
+    "pat"
   ],
   "Logo": "https://cloudogu.com/images/dogus/usermanagement.png",
   "Url": "https://github.com/cloudogu/usermgt",
@@ -25,6 +26,16 @@
     {
       "Type": "dogu",
       "Name": "postfix"
+    },
+    {
+      "Type": "package",
+      "Name": "cesappd",
+      "Version": ">=3.7.0"
+    },
+    {
+      "Type": "component",
+      "Name": "k8s-ces-control",
+      "Version": ">=1.9.0"
     }
   ],
   "OptionalDependencies": [
@@ -166,6 +177,12 @@
       "Name": "mail/import/retry_interval",
       "Description": "The interval in which failed mails will be checked to be sent again.",
       "Default": "30",
+      "Optional": true
+    },
+    {
+      "Name": "experimental/totp/activate",
+      "Description": "Warning: Experimental Feature. Enables two factor authentication with TOTP (Time-based One-Time Password) in Usermgmt. Set this value to 'true' to enable.",
+      "Default": "false",
       "Optional": true
     },
     {

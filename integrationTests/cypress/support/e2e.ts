@@ -1,5 +1,6 @@
 // Loads all commands from the dogu integration library into this project
 import '@bahmutov/cy-api'
+import 'cypress-mailpit';
 import doguTestLibrary from "@cloudogu/dogu-integration-test-library";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 

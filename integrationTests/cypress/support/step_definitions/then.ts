@@ -1,7 +1,8 @@
+import {patCountBadge, firstPATPage, findPATRow} from "./pat-helpers";
 import '@bahmutov/cy-api'
 import {Then} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
-import 'cypress-mailhog';
+import {getLatestMailBodyForRecipient} from "./mailpit-helpers";
 
 Then("the user is asked to change his password", function () {
     //cy.get('div[data-testid="login-reset-pw-msg"]').should('be.visible')
@@ -442,9 +443,46 @@ Then("the user {string} has his mail updated to {string} and his display name to
 })
 
 Then("the user {string} receives an email with his user details", function (username: string) {
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").should('exist')
-    cy.mhGetMailsByRecipient("testmail@cloudogu.de").mhFirst().mhGetBody().then((body) => {
-      expect(body).contains("Benutzername: " + username)
-      expect(body).contains("Passwort")
+    getLatestMailBodyForRecipient("testmail@cloudogu.de").then(body => {
+        expect(body).contains("Benutzername: " + username)
+        expect(body).contains("Passwort")
     })
 })
+
+/* PERSONAL ACCESS TOKENS */
+Then("the PAT overview contains the PAT named {string}", (alias: string) => {
+    cy.get<string>(`@patName-${alias}`).then(name => {
+        firstPATPage();
+        findPATRow(name);
+    });
+});
+
+Then("the PAT count has increased by {int}", (increase: number) => {
+    cy.get<number>("@initialPATCount").then(initialCount => {
+        patCountBadge().should("have.text", String(initialCount + increase));
+    });
+});
+
+Then("the PAT count matches the remembered PAT count", () => {
+    cy.get<number>("@initialPATCount").then(initialCount => {
+        patCountBadge().should("have.text", String(initialCount));
+    });
+});
+
+Then("the user can retrieve users with the PAT named {string}", (alias: string) => {
+    cy.get<string>("@loggedInUsername").then(username => {
+        cy.get<string>(`@patToken-${alias}`).then(token => {
+            cy.request({
+                method: "GET",
+                url: `${Cypress.config().baseUrl}/usermgt/api/account`,
+                auth: {
+                    username,
+                    password: token,
+                },
+            }).then(response => {
+                expect(response.status).to.eq(200);
+                expect(response.body).to.have.property("username", username);
+            });
+        });
+    });
+});
