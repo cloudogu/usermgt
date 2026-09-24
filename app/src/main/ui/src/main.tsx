@@ -142,9 +142,12 @@ function Nav() {
     const location = useLocation();
     const {t} = useTranslation();
     const {casUser, externalLdap} = useApplicationContext();
+    const pathname = location?.pathname ?? "";
+    const activePath =
+        pathname.startsWith("/security/") ? "/security" : pathname;
     return (
         <>
-            <Navbar currentPath={location?.pathname ?? ""}>
+            <Navbar currentPath={activePath}>
                 <Navbar.LeftAlignedList>
                     <Navbar.HomeLink homeUri={"/account"}>
                         <div className={"flex items-center mr-2"}>

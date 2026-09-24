@@ -1,4 +1,4 @@
-import {ApplicationContainer as TailwindContainer, Button, InputField, Select, Label, CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
+import {Button, InputField, Select, Label, CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
 import React, {useRef, useState} from "react";
 import {createUseStyles} from "react-jss";
 import {useNavigate} from "react-router-dom";
@@ -10,6 +10,8 @@ import {useAPI} from "../hooks/useAPI";
 import {PATService} from "../services/PATs";
 import type {PATMetadata} from "../services/PATs";
 import "../ces-styles-wrapper.css";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
+import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
 
 
 const useStyles = createUseStyles({
@@ -30,6 +32,11 @@ const useStyles = createUseStyles({
     },
 });
 
+
+function requiredStar() {
+    return <span aria-label={t("components.required.asterisk.hint")}>*</span>
+}
+
 export default function CreatePAT() {
     const {data: tokens, isLoading, error} = useAPI(PATService.getAll);
 
@@ -37,8 +44,13 @@ export default function CreatePAT() {
         return <p role="alert" className="my-4 text-danger">{t("security.pta.load.error")}</p>;
     }
     if (isLoading || !tokens) {
-        return <CesIconSpinner role="status" aria-label={t("pages.createPAT")}
-            className="h-16 w-16 animate-spin text-divider-primary-border"/>;
+        return  <div className="flex min-h-[60vh] items-center justify-center">
+                    <CesIconSpinner
+                        role="status"
+                        aria-label={t("pages.createPAT")}
+                        className="h-16 w-16 animate-spin"
+                    />
+                </div>
     }
 
     return <CreatePATForm tokens={tokens}/>;
@@ -88,25 +100,24 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
     const showError = touched && nameError !== "";
     const expiryError = selectedOption === "" ? t("security.createpat.error.expireat.select") : "";
     const showExpiryError = expiryTouched && expiryError !== "";
-
+    useSetPageTitle(pageTitle("pages.createPAT"));
+    const defclasses = useDoguSelectionStyles();
     return (
         <div className="tailwind-wrapper">
-            <TailwindContainer.ContentContainer.EmptyLargePage
-                applicationTitle={pageTitle("pages.createPAT")}
-            >
-                <Breadcrumb
-                    items={[
-                        [t("pages.security"), "/security"],
-                        [t("pages.createPAT")],
-                    ]}
-                />
-                <h1 className="mb-0 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">
-                    {t("pages.createPAT")}
-                </h1>
+            <Breadcrumb
+                items={[
+                    [t("pages.security"), "/security"],
+                    [t("pages.createPAT")],
+                ]}
+            />
+            <h1 className="mb-0 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">
+                {t("pages.createPAT")}
+            </h1>
+            <form>
                 <div className={[classes.boldLabel,classes.dangerLabel,classes.defaultTextLabel, "mb-4"].join(" ")}>
                     <InputField type={"text"}
                         variant={showError ? "danger" : undefined}
-                        label={t("security.createpat.input.name.label")}
+                                label={<>{t("security.createpat.input.name.label")}{requiredStar()}</>}
                         hint={showError ? nameError : t("security.createpat.input.name.hint")}
                         value={patName}
                         required={true}
@@ -114,7 +125,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                             setPatName(e.target.value);
                             setTouched(true);
                         }}
-                        className={classes.defaultTextLabel}
+                        className={`${classes.defaultTextLabel} focus-visible:ces-focused`}
                         onBlur={() => setTouched(true)}
                         aria-invalid={showError}
                         data-testid={"security-create-pat-name-input"}
@@ -129,7 +140,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                     }}
                 >
                     <Label
-                        text={t("security.createpat.input.expires.label")}
+                        text={<>{t("security.createpat.input.expires.label")}{requiredStar()}</>}
                         variant={showExpiryError ? "danger" : undefined}
                         hint={showExpiryError ? expiryError : undefined}
                         className={["desktop:text-desktop-regular", "mobile:text-mobile-regular", showExpiryError ? "text-danger": "text-default-text"].join(" ")}
@@ -142,7 +153,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                             onOpenChange={(open) => { expiryOpen.current = open; }}
                             onValueChange={setSelectedOption}
                             placeholder={t("security.createpat.select.expires.placeholder")}
-                            className={showExpiryError ? "border-danger text-default-text" : ""}
+                            className={`focus-visible:ces-focused ${showExpiryError ? "border-danger text-default-text" : ""}`}
                         >
                             <Select.Item value="7" data-testid={"security-create-pat-expiry-7"}>{t("security.createpat.select.expires.option.sevendays")}</Select.Item>
                             <Select.Item value="30" data-testid={"security-create-pat-expiry-30"}>{t("security.createpat.select.expires.option.thirtydays")}</Select.Item>
@@ -158,7 +169,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                     }
                 }}>
                     <DoguSelection
-                        label={t("security.createpat.scopes.appliedto.label")}
+                        label={<>{t("security.createpat.scopes.appliedto.label")}{requiredStar()}</>}
                         value={selectedDogus}
                         onChange={setSelectedDogus}
                         invalid={dogusTouched && selectedDogus.length === 0}
@@ -166,7 +177,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                 </div>
                 <div className="mt-6 flex flex-row items-end justify-between">
                     <div className="flex flex-row items-center justify-start gap-4">
-                        <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit" onClick={createPAT}>
+                        <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit" onClick={createPAT} className={defclasses.checkboxFocus}>
                             {t("security.createpat.selectdogus.createkey")}
                         </Button>
                         <Button color="neutral" variant="secondary" size="regular" type="button"
@@ -176,7 +187,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                     </div>
                     <span className="text-sm text-neutral">* Pflichtfeld</span>
                 </div>
-            </TailwindContainer.ContentContainer.EmptyLargePage>
+            </form>
         </div>
     );
 }

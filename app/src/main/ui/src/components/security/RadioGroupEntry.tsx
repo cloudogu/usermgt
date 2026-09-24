@@ -39,7 +39,7 @@ export function RadioGroupEntry({testId, label, checked, onChange, selectedCount
 
                         <Button type="button" variant="secondary" color="brand" disabled={!checked}
                             onClick={onClear}
-                            className={`${classes.checkboxFocus} flex flex-row items-center gap-1 whitespace-nowrap`}>
+                            className={`${classes.checkboxFocus} flex w-auto mobile:w-full flex-row items-center justify-center gap-1 whitespace-nowrap`}>
                             <CesIconX /> {t("security.createpat.selectdogus.clearselection")}
                         </Button>
                     </div>

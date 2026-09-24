@@ -229,16 +229,16 @@
   "security.overview.table.action.delete": "Löschen",
   "security.overview.table.footer": "Zeilen",
 
-  "security.createpat.input.name.label": "Anzeigename des Schlüssels*",
+  "security.createpat.input.name.label": "Anzeigename des Schlüssels",
   "security.createpat.input.name.hint": "Eindeutiger Name für den Schlüssel, Maximallänge: 64 Zeichen",
-  "security.createpat.input.expires.label": "Läuft ab in*",
+  "security.createpat.input.expires.label": "Läuft ab in",
   "security.createpat.select.expires.placeholder": "Zeitraum wählen",
   "security.createpat.select.expires.option.sevendays": "7 Tage",
   "security.createpat.select.expires.option.thirtydays": "30 Tage",
   "security.createpat.select.expires.option.sixtydays": "60 Tage",
   "security.createpat.select.expires.option.nintydays": "90 Tage",
   "security.createpat.select.expires.option.never": "Nie",
-  "security.createpat.scopes.appliedto.label": "Wird angewendet auf*",
+  "security.createpat.scopes.appliedto.label": "Wird angewendet auf",
   "security.createpat.scopes.selectdogus.label": "Auswahl an Dogus",
   "security.createpat.scopes.selectdogus.all.label.dogus": "Alle Dogus",
   "security.createpat.scopes.selectdogus.all.label.hint": "inklusive nachträglich installierter",
@@ -271,6 +271,7 @@
   "security.createpat.modal.delete.hint.bottom": "Anwendungen, die diesen Schlüssel nutzen, haben danach keinen Zugriff mehr auf das System. Gelöschte Schlüssel können nicht wiederhergestellt werden.",
   "security.createpat.modal.delete.confirm": "Löschen",
   "security.createpat.modal.delete.cancel": "Abbrechen",
+  "security.createpat.modal.delete.succeeded": "Der Eintrag „%s“ wurde gelöscht.",
 
   "security.pat-details.access.label": "Hat Zugriff auf diese Dogus",
   "security.pat.details.delete": "Schlüssel löschen",
@@ -280,5 +281,8 @@
   "security.pat.details.scope": "Dogus",
   "security.pat.details.dogusLoadError": "Die Dogu-Liste konnte nicht geladen werden.",
   "security.pat.details.unknownDogus": "Mindestens ein zugehöriges Dogu ist nicht in der aktuellen Dogu-Liste enthalten.",
-  "security.pat.details.neverExpires": "Läuft nicht ab"
+  "security.pat.details.neverExpires": "Läuft nicht ab",
+
+  "components.breadcrump.aria.label": "Seitenpfad",
+  "components.required.asterisk.hint": "Pflichtfeld"
 }

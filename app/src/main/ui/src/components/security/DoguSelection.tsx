@@ -9,7 +9,7 @@ import {RadioGroupEntry} from "./RadioGroupEntry";
 import type {DoguOption} from "../../services/Dogus";
 
 export type DoguSelectionProps = {
-    label: string;
+    label: React.ReactNode;
     value: string[];
     onChange: (_value: string[]) => void;
     invalid?: boolean;
@@ -53,10 +53,13 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
             {dogu.label}
         </CheckboxField>
     );
+
+    const doguCount = doguOptions.length - excludedDogus.length
+
     return (
         <RadioGroup label={label} className="font-semibold" invalid={invalid}>
             <RadioGroupEntry testId="security-pat-selected-dogus" label="Auswahl an Dogus" checked={!allDogus}
-                onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguOptions.length} onClear={() => onChange([])}>
+                onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguCount} onClear={() => onChange([])}>
                 {basicDogus.length > 0 && (
                     <CheckBoxGroup label={t("security.createpat.check.base")}>
                         {basicDogus.map(renderDogu)}

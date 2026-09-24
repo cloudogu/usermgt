@@ -1,12 +1,12 @@
 import {
     ActionTableFrontendPaginated,
-    ActionTableRoot, CesIconArrowDown, CesIconArrowUp, CesIconTrash,
+    ActionTableRoot, CesIconArrowDown, CesIconArrowUp,
     usePaginationControl,
 } from "@cloudogu/ces-theme-tailwind";
 
 import React, {useMemo, useState} from "react";
 import {Link} from "react-router-dom";
-import {formatDate, t} from "../../helpers/i18nHelpers";
+import {formatDate, t, tWithParams} from "../../helpers/i18nHelpers";
 import {PATService} from "../../services/PATs";
 import StatusIndicator from "../StatusIndicator";
 import DeletePATDialog from "./DeletePATDialog";
@@ -16,16 +16,18 @@ import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
 
 export type PatListProps = {
     tokens: PersonalAccessToken[];
+    labelledBy?: string;
     onTokenDeleted: (_id: string) => void;
 };
 
 type SortableColumn = "displayName" | "status" | "createdAt" | "expiresAt";
 type SortDirection = "ascending" | "descending";
 
-export function PatList({tokens, onTokenDeleted}: PatListProps) {
+export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
     const [sortColumn, setSortColumn] = useState<SortableColumn>("displayName");
     const [sortDirection, setSortDirection] = useState<SortDirection>("ascending");
     const [tokenToDelete, setTokenToDelete] = useState<PersonalAccessToken>();
+    const [announcement, setAnnouncement] = useState("");
 
     const sortedTokens = useMemo(() => [...tokens].sort((left, right) => {
         const comparison = left[sortColumn].localeCompare(right[sortColumn], undefined, {
@@ -39,6 +41,7 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
     const deleteToken = async () => {
         if (!tokenToDelete) return;
         await PATService.delete(tokenToDelete.id);
+        setAnnouncement(tWithParams("security.createpat.modal.delete.succeeded", tokenToDelete.displayName));
         onTokenDeleted(tokenToDelete.id);
         setTokenToDelete(undefined);
     };
@@ -61,7 +64,7 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
         >
             <span>{label}</span>
             {sortColumn === column && (
-                <span aria-hidden="true">{sortDirection === "ascending" ? <CesIconArrowUp/> : <CesIconArrowDown/>}</span>
+                <span aria-hidden="true">{sortDirection === "ascending" ? <CesIconArrowUp className={"w-6 h-6"}/> : <CesIconArrowDown className={"w-6 h-6"}/>}</span>
             )}
         </button>
     );
@@ -81,20 +84,21 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
                 values={sortedTokens}
                 className="pat-list-table mt-default-2x"
                 data-testid="personal-access-tokens"
+                aria-labelledby={labelledBy ? labelledBy : ""}
             >
                 {paginatedTokens => (
                     <>
                         <ActionTableFrontendPaginated.HeadWithOneRow>
-                            <ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "displayName" ? sortDirection : undefined} >
                                 {sortableHeader("displayName", t("security.overview.table.displayName"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                            <ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "status" ? sortDirection : undefined} >
                                 {sortableHeader("status", t("security.overview.table.status"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                            <ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "createdAt" ? sortDirection : undefined} >
                                 {sortableHeader("createdAt", t("security.overview.table.createdAt"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                            <ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "expiresAt" ? sortDirection : undefined} >
                                 {sortableHeader("expiresAt", t("security.overview.table.expiresAt"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column align="center">
@@ -109,7 +113,7 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
                                     className={token.status == "active" ? "" : "bg-neutral-weaker text-neutral"}
                                 >
                                     <ActionTableFrontendPaginated.Body.Row.Column className="break-all">
-                                        <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-default-text">
+                                        <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:text-brand">
                                             {token.displayName}
                                         </Link>
                                     </ActionTableFrontendPaginated.Body.Row.Column>
@@ -122,11 +126,11 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
                                     <ActionTableFrontendPaginated.Body.Row.Column>
                                         {formatDate(token.expiresAt)}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
-                                    <ActionTableFrontendPaginated.Body.Row.Column className="text-center">
+                                    <ActionTableFrontendPaginated.Body.Row.Column>
                                         <DeleteButton
                                             title={t("security.overview.table.action.delete")}
                                             onClick={() => setTokenToDelete(token)}
-                                            className={`text-neutral ${classes.focusable}`}
+                                            aria-label={`${token.displayName} ${t("security.overview.table.action.delete")}`}
                                         />
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                 </ActionTableFrontendPaginated.Body.Row>
@@ -135,6 +139,9 @@ export function PatList({tokens, onTokenDeleted}: PatListProps) {
                     </>
                 )}
             </ActionTableFrontendPaginated>
+            <div role="status" className="sr-only">
+                {announcement}
+            </div>
             {tokenToDelete && (
                 <DeletePATDialog
                     pat={tokenToDelete}

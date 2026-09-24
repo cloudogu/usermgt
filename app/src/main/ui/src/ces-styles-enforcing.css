@@ -1,3 +1,8 @@
+.tailwind-wrapper {
+    --colors-default-focus-inner: var(--ces-color-default-focus-inner);
+    --colors-default-focus-outer: var(--ces-color-default-focus-outer);
+}
+
 .tailwind-wrapper .mb-0 {
     margin-bottom: 0;
 }

@@ -17,11 +17,13 @@ export function PATManagement({pat, patError, isPATLoading}: PATManagementProps)
     const [deletedTokenIds, setDeletedTokenIds] = useState<string[]>([]);
     const tokens = pat.tokens.filter(token => !deletedTokenIds.includes(token.id));
     if (isPATLoading) {
-        return <CesIconSpinner
-            aria-label={t("security.overview.title")}
-            className="h-16 w-16 animate-spin text-divider-primary-border"
-            role="status"
-        />;
+        return  <div className="flex min-h-[60vh] items-center justify-center">
+                    <CesIconSpinner
+                        role="status"
+                        aria-label={t("security.overview.title")}
+                        className="h-16 w-16 animate-spin"
+                    />
+                </div>
     }
 
     if (patError) {
@@ -34,16 +36,14 @@ export function PATManagement({pat, patError, isPATLoading}: PATManagementProps)
 
     return (
         <>
-            <h2>{t("security.overview.title")}</h2>
-            <Label text={t("security.overview.title.discription")}/>
-            <hr className="my-4 border-0 border-t border-neutral-300" aria-hidden="true" />
             <div className="inline-flex items-center gap-3">
-                <h3>{t("security.overview.headline")}</h3>
-                <span data-testid="security-pat-count" className={"mb-2"}><Badge text={tokenCount} className={"px-4"}/></span>
+                <h3 id={"pat-header"}>{t("security.overview.headline")}</h3>
+                <span data-testid="security-pat-count" className="mb-2"><Badge text={tokenCount} className={"px-4"}/></span>
             </div>
             <PatList
                 tokens={tokens}
                 onTokenDeleted={id => setDeletedTokenIds(current => [...current, id])}
+                labelledBy={"pat-header"}
             />
         </>
     );

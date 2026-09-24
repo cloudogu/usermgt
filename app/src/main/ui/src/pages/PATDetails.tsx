@@ -1,5 +1,6 @@
 import {ApplicationContainer as TailwindContainer, Button, CesIconArrowLeft, CesIconCheck, CesIconSpinner, CesIconTrash, Label} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
+import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
@@ -12,6 +13,7 @@ import {useDogus} from "../hooks/useDogus";
 import {PATService} from "../services/PATs";
 import "../ces-styles-wrapper.css";
 import "../ces-styles-enforcing.css";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
 
 export default function PATDetails() {
     const {id} = useParams<{id: string}>();
@@ -28,7 +30,7 @@ export default function PATDetails() {
         navigate("/security", {replace: true});
     };
     const timeHint = pat
-        ? `${t("security.overview.table.createdAt")} ${formatDate(pat.createdAt)} - ${pat.expiresAt
+        ? `${t("security.overview.table.createdAt")} ${formatDate(pat.createdAt)} · ${pat.expiresAt
             ? `${t("security.overview.table.expiresAt")} ${formatDate(pat.expiresAt)}`
             : t("security.pat.details.neverExpires")}`
         : "";
@@ -47,7 +49,7 @@ export default function PATDetails() {
     const hasUnknownDogus = !allDogus && [...scopedDoguNames].some(part =>
         !doguOptions.some(dogu => dogu.value === part));
 
-
+    useSetPageTitle(pageTitle("pages.patDetails"));
     return (
         <div className="tailwind-wrapper">
             <TailwindContainer.ContentContainer.EmptyLargePage applicationTitle={pageTitle("pages.patDetails")}>
@@ -61,50 +63,64 @@ export default function PATDetails() {
                 {error ? (
                     <p role="alert" className="my-4 text-danger">{t("security.pat.details.loadError")}</p>
                 ) : isLoading ? (
-                    <CesIconSpinner role="status" aria-label={t("pages.patDetails")}
-                        className="h-16 w-16 animate-spin text-divider-primary-border"/>
+                    <div className="flex min-h-[60vh] items-center justify-center">
+                        <CesIconSpinner
+                            role="status"
+                            aria-label={t("pages.patDetails")}
+                            className="h-16 w-16 animate-spin"
+                        />
+                    </div>
                 ) : !pat ? (
                     <p role="alert" className="my-4 text-danger">{t("security.pat.details.notFound")}</p>
                 ) : (
                     <div>
-                        <span className="inline-flex items-center gap-1.5">
-                            <h2 className={"mb-1"}>{pat.displayName}</h2>
-                            <StatusIndicator
-                                text={
-                                    pat.expiresAt && Date.parse(pat.expiresAt) <= Date.now()
-                                        ? "expired"
-                                        : "active"
-                                }
-                                variant="primary"
-                            />
-                        </span>
+                        <div className="flex flex-wrap items-center gap-1.5">
+                            <h2 className="min-w-0 max-w-full break-words mb-1">
+                                {pat.displayName}
+                            </h2>
+                            <div className="shrink-0">
+                                <StatusIndicator
+                                    text={
+                                        pat.expiresAt && Date.parse(pat.expiresAt) <= Date.now()
+                                            ? "expired"
+                                            : "active"
+                                    }
+                                    variant="primary"
+                                />
+                            </div>
+                        </div>
                         <Label text={timeHint} className={"mb-2"}/>
                         <Button
-                            className="flex items-center justify-center gap-1 mb-2 mt-2"
+                            className="flex w-auto mobile:w-full items-center justify-center gap-1 mb-2 mt-4"
                             color="neutral"
                             variant="secondary"
                             size="small"
                             type="button"
                             onClick={() => setDeleteDialogOpen(true)}
                         >
-                            <CesIconTrash/>
+                            <CesIconTrash aria-hidden="true"/>
                             <span>{t("security.pat.details.delete")}</span>
                         </Button>
-                        <hr className="my-4 border-0 border-t border-neutral-300" />
+                        <hr className="my-4 border-0 border-t border-neutral-weak" aria-hidden="true" />
                         <h3>{t("security.pat-details.access.label")}</h3>
                         <div className="my-6 break-all">
                             {allDogus ? (
-                                <p>{t("security.createpat.scopes.selectdogus.all.label.dogus")} ({t("security.createpat.scopes.selectdogus.all.label.hint")})</p>
+                                <p className="flex items-center gap-2"><CesIconCheck className="h-6 w-6 shrink-0 text-brand" aria-hidden="true"/>{t("security.createpat.scopes.selectdogus.all.label.dogus")} ({t("security.createpat.scopes.selectdogus.all.label.hint")})</p>
                             ) : doguError ? (
                                 <p role="alert" className="text-danger">{t("security.pat.details.dogusLoadError")}</p>
                             ) : areDogusLoading ? (
-                                <CesIconSpinner role="status" aria-label={t("security.pat.details.scope")}
-                                    className="h-6 w-6 animate-spin"/>
+                                    <div className="flex min-h-[60vh] items-center justify-center">
+                                        <CesIconSpinner
+                                            role="status"
+                                            aria-label={t("security.pat.details.scope")}
+                                            className="h-16 w-16 animate-spin"
+                                        />
+                                    </div>
                             ) : (
                                 <>
                                     {doguGroups.map(group => (
                                         <section key={group.key} aria-labelledby={`pat-dogus-${group.key}`}
-                                            className="border-t border-neutral-weak pt-4 first:border-t-0 first:pt-0">
+                                            className="pt-4 first:pt-0">
                                             <span id={`pat-dogus-${group.key}`} className="mb-4 text-default-text font-semibold desktop:text-desktop-regular mobile:text-mobile-regular">
                                                 {t(`security.createpat.check.${group.key}`)}
                                             </span>
@@ -125,11 +141,25 @@ export default function PATDetails() {
                         </div>
                     </div>
                 )}
-                <Button color="brand" variant="primary" type="button"
-                    className="flex items-center gap-2" onClick={() => navigate("/security")}>
+                <Link
+                    to="/security"
+                    className="
+                          inline-flex items-center justify-center gap-2
+                          h-10 whitespace-nowrap rounded border-2 px-[14px] font-bold
+                          desktop:text-desktop-regular mobile:text-mobile-regular
+                          bg-brand border-brand
+                          hover:bg-brand-strong hover:border-brand-strong
+                          focus-visible:bg-brand-strong focus-visible:border-brand-strong
+                          active:bg-brand-stronger active:border-brand-stronger
+                          !text-inverted-text !no-underline
+                          outline-0 focus-visible:ces-focused
+                          w-auto mobile:w-full
+                          mt-6
+                    "
+                >
                     <CesIconArrowLeft aria-hidden="true"/>
                     {t("security.pat.details.back")}
-                </Button>
+                </Link>
                 {deleteDialogOpen && pat && (
                     <DeletePATDialog
                         pat={pat}

@@ -285,5 +285,8 @@
   "security.overview.delete.dialog.title": "Delete access key",
   "security.overview.delete.dialog.message": "Do you really want to delete the access key '{{displayName}}'?",
   "security.overview.delete.dialog.confirm": "Delete",
-  "security.pta.load.error": "Failed to load personal access tokens."
+  "security.pta.load.error": "Failed to load personal access tokens.",
+
+  "components.breadcrump.aria.label": "Breadcrump",
+  "components.required.asterisk.hint": "mandatory field"
 }
