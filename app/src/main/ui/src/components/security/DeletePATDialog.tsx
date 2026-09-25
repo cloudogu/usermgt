@@ -1,17 +1,28 @@
 import {Button, SegmentedDialog} from "@cloudogu/ces-theme-tailwind";
 import {t} from "../../helpers/i18nHelpers";
 import type {PersonalAccessToken} from "../../hooks/usePAT";
+import type {RefObject} from "react";
 
 export type DeletePATDialogProps = {
     pat: Pick<PersonalAccessToken, "displayName">;
     onClose: () => void;
     onConfirm: () => Promise<void>;
+    returnFocusRef?: RefObject<HTMLButtonElement>;
 };
 
-export default function DeletePATDialog({pat, onClose, onConfirm}: DeletePATDialogProps) {
+export default function DeletePATDialog({pat, onClose, onConfirm, returnFocusRef}: DeletePATDialogProps) {
     return (
         <SegmentedDialog open={true} onOpenChange={(open) => !open && onClose()} variant="danger">
-            <SegmentedDialog.Content className="border-danger" showDefaultCloseIcon>
+            <SegmentedDialog.Content
+                className="border-danger"
+                showDefaultCloseIcon
+                onCloseAutoFocus={event => {
+                    if (returnFocusRef?.current?.isConnected) {
+                        event.preventDefault();
+                        returnFocusRef.current.focus();
+                    }
+                }}
+            >
                 <SegmentedDialog.Content.Header className="border-danger text-danger">
                     <SegmentedDialog.Content.Header.Title>
                         {t("security.createpat.modal.delete.headline")}

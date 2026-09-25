@@ -4,15 +4,15 @@ import {
     usePaginationControl,
 } from "@cloudogu/ces-theme-tailwind";
 
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import {formatDate, t, tWithParams} from "../../helpers/i18nHelpers";
+import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
 import {PATService} from "../../services/PATs";
+import {DeleteButton} from "../DeleteButton";
 import StatusIndicator from "../StatusIndicator";
 import DeletePATDialog from "./DeletePATDialog";
 import type {PersonalAccessToken} from "../../hooks/usePAT";
-import {DeleteButton} from "../DeleteButton";
-import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
 
 export type PatListProps = {
     tokens: PersonalAccessToken[];
@@ -27,6 +27,7 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
     const [sortColumn, setSortColumn] = useState<SortableColumn>("displayName");
     const [sortDirection, setSortDirection] = useState<SortDirection>("ascending");
     const [tokenToDelete, setTokenToDelete] = useState<PersonalAccessToken>();
+    const deleteButtonRef = useRef<HTMLButtonElement | null>(null);
     const [announcement, setAnnouncement] = useState("");
 
     const sortedTokens = useMemo(() => [...tokens].sort((left, right) => {
@@ -129,7 +130,10 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
                                     <ActionTableFrontendPaginated.Body.Row.Column>
                                         <DeleteButton
                                             title={t("security.overview.table.action.delete")}
-                                            onClick={() => setTokenToDelete(token)}
+                                            onClick={event => {
+                                                deleteButtonRef.current = event.currentTarget;
+                                                setTokenToDelete(token);
+                                            }}
                                             aria-label={`${token.displayName} ${t("security.overview.table.action.delete")}`}
                                         />
                                     </ActionTableFrontendPaginated.Body.Row.Column>
@@ -145,6 +149,7 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
             {tokenToDelete && (
                 <DeletePATDialog
                     pat={tokenToDelete}
+                    returnFocusRef={deleteButtonRef}
                     onClose={() => setTokenToDelete(undefined)}
                     onConfirm={deleteToken}
                 />

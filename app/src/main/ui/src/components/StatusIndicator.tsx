@@ -14,7 +14,7 @@ export function StatusIndicator({text, variant = 'primary', className = ''}: Sta
     const  color = isActive ? 'brand' : 'neutral';
 
 
-    return <Badge text={displayText} variant={variant} color={color} className={className}/>;
+    return <Badge text={displayText} variant={variant} color={color} className={className} ariaText={`${t("security.overview.table.status")}: ${displayText}`}/>;
 }
 
 export default StatusIndicator;

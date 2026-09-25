@@ -38,7 +38,9 @@ export function PATManagement({pat, patError, isPATLoading}: PATManagementProps)
         <>
             <div className="inline-flex items-center gap-3">
                 <h3 id={"pat-header"}>{t("security.overview.headline")}</h3>
-                <span data-testid="security-pat-count" className="mb-2"><Badge text={tokenCount} className={"px-4"}/></span>
+                <span data-testid="security-pat-count" className="mb-2">
+                    <Badge text={tokenCount} className={"px-4"} ariaText={`${t("security.overview.table.count")}: ${tokenCount}`}/>
+                </span>
             </div>
             <PatList
                 tokens={tokens}
