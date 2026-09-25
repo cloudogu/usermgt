@@ -1,5 +1,6 @@
-import {Button, InputField, Select, Label, CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
-import React, {useRef, useState} from "react";
+import {Button, InputField, SegmentedSelect, Label, CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
+import React, {useId, useRef, useState} from "react";
+import {flushSync} from "react-dom";
 import {createUseStyles} from "react-jss";
 import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
@@ -7,11 +8,11 @@ import DoguSelection from "../components/security/DoguSelection";
 import {t} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import {useAPI} from "../hooks/useAPI";
+import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {PATService} from "../services/PATs";
 import type {PATMetadata} from "../services/PATs";
 import "../ces-styles-wrapper.css";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
-import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
 
 
 const useStyles = createUseStyles({
@@ -34,7 +35,7 @@ const useStyles = createUseStyles({
 
 
 function requiredStar() {
-    return <span aria-label={t("components.required.asterisk.hint")}>*</span>
+    return <span aria-label={t("components.required.asterisk.hint")}>*</span>;
 }
 
 export default function CreatePAT() {
@@ -45,12 +46,12 @@ export default function CreatePAT() {
     }
     if (isLoading || !tokens) {
         return  <div className="flex min-h-[60vh] items-center justify-center">
-                    <CesIconSpinner
-                        role="status"
-                        aria-label={t("pages.createPAT")}
-                        className="h-16 w-16 animate-spin"
-                    />
-                </div>
+            <CesIconSpinner
+                role="status"
+                aria-label={t("pages.createPAT")}
+                className="h-16 w-16 animate-spin"
+            />
+        </div>;
     }
 
     return <CreatePATForm tokens={tokens}/>;
@@ -65,15 +66,36 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
 
     const [touched, setTouched] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string>("");
-    const [expiryTouched, setExpiryTouched] = useState(false);
-    const [dogusTouched, setDogusTouched] = useState(false);
-    const expiryOpen = useRef(false);
+    const [submitAttempted, setSubmitAttempted] = useState(false);
+    const nameRef = useRef<HTMLInputElement>(null);
+    const expiryRef = useRef<HTMLButtonElement>(null);
+    const dogusRef = useRef<HTMLDivElement>(null);
+    const nameLabelId = useId();
+    const nameHintId = useId();
+    const expiryLabelId = useId();
+    const expiryErrorId = useId();
 
     const createPAT = async () => {
-        setTouched(true);
-        setExpiryTouched(true);
-        setDogusTouched(true);
-        if (nameError || expiryError || selectedDogus.length === 0) return;
+        // Render the field descriptions before moving focus, including on repeated attempts.
+        flushSync(() => {
+            setTouched(true);
+            setSubmitAttempted(true);
+        });
+        if (nameError) {
+            nameRef.current?.focus();
+            return;
+        }
+        if (expiryError) {
+            expiryRef.current?.focus();
+            return;
+        }
+        if (selectedDogus.length === 0) {
+            const group = dogusRef.current;
+            const radio = group?.querySelector<HTMLElement>("[role=\"radio\"][aria-checked=\"true\"]")
+                ?? group?.querySelector<HTMLElement>("[role=\"radio\"]");
+            radio?.focus();
+            return;
+        }
         const expiresInDays = Number(selectedOption);
         const expiresAt = expiresInDays > 0
             ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString()
@@ -99,7 +121,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
 
     const showError = touched && nameError !== "";
     const expiryError = selectedOption === "" ? t("security.createpat.error.expireat.select") : "";
-    const showExpiryError = expiryTouched && expiryError !== "";
+    const showExpiryError = submitAttempted && expiryError !== "";
     useSetPageTitle(pageTitle("pages.createPAT"));
     const defclasses = useDoguSelectionStyles();
     return (
@@ -110,15 +132,18 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                     [t("pages.createPAT")],
                 ]}
             />
-            <h1 className="mb-0 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">
+            <h1 className="mb-4 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">
                 {t("pages.createPAT")}
             </h1>
             <form>
-                <div className={[classes.boldLabel,classes.dangerLabel,classes.defaultTextLabel, "mb-4"].join(" ")}>
+                <div className={[classes.boldLabel,classes.dangerLabel,classes.defaultTextLabel, "mb-6"].join(" ")}>
                     <InputField type={"text"}
+                        ref={nameRef}
+                        aria-labelledby={nameLabelId}
+                        aria-describedby={nameHintId}
                         variant={showError ? "danger" : undefined}
-                                label={<>{t("security.createpat.input.name.label")}{requiredStar()}</>}
-                        hint={showError ? nameError : t("security.createpat.input.name.hint")}
+                        label={<span id={nameLabelId}>{t("security.createpat.input.name.label")}{requiredStar()}</span>}
+                        hint={<span id={nameHintId}>{showError ? nameError : t("security.createpat.input.name.hint")}</span>}
                         value={patName}
                         required={true}
                         onChange={(e) => {
@@ -132,60 +157,62 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                     />
                 </div>
                 <div
-                    className={[classes.boldLabel, classes.dangerLabel, "mb-4"].join(" ")}
-                    onBlur={(event) => {
-                        if (!expiryOpen.current && !event.currentTarget.contains(event.relatedTarget)) {
-                            setExpiryTouched(true);
-                        }
-                    }}
+                    className={[classes.boldLabel, classes.dangerLabel, "mb-6"].join(" ")}
                 >
                     <Label
-                        text={<>{t("security.createpat.input.expires.label")}{requiredStar()}</>}
+                        text={<span id={expiryLabelId}>{t("security.createpat.input.expires.label")}{requiredStar()}</span>}
                         variant={showExpiryError ? "danger" : undefined}
-                        hint={showExpiryError ? expiryError : undefined}
+                        hint={showExpiryError ? <span id={expiryErrorId}>{expiryError}</span> : undefined}
                         className={["desktop:text-desktop-regular", "mobile:text-mobile-regular", showExpiryError ? "text-danger": "text-default-text"].join(" ")}
                     >
-                        <Select
-                            data-testid={"security-create-pat-expiry-select"}
-                            id={"security-create-pat-expiry"}
+                        <SegmentedSelect
                             value={selectedOption}
                             required={true}
-                            onOpenChange={(open) => { expiryOpen.current = open; }}
                             onValueChange={setSelectedOption}
-                            placeholder={t("security.createpat.select.expires.placeholder")}
-                            className={`focus-visible:ces-focused ${showExpiryError ? "border-danger text-default-text" : ""}`}
                         >
-                            <Select.Item value="7" data-testid={"security-create-pat-expiry-7"}>{t("security.createpat.select.expires.option.sevendays")}</Select.Item>
-                            <Select.Item value="30" data-testid={"security-create-pat-expiry-30"}>{t("security.createpat.select.expires.option.thirtydays")}</Select.Item>
-                            <Select.Item value="60" data-testid={"security-create-pat-expiry-60"}>{t("security.createpat.select.expires.option.sixtydays")}</Select.Item>
-                            <Select.Item value="90" data-testid={"security-create-pat-expiry-90"}>{t("security.createpat.select.expires.option.nintydays")}</Select.Item>
-                            <Select.Item value="0" data-testid={"security-create-pat-expiry-0"}>{t("security.createpat.select.expires.option.never")}</Select.Item>
-                        </Select>
+                            <SegmentedSelect.TriggerButton
+                                ref={expiryRef}
+                                id="security-create-pat-expiry"
+                                data-testid="security-create-pat-expiry-select-trigger"
+                                aria-labelledby={expiryLabelId}
+                                aria-invalid={showExpiryError}
+                                aria-describedby={showExpiryError ? expiryErrorId : undefined}
+                                className={`focus-visible:ces-focused ${showExpiryError ? "border-danger text-default-text" : ""} mobile:w-full`}
+                            >
+                                {t("security.createpat.select.expires.placeholder")}
+                            </SegmentedSelect.TriggerButton>
+                            <SegmentedSelect.Content data-testid="security-create-pat-expiry-select">
+                                <SegmentedSelect.Content.Item value="7" data-testid={"security-create-pat-expiry-7"}>{t("security.createpat.select.expires.option.sevendays")}</SegmentedSelect.Content.Item>
+                                <SegmentedSelect.Content.Item value="30" data-testid={"security-create-pat-expiry-30"}>{t("security.createpat.select.expires.option.thirtydays")}</SegmentedSelect.Content.Item>
+                                <SegmentedSelect.Content.Item value="60" data-testid={"security-create-pat-expiry-60"}>{t("security.createpat.select.expires.option.sixtydays")}</SegmentedSelect.Content.Item>
+                                <SegmentedSelect.Content.Item value="90" data-testid={"security-create-pat-expiry-90"}>{t("security.createpat.select.expires.option.nintydays")}</SegmentedSelect.Content.Item>
+                                <SegmentedSelect.Content.Item value="0" data-testid={"security-create-pat-expiry-0"}>{t("security.createpat.select.expires.option.never")}</SegmentedSelect.Content.Item>
+                            </SegmentedSelect.Content>
+                        </SegmentedSelect>
                     </Label>
                 </div>
-                <div onBlur={(event) => {
-                    if (!event.currentTarget.contains(event.relatedTarget)) {
-                        setDogusTouched(true);
-                    }
-                }}>
+                <div ref={dogusRef}>
                     <DoguSelection
                         label={<>{t("security.createpat.scopes.appliedto.label")}{requiredStar()}</>}
                         value={selectedDogus}
                         onChange={setSelectedDogus}
-                        invalid={dogusTouched && selectedDogus.length === 0}
+                        invalid={submitAttempted && selectedDogus.length === 0}
                     />
                 </div>
-                <div className="mt-6 flex flex-row items-end justify-between">
-                    <div className="flex flex-row items-center justify-start gap-4">
-                        <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit" onClick={createPAT} className={defclasses.checkboxFocus}>
+                <div className="mt-6 flex mobile:flex-col desktop:flex-row gap-4 items-end justify-between mb-4">
+                    <div className="flex mobile:flex-col mobile:w-full desktop:flex-row items-center gap-4">
+                        <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit"
+                                onClick={createPAT}
+                                className={`${defclasses.checkboxFocus} mobile:w-full`}>
                             {t("security.createpat.selectdogus.createkey")}
                         </Button>
                         <Button color="neutral" variant="secondary" size="regular" type="button"
-                            onClick={() => navigate("/security")}>
+                                onClick={() => navigate("/security")}
+                                className={`mobile:w-full`}>
                             {t("security.createpat.selectdogus.cancel")}
                         </Button>
                     </div>
-                    <span className="text-sm text-neutral">* Pflichtfeld</span>
+                    <span className="text-sm text-neutral mobile:order-first mobile:self-end mobile:my-4">* Pflichtfeld</span>
                 </div>
             </form>
         </div>

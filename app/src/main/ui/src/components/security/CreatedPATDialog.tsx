@@ -10,6 +10,7 @@ import {
 import {useState} from "react";
 import {t, tWithParams} from "../../helpers/i18nHelpers";
 import type {CreatePATResponse} from "../../services/PATs";
+import MessageBox from "../MessageBox";
 
 export type CreatedPATDialogProps = {
     pat: CreatePATResponse;
@@ -27,7 +28,7 @@ function formatExpiration(expiresAt: string | null): string {
     }
 
     const remainingDays = Math.max(0, Math.ceil((expirationDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)));
-    return tWithParams("", remainingDays, expirationDate.toLocaleDateString("de-DE"));
+    return tWithParams("security.createpat.modal.success.expires.text", remainingDays, expirationDate.toLocaleDateString("de-DE"));
 }
 
 export default function CreatedPATDialog({pat, onClose}: CreatedPATDialogProps) {
@@ -47,14 +48,7 @@ export default function CreatedPATDialog({pat, onClose}: CreatedPATDialogProps) 
                     </SegmentedDialog.Content.Header.Title>
                 </SegmentedDialog.Content.Header>
                 <SegmentedDialog.Content.Body className="text-success">
-                    <div className="self-stretch p-2 bg-success-weaker rounded-md border-success border-2 inline-flex justify-between items-center mb-4">
-                        <div className="flex-1 flex justify-start items-center gap-2">
-                            <CesIconInfo className="size-5 text-success"/>
-                            <div className="flex-1 text-success text-base font-normal leading-6">
-                                {t("security.createpat.modal.success.hint")}
-                            </div>
-                        </div>
-                    </div>
+                    <MessageBox text={t("security.createpat.modal.success.hint")} icon="info" color="success"/>
                     <div className="self-stretch grid grid-cols-[max-content_1fr] items-baseline gap-x-4 gap-y-2 text-default-text text-base leading-6">
                         <div className="font-bold">{t("security.createpat.modal.success.displayname.label")}</div>
                         <div className="font-normal">{pat.displayName}</div>
@@ -79,6 +73,8 @@ export default function CreatedPATDialog({pat, onClose}: CreatedPATDialogProps) 
                                 size="regular"
                                 className="rounded-l-none whitespace-nowrap"
                                 onClick={copyToken}
+                                aria-describedby="pat-created-success-hint"
+                                aria-label={t("security.createpat.modal.success.pat.arialabel")}
                             >
                                 {copied ? <CesIconCheck/> : <CesIconCopy/>}
                             </Button>

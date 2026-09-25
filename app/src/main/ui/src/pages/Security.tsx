@@ -52,7 +52,7 @@ function SecurityContent({username}: {username: string}) {
                     data-testid="security-create-pat"
                     onClick={() => navigate("/security/createPAT")}
                 >
-                    <CesIconPlus/>
+                    <CesIconPlus aria-hidden="true" />
                     <span>{t("security.overview.button.createkey")}</span>
                 </Button>
             </div>

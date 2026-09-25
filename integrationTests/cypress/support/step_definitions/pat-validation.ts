@@ -51,8 +51,19 @@ Then("the PAT validation message {string} is visible", (message: string) => {
 });
 
 Then("the PAT name error is {string}", (message: string) => {
-    patElement("security-create-pat-name-input").should("have.attr", "aria-invalid", "true");
-    cy.contains(message).should("be.visible");
+    patElement("security-create-pat-name-input").should("be.focused")
+        .and("have.attr", "aria-invalid", "true");
+    patElement("security-create-pat-name-input").invoke("attr", "aria-describedby").then(id => {
+        cy.get(`[id="${id}"]`).should("be.visible").and("have.text", message);
+    });
+});
+
+Then("the PAT expiry error is focused and described", () => {
+    patElement("security-create-pat-expiry-select-trigger").should("be.focused")
+        .and("have.attr", "aria-invalid", "true");
+    patElement("security-create-pat-expiry-select-trigger").invoke("attr", "aria-describedby").then(id => {
+        cy.get(`[id="${id}"]`).should("be.visible").and("not.be.empty");
+    });
 });
 
 Then("no PAT creation request was sent", () => {
@@ -85,4 +96,8 @@ Then("the validation PAT is created without expiration", () => assertValidationP
 
 Then("the PAT dogu selection is invalid", () => {
     cy.get('[role="radiogroup"]').should("have.attr", "aria-invalid", "true");
+    cy.get('[role="radiogroup"] [role="radio"][aria-checked="true"]').should("be.focused");
+    cy.get('[role="radiogroup"]').invoke("attr", "aria-describedby").then(id => {
+        cy.get(`[id="${id}"]`).should("be.visible").and("not.be.empty");
+    });
 });

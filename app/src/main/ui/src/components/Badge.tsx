@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type StatusIndicatorProps = {
+export type BadgeProps = {
     text: string;
     ariaText?: string
     variant?: string;
@@ -8,7 +8,7 @@ export type StatusIndicatorProps = {
     className?: string
 };
 
-export function Badge({text, ariaText, variant = 'primary', color = 'brand', className = ''}: StatusIndicatorProps) {
+export function Badge({text, ariaText, variant = 'primary', color = 'brand', className = ''}: BadgeProps) {
     const isActive = color === 'brand';
     if ('secondary' === variant) {
         return (

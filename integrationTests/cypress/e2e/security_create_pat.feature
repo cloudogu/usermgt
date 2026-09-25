@@ -71,6 +71,7 @@ Feature: Personal access tokens on the security page
     And the user selects the PAT scope "/usermgt"
     And the user submits the PAT validation form
     Then the PAT validation message "Please select a validity period." is visible
+    And the PAT expiry error is focused and described
     And no PAT creation request was sent
     When the user selects the PAT expiry option "0"
     And the user submits the PAT validation form

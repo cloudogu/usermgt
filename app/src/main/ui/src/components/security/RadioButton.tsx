@@ -42,7 +42,7 @@ export function RadioButton({label, checked, onChange, testId}: RadioButtonProps
                     {checked && <div className="bg-brand rounded-[50%] w-3.5 h-3.5 absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 hover-dark-bg" />}
                 </div>
             </div>
-            <div className="flex flex-row gap-0 items-center justify-start shrink-0 relative overflow-hidden" >
+            <div className="flex flex-row gap-0 items-center justify-start relative" >
                 <div className="text-default-text text-left" >
                     {label}
                 </div>
