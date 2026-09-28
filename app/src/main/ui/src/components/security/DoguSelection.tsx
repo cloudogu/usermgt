@@ -54,7 +54,7 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
         </CheckboxField>
     );
 
-    const doguCount = doguOptions.length - excludedDogus.length
+    const doguCount = doguOptions.length - excludedDogus.length;
 
     return (
         <RadioGroup label={label} className="font-semibold" invalid={invalid}>

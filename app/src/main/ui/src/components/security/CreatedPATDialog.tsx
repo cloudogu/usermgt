@@ -2,15 +2,14 @@ import {
     Button,
     CesIconCheck,
     CesIconCopy,
-    CesIconInfo,
     Input,
     Label,
     SegmentedDialog,
 } from "@cloudogu/ces-theme-tailwind";
 import {useState} from "react";
 import {t, tWithParams} from "../../helpers/i18nHelpers";
-import type {CreatePATResponse} from "../../services/PATs";
 import MessageBox from "../MessageBox";
+import type {CreatePATResponse} from "../../services/PATs";
 
 export type CreatedPATDialogProps = {
     pat: CreatePATResponse;

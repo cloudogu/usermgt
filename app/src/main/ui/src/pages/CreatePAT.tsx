@@ -202,13 +202,13 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                 <div className="mt-6 flex mobile:flex-col desktop:flex-row gap-4 items-end justify-between mb-4">
                     <div className="flex mobile:flex-col mobile:w-full desktop:flex-row items-center gap-4">
                         <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit"
-                                onClick={createPAT}
-                                className={`${defclasses.checkboxFocus} mobile:w-full`}>
+                            onClick={createPAT}
+                            className={`${defclasses.checkboxFocus} mobile:w-full`}>
                             {t("security.createpat.selectdogus.createkey")}
                         </Button>
                         <Button color="neutral" variant="secondary" size="regular" type="button"
-                                onClick={() => navigate("/security")}
-                                className={`mobile:w-full`}>
+                            onClick={() => navigate("/security")}
+                            className={"mobile:w-full"}>
                             {t("security.createpat.selectdogus.cancel")}
                         </Button>
                     </div>

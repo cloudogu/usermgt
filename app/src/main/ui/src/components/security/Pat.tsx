@@ -1,6 +1,4 @@
-import {
-    CesIconSpinner, Label
-} from "@cloudogu/ces-theme-tailwind";
+import CesIconSpinner from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import {t} from "../../helpers/i18nHelpers";
 import Badge from "../Badge";
@@ -18,12 +16,12 @@ export function PATManagement({pat, patError, isPATLoading}: PATManagementProps)
     const tokens = pat.tokens.filter(token => !deletedTokenIds.includes(token.id));
     if (isPATLoading) {
         return  <div className="flex min-h-[60vh] items-center justify-center">
-                    <CesIconSpinner
-                        role="status"
-                        aria-label={t("security.overview.title")}
-                        className="h-16 w-16 animate-spin"
-                    />
-                </div>
+            <CesIconSpinner
+                role="status"
+                aria-label={t("security.overview.title")}
+                className="h-16 w-16 animate-spin"
+            />
+        </div>;
     }
 
     if (patError) {

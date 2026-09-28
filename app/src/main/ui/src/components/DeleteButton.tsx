@@ -1,6 +1,6 @@
+import {CesIconTrash} from '@cloudogu/ces-theme-tailwind';
 import React, {forwardRef} from 'react';
 import type {ComponentPropsWithoutRef} from 'react';
-import {CesIconTrash} from "@cloudogu/ces-theme-tailwind";
 
 type ButtonProps = ComponentPropsWithoutRef<'button'>
 

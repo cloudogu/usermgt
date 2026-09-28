@@ -1,8 +1,7 @@
 import {ApplicationContainer as TailwindContainer, Button, CesIconArrowLeft, CesIconCheck, CesIconSpinner, CesIconTrash, Label} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, Link} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
 import StatusIndicator from "../components/StatusIndicator";
 import DeletePATDialog from "../components/security/DeletePATDialog";
@@ -10,10 +9,11 @@ import {formatDate} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import {useAPI} from "../hooks/useAPI";
 import {useDogus} from "../hooks/useDogus";
+import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {PATService} from "../services/PATs";
 import "../ces-styles-wrapper.css";
 import "../ces-styles-enforcing.css";
-import {useSetPageTitle} from "../hooks/useSetPageTitle";
+
 
 export default function PATDetails() {
     const {id} = useParams<{id: string}>();
@@ -109,13 +109,13 @@ export default function PATDetails() {
                             ) : doguError ? (
                                 <p role="alert" className="text-danger">{t("security.pat.details.dogusLoadError")}</p>
                             ) : areDogusLoading ? (
-                                    <div className="flex min-h-[60vh] items-center justify-center">
-                                        <CesIconSpinner
-                                            role="status"
-                                            aria-label={t("security.pat.details.scope")}
-                                            className="h-16 w-16 animate-spin"
-                                        />
-                                    </div>
+                                <div className="flex min-h-[60vh] items-center justify-center">
+                                    <CesIconSpinner
+                                        role="status"
+                                        aria-label={t("security.pat.details.scope")}
+                                        className="h-16 w-16 animate-spin"
+                                    />
+                                </div>
                             ) : (
                                 <>
                                     {doguGroups.map(group => (
