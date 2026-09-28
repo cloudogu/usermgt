@@ -1,4 +1,4 @@
-import CesIconSpinner from "@cloudogu/ces-theme-tailwind";
+import {CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import {t} from "../../helpers/i18nHelpers";
 import Badge from "../Badge";
