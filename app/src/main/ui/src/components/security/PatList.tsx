@@ -114,7 +114,7 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
                                     className={token.status == "active" ? "" : "bg-neutral-weaker text-neutral"}
                                 >
                                     <ActionTableFrontendPaginated.Body.Row.Column className="break-all">
-                                        <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:text-brand">
+                                        <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:!text-brand">
                                             {token.displayName}
                                         </Link>
                                     </ActionTableFrontendPaginated.Body.Row.Column>
@@ -131,6 +131,7 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
                                         <DeleteButton
                                             title={t("security.overview.table.action.delete")}
                                             onClick={event => {
+                                                setAnnouncement("");
                                                 deleteButtonRef.current = event.currentTarget;
                                                 setTokenToDelete(token);
                                             }}
@@ -143,7 +144,7 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
                     </>
                 )}
             </ActionTableFrontendPaginated>
-            <div role="status" className="sr-only">
+            <div role="status" aria-atomic="true" className="sr-only">
                 {announcement}
             </div>
             {tokenToDelete && (

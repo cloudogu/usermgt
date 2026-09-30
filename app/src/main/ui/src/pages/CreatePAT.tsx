@@ -136,7 +136,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                 {t("pages.createPAT")}
             </h1>
             <form>
-                <div className={[classes.boldLabel,classes.dangerLabel,classes.defaultTextLabel, "mb-6"].join(" ")}>
+                <div className={[classes.boldLabel,classes.dangerLabel,classes.defaultTextLabel, "mb-6 mt-12"].join(" ")}>
                     <InputField type={"text"}
                         ref={nameRef}
                         aria-labelledby={nameLabelId}

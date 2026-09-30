@@ -1,10 +1,10 @@
 import {Button, CesIconPlus} from "@cloudogu/ces-theme-tailwind";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useApplicationContext} from "../components/contexts/ApplicationContext";
 import CreatedPATDialog from "../components/security/CreatedPATDialog";
 import {PATManagement} from "../components/security/Pat";
-import {t} from "../helpers/i18nHelpers";
+import {t, tWithParams} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
 import {usePAT} from "../hooks/usePAT";
@@ -28,7 +28,20 @@ function SecurityContent({username}: {username: string}) {
     const {pat, isPATLoading, patError} = usePAT(username);
     const navigate = useNavigate();
     const location = useLocation();
-    const createdPAT = (location.state as {createdPAT?: CreatePATResponse} | null)?.createdPAT;
+    const navigationState = location.state as {
+        createdPAT?: CreatePATResponse;
+        deletedPATName?: string;
+    } | null;
+    const createdPAT = navigationState?.createdPAT;
+    const deletedPATName = navigationState?.deletedPATName;
+    const [announcement, setAnnouncement] = useState("");
+
+    useEffect(() => {
+        if (deletedPATName !== undefined) {
+            setAnnouncement(tWithParams("security.createpat.modal.delete.succeeded", deletedPATName));
+            navigate("/security", {replace: true, state: null});
+        }
+    }, [deletedPATName, navigate]);
     const dialogPAT = createdPAT;
     const closeCreatedPAT = () => navigate("/security", {replace: true, state: null});
 
@@ -40,7 +53,7 @@ function SecurityContent({username}: {username: string}) {
             <div className="flex flex-col gap-4 desktop:flex-row desktop:items-start desktop:justify-between">
                 <div className="min-w-0">
                     <h1 className="desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand mb-0">{t("pages.security")}</h1>
-                    <h2>{t("security.overview.title")}</h2>
+                    <h2 className={"mt-8"}>{t("security.overview.title")}</h2>
                     <div className="desktop:text-desktop-regular mobile:text-mobile-regular text-neutral flex flex-col">
                         {t("security.overview.title.discription")}
                     </div>
@@ -61,6 +74,9 @@ function SecurityContent({username}: {username: string}) {
             <section className="pb-8">
                 {pat && <PATManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
             </section>
+            <div role="status" aria-atomic="true" className="sr-only">
+                {announcement}
+            </div>
             {dialogPAT && <CreatedPATDialog pat={dialogPAT} onClose={closeCreatedPAT}/>}
         </>
     );
