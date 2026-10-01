@@ -3,6 +3,16 @@ export const patElement = (testId: string) => cy.get(`[data-testid="${testId}"]`
 
 export const patCountBadge = () => patElement("security-pat-count").should("be.visible");
 
+// Exclude the screenreader label when reading the displayed token count.
+export function readPATCount(badge: JQuery<HTMLElement>): number {
+    const visibleBadge = badge.clone();
+    visibleBadge.find(".sr-only").remove();
+    const text = visibleBadge.text().trim();
+    expect(text, "displayed PAT count").to.match(/^\d+$/);
+    return Number(text);
+}
+
+
 export function firstPATPage(): void {
     patElement("personal-access-tokens-pagination-back").then(button => {
         // Theme buttons express their disabled state through aria-disabled.

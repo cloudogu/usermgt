@@ -1,4 +1,4 @@
-import {patCountBadge} from "./pat-helpers";
+import {patCountBadge, readPATCount} from "./pat-helpers";
 import { Given } from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
 Given("the user {string} exists", (username: string) => {
@@ -89,7 +89,9 @@ Given("the file {string} is uploaded", (file: string) => {
 
 /* PERSONAL ACCESS TOKENS */
 Given("the user remembers the current PAT count", () => {
-    patCountBadge().invoke("text").should("match", /^\d+$/).then(text => {
-        cy.wrap(Number(text)).as("initialPATCount");
+    patCountBadge().should(badge => {
+        readPATCount(badge);
+    }).then(badge => {
+        cy.wrap(readPATCount(badge)).as("initialPATCount");
     });
 });

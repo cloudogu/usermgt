@@ -1,4 +1,4 @@
-import {patCountBadge, firstPATPage, findPATRow} from "./pat-helpers";
+import {patCountBadge, readPATCount, firstPATPage, findPATRow} from "./pat-helpers";
 import '@bahmutov/cy-api'
 import {Then} from "@badeball/cypress-cucumber-preprocessor";
 import env from "@cloudogu/dogu-integration-test-library/lib/environment_variables";
@@ -459,13 +459,17 @@ Then("the PAT overview contains the PAT named {string}", (alias: string) => {
 
 Then("the PAT count has increased by {int}", (increase: number) => {
     cy.get<number>("@initialPATCount").then(initialCount => {
-        patCountBadge().should("have.text", String(initialCount + increase));
+        patCountBadge().should(badge => {
+            expect(readPATCount(badge)).to.eq(initialCount + increase);
+        });
     });
 });
 
 Then("the PAT count matches the remembered PAT count", () => {
     cy.get<number>("@initialPATCount").then(initialCount => {
-        patCountBadge().should("have.text", String(initialCount));
+        patCountBadge().should(badge => {
+            expect(readPATCount(badge)).to.eq(initialCount);
+        });
     });
 });
 
