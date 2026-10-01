@@ -276,7 +276,7 @@ When("the user {string} tries to log in with his generated password", function (
 })
 
 When("the user configures the new password to {string}", function (password: string) {
-    cy.get('input[data-testid="currentPassword-input"]').clear().type(password, {parseSpecialCharSequences: false});
+    //cy.get('input[data-testid="currentPassword-input"]').clear().type(password, {parseSpecialCharSequences: false});
     cy.get('input[data-testid="password-input"]').clear().type(password, {parseSpecialCharSequences: false});
     cy.get('input[data-testid="confirmPassword-input"]').clear().type(password, {parseSpecialCharSequences: false});
     cy.get('button[data-testid="save-button"]').click()
@@ -289,7 +289,7 @@ When("the user sets the new password to {string}", function (password: string) {
         expect(match, "generated password found in import mail").to.not.be.null
         const currentPassword = match[1]
 
-        cy.get('input[data-testid="currentPassword-input"]').clear().type(currentPassword, {parseSpecialCharSequences: false});
+        //cy.get('input[data-testid="currentPassword-input"]').clear().type(currentPassword, {parseSpecialCharSequences: false});
         cy.get('input[data-testid="password-input"]').clear().type(password, {parseSpecialCharSequences: false});
         cy.get('input[data-testid="confirmedPassword-input"]').clear().type(password, {parseSpecialCharSequences: false});
         cy.get('button[id="submit"]').click()
