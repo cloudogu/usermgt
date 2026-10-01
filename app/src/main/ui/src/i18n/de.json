@@ -284,6 +284,11 @@
   "security.pat.details.unknownDogus": "Mindestens ein zugehöriges Dogu ist nicht in der aktuellen Dogu-Liste enthalten.",
   "security.pat.details.neverExpires": "Läuft nicht ab",
 
+  "security.overview.delete.dialog.title": "Zugriffsschlüssel löschen",
+  "security.overview.delete.dialog.message": "Möchten Sie den Zugriffsschlüssel '{{displayName}}' wirklich löschen?",
+  "security.overview.delete.dialog.confirm": "Löschen",
+  "security.pta.load.error": "Die persönlichen Zugriffsschlüssel konnten nicht geladen werden.",
+
   "components.breadcrumb.aria.label": "Seitenpfad",
   "components.required.asterisk.hint": "Pflichtfeld"
 }
