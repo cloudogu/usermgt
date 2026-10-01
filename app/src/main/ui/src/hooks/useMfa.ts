@@ -35,7 +35,7 @@ export function useMfa(username?: string): mfaResult {
         mfa: mfaList,
         isMfaLoading,
         mfaError,
-        isMfaAvailable: !isAxiosError(mfaError) || mfaError.response?.status !== 503,
+        isMfaAvailable: !isAxiosError(mfaError) || (mfaError.response?.status !== undefined && mfaError.response?.status < 400),
         reloadMfa: () => setReloadTrigger(prev => prev + 1),
     };
 }

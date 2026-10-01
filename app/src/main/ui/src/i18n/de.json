@@ -284,6 +284,6 @@
   "security.pat.details.unknownDogus": "Mindestens ein zugehöriges Dogu ist nicht in der aktuellen Dogu-Liste enthalten.",
   "security.pat.details.neverExpires": "Läuft nicht ab",
 
-  "components.breadcrump.aria.label": "Seitenpfad",
+  "components.breadcrumb.aria.label": "Seitenpfad",
   "components.required.asterisk.hint": "Pflichtfeld"
 }

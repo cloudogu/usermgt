@@ -41,7 +41,7 @@ Nach der Erstellung erscheint ein Dialog mit dem neuen Zugriffsschlüssel. Kopie
 
 > **Wichtig:** Der Schlüssel wird nur einmal angezeigt. Wenn er verloren geht, muss der PAT gelöscht und neu erstellt werden.
 
-![Einmalige Anzeige des neu erstellten PATs](figures/pat/de/PATCreate.png)
+![Einmalige Anzeige des neu erstellten PATs](figures/pat/de/PATCreated.png)
 
 ## PAT verwenden
 

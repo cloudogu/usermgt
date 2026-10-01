@@ -2,15 +2,15 @@ import {t} from 'i18next';
 import React, {Fragment} from 'react';
 import {Link} from 'react-router-dom';
 
-export type BreadcrumpItem = readonly [text: string, path?: string];
+export type BreadcrumbItem = readonly [text: string, path?: string];
 
-export type BreadcrumpProps = {
-    items: readonly BreadcrumpItem[];
+export type BreadcrumbProps = {
+    items: readonly BreadcrumbItem[];
 };
 
-export function Breadcrumb({items}: BreadcrumpProps) {
+export function Breadcrumb({items}: BreadcrumbProps) {
     return (
-        <nav aria-label={t('components.breadcrump.aria.label')}>
+        <nav aria-label={t('components.breadcrumb.aria.label')}>
             <ol className="flex flex-wrap items-center gap-1 mb-4">
                 {items.map(([text, path], index) => (
                     <Fragment key={`${text}-${path ?? ''}-${index}`}>

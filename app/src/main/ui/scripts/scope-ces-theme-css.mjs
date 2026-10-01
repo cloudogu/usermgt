@@ -1,3 +1,9 @@
+/*
+* This script is used by the make target "generate-tailwind-wrapper-css"
+* to generate a wrapper for css-classes to include in legacy and new-tailwind-theme mixtures
+*
+* It loads the custom css from the new theme and prepands every class with a defined ".tailwind-wrapper" class
+* */
 import fs from "node:fs";
 import postcss from "postcss";
 import selectorParser from "postcss-selector-parser";

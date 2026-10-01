@@ -288,6 +288,6 @@
   "security.overview.delete.dialog.confirm": "Delete",
   "security.pta.load.error": "Failed to load personal access tokens.",
 
-  "components.breadcrump.aria.label": "Breadcrump",
+  "components.breadcrumb.aria.label": "Breadcrumb",
   "components.required.asterisk.hint": "mandatory field"
 }

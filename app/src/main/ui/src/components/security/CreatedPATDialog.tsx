@@ -55,7 +55,7 @@ export default function CreatedPATDialog({pat, onClose}: CreatedPATDialogProps) 
                         <div className="font-normal">{formatExpiration(pat.expiresAt)}</div>
                     </div>
                     <div className="border-b-2 border-neutral-weak my-4" />
-                    <Label text="Zugriffsschlüssel" variant="neutral" className="w-full text-default-text font-bold">
+                    <Label text={t("security.createpat.modal.success.pat.label")} variant="neutral" className="w-full text-default-text font-bold">
                         <div className="flex w-full">
                             <Input
                                 type="text"

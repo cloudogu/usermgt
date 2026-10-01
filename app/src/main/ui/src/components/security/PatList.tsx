@@ -14,6 +14,11 @@ import StatusIndicator from "../StatusIndicator";
 import DeletePATDialog from "./DeletePATDialog";
 import type {PersonalAccessToken} from "../../hooks/usePAT";
 
+enum SortDirection {
+    Ascending = "ascending",
+    Descending = "descending",
+}
+
 export type PatListProps = {
     tokens: PersonalAccessToken[];
     labelledBy?: string;
@@ -21,11 +26,10 @@ export type PatListProps = {
 };
 
 type SortableColumn = "displayName" | "status" | "createdAt" | "expiresAt";
-type SortDirection = "ascending" | "descending";
 
 export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
     const [sortColumn, setSortColumn] = useState<SortableColumn>("displayName");
-    const [sortDirection, setSortDirection] = useState<SortDirection>("ascending");
+    const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Ascending);
     const [tokenToDelete, setTokenToDelete] = useState<PersonalAccessToken>();
     const deleteButtonRef = useRef<HTMLButtonElement | null>(null);
     const [announcement, setAnnouncement] = useState("");
@@ -36,7 +40,7 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
             sensitivity: "base",
         });
 
-        return sortDirection === "ascending" ? comparison : -comparison;
+        return sortDirection === SortDirection.Ascending ? comparison : -comparison;
     }), [tokens, sortColumn, sortDirection]);
 
     const deleteToken = async () => {
@@ -49,12 +53,12 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
 
     const changeSorting = (column: SortableColumn) => {
         if (column === sortColumn) {
-            setSortDirection(currentDirection => currentDirection === "ascending" ? "descending" : "ascending");
+            setSortDirection(currentDirection => currentDirection === SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending);
             return;
         }
 
         setSortColumn(column);
-        setSortDirection("ascending");
+        setSortDirection(SortDirection.Ascending);
     };
 
     const sortableHeader = (column: SortableColumn, label: string) => (
@@ -65,7 +69,7 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
         >
             <span>{label}</span>
             {sortColumn === column && (
-                <span aria-hidden="true">{sortDirection === "ascending" ? <CesIconArrowUp className={"w-6 h-6"}/> : <CesIconArrowDown className={"w-6 h-6"}/>}</span>
+                <span aria-hidden="true">{sortDirection === SortDirection.Ascending ? <CesIconArrowUp className={"w-6 h-6"}/> : <CesIconArrowDown className={"w-6 h-6"}/>}</span>
             )}
         </button>
     );

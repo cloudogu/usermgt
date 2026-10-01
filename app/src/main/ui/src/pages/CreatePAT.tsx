@@ -98,7 +98,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
         }
         const expiresInDays = Number(selectedOption);
         const expiresAt = expiresInDays > 0
-            ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString()
+            ? new Date(new Date().setDate(new Date().getDate() + expiresInDays)).toISOString()
             : undefined;
         const response = await PATService.create({
             displayName: patName,
@@ -108,6 +108,10 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
         navigate("/security", {state: {createdPAT: response}});
     };
 
+    // validate name input field
+    // * not longer than 64 characters
+    // * no whitespace characters
+    // * not an exisiting pat-name for this user
     const nameError =
         patName.trim().length === 0
             ? t("security.createpat.error.displayname.empty")
@@ -212,7 +216,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                             {t("security.createpat.selectdogus.cancel")}
                         </Button>
                     </div>
-                    <span className="text-sm text-neutral mobile:order-first mobile:self-end mobile:my-4">* Pflichtfeld</span>
+                    <span className="text-sm text-neutral mobile:order-first mobile:self-end mobile:my-4">{t("security.createpat.legend")}</span>
                 </div>
             </form>
         </div>

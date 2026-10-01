@@ -1,5 +1,5 @@
 import {CheckboxField} from "@cloudogu/ces-theme-tailwind";
-import React from "react";
+import React, {useMemo} from "react";
 import {t} from "../../helpers/i18nHelpers";
 import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
 import {useDogus} from "../../hooks/useDogus";
@@ -18,21 +18,40 @@ export type DoguSelectionProps = {
 export function DoguSelection({label, value, onChange, invalid = false}: DoguSelectionProps) {
     const classes = useDoguSelectionStyles();
     const {doguOptions} = useDogus();
-    const administrationDogus: DoguOption[] = [];
-    const developmentDogus: DoguOption[] = [];
-    const basicDogus: DoguOption[] = [];
-    const excludedDogus: DoguOption[] = [];
-    doguOptions.forEach(dogu => {
-        if (!dogu.tags.includes("pat")){
-            excludedDogus.push(dogu);
-        } else if (dogu.category === "Administration" || dogu.category === "Administration Apps") {
-            administrationDogus.push(dogu);
-        } else if (dogu.category === "Development" || dogu.category === "Development Apps") {
-            developmentDogus.push(dogu);
-        } else {
-            basicDogus.push(dogu);
-        }
-    });
+    const {
+        administrationDogus,
+        developmentDogus,
+        basicDogus,
+        excludedDogus,
+    } = useMemo(() => {
+        const administrationDogus: DoguOption[] = [];
+        const developmentDogus: DoguOption[] = [];
+        const basicDogus: DoguOption[] = [];
+        const excludedDogus: DoguOption[] = [];
+        doguOptions.forEach(dogu => {
+            if (!dogu.tags.includes("pat")) {
+                excludedDogus.push(dogu);
+            } else if (
+                dogu.category === "Administration" ||
+                dogu.category === "Administration Apps"
+            ) {
+                administrationDogus.push(dogu);
+            } else if (
+                dogu.category === "Development" ||
+                dogu.category === "Development Apps"
+            ) {
+                developmentDogus.push(dogu);
+            } else {
+                basicDogus.push(dogu);
+            }
+        });
+        return {
+            administrationDogus,
+            developmentDogus,
+            basicDogus,
+            excludedDogus,
+        };
+    }, [doguOptions]);
     const allDogus = value.includes("/*");
     const selectedDogus = allDogus ? [] : value;
     const toggleDogu = (dogu: string) => {
@@ -58,7 +77,7 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
 
     return (
         <RadioGroup label={label} className="font-semibold" invalid={invalid}>
-            <RadioGroupEntry testId="security-pat-selected-dogus" label="Auswahl an Dogus" checked={!allDogus}
+            <RadioGroupEntry testId="security-pat-selected-dogus" label={t("security.createpat.scopes.selectdogus.label")} checked={!allDogus}
                 onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguCount} onClear={() => onChange([])}>
                 {basicDogus.length > 0 && (
                     <CheckBoxGroup label={t("security.createpat.check.base")}>
