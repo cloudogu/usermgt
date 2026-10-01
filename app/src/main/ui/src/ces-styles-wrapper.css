@@ -49,7 +49,7 @@
         @apply text-brand underline decoration-brand decoration-dashed decoration-1
         hover:decoration-solid
         active:decoration-2 active:decoration-solid
-        focus-visible:ces-focused focus-visible:outline-none focus-visible:text-default-text focus-visible:no-underline
+        focus-visible:ces-focused focus-visible:outline-none focus-visible:text-default-text focus-visible:no-underline rounded-sm
     }
 
 .tailwind-wrapper a.ces-unstyled {

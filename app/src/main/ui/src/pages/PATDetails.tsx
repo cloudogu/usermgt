@@ -30,7 +30,7 @@ export default function PATDetails() {
         navigate("/security", {replace: true, state: {deletedPATName: pat.displayName}});
     };
     const timeHint = pat
-        ? `${t("security.overview.table.createdAt")} ${formatDate(pat.createdAt)} · ${pat.expiresAt
+        ? `${t("security.overview.table.createdAt")} ${formatDate(pat.createdAt)}・${pat.expiresAt
             ? `${t("security.overview.table.expiresAt")} ${formatDate(pat.expiresAt)}`
             : t("security.pat.details.neverExpires")}`
         : "";
@@ -56,7 +56,7 @@ export default function PATDetails() {
                 [t("pages.security"), "/security"],
                 [t("pages.patDetails")],
             ]}/>
-            <h1 className="desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand break-all">
+            <h1 className="desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand hyphens-auto">
                 {t("pages.patDetails")}
             </h1>
             {error ? (
@@ -73,8 +73,8 @@ export default function PATDetails() {
                 <p role="alert" className="my-4 text-danger">{t("security.pat.details.notFound")}</p>
             ) : (
                 <div>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                        <h2 className="min-w-0 max-w-full break-words hyphens-auto mb-1 mt-8 mr-2">
+                    <div className="flex flex-wrap items-center gap-4">
+                        <h2 className="min-w-0 max-w-full break-words hyphens-auto mb-1 mt-8">
                             {pat.displayName}
                         </h2>
                         <div className="shrink-0 mt-8">
@@ -88,9 +88,9 @@ export default function PATDetails() {
                             />
                         </div>
                     </div>
-                    <Label text={timeHint} className={"mb-2"}/>
+                    <p className="my-2 text-neutral">{timeHint}</p>
                     <Button
-                        className="flex w-auto mobile:w-full items-center justify-center gap-1 mb-2 mt-4"
+                        className="flex w-auto mobile:w-full items-center justify-center gap-2 mb-2 mt-4 hover:bg-neutral-weaker focus-visible:!bg-transparent"
                         color="neutral"
                         variant="secondary"
                         size="small"
@@ -144,7 +144,7 @@ export default function PATDetails() {
                 to="/security"
                 className="
                       inline-flex items-center justify-center gap-2
-                      h-10 whitespace-nowrap rounded border-2 px-[14px] font-bold
+                      h-10 whitespace-nowrap rounded border-2 px-3.5 font-bold
                       desktop:text-desktop-regular mobile:text-mobile-regular
                       bg-brand border-brand
                       hover:bg-brand-strong hover:border-brand-strong

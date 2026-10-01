@@ -136,7 +136,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                     [t("pages.createPAT")],
                 ]}
             />
-            <h1 className="mb-4 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand">
+            <h1 className="mb-4 desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand hyphens-auto">
                 {t("pages.createPAT")}
             </h1>
             <form>

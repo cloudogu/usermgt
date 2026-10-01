@@ -53,13 +53,13 @@ function SecurityContent({username}: {username: string}) {
             <div className="flex flex-col gap-4 desktop:flex-row desktop:items-start desktop:justify-between">
                 <div className="min-w-0">
                     <h1 className="desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand mb-0">{t("pages.security")}</h1>
-                    <h2 className={"mt-8"}>{t("security.overview.title")}</h2>
+                    <h2>{t("security.overview.title")}</h2>
                     <div className="desktop:text-desktop-regular mobile:text-mobile-regular text-neutral flex flex-col">
                         {t("security.overview.title.discription")}
                     </div>
                 </div>
                 <Button
-                    className={`flex w-auto mobile:w-full self-start shrink-0 items-center justify-center gap-1 mt-2 ${classes.focusable}`}
+                    className="flex w-auto mobile:w-full self-start shrink-0 items-center justify-center gap-1 mt-2"
                     color="brand"
                     variant="primary"
                     size="small"
