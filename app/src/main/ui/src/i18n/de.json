@@ -282,7 +282,7 @@
   "security.pat.details.scope": "Dogus",
   "security.pat.details.dogusLoadError": "Die Dogu-Liste konnte nicht geladen werden.",
   "security.pat.details.unknownDogus": "Mindestens ein zugehöriges Dogu ist nicht in der aktuellen Dogu-Liste enthalten.",
-  "security.pat.details.neverExpires": "Läuft nicht ab",
+  "security.pat.details.neverExpires": "Unbegrenzt gültig",
 
   "components.breadcrumb.aria.label": "Seitenpfad",
   "components.required.asterisk.hint": "Pflichtfeld"
