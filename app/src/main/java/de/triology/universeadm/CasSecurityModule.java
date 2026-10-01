@@ -93,6 +93,7 @@ public class CasSecurityModule extends BaseSecurityModule {
     addFilterChain("/api/mfa/*", filterConfig(API), filterConfig(ROLES, Roles.ADMINISTRATOR));
     addFilterChain("/api/account", filterConfig(API));
     addFilterChain("/api/account/*", filterConfig(API));
+    addFilterChain("/api/pats", filterConfig(API));
     addFilterChain("/**", filterConfig(AUTHC));
   }
 

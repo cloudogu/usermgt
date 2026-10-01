@@ -1251,10 +1251,10 @@ cypress-fs@^0.2.5:
   resolved "https://registry.yarnpkg.com/cypress-fs/-/cypress-fs-0.2.8.tgz#833078128e5dde341b3825efc00026a33909ade0"
   integrity sha512-+jPNGn8qUo9SxZF/fSINbkhQC9uQma5RTm1aKKr09NhJIYylO6EjaN8KSWHWqGvxEqW9Q+wMfKTycUBnMxsRSw==
 
-cypress-mailhog@^2.4.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/cypress-mailhog/-/cypress-mailhog-2.5.0.tgz#f9a71f7bf903ab43fca0b668b2f9469d8e1e1841"
-  integrity sha512-6zht7jiqgH70m0vVzDMuMsBmze8psYIIxPh66uaDe7bdxtw5Ae5AfXib+vDi3P/n0Tq7vfhamEn0MuzlQzCRNA==
+cypress-mailpit@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cypress-mailpit/-/cypress-mailpit-2.0.0.tgz#3edf792515a8db6d4467a22db140025513a8250a"
+  integrity sha512-xP99xkEpL9QFdVgrptz7UKIpGlcaNw1N3n/JZ5boz/FhecImjYfDqkgsXd3IGw4cDf33PEvsTQmxha0Fgjd8+g==
 
 cypress@^16.0.0:
   version "16.0.0"

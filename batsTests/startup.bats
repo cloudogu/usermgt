@@ -47,3 +47,19 @@ teardown() {
   assert_equal "$(mock_get_call_args "${cipher}" "1")" "encrypt Password1!"
   assert_equal "${LDAP_BIND_PASSWORD_ENC}" "YmFzZTY0IGlzIG5vdCBlbmNyeXB0aW9u"
 }
+
+@test "setMfaEnv() should pass TOTP activation to the Java process" {
+  export UNIVERSEADM_HOME=""
+  export CATALINA_OPTS="-Xmx256m"
+  source /workspace/resources/startup.sh
+  mock_set_status "${doguctl}" 0
+  mock_set_output "${doguctl}" "true" 1
+  mock_set_output "${doguctl}" "mfa-user" 2
+  mock_set_output "${doguctl}" "mfa-password" 3
+  mock_set_output "${doguctl}" "ces.example.com" 4
+
+  setMfaEnv
+
+  assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config experimental/totp/activate --default false"
+  assert_equal "${CATALINA_OPTS}" "-Xmx256m -Dcas.mfa.activate=true -Dcas.mfa.user=mfa-user -Dcas.mfa.password=mfa-password -Dcas.mfa.fqdn=ces.example.com"
+}
