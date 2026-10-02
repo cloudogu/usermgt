@@ -91,8 +91,8 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
         }
         if (selectedDogus.length === 0) {
             const group = dogusRef.current;
-            const radio = group?.querySelector<HTMLElement>("[role=\"radio\"][aria-checked=\"true\"]")
-                ?? group?.querySelector<HTMLElement>("[role=\"radio\"]");
+            const radio = group?.querySelector<HTMLInputElement>("input[type=\"radio\"]:checked")
+                ?? group?.querySelector<HTMLInputElement>("input[type=\"radio\"]");
             radio?.focus();
             return;
         }
@@ -216,7 +216,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                             {t("security.createpat.selectdogus.cancel")}
                         </Button>
                     </div>
-                    <span className="text-sm text-neutral mobile:order-first mobile:self-end mobile:my-4">{t("security.createpat.legend")}</span>
+                    <div aria-hidden="true" className="text-sm text-neutral mobile:order-first mobile:self-end mobile:my-4">{t("security.createpat.legend")}</div>
                 </div>
             </form>
         </div>
