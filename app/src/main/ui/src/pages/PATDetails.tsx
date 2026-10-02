@@ -1,4 +1,4 @@
-import {Button, CesIconArrowLeft, CesIconCheck, CesIconSpinner, CesIconTrash, Label} from "@cloudogu/ces-theme-tailwind";
+import {Button, CesIconArrowLeft, CesIconCheck, CesIconSpinner, CesIconTrash} from "@cloudogu/ces-theme-tailwind";
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams, Link} from "react-router-dom";

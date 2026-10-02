@@ -6,7 +6,6 @@ import CreatedPATDialog from "../components/security/CreatedPATDialog";
 import {PATManagement} from "../components/security/Pat";
 import {t, tWithParams} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
-import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
 import {usePAT} from "../hooks/usePAT";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import type {CreatePATResponse} from "../services/PATs";
@@ -45,7 +44,6 @@ function SecurityContent({username}: {username: string}) {
     const dialogPAT = createdPAT;
     const closeCreatedPAT = () => navigate("/security", {replace: true, state: null});
 
-    const classes = useDoguSelectionStyles();
     useSetPageTitle(pageTitle("pages.security"));
 
     return (
