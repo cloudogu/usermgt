@@ -71,7 +71,7 @@ function SecurityContent({username}: {username: string}) {
                 </Button>
             </div>
             <hr className="my-4 border-0 border-t border-neutral-weak" aria-hidden="true"/>
-            <section className="pb-8">
+            <section className="pt-3 pb-8">
                 {pat && <PATManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
             </section>
             <div role="status" aria-atomic="true" className="sr-only">

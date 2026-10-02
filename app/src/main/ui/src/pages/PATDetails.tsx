@@ -72,7 +72,7 @@ export default function PATDetails() {
             ) : !pat ? (
                 <p role="alert" className="my-4 text-danger">{t("security.pat.details.notFound")}</p>
             ) : (
-                <div>
+                <div className="flex flex-col">
                     <div className="flex flex-wrap items-center gap-4">
                         <h2 className="min-w-0 max-w-full break-words hyphens-auto mb-1 mt-8">
                             {pat.displayName}
@@ -90,19 +90,19 @@ export default function PATDetails() {
                     </div>
                     <p className="my-2 text-neutral">{timeHint}</p>
                     <Button
-                        className="flex w-auto mobile:w-full items-center justify-center gap-2 mb-2 mt-4 hover:bg-neutral-weaker focus-visible:!bg-transparent"
+                        className="flex w-full desktop:w-fit items-center justify-center gap-2 mb-2 mt-4 hover:bg-neutral-weaker focus-visible:!bg-transparent"
                         color="neutral"
                         variant="secondary"
                         size="small"
                         type="button"
                         onClick={() => setDeleteDialogOpen(true)}
                     >
-                        <CesIconTrash aria-hidden="true"/>
+                        <CesIconTrash aria-hidden="true" weight="bold"/>
                         <span>{t("security.pat.details.delete")}</span>
                     </Button>
                     <hr className="my-4 border-0 border-t border-neutral-weak" aria-hidden="true" />
-                    <h3>{t("security.pat-details.access.label")}</h3>
-                    <div className="my-6 break-all">
+                    <h3 className="mt-4">{t("security.pat-details.access.label")}</h3>
+                    <div className="my-4 break-all">
                         {allDogus ? (
                             <p className="flex items-center gap-2"><CesIconCheck className="h-6 w-6 shrink-0 text-brand" aria-hidden="true"/>{t("security.createpat.scopes.selectdogus.all.label.dogus")} ({t("security.createpat.scopes.selectdogus.all.label.hint")})</p>
                         ) : doguError ? (

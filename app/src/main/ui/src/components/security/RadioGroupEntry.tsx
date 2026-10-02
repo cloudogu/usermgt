@@ -30,7 +30,7 @@ export function RadioGroupEntry({testId, label, checked, onChange, selectedCount
                     <div className="bg-neutral-colors-neutral-0 rounded-rounded-sm flex flex-col gap-0 items-start justify-start self-stretch shrink-0 relative overflow-hidden" >
                         {children}
                     </div>
-                    <div className="flex flex-row gap-4 gap-y-0 items-center justify-end flex-wrap content-center self-stretch shrink-0 relative" >
+                    <div className="flex flex-row gap-4 desktop:gap-y-0 items-center justify-end flex-wrap content-center self-stretch shrink-0 relative" >
                         <div className="flex flex-row gap-2 items-center justify-start shrink-0 relative" >
                             <div className={`${classes.fontDefault400} text-neutral text-left font-copy-paragraph-regular-font-family text-copy-paragraph-regular-font-size leading-copy-paragraph-regular-line-height font-copy-paragraph-regular-font-weight relative`} >
                                 {tWithParams("security.createpat.selectdogus.hint", selectedCount, totalCount)}
@@ -40,7 +40,7 @@ export function RadioGroupEntry({testId, label, checked, onChange, selectedCount
                         <Button type="button" variant="secondary" color="brand" disabled={!checked}
                             onClick={onClear}
                             className={`${classes.checkboxFocus} flex w-auto mobile:w-full flex-row items-center justify-center gap-1 whitespace-nowrap`}>
-                            <CesIconX /> {t("security.createpat.selectdogus.clearselection")}
+                            <CesIconX weight="bold" /> {t("security.createpat.selectdogus.clearselection")}
                         </Button>
                     </div>
                 </div>

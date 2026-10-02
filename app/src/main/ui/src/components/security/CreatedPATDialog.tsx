@@ -48,9 +48,9 @@ export default function CreatedPATDialog({pat, onClose}: CreatedPATDialogProps) 
                 </SegmentedDialog.Content.Header>
                 <SegmentedDialog.Content.Body className="text-success">
                     <MessageBox text={t("security.createpat.modal.success.hint")} icon="info" color="success"/>
-                    <div className="self-stretch grid grid-cols-[max-content_1fr] items-baseline gap-x-4 gap-y-2 text-default-text text-base leading-6">
+                    <div className="self-stretch grid grid-cols-[max-content_1fr] items-baseline gap-x-4 gap-y-2 text-default-text text-base leading-6 max-w-full">
                         <div className="font-bold">{t("security.createpat.modal.success.displayname.label")}</div>
-                        <div className="font-normal">{pat.displayName}</div>
+                        <div className="font-normal hyphens-auto break-all">{pat.displayName}</div>
                         <div className="font-bold">{t("security.createpat.modal.success.expires.label")}</div>
                         <div className="font-normal">{formatExpiration(pat.expiresAt)}</div>
                     </div>
