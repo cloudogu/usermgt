@@ -38,12 +38,18 @@ export function findPATRow(name: string): void {
     });
 }
 
+// Native radios are visually hidden; click the label like a user would.
+function checkPATRadio(testId: string): void {
+    patElement(testId).parent("label").click();
+    patElement(testId).should("be.checked");
+}
+
 export function selectPATScope(scope: string): void {
     if (scope === "Alle Dogus") {
-        patElement("security-pat-all-dogus").click().should("have.attr", "aria-checked", "true");
+        checkPATRadio("security-pat-all-dogus");
     } else {
         expect(scope, "single dogu scope").to.match(/^\/[^/]+$/);
-        patElement("security-pat-selected-dogus").click().should("have.attr", "aria-checked", "true");
+        checkPATRadio("security-pat-selected-dogus");
         patElement(`security-pat-dogu-${scope.slice(1)}`)
             .click().should("have.attr", "aria-checked", "true");
     }

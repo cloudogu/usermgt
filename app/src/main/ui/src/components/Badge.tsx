@@ -19,7 +19,7 @@ export function Badge({text, ariaText, variant = 'primary', color = 'brand', cla
         );
     }
     return (
-        <span className={`rounded-sm px-5 py-1 desktop:text-desktop-xl mobile:text-xl ${isActive ? 'bg-brand-weaker' : 'bg-neutral-weak'} ${className}`}>
+        <span className={`rounded-sm px-5 py-2 desktop:text-desktop-xl mobile:text-xl ${isActive ? 'bg-brand-weaker' : 'bg-neutral-weak'} ${className}`}>
             {ariaText ? <span className="sr-only"> {ariaText}</span> : ''}
             {text}
         </span>

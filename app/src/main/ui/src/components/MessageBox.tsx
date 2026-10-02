@@ -9,7 +9,7 @@ export type MessageBoxProps = {
 };
 
 export function MessageBox({text, icon = 'info', color = 'brand', className = ''}: MessageBoxProps) {
-    return <div className={`self-stretch p-2 bg-${color}-weaker rounded-md border-${color} border-2 inline-flex justify-between items-center mb-4 ${className}`}>
+    return <div className={`w-full self-stretch p-2 bg-${color}-weaker rounded-md border-${color} border-2 inline-flex justify-between items-center mb-4 ${className}`}>
         <div className="flex-1 flex justify-start items-center gap-2">
             {icon === 'info' ? <CesIconInfo className={`size-5 text-${color}`} aria-hidden={'true'}/> : ''}
             {icon === 'check' ? <CesIconCheck className={`size-5 text-${color}`} aria-hidden={'true'}/> : ''}

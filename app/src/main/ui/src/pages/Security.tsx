@@ -6,7 +6,6 @@ import CreatedPATDialog from "../components/security/CreatedPATDialog";
 import {PATManagement} from "../components/security/Pat";
 import {t, tWithParams} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
-import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
 import {usePAT} from "../hooks/usePAT";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import type {CreatePATResponse} from "../services/PATs";
@@ -45,7 +44,6 @@ function SecurityContent({username}: {username: string}) {
     const dialogPAT = createdPAT;
     const closeCreatedPAT = () => navigate("/security", {replace: true, state: null});
 
-    const classes = useDoguSelectionStyles();
     useSetPageTitle(pageTitle("pages.security"));
 
     return (
@@ -53,13 +51,13 @@ function SecurityContent({username}: {username: string}) {
             <div className="flex flex-col gap-4 desktop:flex-row desktop:items-start desktop:justify-between">
                 <div className="min-w-0">
                     <h1 className="desktop:text-desktop-6xl mobile:text-mobile-6xl text-brand mb-0">{t("pages.security")}</h1>
-                    <h2 className={"mt-8"}>{t("security.overview.title")}</h2>
+                    <h2>{t("security.overview.title")}</h2>
                     <div className="desktop:text-desktop-regular mobile:text-mobile-regular text-neutral flex flex-col">
                         {t("security.overview.title.discription")}
                     </div>
                 </div>
                 <Button
-                    className={`flex w-auto mobile:w-full self-start shrink-0 items-center justify-center gap-1 mt-2 ${classes.focusable}`}
+                    className="flex w-auto mobile:w-full self-start shrink-0 items-center justify-center gap-1 mt-2"
                     color="brand"
                     variant="primary"
                     size="small"
@@ -71,7 +69,7 @@ function SecurityContent({username}: {username: string}) {
                 </Button>
             </div>
             <hr className="my-4 border-0 border-t border-neutral-weak" aria-hidden="true"/>
-            <section className="pb-8">
+            <section className="pt-3 pb-8">
                 {pat && <PATManagement pat={pat} patError={patError} isPATLoading={isPATLoading}/>}
             </section>
             <div role="status" aria-atomic="true" className="sr-only">

@@ -67,7 +67,7 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
             checked={selectedDogus.includes(dogu.value)}
             disabled={allDogus}
             onCheckedChange={() => toggleDogu(dogu.value)}
-            className={`p-2 min-h-[40px] items-center ${classes.checkboxFocus} text-default-text`}
+            className={`p-2 min-h-10 items-center ${classes.checkboxFocus} text-default-text`}
         >
             {dogu.label}
         </CheckboxField>
