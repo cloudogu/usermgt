@@ -95,9 +95,10 @@ Then("the validation PAT is created", () => assertValidationPATCreated());
 Then("the validation PAT is created without expiration", () => assertValidationPATCreated(true));
 
 Then("the PAT dogu selection is invalid", () => {
-    cy.get('[role="radiogroup"]').should("have.attr", "aria-invalid", "true");
-    cy.get('[role="radiogroup"] input[type="radio"]:checked').should("be.focused");
-    cy.get('[role="radiogroup"]').invoke("attr", "aria-describedby").then(id => {
-        cy.get(`[id="${id}"]`).should("be.visible").and("not.be.empty");
-    });
+    patElement("security-pat-selected-dogus").should("be.checked").and("be.focused");
+    patElement("security-pat-selected-dogus").closest("fieldset")
+        .should("have.attr", "aria-invalid", "true")
+        .invoke("attr", "aria-describedby").then(id => {
+            cy.get(`[id="${id}"]`).should("be.visible").and("not.be.empty");
+        });
 });
