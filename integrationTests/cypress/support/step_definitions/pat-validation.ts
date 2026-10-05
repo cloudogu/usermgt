@@ -96,7 +96,7 @@ Then("the validation PAT is created without expiration", () => assertValidationP
 
 Then("the PAT dogu selection is invalid", () => {
     cy.get('[role="radiogroup"]').should("have.attr", "aria-invalid", "true");
-    cy.get('[role="radiogroup"] [role="radio"][aria-checked="true"]').should("be.focused");
+    cy.get('[role="radiogroup"] input[type="radio"]:checked').should("be.focused");
     cy.get('[role="radiogroup"]').invoke("attr", "aria-describedby").then(id => {
         cy.get(`[id="${id}"]`).should("be.visible").and("not.be.empty");
     });

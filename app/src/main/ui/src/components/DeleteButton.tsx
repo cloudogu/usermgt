@@ -13,7 +13,7 @@ DeleteButton.displayName = 'DeleteButton';
 
 const IconButton = forwardRef<HTMLButtonElement, ButtonProps>(({children, ...props}, ref) =>
     <button {...props} ref={ref}
-        className={`hover:!text-brand focus-visible:!text-text-primary active:!text-text-primary disabled:cursor-not-allowed text-neutral focus-visible:ces-focused rounded-sm outline-none ${props.className}`}
+        className={`hover:!text-brand focus-visible:!text-brand-strong active:!text-brand-strong disabled:cursor-not-allowed text-neutral focus-visible:ces-focused rounded-sm outline-none ${props.className}`}
     >
         {children}
     </button>
