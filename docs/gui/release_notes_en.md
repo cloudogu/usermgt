@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.23.1-1] - 2026-10-06
 ### Added
 - Management of personal access tokens was added to the user management
 
