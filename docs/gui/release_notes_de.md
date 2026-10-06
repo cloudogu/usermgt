@@ -5,6 +5,8 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+
+## [v1.23.1-1] - 2026-10-06
 ### Hinzugefügt
 - Die Verwaltung von persönlichen Zugriffsschlüsseln wurde der Benutzerverwaltung hinzugefügt
 
