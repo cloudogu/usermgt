@@ -59,7 +59,10 @@ module.exports = {
                 "html": true
             }
         ],
-        "autofix/no-unused-vars": [
+        "no-unused-vars": "off",
+        "autofix/no-unused-vars": "off",
+        // using TypeScript linter instead of autofix (autofix is outdated)
+        "@typescript-eslint/no-unused-vars": [
             "error",
             {
                 "argsIgnorePattern": "^_",

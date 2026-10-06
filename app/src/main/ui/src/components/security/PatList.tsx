@@ -1,0 +1,166 @@
+import {
+    ActionTableFrontendPaginated,
+    ActionTableRoot, CesIconArrowDown, CesIconArrowUp,
+    usePaginationControl,
+} from "@cloudogu/ces-theme-tailwind";
+
+import React, {useMemo, useRef, useState} from "react";
+import {Link} from "react-router-dom";
+import {formatDate, t, tWithParams} from "../../helpers/i18nHelpers";
+import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
+import {PATService} from "../../services/PATs";
+import {DeleteButton} from "../DeleteButton";
+import StatusIndicator from "../StatusIndicator";
+import DeletePATDialog from "./DeletePATDialog";
+import type {PersonalAccessToken} from "../../hooks/usePAT";
+
+enum SortDirection {
+    Ascending = "ascending",
+    Descending = "descending",
+}
+
+export type PatListProps = {
+    tokens: PersonalAccessToken[];
+    labelledBy?: string;
+    onTokenDeleted: (_id: string) => void;
+};
+
+type SortableColumn = "displayName" | "status" | "createdAt" | "expiresAt";
+
+export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
+    const [sortColumn, setSortColumn] = useState<SortableColumn>("displayName");
+    const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Ascending);
+    const [tokenToDelete, setTokenToDelete] = useState<PersonalAccessToken>();
+    const deleteButtonRef = useRef<HTMLButtonElement | null>(null);
+    const [announcement, setAnnouncement] = useState("");
+
+    const sortedTokens = useMemo(() => [...tokens].sort((left, right) => {
+        const comparison = left[sortColumn].localeCompare(right[sortColumn], undefined, {
+            numeric: true,
+            sensitivity: "base",
+        });
+
+        return sortDirection === SortDirection.Ascending ? comparison : -comparison;
+    }), [tokens, sortColumn, sortDirection]);
+
+    const deleteToken = async () => {
+        if (!tokenToDelete) return;
+        await PATService.delete(tokenToDelete.id);
+        setAnnouncement(tWithParams("security.createpat.modal.delete.succeeded", tokenToDelete.displayName));
+        onTokenDeleted(tokenToDelete.id);
+        setTokenToDelete(undefined);
+    };
+
+    const changeSorting = (column: SortableColumn) => {
+        if (column === sortColumn) {
+            setSortDirection(currentDirection => currentDirection === SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending);
+            return;
+        }
+
+        setSortColumn(column);
+        setSortDirection(SortDirection.Ascending);
+    };
+
+    const sortableHeader = (column: SortableColumn, label: string) => (
+        <button
+            type="button"
+            className={`flex items-center gap-2 text-left hover:underline ${classes.focusable}`}
+            onClick={() => changeSorting(column)}
+        >
+            <span>{label}</span>
+            {sortColumn === column && (
+                <span aria-hidden="true">{sortDirection === SortDirection.Ascending ? <CesIconArrowUp className={"w-6 h-6"}/> : <CesIconArrowDown className={"w-6 h-6"}/>}</span>
+            )}
+        </button>
+    );
+
+    const paginationControl = usePaginationControl({
+        lineCountOptions: [25, 50, 100],
+        allLineCount: sortedTokens.length,
+        defaultStartPage: 1,
+        defaultLinesPerPage: 25,
+    });
+
+    const classes = useDoguSelectionStyles();
+
+    return (
+        <ActionTableRoot paginationControl={paginationControl}>
+            <ActionTableFrontendPaginated<PersonalAccessToken>
+                values={sortedTokens}
+                className="pat-list-table mt-default-2x"
+                data-testid="personal-access-tokens"
+                aria-labelledby={labelledBy ? labelledBy : ""}
+            >
+                {paginatedTokens => (
+                    <>
+                        <ActionTableFrontendPaginated.HeadWithOneRow>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "displayName" ? sortDirection : undefined} >
+                                {sortableHeader("displayName", t("security.overview.table.displayName"))}
+                            </ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "status" ? sortDirection : undefined} >
+                                {sortableHeader("status", t("security.overview.table.status"))}
+                            </ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "createdAt" ? sortDirection : undefined} >
+                                {sortableHeader("createdAt", t("security.overview.table.createdAt"))}
+                            </ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "expiresAt" ? sortDirection : undefined} >
+                                {sortableHeader("expiresAt", t("security.overview.table.expiresAt"))}
+                            </ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column align="center">
+                                {t("security.overview.table.action")}
+                            </ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                        </ActionTableFrontendPaginated.HeadWithOneRow>
+                        <ActionTableFrontendPaginated.Body>
+                            {paginatedTokens.map(token => (
+                                <ActionTableFrontendPaginated.Body.Row
+                                    key={token.id}
+                                    data-testid={`personal-access-token-row-${token.id}`}
+                                    className={token.status == "active" ? "" : "bg-neutral-weaker text-neutral"}
+                                >
+                                    <ActionTableFrontendPaginated.Body.Row.Column className="break-all">
+                                        <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:!text-brand">
+                                            {token.displayName}
+                                        </Link>
+                                    </ActionTableFrontendPaginated.Body.Row.Column>
+                                    <ActionTableFrontendPaginated.Body.Row.Column>
+                                        <StatusIndicator text={token.status} variant="secondary"/>
+                                    </ActionTableFrontendPaginated.Body.Row.Column>
+                                    <ActionTableFrontendPaginated.Body.Row.Column>
+                                        {formatDate(token.createdAt)}
+                                    </ActionTableFrontendPaginated.Body.Row.Column>
+                                    <ActionTableFrontendPaginated.Body.Row.Column>
+                                        {formatDate(token.expiresAt)}
+                                    </ActionTableFrontendPaginated.Body.Row.Column>
+                                    <ActionTableFrontendPaginated.Body.Row.Column>
+                                        <DeleteButton
+                                            title={t("security.overview.table.action.delete")}
+                                            onClick={event => {
+                                                setAnnouncement("");
+                                                deleteButtonRef.current = event.currentTarget;
+                                                setTokenToDelete(token);
+                                            }}
+                                            aria-label={`${token.displayName} ${t("security.overview.table.action.delete")}`}
+                                        />
+                                    </ActionTableFrontendPaginated.Body.Row.Column>
+                                </ActionTableFrontendPaginated.Body.Row>
+                            ))}
+                        </ActionTableFrontendPaginated.Body>
+                    </>
+                )}
+            </ActionTableFrontendPaginated>
+            <div role="status" aria-atomic="true" className="sr-only">
+                {announcement}
+            </div>
+            {tokenToDelete && (
+                <DeletePATDialog
+                    pat={tokenToDelete}
+                    returnFocusRef={deleteButtonRef}
+                    onClose={() => setTokenToDelete(undefined)}
+                    onConfirm={deleteToken}
+                />
+            )}
+        </ActionTableRoot>
+    );
+}
+
+export default PatList;

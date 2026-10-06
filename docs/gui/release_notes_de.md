@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.23.1-1] - 2026-10-06
+### Hinzugefügt
+- Die Verwaltung von persönlichen Zugriffsschlüsseln wurde der Benutzerverwaltung hinzugefügt
+
 ## [v1.22.2-1] - 2026-09-23
 ### Behoben
 - Die API-Endpunkte zur Gruppenzugehörigkeit (z. B. `POST /api/users/{benutzer}/groups/{gruppe}`) antworteten mit einer Weiterleitung auf die CAS-Anmeldung statt die Anfrage zu verarbeiten.

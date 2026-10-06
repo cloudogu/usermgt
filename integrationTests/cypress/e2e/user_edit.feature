@@ -35,3 +35,10 @@ Feature: Tests for editing new users.
     And the user clicks save
     And the user clicks on the edit-user button for the user "testuser_1"
     Then the user has no groups
+
+  # MFA is not enabled via the configuration key in this test suite.
+  Scenario: MFA management is not shown when MFA is disabled
+    Given the MFA request for user "testuser_1" is observed
+    When the user clicks on the edit-user button for the user "testuser_1"
+    Then the edit-user-page for user "testuser_1" is shown
+    And MFA management is not shown in the user form

@@ -13,12 +13,15 @@ import {t} from "./helpers/i18nHelpers";
 import {useCasUser} from "./hooks/useCasUser";
 import {useGuiConfig} from "./hooks/useGuiConfig";
 import Account from "./pages/Account";
+import CreatePAT from "./pages/CreatePAT";
 import {EditGroup} from "./pages/EditGroup";
 import EditUser from "./pages/EditUser";
 import ErrorPage from "./pages/Error";
 import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
+import PATDetails from "./pages/PATDetails";
+import Security from "./pages/Security";
 import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
 
@@ -43,6 +46,19 @@ const router = createBrowserRouter([
                 element: <TitledPage pageName={t("pages.account")}>
                     <Account/>
                 </TitledPage>
+            },
+            {
+                path: "security",
+                element:
+                    <Security/>
+            },
+            {
+                path: "security/pats/:id",
+                element: <PATDetails/>
+            },
+            {
+                path: "security/createPAT",
+                element: <CreatePAT/>
             },
             {
                 path: "users",
@@ -126,9 +142,12 @@ function Nav() {
     const location = useLocation();
     const {t} = useTranslation();
     const {casUser, externalLdap} = useApplicationContext();
+    const pathname = location?.pathname ?? "";
+    const activePath =
+        pathname.startsWith("/security/") ? "/security" : pathname;
     return (
         <>
-            <Navbar currentPath={location?.pathname ?? ""}>
+            <Navbar currentPath={activePath}>
                 <Navbar.LeftAlignedList>
                     <Navbar.HomeLink homeUri={"/account"}>
                         <div className={"flex items-center mr-2"}>
@@ -138,6 +157,9 @@ function Nav() {
                         </div>
                         <Navbar.HomeLink.LinkText>{"User Management"}</Navbar.HomeLink.LinkText>
                     </Navbar.HomeLink>
+                    <Navbar.ListItem path={"/security"}>
+                        {t("pages.security")}
+                    </Navbar.ListItem>
                     {casUser.admin ?
                         <>
                             <Navbar.ListItem path={"/users"}>

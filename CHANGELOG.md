@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.23.1-1] - 2026-10-06
+### Added
+- [#255] Add Personal Access Token management
+
 ## [v1.22.2-1] - 2026-09-23
 ### Fixed
 - [#258] Group membership endpoints returned a 302 redirect to the CAS login instead of being handled by the API
