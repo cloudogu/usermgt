@@ -118,6 +118,8 @@ parallel(
 
                     stage('Setup') {
                         ecoSystem.loginBackend('cesmarvin-setup')
+                        String casConfig = casConfigOverride()
+                        String secret = secretOverride()
                         ecoSystem.setup([registryConfig: """
                                         "_global": {
                                             "password-policy": {
@@ -127,7 +129,11 @@ parallel(
                                                 "must_contain_special_character": "true",
                                                 "min_length": "14"
                                             }
-                                        }
+                                        },
+                                        "cas": ${casConfig}
+                                        """, registryConfigEncrypted: """
+                                        "cas": ${secret},
+                                        "usermgt": ${secret}
                                         """])
                     }
 
@@ -159,9 +165,9 @@ parallel(
                     }
 
 
-                    if (params.RunIntegrationTests) {
+                    if (params.RunIntegrationTests || gitflow.isReleaseBranch() || git.getSimpleBranchName() == "develop") {
                         stage('Integration Tests') {
-                            echo "setup mailhog"
+                            echo "setup mailpit"
                             ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                             ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
                             echo "wait for postfix"
@@ -213,7 +219,7 @@ parallel(
                             }
                     } else {
                         stage('Integration Tests (skipped)') {
-                            echo "Skipped integration tests: No pull request and parameter 'RunIntegrationTests' is false."
+                            echo "Skipped integration tests: not a release or development build and parameter 'RunIntegrationTests' is false."
                         }
                     }
 
@@ -341,8 +347,6 @@ ${indentedServerCertificate}
                             + " --set image.repository=local-smoke/usermgt"
                             + " --set image.tag=${releaseVersion}"
                             // The default 400Mi are not enough in the pipeline.
-                            + " --set resources.requests.memory=512Mi"
-                            + " --set resources.limits.memory=512Mi"
                             + " --wait --timeout 5m")
 
                         echo "[Component k3d] Verify component startup"
@@ -396,10 +400,11 @@ void createNpmrcFile(credentialsId) {
                             script: 'echo -n "${TARGET_USER}:${TARGET_PSW}" | openssl base64'
                     )}""".trim()
                     writeFile encoding: 'UTF-8', file: 'app/src/main/ui/.npmrc', text: """
-        @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-releases/
+        @cloudogu:registry=https://ecosystem.cloudogu.com/nexus/repository/npm-internal/
+        //ecosystem.cloudogu.com/nexus/repository/npm-releases/:_auth=${NPM_TOKEN}
+        //ecosystem.cloudogu.com/nexus/repository/npm-internal/:_auth=${NPM_TOKEN}
         email=jenkins@cloudogu.com
         always-auth=true
-        _auth=${NPM_TOKEN}
         """.trim()
         }
     }
@@ -443,4 +448,50 @@ void runMakeInGoContainer (String target, String buildToolsVersion) {
         .inside("--volume ${WORKSPACE}:/workdir -w /workdir") {
             sh "make ${target}"
         }
+}
+
+String casConfigOverride() {
+    return '''
+{
+  "pat": {
+    "enabled": "true"
+  }
+}
+'''.trim()
+}
+
+String secretOverride() {
+    return '''
+{
+  "experimental": {
+    "totp": {
+       "api_user_name": "pat-api",
+       "api_user_password": "securePassword"
+    }
+  }
+}
+'''.trim()
+}
+
+def mergeConfigMapYaml = { String configMapName, String overrideConfig ->
+    sh """
+       kubectl get configmap ${configMapName} -n ecosystem -o yaml | .bin/yq '
+         .data."config.yaml" |= (
+           (from_yaml) * ${overrideConfig}
+           | to_yaml
+         )
+       ' | tee ${configMapName}-output.yml | kubectl apply -f -
+       """
+}
+
+def mergeSecretYaml = { String secretName, String overrideConfig ->
+    sh """
+       kubectl get secret ${secretName} -n ecosystem -o yaml | .bin/yq '
+         .data."config.yaml" |= (
+           (. | @base64d | from_yaml) * ${overrideConfig}
+           | to_yaml
+           | @base64
+         )
+       ' | tee ${secretName}-output.yml | kubectl apply -f -
+       """
 }
