@@ -463,11 +463,9 @@ String casConfigOverride() {
 String secretOverride() {
     return '''
 {
-  "experimental": {
-    "totp": {
-       "api_user_name": "pat-api",
-       "api_user_password": "securePassword"
-    }
+  "2fa": {
+    "api_user_name": "pat-api",
+    "api_user_password": "securePassword"
   }
 }
 '''.trim()

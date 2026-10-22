@@ -5,6 +5,8 @@ Below you will find the release notes for User Management.
 Technical details on a release can be found in the corresponding [Changelog](https://docs.cloudogu.com/en/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+### Changed
+- Two-factor authentication (2FA) using an authenticator app is now available as a fully supported feature.
 
 ## [v1.23.1-1] - 2026-10-06
 ### Added

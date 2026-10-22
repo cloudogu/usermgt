@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Promote two-factor authentication (2FA) from experimental to a fully supported feature.
+    - Move all 2FA configuration keys to the `2fa/` namespace
+
 ## [v1.23.1-1] - 2026-10-06
 ### Added
 - [#255] Add Personal Access Token management
