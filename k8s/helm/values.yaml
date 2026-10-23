@@ -15,10 +15,6 @@ additionalImages:
   chownInitImage: busybox:1.36
 networkPolicies:
   enabled: true
-  gateway:
-    enabled: true
-    matchLabels:
-      k8s.cloudogu.com/component.name: k8s-ces-gateway
 exposition:
   enabled: true
 resources:
