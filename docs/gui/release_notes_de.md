@@ -6,6 +6,9 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.23.1-2] - 2026-10-26
+Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
+
 ## [v1.23.1-1] - 2026-10-06
 ### Hinzugefügt
 - Die Verwaltung von persönlichen Zugriffsschlüsseln wurde der Benutzerverwaltung hinzugefügt
