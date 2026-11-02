@@ -8,17 +8,13 @@ replicas: 1
 image:
   registry: registry.cloudogu.com
   repository: official/usermgt
-  tag: 1.23.1-1
+  tag: 1.23.1-2
 imagePullPolicy: IfNotPresent
 additionalImages:
   # chownInitImage will be used to change file permissions on writeable volumes
   chownInitImage: busybox:1.36
 networkPolicies:
   enabled: true
-  gateway:
-    enabled: true
-    matchLabels:
-      k8s.cloudogu.com/component.name: k8s-ces-gateway
 exposition:
   enabled: true
 resources:
