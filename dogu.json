@@ -180,20 +180,20 @@
       "Optional": true
     },
     {
-      "Name": "experimental/totp/activate",
-      "Description": "Warning: Experimental Feature. Enables Personal Access Token management in Usermgmt. Set this value to 'true' to enable.",
+      "Name": "2fa/activate",
+      "Description": "Enables two-factor authentication management in Usermgmt. Set this value to 'true' to enable.",
       "Default": "false",
       "Optional": true
     },
     {
-      "Name": "experimental/totp/api_user_name",
-      "Description": "Warning: Experimental Feature. Username for totp administration. Supply the same username to the usermgt dogu.",
+      "Name": "2fa/api_user_name",
+      "Description": "Username for two-factor authentication administration. Supply the same username to the CAS dogu.",
       "Optional": true,
       "Encrypted": true
     },
     {
-      "Name": "experimental/totp/api_user_password",
-      "Description": "Warning: Experimental Feature. API password for totp administration. Supply the same password to the usermgt dogu.",
+      "Name": "2fa/api_user_password",
+      "Description": "API password for two-factor authentication administration. Supply the same password to the CAS dogu.",
       "Optional": true,
       "Encrypted": true
     },
