@@ -149,6 +149,22 @@ parallel(
                             ecoSystem.purgeDogu("usermgt")
                         }
                         ecoSystem.build("/dogu")
+
+                        if (gitflow.isPreReleaseBranch()) {
+                            // Purging removes the setup secrets; encrypt them again with the new dogu key.
+                            ecoSystem.waitForDogu("usermgt")
+                            def patApiConfig = readJSON(text: secretOverride())["2fa"]
+                            patApiConfig.each { key, value ->
+                                String quotedValue = "'" + value.toString().replace("'", "'\"'\"'") + "'"
+                                ecoSystem.vagrant.ssh(
+                                        "sudo docker exec usermgt doguctl config --encrypted " +
+                                        "2fa/${key} ${quotedValue}"
+                                )
+                            }
+                            ecoSystem.restartDogu("usermgt", false)
+                            ecoSystem.waitForDogu("usermgt")
+                        }
+
                     }
 
                     stage('Trivy scan') {
