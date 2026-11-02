@@ -149,22 +149,6 @@ parallel(
                             ecoSystem.purgeDogu("usermgt")
                         }
                         ecoSystem.build("/dogu")
-
-                        if (gitflow.isPreReleaseBranch()) {
-                            // Purging removes the setup secrets; encrypt them again with the new dogu key.
-                            ecoSystem.waitForDogu("usermgt")
-                            def patApiConfig = readJSON(text: secretOverride())["2fa"]
-                            patApiConfig.each { key, value ->
-                                String quotedValue = "'" + value.toString().replace("'", "'\"'\"'") + "'"
-                                ecoSystem.vagrant.ssh(
-                                        "sudo docker exec usermgt doguctl config --encrypted " +
-                                        "2fa/${key} ${quotedValue}"
-                                )
-                            }
-                            ecoSystem.restartDogu("usermgt", false)
-                            ecoSystem.waitForDogu("usermgt")
-                        }
-
                     }
 
                     stage('Trivy scan') {
@@ -183,6 +167,20 @@ parallel(
 
                     if (params.RunIntegrationTests || gitflow.isReleaseBranch() || git.getSimpleBranchName() == "develop") {
                         stage('Integration Tests') {
+                            if (gitflow.isPreReleaseBranch()) {
+                                // Purging removes the setup secrets; encrypt them again with the new dogu key.
+                                ecoSystem.waitForDogu("usermgt")
+                                def patApiConfig = readJSON(text: secretOverride())["2fa"]
+                                patApiConfig.each { key, value ->
+                                    String quotedValue = "'" + value.toString().replace("'", "'\"'\"'") + "'"
+                                    ecoSystem.vagrant.ssh(
+                                            "sudo docker exec usermgt doguctl config --encrypted " +
+                                            "2fa/${key} ${quotedValue}"
+                                    )
+                                }
+                                ecoSystem.restartDogu("usermgt", false)
+                                ecoSystem.waitForDogu("usermgt")
+                            }
                             echo "setup mailpit"
                             ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                             ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
