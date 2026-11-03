@@ -6,6 +6,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.23.2-1] - 2026-11-02
+### Changed
+- Two-factor authentication (2FA) using an authenticator app is now available as a fully supported feature.
+
 ## [v1.23.1-2] - 2026-10-26
 We have only made technical changes. You can find more details in the changelogs.
 

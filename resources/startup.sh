@@ -187,16 +187,16 @@ setMfaEnv() {
       local mfaApiUser=""
       local mfaApiPassword=""
 
-      mfaActivated="$(doguctl config experimental/totp/activate --default 'false')"
+      mfaActivated="$(doguctl config 2fa/activate --default 'false')"
       export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.activate=${mfaActivated}"
 
-      if ! mfaApiUser="$(doguctl config -e experimental/totp/api_user_name 2>/dev/null)"; then
-        echo "Skipping MFA env setup because experimental/totp/api_user_name is not configured"
+      if ! mfaApiUser="$(doguctl config -e 2fa/api_user_name 2>/dev/null)"; then
+        echo "Skipping MFA env setup because 2fa/api_user_name is not configured"
         return
       fi
 
-      if ! mfaApiPassword="$(doguctl config -e experimental/totp/api_user_password 2>/dev/null)"; then
-        echo "Skipping MFA env setup because experimental/totp/api_user_password is not configured"
+      if ! mfaApiPassword="$(doguctl config -e 2fa/api_user_password 2>/dev/null)"; then
+        echo "Skipping MFA env setup because 2fa/api_user_password is not configured"
         return
       fi
 

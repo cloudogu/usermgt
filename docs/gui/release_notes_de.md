@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.23.2-1] - 2026-11-02
+### Changed
+- Die Zwei-Faktor-Authentifizierung (2FA) mit einer Authenticator-App steht jetzt als vollständig unterstützte Funktion zur Verfügung.
+
 ## [v1.23.1-2] - 2026-10-26
 Wir haben nur technische Änderungen vorgenommen. Näheres finden Sie in den Changelogs.
 
