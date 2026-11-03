@@ -290,5 +290,9 @@
   "security.pta.load.error": "Failed to load personal access tokens.",
 
   "components.breadcrumb.aria.label": "Breadcrumb",
-  "components.required.asterisk.hint": "mandatory field"
+  "components.required.asterisk.hint": "mandatory field",
+  "users.load.error": "Failed to load users.",
+  "robots.overview.title": "Technical accounts",
+  "robots.overview.headline": "Technical accounts",
+  "robots.overview.table.count": "Count"
 }

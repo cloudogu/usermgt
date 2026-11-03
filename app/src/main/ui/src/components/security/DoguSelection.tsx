@@ -13,9 +13,10 @@ export type DoguSelectionProps = {
     value: string[];
     onChange: (_value: string[]) => void;
     invalid?: boolean;
+    showUnsupportedDogus?: boolean;
 };
 
-export function DoguSelection({label, value, onChange, invalid = false}: DoguSelectionProps) {
+export function DoguSelection({label, value, onChange, invalid = false, showUnsupportedDogus = false}: DoguSelectionProps) {
     const classes = useDoguSelectionStyles();
     const {doguOptions} = useDogus();
     const {
@@ -60,12 +61,12 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
             ? selectedDogus.filter(selected => selected !== dogu)
             : [...selectedDogus, dogu]);
     };
-    const renderDogu = (dogu: DoguOption) => (
+    const renderDogu = (dogu: DoguOption, disabled = false) => (
         <CheckboxField
             key={dogu.value}
             data-testid={`security-pat-dogu-${dogu.value}`}
             checked={selectedDogus.includes(dogu.value)}
-            disabled={allDogus}
+            disabled={allDogus || disabled}
             onCheckedChange={() => toggleDogu(dogu.value)}
             className={`p-2 min-h-10 items-center ${classes.checkboxFocus} text-default-text`}
         >
@@ -81,17 +82,23 @@ export function DoguSelection({label, value, onChange, invalid = false}: DoguSel
                 onChange={() => onChange([])} selectedCount={selectedDogus.length} totalCount={doguCount} onClear={() => onChange([])}>
                 {basicDogus.length > 0 && (
                     <CheckBoxGroup label={t("security.createpat.check.base")}>
-                        {basicDogus.map(renderDogu)}
+                        {basicDogus.map(dogu => renderDogu(dogu))}
                     </CheckBoxGroup>
                 )}
                 {developmentDogus.length > 0 && (
                     <CheckBoxGroup label={t("security.createpat.check.development")}>
-                        {developmentDogus.map(renderDogu)}
+                        {developmentDogus.map(dogu => renderDogu(dogu))}
                     </CheckBoxGroup>
                 )}
                 {administrationDogus.length > 0 && (
                     <CheckBoxGroup label={t("security.createpat.check.administration")} className="pr-4">
-                        {administrationDogus.map(renderDogu)}
+                        {administrationDogus.map(dogu => renderDogu(dogu))}
+                    </CheckBoxGroup>
+                )}
+                {showUnsupportedDogus && excludedDogus.length > 0 && (
+                    <CheckBoxGroup label={t("robots.createrobot.invalid.dogus.label")} className="pr-4">
+                        <span>{t("robots.createrobot.invalid.dogus.hint")}</span>
+                        {excludedDogus.map(dogu => renderDogu(dogu, true))}
                     </CheckBoxGroup>
                 )}
             </RadioGroupEntry>
