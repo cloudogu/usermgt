@@ -121,7 +121,7 @@ public class RobotService {
                     CreateRobotRequest replacement = new CreateRobotRequest();
                     replacement.setDisplayName(pat.getDisplayName());
                     replacement.setScope(pat.getScope());
-                    replacement.setExpiresAt(request != null && request.hasExpirationOverride() ? expiredAt : pat.getExpiresAt());
+                    replacement.setExpiresAt(expiredAt == null ? pat.getExpiresAt() : expiredAt);
                     deletePAT(user.getUsername(), id);
                     return createPAT(user.getUsername(), replacement);
                 }
