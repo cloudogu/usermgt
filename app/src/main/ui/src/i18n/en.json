@@ -292,6 +292,7 @@
   "components.breadcrumb.aria.label": "Breadcrumb",
   "components.required.asterisk.hint": "mandatory field",
   "users.load.error": "Failed to load users.",
+  "robots.overview.renew.error": "Failed to renew the access token.",
   "robots.overview.title": "Technical accounts",
   "robots.overview.headline": "Technical accounts",
   "robots.overview.table.count": "Count"

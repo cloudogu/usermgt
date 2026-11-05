@@ -292,6 +292,7 @@
   "security.overview.delete.dialog.confirm": "Löschen",
   "security.pta.load.error": "Die persönlichen Zugriffsschlüssel konnten nicht geladen werden.",
 
+  "robots.overview.renew.error": "Der Zugriffsschlüssel konnte nicht erneuert werden.",
   "robots.overview.title": "Technische Konten",
   "robots.overview.description": "Technische Konten ermöglichen automatisierte Zugriffe ohne an ein persönliches Konto gebunden zu sein. Sollte der zweite Faktor aktiviert sein, benötigen technische Konten keinen zweiten Faktor",
   "robots.overview.button.create":"Technisches Konto anlegen",

@@ -8,12 +8,14 @@ import React, {useMemo, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import {formatDate, t, tWithParams} from "../../helpers/i18nHelpers";
 import useDoguSelectionStyles from "../../hooks/useDoguSelectionStyles";
+import {RobotsService} from "../../services/Robots";
 import {DeleteButton} from "../DeleteButton";
 import {RefreshButton} from "../RefreshButton";
 import StatusIndicator from "../StatusIndicator";
-import type {RobotsResult} from "../../hooks/useRobots";
-import {RobotsService} from "../../services/Robots";
+import CreatedRobotDialog from "./CreatedRobotDialog";
 import DeleteRobotDialog from "./DeleteRobotDialog";
+import type {RobotsResult} from "../../hooks/useRobots";
+import type {CreatePATResponse} from "../../services/PATs";
 
 type RobotToken = RobotsResult["robots"][number];
 
@@ -34,6 +36,9 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
     const [sortColumn, setSortColumn] = useState<SortableColumn>("displayName");
     const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Ascending);
     const [tokenToDelete, setTokenToDelete] = useState<RobotToken>();
+    const [renewedPAT, setRenewedPAT] = useState<CreatePATResponse>();
+    const [isRenewing, setIsRenewing] = useState(false);
+    const [renewError, setRenewError] = useState(false);
     const deleteButtonRef = useRef<HTMLButtonElement | null>(null);
     const [announcement, setAnnouncement] = useState("");
 
@@ -52,6 +57,20 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
         setAnnouncement(tWithParams("robots.createrobot.modal.delete.succeeded", tokenToDelete.displayName));
         onTokenDeleted(tokenToDelete.id);
         setTokenToDelete(undefined);
+    };
+
+    const renewToken = async (token: RobotToken) => {
+        if (isRenewing) return;
+        setIsRenewing(true);
+        setRenewError(false);
+        try {
+            const response = await RobotsService.renew(token.id);
+            setRenewedPAT(response);
+        } catch {
+            setRenewError(true);
+        } finally {
+            setIsRenewing(false);
+        }
     };
 
     const changeSorting = (column: SortableColumn) => {
@@ -137,16 +156,14 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                                     <ActionTableFrontendPaginated.Body.Row.Column>
                                         <RefreshButton
                                             title={t("robots.overview.table.action.renew")}
-                                            onClick={event => {
-                                                setAnnouncement("");
-                                                deleteButtonRef.current = event.currentTarget;
-                                                setTokenToDelete(token);
-                                            }}
+                                            disabled={isRenewing || !!renewedPAT}
+                                            onClick={() => void renewToken(token)}
                                             aria-label={`${token.displayName} ${t("robots.overview.table.action.renew")}`}
                                             className={"mr-2"}
                                         />
                                         <DeleteButton
                                             title={t("robots.overview.table.action.delete")}
+                                            disabled={isRenewing || !!renewedPAT}
                                             onClick={event => {
                                                 setAnnouncement("");
                                                 deleteButtonRef.current = event.currentTarget;
@@ -164,6 +181,12 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
             <div role="status" aria-atomic="true" className="sr-only">
                 {announcement}
             </div>
+            {renewError && (
+                <p role="alert" className="my-4 text-danger">{t("robots.overview.renew.error")}</p>
+            )}
+            {renewedPAT && (
+                <CreatedRobotDialog pat={renewedPAT} onClose={() => window.location.reload()}/>
+            )}
             {tokenToDelete && (
                 <DeleteRobotDialog
                     pat={tokenToDelete}

@@ -6,6 +6,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import StatusIndicator from "../components/StatusIndicator";
 import CreatedRobotDialog from "../components/robots/CreatedRobotDialog";
 import DeleteRobotDialog from "../components/robots/DeleteRobotDialog";
+import {formatDate} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
 import {formatPATTimeHint, isPATExpired, resolveScopedDogus} from "../helpers/pat";
 import {requiredStar} from "../helpers/snippets";
@@ -143,7 +144,7 @@ export default function RobotDetails() {
                                         {t("robots.createrobot.select.expires.placeholder")}
                                     </SegmentedSelect.TriggerButton>
                                     <SegmentedSelect.Content data-testid="robots-create-pat-expiry-select">
-                                        {!isExpired && <SegmentedSelect.Content.Item value="-1" data-testid={"security-create-pat-expiry-7"}>{pat.expiresAt}</SegmentedSelect.Content.Item>}
+                                        {!isExpired && pat.expiresAt && <SegmentedSelect.Content.Item value="-1" data-testid={"security-create-pat-expiry-7"}>{formatDate(pat.expiresAt)}</SegmentedSelect.Content.Item>}
                                         <SegmentedSelect.Content.Item value="7" data-testid={"security-create-pat-expiry-7"}>{t("robots.createrobot.select.expires.option.sevendays")}</SegmentedSelect.Content.Item>
                                         <SegmentedSelect.Content.Item value="30" data-testid={"security-create-pat-expiry-30"}>{t("robots.createrobot.select.expires.option.thirtydays")}</SegmentedSelect.Content.Item>
                                         <SegmentedSelect.Content.Item value="60" data-testid={"security-create-pat-expiry-60"}>{t("robots.createrobot.select.expires.option.sixtydays")}</SegmentedSelect.Content.Item>
@@ -153,8 +154,8 @@ export default function RobotDetails() {
                                 </SegmentedSelect>
                             </Label>
                         </div>
-                        <Button color="brand" variant="primary" size="small" type="submit"
-                            className={`flex w-full desktop:w-fit items-center justify-center gap-2 mb-2 mt-4 ${isExpired ? "" : "hover:!bg-warning-weaker bg-warning"}`}
+                        <Button color="brand" variant={isExpired ? "primary" : "secondary"} size="small" type="submit"
+                            className={`flex w-full desktop:w-fit items-center justify-center gap-2 mb-2 mt-4 ${isExpired ? "" : "!border-warning hover:!bg-warning-weaker hover:!border-warning-strong hover:!text-warning-strong !text-warning-strong"}`}
                         >
                             <CesIconArrowClockwise aria-hidden="true" weight="bold"/>
                             <span>{t("robots.pat.details.manage.renewkey")}</span>
@@ -225,7 +226,7 @@ export default function RobotDetails() {
                       !text-inverted-text !no-underline
                       outline-0 focus-visible:ces-focused
                       w-auto mobile:w-full
-                      mt-6
+                      mt-6 mb-6
                 "
             >
                 <CesIconArrowLeft aria-hidden="true"/>
