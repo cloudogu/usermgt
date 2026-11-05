@@ -342,9 +342,9 @@ public class RobotServiceTest {
         assertEquals("robot-a", renewed.getDisplayName());
         org.mockito.InOrder order = inOrder(client);
         order.verify(client).getPATs("robot-a");
-        order.verify(client).deletePAT("robot-a", "target");
         ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
         order.verify(client).createPAT(eq("robot-a"), bodies.capture());
+        order.verify(client).deletePAT("robot-a", "target");
         CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
         assertEquals("2099-01-01T00:00:00Z", replacement.getExpiresAt());
         assertEquals("/scm", replacement.getScope());
@@ -448,28 +448,48 @@ public class RobotServiceTest {
     }
 
     @Test
-    public void stopsRenewalWhenPATDeletionFails() throws Exception {
+    public void rollsBackReplacementWhenOldPATDeletionFails() throws Exception {
         prepareRenew();
         when(client.deletePAT("robot-a", "target")).thenReturn(Response.status(502).build());
+        when(client.deletePAT("robot-a", "replacement")).thenReturn(Response.noContent().build());
         try {
             service.renewRobot("target", null);
             fail("Expected CAS failure");
         } catch (IOException expected) {
-            verify(client, never()).createPAT(anyString(), anyString());
+            org.mockito.InOrder order = inOrder(client);
+            order.verify(client).createPAT(eq("robot-a"), anyString());
+            order.verify(client).deletePAT("robot-a", "target");
+            order.verify(client).deletePAT("robot-a", "replacement");
             verify(connection, never()).delete(anyString());
             verifyZeroInteractions(eventBus);
         }
     }
 
     @Test
-    public void preservesUserWhenReplacementCreationFails() throws Exception {
+    public void reportsRollbackFailureWhenReplacementCannotBeDeleted() throws Exception {
+        prepareRenew();
+        when(client.deletePAT("robot-a", "target")).thenReturn(Response.status(502).build());
+        when(client.deletePAT("robot-a", "replacement")).thenReturn(Response.status(502).build());
+        try {
+            service.renewRobot("target", null);
+            fail("Expected CAS failure");
+        } catch (IOException expected) {
+            assertEquals(1, expected.getSuppressed().length);
+            verify(client).deletePAT("robot-a", "replacement");
+            verify(connection, never()).delete(anyString());
+            verifyZeroInteractions(eventBus);
+        }
+    }
+
+    @Test
+    public void preservesOldPATAndUserWhenReplacementCreationFails() throws Exception {
         prepareRenew();
         when(client.createPAT(eq("robot-a"), anyString())).thenReturn(Response.status(502).build());
         try {
             service.renewRobot("target", null);
             fail("Expected CAS failure");
         } catch (IOException expected) {
-            verify(client).deletePAT("robot-a", "target");
+            verify(client, never()).deletePAT(anyString(), anyString());
             verify(connection, never()).delete(anyString());
             verifyZeroInteractions(eventBus);
         }

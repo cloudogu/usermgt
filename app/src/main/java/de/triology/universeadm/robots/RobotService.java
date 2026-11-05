@@ -122,8 +122,19 @@ public class RobotService {
                     replacement.setDisplayName(pat.getDisplayName());
                     replacement.setScope(pat.getScope());
                     replacement.setExpiresAt(expiredAt == null ? pat.getExpiresAt() : expiredAt);
-                    deletePAT(user.getUsername(), id);
-                    return createPAT(user.getUsername(), replacement);
+                    CreatedRobotPAT renewed = createPAT(user.getUsername(), replacement);
+                    try {
+                        deletePAT(user.getUsername(), id);
+                    } catch (IOException e) {
+                        try {
+                            deletePAT(user.getUsername(), renewed.getId());
+                        } catch (IOException rollbackError) {
+                            e.addSuppressed(rollbackError);
+                            LOG.error("Failed to roll back replacement PAT after old PAT deletion failed", rollbackError);
+                        }
+                        throw e;
+                    }
+                    return renewed;
                 }
             }
         }
