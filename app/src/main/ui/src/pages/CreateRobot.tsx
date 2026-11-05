@@ -1,42 +1,20 @@
 import {Button, InputField, SegmentedSelect, Label, CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
 import React, {useId, useRef, useState} from "react";
 import {flushSync} from "react-dom";
-import {createUseStyles} from "react-jss";
 import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
 import DoguSelection from "../components/security/DoguSelection";
 import {t} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
+import {requiredStar} from "../helpers/snippets";
 import {useAPI} from "../hooks/useAPI";
 import useDoguSelectionStyles from "../hooks/useDoguSelectionStyles";
+import usePATFormStyles from "../hooks/usePATFormStyles";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
 import {RobotsService} from "../services/Robots";
 import type {PATMetadata} from "../services/PATs";
 import "../ces-styles-wrapper.css";
 
-
-const useStyles = createUseStyles({
-    boldLabel: {
-        "& label > span:first-of-type": {
-            fontWeight: 600,
-        },
-    },
-    dangerLabel: {
-        "& label.text-danger > span": {
-            color: "#CC3333"
-        },
-    },
-    defaultTextLabel: {
-        "& label > span": {
-            color: "#0D1C26",
-        },
-    },
-});
-
-
-function requiredStar() {
-    return <span aria-label={t("components.required.asterisk.hint")}>*</span>;
-}
 
 export default function CreateRobot() {
     const {data: tokens, isLoading, error} = useAPI(RobotsService.getAll);
@@ -62,7 +40,7 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
     const navigate = useNavigate();
     const [robotName, setRobotName] = useState<string>("");
     const [selectedDogus, setSelectedDogus] = useState<string[]>([]);
-    const classes = useStyles();
+    const classes = usePATFormStyles();
 
     const [touched, setTouched] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string>("");

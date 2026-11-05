@@ -3,7 +3,15 @@ package de.triology.universeadm.robots;
 /** Optional expiration override when replacing a robot PAT. */
 public class RenewRobotRequest {
     private String expiredAt;
+    private transient boolean expirationOverride;
 
     public String getExpiredAt() { return expiredAt; }
-    public void setExpiredAt(String expiredAt) { this.expiredAt = expiredAt; }
+    public void setExpiredAt(String expiredAt) {
+        this.expiredAt = expiredAt;
+        this.expirationOverride = true;
+    }
+
+    public boolean hasExpirationOverride() {
+        return expirationOverride || expiredAt != null;
+    }
 }

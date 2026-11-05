@@ -370,6 +370,21 @@ public class RobotServiceTest {
     }
 
     @Test
+    public void removesExpirationWhenExplicitlyRequested() throws Exception {
+        prepareRenew();
+        RenewRobotRequest request = new RenewRobotRequest();
+        request.setExpiredAt(null);
+
+        service.renewRobot("target", request);
+
+        ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
+        verify(client).createPAT(eq("robot-a"), bodies.capture());
+        CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
+        assertNull(replacement.getExpiresAt());
+        assertEquals("/scm", replacement.getScope());
+    }
+
+    @Test
     public void renewsNonExpiringPATWithoutAddingExpiration() throws Exception {
         prepareRenew();
         when(client.getPATs("robot-a")).thenReturn(Response.ok("[{\"id\":\"target\"}]").build());
