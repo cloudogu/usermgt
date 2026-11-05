@@ -10,10 +10,13 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -79,6 +82,60 @@ public class RobotResource {
             return Response.status(Response.Status.BAD_GATEWAY)
                 .entity("{\"message\":\"Failed to create robot PAT in CAS\"}")
                 .type(MediaType.APPLICATION_JSON).build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response renewRobot(@PathParam("id") String id, RenewRobotRequest request) {
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated() || !subject.hasRole(Roles.ADMINISTRATOR)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        try {
+            CreatedRobotPAT pat = service.renewRobot(id, request);
+            if (pat == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.status(Response.Status.CREATED)
+                .entity(GSON.toJson(pat)).type(MediaType.APPLICATION_JSON).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(GSON.toJson(java.util.Collections.singletonMap("message", e.getMessage()))).build();
+        } catch (LDAPException e) {
+            LOG.error("Failed to load technical user from LDAP for PAT renewal", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"message\":\"Failed to load technical user from LDAP\"}").build();
+        } catch (IOException e) {
+            LOG.error("Failed to renew robot PAT in CAS", e);
+            return Response.status(Response.Status.BAD_GATEWAY)
+                .entity("{\"message\":\"Failed to renew robot PAT in CAS\"}").build();
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteRobot(@PathParam("id") String id) {
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.isAuthenticated() || !subject.hasRole(Roles.ADMINISTRATOR)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        try {
+            return service.deleteRobot(id)
+                ? Response.noContent().build()
+                : Response.status(Response.Status.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(GSON.toJson(java.util.Collections.singletonMap("message", e.getMessage()))).build();
+        } catch (LDAPException e) {
+            LOG.error("Failed to delete technical user from LDAP", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"message\":\"Failed to delete technical user from LDAP\"}").build();
+        } catch (IOException e) {
+            LOG.error("Failed to delete robot PAT in CAS", e);
+            return Response.status(Response.Status.BAD_GATEWAY)
+                .entity("{\"message\":\"Failed to delete robot PAT in CAS\"}").build();
         }
     }
 

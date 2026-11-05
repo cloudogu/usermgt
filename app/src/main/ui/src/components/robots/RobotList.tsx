@@ -143,6 +143,7 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                                                 setTokenToDelete(token);
                                             }}
                                             aria-label={`${token.displayName} ${t("robots.overview.table.action.renew")}`}
+                                            className={"mr-2"}
                                         />
                                         <DeleteButton
                                             title={t("robots.overview.table.action.delete")}

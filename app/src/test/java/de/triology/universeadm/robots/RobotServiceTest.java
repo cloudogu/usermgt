@@ -250,6 +250,222 @@ public class RobotServiceTest {
         assertTrue(mail.endsWith("-robot@account.de"));
     }
 
+    @Test
+    public void deletesMatchingPATEvenWhenItIsNotFirstAndThenDeletesOwner() throws Exception {
+        prepareDelete();
+        when(client.deletePAT("robot-a", "target")).thenReturn(Response.noContent().build());
+
+        assertTrue(service.deleteRobot("target"));
+
+        org.mockito.InOrder order = inOrder(client, connection, eventBus);
+        order.verify(client).deletePAT("robot-a", "target");
+        order.verify(connection).delete("uid=robot-a,ou=People,dc=example");
+        ArgumentCaptor<de.triology.universeadm.user.UserEvent> events =
+            ArgumentCaptor.forClass(de.triology.universeadm.user.UserEvent.class);
+        order.verify(eventBus).post(events.capture());
+        assertEquals(de.triology.universeadm.EventType.REMOVE, events.getValue().getType());
+        assertEquals("robot-a", events.getValue().getEntity().getUsername());
+        ArgumentCaptor<SearchRequest> requests = ArgumentCaptor.forClass(SearchRequest.class);
+        verify(connection).searchForEntry(requests.capture());
+        assertEquals("(&(uid=*)(technical=TRUE)(uid=robot-a))", requests.getValue().getFilter().toString());
+    }
+
+    @Test
+    public void doesNotDeleteAnythingForUnknownPAT() throws Exception {
+        prepareDelete();
+        assertFalse(service.deleteRobot("unknown"));
+        verify(client, never()).deletePAT(anyString(), anyString());
+        verify(connection, never()).delete(anyString());
+        verifyZeroInteractions(eventBus);
+    }
+
+    @Test
+    public void preservesUserWhenPATDeletionFails() throws Exception {
+        prepareDelete();
+        when(client.deletePAT("robot-a", "target")).thenReturn(Response.status(502).build());
+        try {
+            service.deleteRobot("target");
+            fail("Expected CAS failure");
+        } catch (IOException expected) {
+            verify(connection, never()).delete(anyString());
+            verifyZeroInteractions(eventBus);
+        }
+    }
+
+    @Test
+    public void doesNotDeleteAnythingWhenPATLookupFails() throws Exception {
+        prepareDelete();
+        when(client.getPATs("robot-a")).thenReturn(Response.status(502).build());
+        try {
+            service.deleteRobot("target");
+            fail("Expected CAS failure");
+        } catch (IOException expected) {
+            verify(client, never()).deletePAT(anyString(), anyString());
+            verify(connection, never()).delete(anyString());
+        }
+    }
+
+    @Test
+    public void reportsLDAPDeletionFailureWithoutPostingEvent() throws Exception {
+        prepareDelete();
+        when(client.deletePAT("robot-a", "target")).thenReturn(Response.noContent().build());
+        when(connection.delete(anyString())).thenThrow(
+            new com.unboundid.ldap.sdk.LDAPException(com.unboundid.ldap.sdk.ResultCode.CONNECT_ERROR));
+        try {
+            service.deleteRobot("target");
+            fail("Expected LDAP failure");
+        } catch (com.unboundid.ldap.sdk.LDAPException expected) {
+            verifyZeroInteractions(eventBus);
+        }
+    }
+
+    @Test
+    public void rejectsEmptyPATIdBeforeAccessingLDAPOrCAS() throws Exception {
+        for (String id : Arrays.asList(null, "", " ")) {
+            try {
+                service.deleteRobot(id);
+                fail("Expected invalid PAT id");
+            } catch (IllegalArgumentException expected) {
+                verifyZeroInteractions(connection, client);
+            }
+        }
+    }
+
+    @Test
+    public void renewsPATWithOriginalExpirationAndScopeAndPreservesUser() throws Exception {
+        prepareRenew();
+
+        CreatedRobotPAT renewed = service.renewRobot("target", null);
+
+        assertEquals("replacement", renewed.getId());
+        assertEquals("new-secret", renewed.getToken());
+        assertEquals("robot-a", renewed.getDisplayName());
+        org.mockito.InOrder order = inOrder(client);
+        order.verify(client).getPATs("robot-a");
+        order.verify(client).deletePAT("robot-a", "target");
+        ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
+        order.verify(client).createPAT(eq("robot-a"), bodies.capture());
+        CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
+        assertEquals("2099-01-01T00:00:00Z", replacement.getExpiresAt());
+        assertEquals("/scm", replacement.getScope());
+        assertEquals("Original PAT", replacement.getDisplayName());
+        verify(connection, never()).add(any(com.unboundid.ldap.sdk.Entry.class));
+        verify(connection, never()).delete(anyString());
+        verifyZeroInteractions(eventBus);
+    }
+
+    @Test
+    public void usesOptionalRenewalExpirationOverride() throws Exception {
+        prepareRenew();
+        RenewRobotRequest request = new Gson().fromJson(
+            "{\"expiredAt\":\"2099-02-01T00:00:00Z\"}", RenewRobotRequest.class);
+
+        service.renewRobot("target", request);
+
+        ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
+        verify(client).createPAT(eq("robot-a"), bodies.capture());
+        CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
+        assertEquals("2099-02-01T00:00:00Z", replacement.getExpiresAt());
+        assertEquals("/scm", replacement.getScope());
+    }
+
+    @Test
+    public void renewsNonExpiringPATWithoutAddingExpiration() throws Exception {
+        prepareRenew();
+        when(client.getPATs("robot-a")).thenReturn(Response.ok("[{\"id\":\"target\"}]").build());
+
+        service.renewRobot("target", new RenewRobotRequest());
+
+        ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
+        verify(client).createPAT(eq("robot-a"), bodies.capture());
+        CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
+        assertNull(replacement.getExpiresAt());
+        assertNull(replacement.getScope());
+    }
+
+    @Test
+    public void doesNotRenewUnknownPAT() throws Exception {
+        prepareRenew();
+        assertNull(service.renewRobot("unknown", null));
+        verify(client, never()).deletePAT(anyString(), anyString());
+        verify(client, never()).createPAT(anyString(), anyString());
+        verify(connection, never()).delete(anyString());
+    }
+
+    @Test
+    public void rejectsInvalidRenewalExpirationBeforeDeletingPAT() throws Exception {
+        for (String expiration : Arrays.asList("invalid", "", "2000-01-01T00:00:00Z")) {
+            RenewRobotRequest request = new RenewRobotRequest();
+            request.setExpiredAt(expiration);
+            try {
+                service.renewRobot("target", request);
+                fail("Expected invalid expiration");
+            } catch (IllegalArgumentException expected) {
+                verifyZeroInteractions(connection, client);
+            }
+        }
+    }
+
+    @Test
+    public void rejectsEmptyRenewalPATId() throws Exception {
+        for (String id : Arrays.asList(null, "", " ")) {
+            try {
+                service.renewRobot(id, null);
+                fail("Expected invalid PAT id");
+            } catch (IllegalArgumentException expected) {
+                verifyZeroInteractions(connection, client);
+            }
+        }
+    }
+
+    @Test
+    public void stopsRenewalWhenPATDeletionFails() throws Exception {
+        prepareRenew();
+        when(client.deletePAT("robot-a", "target")).thenReturn(Response.status(502).build());
+        try {
+            service.renewRobot("target", null);
+            fail("Expected CAS failure");
+        } catch (IOException expected) {
+            verify(client, never()).createPAT(anyString(), anyString());
+            verify(connection, never()).delete(anyString());
+            verifyZeroInteractions(eventBus);
+        }
+    }
+
+    @Test
+    public void preservesUserWhenReplacementCreationFails() throws Exception {
+        prepareRenew();
+        when(client.createPAT(eq("robot-a"), anyString())).thenReturn(Response.status(502).build());
+        try {
+            service.renewRobot("target", null);
+            fail("Expected CAS failure");
+        } catch (IOException expected) {
+            verify(client).deletePAT("robot-a", "target");
+            verify(connection, never()).delete(anyString());
+            verifyZeroInteractions(eventBus);
+        }
+    }
+
+    private void prepareRenew() throws Exception {
+        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(), user("robot-a", "Robot A")));
+        when(client.getPATs("robot-a")).thenReturn(Response.ok(
+            "[{\"id\":\"first\"},{\"id\":\"target\",\"userId\":\"untrusted-owner\",\"displayName\":\"Original PAT\","
+                + "\"expiresAt\":\"2099-01-01T00:00:00Z\",\"scope\":\"/scm\"}]").build());
+        when(client.deletePAT("robot-a", "target")).thenReturn(Response.noContent().build());
+        when(client.createPAT(eq("robot-a"), anyString())).thenReturn(Response.status(201)
+            .entity("{\"id\":\"replacement\",\"token\":\"new-secret\"}").build());
+    }
+
+    private void prepareDelete() throws Exception {
+        SearchResultEntry entry = user("robot-a", "Robot A");
+        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(), entry));
+        when(client.getPATs("robot-a")).thenReturn(Response.ok(
+            "[{\"id\":\"first\"},{\"id\":\"target\",\"userId\":\"untrusted-owner\"}]").build());
+        when(mapper.getReturningAttributes()).thenReturn(Arrays.asList("uid", "cn", "memberOf"));
+        when(connection.searchForEntry(any(SearchRequest.class))).thenReturn(entry);
+        when(mapper.convert(entry)).thenReturn(new User("robot-a"));
+    }
+
     private void prepareCreate() throws com.unboundid.ldap.sdk.LDAPException {
         when(connection.search(any(SearchRequest.class))).thenReturn(mock(SearchResult.class));
         when(configuration.isRequirePreEncodedPasswords()).thenReturn(true);

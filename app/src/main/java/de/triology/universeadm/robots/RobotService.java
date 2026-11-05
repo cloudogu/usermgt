@@ -110,6 +110,71 @@ public class RobotService {
         return pat;
     }
 
+    /** Replaces a technical user's PAT while keeping the LDAP user unchanged. */
+    public CreatedRobotPAT renewRobot(String id, RenewRobotRequest request) throws LDAPException, IOException {
+        validatePATId(id);
+        String expiredAt = request == null ? null : request.getExpiredAt();
+        validateExpiration(expiredAt);
+        for (User user : getTechnicalUsers()) {
+            for (RobotPAT pat : getPATs(user)) {
+                if (id.equals(pat.getId())) {
+                    CreateRobotRequest replacement = new CreateRobotRequest();
+                    replacement.setDisplayName(pat.getDisplayName());
+                    replacement.setScope(pat.getScope());
+                    replacement.setExpiresAt(request != null && request.hasExpirationOverride() ? expiredAt : pat.getExpiresAt());
+                    deletePAT(user.getUsername(), id);
+                    return createPAT(user.getUsername(), replacement);
+                }
+            }
+        }
+        return null;
+    }
+
+    private void validatePATId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("PAT id is required");
+        }
+    }
+
+    private void deletePAT(String username, String id) throws IOException {
+        Response response = patClient.deletePAT(username, id);
+        try {
+            if (response.getStatus() < 200 || response.getStatus() > 299) {
+                throw new IOException("Failed to delete technical user PAT in CAS");
+            }
+        } finally {
+            response.close();
+        }
+    }
+
+    /** Deletes the PAT before deleting its owning technical user. */
+    public boolean deleteRobot(String id) throws LDAPException, IOException {
+        validatePATId(id);
+        for (User user : getTechnicalUsers()) {
+            for (RobotPAT pat : getPATs(user)) {
+                if (!id.equals(pat.getId())) {
+                    continue;
+                }
+                LDAPInterface connection = strategy.get();
+                SearchRequest request = new SearchRequest(mapper.getParentDN(), SearchScope.SUB,
+                    Filter.createANDFilter(mapper.getBaseFilter(),
+                        Filter.createEqualityFilter("technical", "TRUE"),
+                        Filter.createEqualityFilter(mapper.getAttribute("username").getLdapName(), user.getUsername())),
+                    mapper.getReturningAttributes().toArray(new String[0]));
+                SearchResultEntry entry = connection.searchForEntry(request);
+                if (entry == null) {
+                    return false;
+                }
+                User owner = mapper.convert(entry);
+                deletePAT(user.getUsername(), id);
+                connection.delete(entry.getDN());
+                eventBus.post(new UserEvent(owner, EventType.REMOVE));
+                return true;
+            }
+        }
+        return false;
+    }
+
     String createRobotMail(String username, LDAPInterface connection) throws LDAPException {
         String normalized = username.toLowerCase(Locale.ROOT)
             .replaceAll("[^a-z0-9]+", "-")
@@ -138,9 +203,13 @@ public class RobotService {
             || !request.getDisplayName().matches("[a-zA-Z0-9_@.\\-]{2,64}")) {
             throw new IllegalArgumentException("displayName must be a valid username with 2 to 64 characters");
         }
-        if (request.getExpiresAt() != null) {
+        validateExpiration(request.getExpiresAt());
+    }
+
+    private void validateExpiration(String expiresAt) {
+        if (expiresAt != null) {
             try {
-                if (!Instant.parse(request.getExpiresAt()).isAfter(Instant.now())) {
+                if (!Instant.parse(expiresAt).isAfter(Instant.now())) {
                     throw new IllegalArgumentException("expiresAt must be in the future");
                 }
             } catch (DateTimeParseException e) {
@@ -202,28 +271,38 @@ public class RobotService {
     }
 
     private RobotPAT getFirstPAT(User user) throws IOException {
+        List<RobotPAT> pats = getPATs(user);
+        if (pats.isEmpty()) {
+            return null;
+        }
+        RobotPAT pat = pats.get(0);
+        String name = user.getDisplayName();
+        pat.setDisplayName(name == null || name.trim().isEmpty() ? user.getUsername() : name);
+        return pat;
+    }
+
+    private List<RobotPAT> getPATs(User user) throws IOException {
         Response response = patClient.getPATs(user.getUsername());
         try {
             if (response.getStatus() < 200 || response.getStatus() > 299) {
                 throw new IOException("Failed to load technical user PAT metadata from CAS");
             }
             if (response.getStatus() == 204) {
-                return null;
+                return Collections.emptyList();
             }
             JsonArray pats = GSON.fromJson((String) response.getEntity(), JsonArray.class);
             if (pats == null) {
                 throw new IOException("CAS returned no PAT metadata array");
             }
-            if (pats.size() == 0) {
-                return null;
+            List<RobotPAT> result = new ArrayList<>();
+            for (int i = 0; i < pats.size(); i++) {
+                RobotPAT pat = GSON.fromJson(pats.get(i).getAsJsonObject(), RobotPAT.class);
+                if (pat.getId() == null || pat.getId().isEmpty()) {
+                    throw new IOException("CAS PAT metadata has no id");
+                }
+                result.add(pat);
             }
-            RobotPAT pat = GSON.fromJson(pats.get(0).getAsJsonObject(), RobotPAT.class);
-            if (pat.getId() == null || pat.getId().isEmpty()) {
-                throw new IOException("CAS PAT metadata has no id");
-            }
-            String name = user.getDisplayName();
-            pat.setDisplayName(name == null || name.trim().isEmpty() ? user.getUsername() : name);
-            return pat;
+            return result;
         } catch (JsonParseException | IllegalStateException e) {
             throw new IOException("Invalid CAS PAT metadata", e);
         } finally {
