@@ -1,4 +1,5 @@
 import {Button, InputField, SegmentedSelect, Label, CesIconSpinner} from "@cloudogu/ces-theme-tailwind";
+import {isAxiosError} from "axios";
 import React, {useId, useRef, useState} from "react";
 import {flushSync} from "react-dom";
 import {useNavigate} from "react-router-dom";
@@ -39,6 +40,9 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
 
     const navigate = useNavigate();
     const [robotName, setRobotName] = useState<string>("");
+    const [conflictingName, setConflictingName] = useState<string>();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [createError, setCreateError] = useState(false);
     const [selectedDogus, setSelectedDogus] = useState<string[]>([]);
     const classes = usePATFormStyles();
 
@@ -54,6 +58,8 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
     const expiryErrorId = useId();
 
     const createRobot = async () => {
+        if (isSubmitting) return;
+        setCreateError(false);
         // Render the field descriptions before moving focus, including on repeated attempts.
         flushSync(() => {
             setTouched(true);
@@ -78,28 +84,40 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
         const expiresAt = expiresInDays > 0
             ? new Date(new Date().setDate(new Date().getDate() + expiresInDays)).toISOString()
             : undefined;
-        const response = await RobotsService.create({
-            displayName: robotName,
-            expiresAt,
-            scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.map(dogu => `/${dogu}`).join(","),
-        });
-        navigate("/robots", {state: {createdPAT: response}});
+        setIsSubmitting(true);
+        try {
+            const response = await RobotsService.create({
+                displayName: robotName,
+                expiresAt,
+                scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.map(dogu => `/${dogu}`).join(","),
+            });
+            navigate("/robots", {state: {createdPAT: response}});
+        } catch (error) {
+            if (isAxiosError(error) && error.response?.status === 409) {
+                flushSync(() => setConflictingName(robotName));
+                if (nameRef.current?.value === robotName) {
+                    nameRef.current.focus();
+                }
+            } else {
+                setCreateError(true);
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    // validate name input field
-    // * not longer than 64 characters
-    // * no whitespace characters
-    // * not an exisiting pat-name for this user
     const nameError =
         robotName.trim().length === 0
             ? t("security.createpat.error.displayname.empty")
-            : robotName.length > 64
-                ? t("security.createpat.error.displayname.length")
-                : /[\s\p{C}\p{Z}\p{Default_Ignorable_Code_Point}]/u.test(robotName)
-                    ? t("security.createpat.error.displayname.invalidchars")
-                    : tokens.some(token => token.displayName === robotName)
-                        ? t("security.createpat.error.displayname.exists")
-                        : "";
+            : robotName.length < 2
+                ? t("robots.createrobot.error.displayname.minlength")
+                : robotName.length > 64
+                    ? t("security.createpat.error.displayname.length")
+                    : /[^a-zA-Z0-9_@.-]/.test(robotName)
+                        ? t("robots.createrobot.error.displayname.invalidchars")
+                        : conflictingName === robotName || tokens.some(token => token.displayName === robotName)
+                            ? t("robots.createrobot.error.displayname.exists")
+                            : "";
 
     const showError = touched && nameError !== "";
     const expiryError = selectedOption === "" ? t("security.createpat.error.expireat.select") : "";
@@ -130,6 +148,7 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
                         required={true}
                         onChange={(e) => {
                             setRobotName(e.target.value);
+                            setConflictingName(undefined);
                             setTouched(true);
                         }}
                         className={`${classes.defaultTextLabel} focus-visible:ces-focused`}
@@ -182,10 +201,14 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
                         showUnsupportedDogus={true}
                     />
                 </div>
+                {createError && (
+                    <p role="alert" className="my-4 text-danger">{t("robots.createrobot.error.create")}</p>
+                )}
                 <div className="mt-6 flex mobile:flex-col desktop:flex-row gap-4 items-end justify-between mb-4">
                     <div className="flex mobile:flex-col mobile:w-full desktop:flex-row items-center gap-4">
                         <Button color="brand" variant="primary" size="regular" type="button" data-testid="security-create-pat-submit"
                             onClick={createRobot}
+                            disabled={isSubmitting}
                             className={`${defclasses.checkboxFocus} mobile:w-full`}>
                             {t("robots.createrobot.selectdogus.createkey")}
                         </Button>

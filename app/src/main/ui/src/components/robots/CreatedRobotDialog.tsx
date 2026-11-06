@@ -27,7 +27,7 @@ function formatExpiration(expiresAt: string | null): string {
     }
 
     const remainingDays = Math.max(0, Math.ceil((expirationDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)));
-    return tWithParams("robot.createrobot.modal.success.expires.text", remainingDays, expirationDate.toLocaleDateString("de-DE"));
+    return tWithParams("robots.createrobot.modal.success.expires.text", remainingDays, expirationDate.toLocaleDateString("de-DE"));
 }
 
 export default function CreatedRobotDialog({pat, onClose}: CreatedRobotDialogProps) {
@@ -43,7 +43,7 @@ export default function CreatedRobotDialog({pat, onClose}: CreatedRobotDialogPro
             <SegmentedDialog.Content className="border-success" showDefaultCloseIcon>
                 <SegmentedDialog.Content.Header className="border-success text-success">
                     <SegmentedDialog.Content.Header.Title>
-                        {t("robot.createrobot.modal.success.headline")}
+                        {t("robots.createrobot.modal.success.headline")}
                     </SegmentedDialog.Content.Header.Title>
                 </SegmentedDialog.Content.Header>
                 <SegmentedDialog.Content.Body className="text-success">

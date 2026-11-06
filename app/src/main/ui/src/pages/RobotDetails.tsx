@@ -104,17 +104,17 @@ export default function RobotDetails() {
             ) : (
                 <div className="flex flex-col">
                     <div className="flex flex-wrap items-center gap-4">
-                        <h2 className="min-w-0 max-w-full break-words hyphens-auto mb-1 mt-8">
+                        <h2 className="min-w-0 max-w-full break-words hyphens-auto mb-1 mt-3">
                             {pat.displayName}
                         </h2>
-                        <div className="shrink-0 mt-8">
+                        <div className="shrink-0 mt-3">
                             <StatusIndicator
                                 text={ isExpired ? "expired" : "active" }
                                 variant="primary"
                             />
                         </div>
                     </div>
-                    <p className="my-2 text-neutral">{timeHint}</p>
+                    <p className="mb-2 text-neutral">{timeHint}</p>
                     <h3>{t("robots.pat.details.manage")}</h3>
                     <h4>{t("robots.pat.details.manage.renewkey")}</h4>
                     <form onSubmit={submitRenewal}>
@@ -155,7 +155,7 @@ export default function RobotDetails() {
                             </Label>
                         </div>
                         <Button color="brand" variant={isExpired ? "primary" : "secondary"} size="small" type="submit"
-                            className={`flex w-full desktop:w-fit items-center justify-center gap-2 mb-2 mt-4 ${isExpired ? "" : "!border-warning hover:!bg-warning-weaker hover:!border-warning-strong hover:!text-warning-strong !text-warning-strong"}`}
+                            className={`flex w-full desktop:w-fit items-center justify-center gap-2 my-4 ${isExpired ? "" : "!border-warning hover:!bg-warning-weaker hover:!border-warning-strong hover:!text-warning-strong !text-warning-strong"}`}
                         >
                             <CesIconArrowClockwise aria-hidden="true" weight="bold"/>
                             <span>{t("robots.pat.details.manage.renewkey")}</span>

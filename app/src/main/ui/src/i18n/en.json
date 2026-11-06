@@ -307,6 +307,7 @@
   "robots.overview.table.action.delete": "Delete",
   "robots.overview.table.footer": "Rows",
 
+  "robots.createrobot.input.name.hint": "Unique account name: 2 to 64 characters. Allowed characters are letters (a–z, A–Z), numbers, hyphens, underscores, periods and @.",
   "robots.createrobot.input.expires.label": "Expires in",
   "robots.createrobot.select.expires.placeholder": "Select a period",
   "robots.createrobot.select.expires.option.sevendays": "7 days",
@@ -325,8 +326,10 @@
   "robots.createrobot.selectdogus.clearselection": "Clear selection",
   "robots.createrobot.selectdogus.cancel": "Cancel",
   "robots.createrobot.legend": "* Mandatory field",
+  "robots.createrobot.error.displayname.minlength": "The name must contain at least 2 characters.",
   "robots.createrobot.error.displayname.exists": "This name is already in use. Please choose another one.",
-  "robots.createrobot.error.displayname.invalidchars": "The name contains unsupported characters. Remove any spaces or other invisible special characters.",
+  "robots.createrobot.error.displayname.invalidchars": "The name may only contain letters (a–z, A–Z), numbers, hyphens, underscores, periods and @.",
+  "robots.createrobot.error.create": "Failed to create the technical account. Please try again.",
   "robots.createrobot.error.expireat.select": "Select a time period",
 
   "robots.createrobot.modal.success.hint": "Copy and save the token. This screen will only appear once.",
