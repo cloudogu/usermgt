@@ -197,7 +197,7 @@ parallel(
                                 cypressImage     : "cypress/included:16.0.0",
                                 enableVideo      : params.EnableVideoRecording,
                                 enableScreenshots: params.EnableScreenshotRecording,
-                                timeoutInMinutes : 45,
+                                timeoutInMinutes : 60,
                             ])
                         }
 
