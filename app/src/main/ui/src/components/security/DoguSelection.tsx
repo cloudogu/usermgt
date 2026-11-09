@@ -28,9 +28,12 @@ export function DoguSelection({label, value, onChange, invalid = false, showUnsu
         const administrationDogus: DoguOption[] = [];
         const developmentDogus: DoguOption[] = [];
         const basicDogus: DoguOption[] = [];
+        const systemDogus: DoguOption[] = [];
         const excludedDogus: DoguOption[] = [];
         doguOptions.forEach(dogu => {
-            if (!dogu.tags.includes("pat")) {
+            if (!dogu.tags.includes("warp")) {
+                systemDogus.push(dogu);
+            } else if (!dogu.tags.includes("pat")) {
                 excludedDogus.push(dogu);
             } else if (
                 dogu.category === "Administration" ||
@@ -97,7 +100,7 @@ export function DoguSelection({label, value, onChange, invalid = false, showUnsu
                 )}
                 {showUnsupportedDogus && excludedDogus.length > 0 && (
                     <CheckBoxGroup label={t("robots.createrobot.invalid.dogus.label")} className="pr-4">
-                        <span>{t("robots.createrobot.invalid.dogus.hint")}</span>
+                        <span className="font-normal ml-2">{t("robots.createrobot.invalid.dogus.hint")}</span>
                         {excludedDogus.map(dogu => renderDogu(dogu, true))}
                     </CheckBoxGroup>
                 )}
