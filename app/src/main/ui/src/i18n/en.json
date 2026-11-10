@@ -341,7 +341,7 @@
   "robots.createrobot.error.displayname.invalidchars": "The name may only contain letters (a–z, A–Z), numbers, hyphens, underscores, periods and @.",
   "robots.createrobot.error.create": "Failed to create the technical account. Please try again.",
   "robots.createrobot.error.expireat.select": "Select a time period",
-  "robots.createrobot.error.dogus.select": "Select the Dogus for which the key is valid",,
+  "robots.createrobot.error.dogus.select": "Select the Dogus for which the key is valid",
   "robots.createrobot.invalid.dogus.label": "Incompatible Dogus",
   "robots.createrobot.invalid.dogus.hint": "These Dogus are not compatible with technical accounts.",
 
