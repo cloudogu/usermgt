@@ -2,7 +2,7 @@
 
 Technical accounts enable automated access to the Cloudogu EcoSystem independently of an employee's personal account. The feature connects an LDAP user account with an access token in CAS. In the source code and API paths, technical accounts are referred to as `robots`.
 
-This document describes the current implementation and the API for integrations. For instructions on using the interface, see [Technical accounts](../operations/robots_en.md).
+This document describes the current implementation and the API for integrations. For instructions on using the interface, see [Technical accounts](../gui/robots_en.md).
 
 ## Components and responsibilities
 

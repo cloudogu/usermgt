@@ -10,6 +10,8 @@ Melden Sie sich mit einem Konto mit Managerrechten am Cloudogu EcoSystem an. Öf
 
 Die Übersicht zeigt die vorhandenen technischen Konten mit Anzeigename, Status, Erstellungsdatum und Ablaufdatum. So erkennen Sie, welche Schlüssel noch aktiv und welche bereits abgelaufen sind. Klicken Sie auf einen Anzeigenamen, um die Kontodetails und die freigegebenen Dogus zu sehen.
 
+![Robot-Übersicht im Bereich Technische Konten](figures/robots/de/OverviewRobots.png)
+
 ## Ein technisches Konto anlegen
 
 1. Klicken Sie in der Übersicht auf **Technisches Konto anlegen**.
@@ -20,7 +22,11 @@ Die Übersicht zeigt die vorhandenen technischen Konten mit Anzeigename, Status,
 6. Kopieren Sie den angezeigten Zugriffsschlüssel über das Kopiersymbol und speichern Sie ihn sicher, beispielsweise in einem Passwortmanager.
 7. Hinterlegen Sie den Schlüssel in der Anwendung, die das technische Konto verwenden soll. Falls diese einen Benutzernamen benötigt, verwenden Sie den beim Anlegen vergebenen Kontonamen.
 
+![Erstellen eines technischen Kontos](figures/robots/de/RobotCreate.png)
+
 **Der vollständige Zugriffsschlüssel wird nur einmal angezeigt.** Kopieren Sie ihn, bevor Sie den Dialog schließen. In den Kontodetails können Sie ihn später nicht erneut aufrufen.
+
+![Erstellen eines technischen Kontos](figures/robots/de/RobotCreated.png)
 
 ## Den Zugriffsschlüssel erneuern
 
@@ -36,6 +42,8 @@ Erneuern Sie den Schlüssel, wenn seine Gültigkeit bald endet oder Sie einen ne
 **Der alte Schlüssel wird beim erfolgreichen Erneuern sofort ungültig.** Planen Sie deshalb ein, die Zugangsdaten der betroffenen Anwendungen direkt anschließend zu aktualisieren. Bis dahin können diese mit dem alten Schlüssel nicht mehr zugreifen.
 
 Auch bei einem bereits abgelaufenen Schlüssel können Sie über die Kontodetails eine neue Gültigkeitsdauer wählen und einen neuen Schlüssel erzeugen.
+
+![Details eines technischen Kontos](figures/robots/de/RobotDetails.png)
 
 ### Direkt aus der Übersicht erneuern
 

@@ -10,6 +10,8 @@ Sign in to the Cloudogu EcoSystem with an account that has manager permissions. 
 
 The overview lists existing technical accounts with their display name, status, creation date, and expiry date. This lets you see which tokens are still active and which have expired. Click a display name to view the account details and the Dogus it can access.
 
+![Robot-Overview in technical account section](figures/robots/en/OverviewRobots.png)
+
 ## Creating a technical account
 
 1. In the overview, click **Create technical account**.
@@ -20,7 +22,11 @@ The overview lists existing technical accounts with their display name, status, 
 6. Use the copy icon to copy the displayed access token and store it securely, for example in a password manager.
 7. Store the token in the application that will use the technical account. If the application requires a username, use the account name you entered when creating the account.
 
+![Create a technical Account](figures/robots/en/RobotCreate.png)
+
 **The full access token is displayed only once.** Copy it before closing the dialog. You cannot view it again later in the account details.
+
+![Created a technical Account](figures/robots/en/RobotCreated.png)
 
 ## Renewing the access token
 
@@ -37,9 +43,12 @@ Renew the token when it is about to expire or when you need a new token for the 
 
 Even if a token has already expired, you can select a new validity period in the account details and generate a new token.
 
+![Details of a technical account](figures/robots/en/RobotDetails.png)
+
 ### Renewing directly from the overview
 
 Use the **Renew** icon in the **Action** column to replace a token directly. This keeps the existing expiry date; it does not extend the validity period. Use the account details if you want to set a new validity period, especially for tokens that have already expired.
+
 
 ## Troubleshooting
 

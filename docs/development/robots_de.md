@@ -2,7 +2,7 @@
 
 Technische Konten ermöglichen automatisierte Zugriffe auf das Cloudogu EcoSystem unabhängig vom persönlichen Konto eines Mitarbeiters. Die Funktion verbindet ein Benutzerkonto im LDAP mit einem Zugriffsschlüssel in CAS. Im Quellcode und in den API-Pfaden werden technische Konten als `robots` bezeichnet.
 
-Diese Dokumentation beschreibt die aktuelle Implementierung und die API für Integrationen. Eine Anleitung zur Bedienoberfläche finden Sie unter [Technische Konten](../operations/robots_de.md).
+Diese Dokumentation beschreibt die aktuelle Implementierung und die API für Integrationen. Eine Anleitung zur Bedienoberfläche finden Sie unter [Technische Konten](../gui/robots_de.md).
 
 ## Aufbau und Zuständigkeiten
 
