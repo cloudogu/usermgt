@@ -84,8 +84,9 @@ public class RobotServiceTest {
 
     @Test
     public void returnsFirstPATPerUserWithLDAPDisplayNameAndOmitsSecrets() throws Exception {
-        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(),
-            user("robot-a", "Robot A"), user("robot-b", "Robot B")));
+        SearchResult searchResult = page(new ASN1OctetString(),
+            user("robot-a", "Robot A"), user("robot-b", "Robot B"));
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         when(client.getPATs("robot-a")).thenReturn(Response.ok(
             "[{\"id\":\"first\",\"userId\":\"robot-a\",\"displayName\":\"original\",\"token\":\"secret\"},{\"id\":\"second\"}]").build());
         when(client.getPATs("robot-b")).thenReturn(Response.ok("[{\"id\":\"third\"}]").build());
@@ -102,8 +103,9 @@ public class RobotServiceTest {
 
     @Test
     public void skipsUsersWithoutPATAndFallsBackToUsername() throws Exception {
-        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(),
-            user("robot-a", " "), user("robot-b", "Robot B"), user("robot-c", "Robot C")));
+        SearchResult searchResult = page(new ASN1OctetString(),
+            user("robot-a", " "), user("robot-b", "Robot B"), user("robot-c", "Robot C"));
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         when(client.getPATs("robot-a")).thenReturn(Response.ok("[{\"id\":\"first\"}]").build());
         when(client.getPATs("robot-b")).thenReturn(Response.ok("[]").build());
         when(client.getPATs("robot-c")).thenReturn(Response.noContent().build());
@@ -116,21 +118,24 @@ public class RobotServiceTest {
 
     @Test
     public void doesNotCallCASWhenNoTechnicalUsersExist() throws Exception {
-        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString()));
+        SearchResult searchResult = page(new ASN1OctetString());
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         assertTrue(service.getRobots().isEmpty());
         verifyZeroInteractions(client);
     }
 
     @Test(expected = IOException.class)
     public void failsRatherThanReturningPartialResultsOnCASError() throws Exception {
-        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(), user("robot-a", "Robot A")));
+        SearchResult searchResult = page(new ASN1OctetString(), user("robot-a", "Robot A"));
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         when(client.getPATs("robot-a")).thenReturn(Response.status(502).build());
         service.getRobots();
     }
 
     @Test(expected = IOException.class)
     public void rejectsMalformedCASMetadata() throws Exception {
-        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(), user("robot-a", "Robot A")));
+        SearchResult searchResult = page(new ASN1OctetString(), user("robot-a", "Robot A"));
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         when(client.getPATs("robot-a")).thenReturn(Response.ok("{}").build());
         service.getRobots();
     }
@@ -496,7 +501,8 @@ public class RobotServiceTest {
     }
 
     private void prepareRenew() throws Exception {
-        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(), user("robot-a", "Robot A")));
+        SearchResult searchResult = page(new ASN1OctetString(), user("robot-a", "Robot A"));
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         when(client.getPATs("robot-a")).thenReturn(Response.ok(
             "[{\"id\":\"first\"},{\"id\":\"target\",\"userId\":\"untrusted-owner\",\"displayName\":\"Original PAT\","
                 + "\"expiresAt\":\"2099-01-01T00:00:00Z\",\"scope\":\"/scm\"}]").build());
@@ -507,7 +513,8 @@ public class RobotServiceTest {
 
     private void prepareDelete() throws Exception {
         SearchResultEntry entry = user("robot-a", "Robot A");
-        when(connection.search(any(SearchRequest.class))).thenReturn(page(new ASN1OctetString(), entry));
+        SearchResult searchResult = page(new ASN1OctetString(), entry);
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         when(client.getPATs("robot-a")).thenReturn(Response.ok(
             "[{\"id\":\"first\"},{\"id\":\"target\",\"userId\":\"untrusted-owner\"}]").build());
         when(mapper.getReturningAttributes()).thenReturn(Arrays.asList("uid", "cn", "memberOf"));
