@@ -189,7 +189,7 @@ public class RobotService {
     String createRobotMail(String username, LDAPInterface connection) throws LDAPException {
         String normalized = username.toLowerCase(Locale.ROOT)
             .replaceAll("[^a-z0-9]+", "-")
-            .replaceAll("^-|-$", "");
+            .replaceAll("(?:^-)|(?:-$)", "");
         if (normalized.isEmpty()) {
             normalized = "account";
         }
