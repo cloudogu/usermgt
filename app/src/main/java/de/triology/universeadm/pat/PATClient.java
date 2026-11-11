@@ -22,6 +22,7 @@ public class PATClient {
     private static final Logger LOG = LoggerFactory.getLogger(PATClient.class);
     private static final String USER = System.getProperty("cas.mfa.user");
     private static final String PASSWORD = System.getProperty("cas.mfa.password");
+    private static final int DEFAULT_TIMEOUT = 10000; // 10 seconds
     private final String casPATEndpoint;
 
     private enum ResponseMode {
@@ -114,8 +115,8 @@ public class PATClient {
             .replace("+", "%20");
         URL url = new URL(casPATEndpoint + "/" + encodedUsername + "/pats" + pathSuffix);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(10000);
-        connection.setReadTimeout(10000);
+        connection.setConnectTimeout(DEFAULT_TIMEOUT);
+        connection.setReadTimeout(DEFAULT_TIMEOUT);
         connection.setRequestMethod(method);
         connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
         connection.setDoOutput(hasRequestBody);
@@ -152,7 +153,7 @@ public class PATClient {
      */
     private Response createResponse(HttpURLConnection connection, ResponseMode responseMode) throws IOException {
         int status = connection.getResponseCode();
-        if (responseMode == ResponseMode.SUCCESS_BODY && (status < 200 || status > 299)) {
+        if (responseMode == ResponseMode.SUCCESS_BODY && !isSuccessResponseCode(status)) {
             throw new IOException("CAS PAT endpoint returned status " + status);
         }
         if (responseMode == ResponseMode.STATUS_ONLY) {
@@ -188,7 +189,7 @@ public class PATClient {
      */
     private String readResponseBody(HttpURLConnection connection, int status) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-            status >= 200 && status < 300 ? connection.getInputStream() : connection.getErrorStream(),
+            isSuccessResponseCode(status) ? connection.getInputStream() : connection.getErrorStream(),
             StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
             String line;
@@ -210,6 +211,10 @@ public class PATClient {
                 .encodeToString((USER + ":" + PASSWORD).getBytes(StandardCharsets.UTF_8));
             connection.setRequestProperty("Authorization", "Basic " + basicAuth);
         }
+    }
+
+    private boolean isSuccessResponseCode(int status) {
+        return status >= 200 && status < 300;
     }
 
 }

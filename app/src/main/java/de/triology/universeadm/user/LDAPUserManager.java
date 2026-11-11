@@ -347,7 +347,7 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
         }
 
         /**
-           Do not List robot-Accounts
+           Do not List robot-Accounts when searching for normal users
          */
         @Override
         protected Filter createFilter(String query, List<String> excludes)

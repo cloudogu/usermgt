@@ -12,9 +12,9 @@ After({tags: "@created_robot"}, () => {
     if (!createdRobotName) return;
     // Resolve the current ID by name because renewal replaces the PAT and its ID.
     cy.request("GET", "/usermgt/api/robots").then(response => {
-        const robots = response.body as {id: string; displayName: string}[];
+        const robots = response.body as {userId: string; displayName: string}[];
         robots.filter(robot => robot.displayName === createdRobotName).forEach(robot => {
-            cy.request("DELETE", `/usermgt/api/robots/${encodeURIComponent(robot.id)}`)
+            cy.request("DELETE", `/usermgt/api/robots/${encodeURIComponent(robot.userId)}`)
                 .its("status").should("eq", 204);
         });
     });

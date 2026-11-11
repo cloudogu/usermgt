@@ -35,13 +35,13 @@ export default function RobotDetails() {
 
     const deleteToken = async () => {
         if (!pat) return;
-        await RobotsService.delete(pat.id);
+        await RobotsService.delete(pat.userId);
         setDeleteDialogOpen(false);
         navigate("/robots", {replace: true, state: {deletedPATName: pat.displayName}});
     };
     const renewToken = async (expiredAt?: string | null) => {
         if (!pat) return;
-        const response = await RobotsService.renew(pat.id, expiredAt);
+        const response = await RobotsService.renew(pat.userId, expiredAt);
         setRenewedPAT(response);
     };
     const closeRenewedRobot = () => {
@@ -60,7 +60,7 @@ export default function RobotDetails() {
         const expiresInDays = Number(selectedOption);
         const expiredAt = expiresInDays > 0
             ? new Date(new Date().setDate(new Date().getDate() + expiresInDays)).toISOString()
-            : null;
+            : expiresInDays === 0 ? null : undefined;
         void renewToken(expiredAt);
     };
     const timeHint = formatPATTimeHint(pat, {

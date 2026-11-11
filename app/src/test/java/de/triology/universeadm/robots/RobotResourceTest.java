@@ -30,8 +30,8 @@ public class RobotResourceTest {
     @Test
     public void rejectsUnauthenticatedRequests() {
         assertEquals(403, resource.getRobots().getStatus());
-        assertEquals(403, resource.deleteRobot("pat-id").getStatus());
-        assertEquals(403, resource.renewRobot("pat-id", null).getStatus());
+        assertEquals(403, resource.deleteRobot("robot-a").getStatus());
+        assertEquals(403, resource.renewRobot("robot-a", null).getStatus());
         assertEquals(403, resource.createRobot(new CreateRobotRequest()).getStatus());
         verifyZeroInteractions(service);
     }
@@ -40,8 +40,8 @@ public class RobotResourceTest {
     @SubjectAware(username = "dent", password = "secret")
     public void rejectsNonAdministrators() {
         assertEquals(403, resource.getRobots().getStatus());
-        assertEquals(403, resource.deleteRobot("pat-id").getStatus());
-        assertEquals(403, resource.renewRobot("pat-id", null).getStatus());
+        assertEquals(403, resource.deleteRobot("robot-a").getStatus());
+        assertEquals(403, resource.renewRobot("robot-a", null).getStatus());
         assertEquals(403, resource.createRobot(new CreateRobotRequest()).getStatus());
         verifyZeroInteractions(service);
     }
@@ -105,14 +105,14 @@ public class RobotResourceTest {
     @Test
     @SubjectAware(username = "trillian", password = "secret")
     public void deletesRobotForAdministrators() throws Exception {
-        when(service.deleteRobot("pat-id")).thenReturn(true);
-        assertEquals(204, resource.deleteRobot("pat-id").getStatus());
-        verify(service).deleteRobot("pat-id");
+        when(service.deleteRobot("robot-a")).thenReturn(true);
+        assertEquals(204, resource.deleteRobot("robot-a").getStatus());
+        verify(service).deleteRobot("robot-a");
     }
 
     @Test
     @SubjectAware(username = "trillian", password = "secret")
-    public void returnsNotFoundForUnknownRobotPAT() throws Exception {
+    public void returnsNotFoundForUnknownRobot() throws Exception {
         assertEquals(404, resource.deleteRobot("unknown").getStatus());
     }
 
@@ -121,7 +121,7 @@ public class RobotResourceTest {
     public void mapsDeleteFailures() throws Exception {
         when(service.deleteRobot("cas-failure")).thenThrow(new IOException("CAS unavailable"));
         when(service.deleteRobot("ldap-failure")).thenThrow(new LDAPException(ResultCode.CONNECT_ERROR));
-        when(service.deleteRobot("")).thenThrow(new IllegalArgumentException("PAT id is required"));
+        when(service.deleteRobot("")).thenThrow(new IllegalArgumentException("Username is required"));
         assertEquals(502, resource.deleteRobot("cas-failure").getStatus());
         assertEquals(500, resource.deleteRobot("ldap-failure").getStatus());
         assertEquals(400, resource.deleteRobot("").getStatus());
@@ -134,13 +134,13 @@ public class RobotResourceTest {
         request.setExpiredAt("2099-01-01T00:00:00Z");
         CreatedRobotPAT pat = new com.google.gson.Gson().fromJson(
             "{\"id\":\"replacement\",\"token\":\"new-secret\"}", CreatedRobotPAT.class);
-        when(service.renewRobot("old-pat", request)).thenReturn(pat);
-        javax.ws.rs.core.Response response = resource.renewRobot("old-pat", request);
+        when(service.renewRobot("robot-a", request)).thenReturn(pat);
+        javax.ws.rs.core.Response response = resource.renewRobot("robot-a", request);
         assertEquals(201, response.getStatus());
         CreatedRobotPAT returned = new com.google.gson.Gson().fromJson((String) response.getEntity(), CreatedRobotPAT.class);
         assertEquals("replacement", returned.getId());
         assertEquals("new-secret", returned.getToken());
-        verify(service).renewRobot("old-pat", request);
+        verify(service).renewRobot("robot-a", request);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class RobotResourceTest {
     public void mapsRenewalFailures() throws Exception {
         when(service.renewRobot("cas-failure", null)).thenThrow(new IOException("CAS unavailable"));
         when(service.renewRobot("ldap-failure", null)).thenThrow(new LDAPException(ResultCode.CONNECT_ERROR));
-        when(service.renewRobot("", null)).thenThrow(new IllegalArgumentException("PAT id is required"));
+        when(service.renewRobot("", null)).thenThrow(new IllegalArgumentException("Username is required"));
         assertEquals(502, resource.renewRobot("cas-failure", null).getStatus());
         assertEquals(500, resource.renewRobot("ldap-failure", null).getStatus());
         assertEquals(400, resource.renewRobot("", null).getStatus());

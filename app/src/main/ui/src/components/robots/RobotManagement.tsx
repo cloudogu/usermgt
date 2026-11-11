@@ -22,7 +22,7 @@ export function RobotManagement({robots, error, isLoading}: RobotManagementProps
 
     if (error) {
         return <p className="my-4 text-danger" role="alert">
-            {t("security.pta.load.error")}
+            {t("security.pat.load.error")}
         </p>;
     }
 

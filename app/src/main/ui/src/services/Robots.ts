@@ -17,15 +17,15 @@ export const RobotsService = {
         }
         return response.data;
     },
-    async renew(id: string, expiredAt?: string | null): Promise<CreatePATResponse> {
-        const response = await Axios.put<CreatePATResponse>(`/robots/${encodeURIComponent(id)}`, {expiredAt});
+    async renew(username: string, expiredAt?: string | null): Promise<CreatePATResponse> {
+        const response = await Axios.put<CreatePATResponse>(`/robots/${encodeURIComponent(username)}`, {expiredAt});
         if (!isSuccessStatus(response.status)) {
             throw new Error("failed to renew personal access token: " + response.status);
         }
         return response.data;
     },
-    async delete(id: string): Promise<void> {
-        const response = await Axios.delete(`/robots/${encodeURIComponent(id)}`);
+    async delete(username: string): Promise<void> {
+        const response = await Axios.delete(`/robots/${encodeURIComponent(username)}`);
         if (!isSuccessStatus(response.status)) {
             throw new Error("failed to delete personal access token: " + response.status);
         }

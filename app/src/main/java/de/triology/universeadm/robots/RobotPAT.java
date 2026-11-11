@@ -16,6 +16,10 @@ public class RobotPAT {
     public String getExpiresAt() { return expiresAt; }
     public String getScope() { return scope; }
 
+    void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     void setDisplayName(String displayName) {
         this.displayName = displayName;
     }

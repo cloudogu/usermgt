@@ -41,10 +41,10 @@ Requests mit JSON-Inhalt verwenden `Content-Type: application/json`. Antworten m
 | --- | --- | --- | --- |
 | `GET` | leer | Technische Konten mit Schlüsselmetadaten auflisten | `200 OK` |
 | `POST` | leer | Technisches Konto und ersten Schlüssel anlegen | `201 Created` |
-| `PUT` | `/{id}` | Einen vorhandenen Schlüssel ersetzen | `201 Created` |
-| `DELETE` | `/{id}` | Schlüssel und zugehöriges technisches Konto löschen | `204 No Content` |
+| `PUT` | `/{username}` | Einen vorhandenen Schlüssel ersetzen | `201 Created` |
+| `DELETE` | `/{username}` | Schlüssel und zugehöriges technisches Konto löschen | `204 No Content` |
 
-`id` ist die **CAS-Schlüssel-ID**, nicht der Benutzername und nicht der geheime Schlüsselwert. Kodieren Sie die ID bei Bedarf als URL-Pfadsegment. Nach dem Erneuern hat der neue Schlüssel eine neue ID.
+`username` ist die **LDAP-Benutzerkennung** aus dem Antwortfeld `userId`. Kodieren Sie sie als URL-Pfadsegment. Die Benutzerkennung bleibt beim Erneuern gleich; nur die CAS-Schlüssel-ID ändert sich. Erneuern und Löschen verwenden den ersten CAS-Schlüssel des Kontos, wie die Übersicht.
 
 Ein Endpunkt `GET /{id}` ist nicht implementiert. Für eine Detailansicht lädt das Frontend die Liste und sucht darin nach der Schlüssel-ID.
 
@@ -75,8 +75,8 @@ Die Werte dienen als Beispiel. Die konkreten IDs und Zeitangaben stammen aus CAS
 
 | Feld | Bedeutung |
 | --- | --- |
-| `id` | ID des Schlüssels; wird für Erneuern und Löschen verwendet. |
-| `userId` | Von CAS gelieferte Benutzerzuordnung. |
+| `id` | ID des Schlüssels in CAS. |
+| `userId` | LDAP-Benutzerkennung; wird für Erneuern und Löschen verwendet. |
 | `displayName` | In der Übersicht der LDAP-Anzeigename; bei leerem Anzeigenamen wird der Benutzername verwendet. |
 | `createdAt` | Erstellungszeitpunkt des Schlüssels aus CAS. |
 | `expiresAt` | Ablaufzeitpunkt des Schlüssels. Ohne Ablaufdatum kann das Feld fehlen. |
@@ -133,7 +133,7 @@ Beispielantwort mit `201 Created`:
 }
 ```
 
-Der Service übernimmt die Metadaten aus CAS und setzt den zurückgegebenen `displayName` auf den Benutzernamen. Er verlangt mindestens eine nicht leere `id` und einen nicht leeren `token` von CAS. Andere Metadaten können fehlen, wenn CAS sie nicht liefert.
+Der Service übernimmt die Metadaten aus CAS und setzt `userId` und `displayName` auf den LDAP-Benutzernamen. Er verlangt mindestens eine nicht leere `id` und einen nicht leeren `token` von CAS. Andere Metadaten können fehlen, wenn CAS sie nicht liefert.
 
 Der geheime Schlüsselwert wird nur in der erfolgreichen Antwort auf das Anlegen oder Erneuern zurückgegeben. Die Robots-API bietet keine Möglichkeit, ihn später erneut abzurufen.
 
@@ -158,7 +158,7 @@ curl --cookie cookies.txt \
   --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
   --data '{"expiredAt":"2099-02-01T00:00:00Z"}' \
-  "$ROBOTS_API/pat-123"
+  "$ROBOTS_API/datenabgleich"
 ```
 
 **Der Feldname lautet hier `expiredAt`, beim Anlegen dagegen `expiresAt`.** Die abweichende Schreibweise ist Teil der aktuellen Implementierung.
@@ -167,17 +167,17 @@ curl --cookie cookies.txt \
 | --- | --- |
 | `{"expiredAt":"2099-02-01T00:00:00Z"}` | Verwendet den angegebenen zukünftigen Ablaufzeitpunkt. |
 | `{}` | Behält das bisherige Ablaufdatum bei. |
-| `{"expiredAt":null}` | Behält ebenfalls das bisherige Ablaufdatum bei. |
+| `{"expiredAt":null}` | Entfernt das Ablaufdatum. |
 
 Ein ungültiger, leerer oder nicht in der Zukunft liegender expliziter Zeitpunkt führt zu `400 Bad Request`. Die Fehlernachrichten nennen dabei `expiresAt`, weil dieselbe Validierung wie beim Anlegen verwendet wird.
 
-**Mit `null` lässt sich bei der Erneuerung kein vorhandenes Ablaufdatum entfernen.** Ein bereits unbefristeter Schlüssel bleibt ohne expliziten Zeitpunkt unbefristet. Bei einem abgelaufenen Schlüssel sollte ein neuer zukünftiger Zeitpunkt angegeben werden: Ohne Überschreibung wird das alte Ablaufdatum an CAS weitergegeben, nicht automatisch verlängert.
+**Ein explizites `null` entfernt das Ablaufdatum; ein fehlendes `expiredAt` behält es bei.** Ein bereits unbefristeter Schlüssel bleibt ohne expliziten Zeitpunkt unbefristet. Bei einem abgelaufenen Schlüssel sollte ein neuer zukünftiger Zeitpunkt angegeben oder das Ablaufdatum explizit entfernt werden: Ohne Überschreibung wird das alte Ablaufdatum an CAS weitergegeben, nicht automatisch verlängert.
 
-Die Erfolgsantwort hat den Status `201 Created` und dieselbe Struktur wie beim Anlegen. Sie enthält die **neue ID** und den **neuen geheimen Schlüsselwert**. Verwenden Sie für spätere Operationen diese neue ID.
+Die Erfolgsantwort hat den Status `201 Created` und dieselbe Struktur wie beim Anlegen. Sie enthält die **neue ID** und den **neuen geheimen Schlüsselwert**. Für spätere Operationen verwenden Sie weiterhin dieselbe Benutzerkennung.
 
 ### Ablauf und Fehlerbehandlung
 
-1. Der Service sucht den adressierten Schlüssel unter den Schlüsseln aller technischen LDAP-Konten. Anders als die Übersicht berücksichtigt diese Suche alle von CAS zurückgegebenen Schlüssel eines Kontos.
+1. Der Service sucht gezielt das LDAP-Konto mit der angegebenen Benutzerkennung und `technical=TRUE`. Er lädt ausschließlich dessen CAS-Schlüssel und verwendet den ersten. Fehlen Konto oder Schlüssel, antwortet die API mit `404`.
 2. Er übernimmt Anzeigename und Geltungsbereich des alten CAS-Schlüssels und setzt gegebenenfalls den neuen Ablaufzeitpunkt.
 3. CAS erstellt zunächst einen neuen Schlüssel für denselben Benutzer.
 4. Anschließend wird der alte Schlüssel in CAS gelöscht.
@@ -185,23 +185,23 @@ Die Erfolgsantwort hat den Status `201 Created` und dieselbe Struktur wie beim A
 
 Schlägt das Erstellen des Ersatzschlüssels fehl, wird der alte Schlüssel nicht gelöscht. Schlägt das anschließende Löschen des alten Schlüssels fehl, versucht der Service, den Ersatzschlüssel wieder zu entfernen. Auch dieser Rückrollversuch kann fehlschlagen und wird dann protokolliert.
 
-Nach erfolgreicher Erneuerung ist der alte Schlüssel ungültig. Anwendungen müssen auf den neuen Schlüssel umgestellt werden. Die Erneuerung ist nicht idempotent: Ein erneuter Request mit der alten ID kann nach erfolgreichem Abschluss `404` liefern. Geht die Erfolgsantwort verloren, kann der neue Schlüsselwert nicht über die Übersicht nachgeladen werden.
+Nach erfolgreicher Erneuerung ist der alte Schlüssel ungültig. Anwendungen müssen auf den neuen Schlüssel umgestellt werden. Die Erneuerung ist nicht idempotent: Ein erneuter Request mit derselben Benutzerkennung ersetzt den inzwischen aktuellen Schlüssel erneut. Geht die Erfolgsantwort verloren, kann der neue Schlüsselwert nicht über die Übersicht nachgeladen werden.
 
 ## Technisches Konto löschen
 
 ```bash
 curl --cookie cookies.txt \
   --request DELETE \
-  "$ROBOTS_API/pat-123"
+  "$ROBOTS_API/datenabgleich"
 ```
 
-Bei Erfolg antwortet die API mit `204 No Content` ohne Antwortinhalt. Zum Löschen verwenden Sie die aktuelle Schlüssel-ID, nach einer Erneuerung also die ID des Ersatzschlüssels.
+Bei Erfolg antwortet die API mit `204 No Content` ohne Antwortinhalt. Zum Löschen verwenden Sie die LDAP-Benutzerkennung, auch nach einer Erneuerung.
 
-Der Service ermittelt das technische Konto anhand der Schlüssel-ID und liest es erneut aus LDAP. Danach löscht er zuerst den adressierten Schlüssel in CAS, anschließend das Konto in LDAP und veröffentlicht ein `UserEvent` vom Typ `REMOVE`.
+Der Service liest gezielt das technische LDAP-Konto anhand der Benutzerkennung und lädt nur dessen CAS-Schlüssel. Danach löscht er zuerst den ersten Schlüssel in CAS, anschließend das Konto in LDAP und veröffentlicht ein `UserEvent` vom Typ `REMOVE`.
 
 Scheitert das Löschen des Schlüssels, bleibt das LDAP-Konto erhalten. Scheitert das LDAP-Löschen nach erfolgreichem CAS-Löschen, ist der Schlüssel bereits entfernt, während das Konto noch existieren kann. Dafür gibt es keinen automatischen Wiederherstellungsversuch. Ein `REMOVE`-Ereignis wird nur nach erfolgreichem LDAP-Löschen veröffentlicht.
 
-Die Operation löscht ausdrücklich den adressierten CAS-Schlüssel. Sie führt keine Schleife zum Löschen weiterer Schlüssel desselben Kontos aus. Das reguläre Anlegen und Erneuern ist auf einen verwalteten Schlüssel pro Konto ausgelegt.
+Die Operation löscht den ersten CAS-Schlüssel des angegebenen Kontos. Sie führt keine Schleife zum Löschen weiterer Schlüssel desselben Kontos aus. Das reguläre Anlegen und Erneuern ist auf einen verwalteten Schlüssel pro Konto ausgelegt.
 
 ## Statuscodes und Fehlerantworten
 
@@ -210,9 +210,9 @@ Die Operation löscht ausdrücklich den adressierten CAS-Schlüssel. Sie führt 
 | `200 OK` | `GET` | Metadatenliste erfolgreich geladen, gegebenenfalls `[]`. |
 | `201 Created` | `POST`, `PUT` | Konto mit Schlüssel angelegt beziehungsweise Ersatzschlüssel erstellt. |
 | `204 No Content` | `DELETE` | Schlüssel und Konto erfolgreich gelöscht. |
-| `400 Bad Request` | `POST`, `PUT`, `DELETE` | Servicevalidierung fehlgeschlagen, beispielsweise ungültiger Name, Zeitpunkt oder leere Schlüssel-ID. |
+| `400 Bad Request` | `POST`, `PUT`, `DELETE` | Servicevalidierung fehlgeschlagen, beispielsweise ungültiger Name, Zeitpunkt oder leere Benutzerkennung. |
 | `403 Forbidden` | Alle | Die Resource erkennt keine authentifizierte Identität mit der erforderlichen Rolle. Vorgeschaltete Filter können eine andere Antwort liefern. |
-| `404 Not Found` | `PUT`, `DELETE` | Unter den technischen Konten wurde kein passender Schlüssel gefunden; beim Löschen gegebenenfalls auch kein zugehöriger LDAP-Eintrag mehr. |
+| `404 Not Found` | `PUT`, `DELETE` | Das angegebene technische LDAP-Konto existiert nicht oder hat keinen CAS-Schlüssel. |
 | `409 Conflict` | `POST` | Der LDAP-Benutzername ist bereits vergeben, auch durch ein normales Benutzerkonto. |
 | `500 Internal Server Error` | Alle | Fehler beim LDAP-Zugriff. |
 | `502 Bad Gateway` | Alle | Fehler beim Zugriff auf CAS oder ungültige beziehungsweise unvollständige CAS-Antwort. |

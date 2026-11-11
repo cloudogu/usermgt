@@ -290,7 +290,7 @@
   "security.overview.delete.dialog.title": "Zugriffsschlüssel löschen",
   "security.overview.delete.dialog.message": "Möchten Sie den Zugriffsschlüssel '{{displayName}}' wirklich löschen?",
   "security.overview.delete.dialog.confirm": "Löschen",
-  "security.pta.load.error": "Die persönlichen Zugriffsschlüssel konnten nicht geladen werden.",
+  "security.pat.load.error": "Die persönlichen Zugriffsschlüssel konnten nicht geladen werden.",
 
   "robots.overview.renew.error": "Der Zugriffsschlüssel konnte nicht erneuert werden.",
   "robots.overview.title": "Technische Konten",
@@ -343,7 +343,7 @@
   "robots.createrobot.error.expireat.select": "Wählen Sie einen Zeitraum",
   "robots.createrobot.error.dogus.select": "Wählen Sie aus, für welche Dogus das technische Konto gilt",
   "robots.createrobot.invalid.dogus.label": "Nicht kompatible Dogus",
-  "robots.createrobot.invalid.dogus.hint": "Diese Dogus sind nicht mit technischen Konten komatibel.",
+  "robots.createrobot.invalid.dogus.hint": "Diese Dogus sind nicht mit technischen Konten kompatibel.",
 
   "robots.createrobot.modal.success.headline": "Technisches Konto angelegt",
   "robots.createrobot.modal.success.hint": "Kopieren und speichern Sie den Schlüssel. Diese Ansicht wird nur einmal angezeigt.",

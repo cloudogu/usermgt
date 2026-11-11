@@ -36,8 +36,7 @@ public class RobotResource {
 
     @GET
     public Response getRobots() {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated() || !subject.hasRole(Roles.ADMINISTRATOR)) {
+        if (!isAuthenticatedAdministrator()) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         try {
@@ -55,8 +54,7 @@ public class RobotResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createRobot(CreateRobotRequest request) {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated() || !subject.hasRole(Roles.ADMINISTRATOR)) {
+        if (!isAuthenticatedAdministrator()) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         try {
@@ -86,15 +84,14 @@ public class RobotResource {
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response renewRobot(@PathParam("id") String id, RenewRobotRequest request) {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated() || !subject.hasRole(Roles.ADMINISTRATOR)) {
+    public Response renewRobot(@PathParam("username") String username, RenewRobotRequest request) {
+        if (!isAuthenticatedAdministrator()) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         try {
-            CreatedRobotPAT pat = service.renewRobot(id, request);
+            CreatedRobotPAT pat = service.renewRobot(username, request);
             if (pat == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
@@ -115,14 +112,13 @@ public class RobotResource {
     }
 
     @DELETE
-    @Path("/{id}")
-    public Response deleteRobot(@PathParam("id") String id) {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.isAuthenticated() || !subject.hasRole(Roles.ADMINISTRATOR)) {
+    @Path("/{username}")
+    public Response deleteRobot(@PathParam("username") String username) {
+        if (!isAuthenticatedAdministrator()) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         try {
-            return service.deleteRobot(id)
+            return service.deleteRobot(username)
                 ? Response.noContent().build()
                 : Response.status(Response.Status.NOT_FOUND).build();
         } catch (IllegalArgumentException e) {
@@ -139,4 +135,8 @@ public class RobotResource {
         }
     }
 
+    private boolean isAuthenticatedAdministrator() {
+        Subject subject = SecurityUtils.getSubject();
+        return subject.isAuthenticated() && subject.hasRole(Roles.ADMINISTRATOR);
+    }
 }

@@ -53,7 +53,7 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
 
     const deleteToken = async () => {
         if (!tokenToDelete) return;
-        await RobotsService.delete(tokenToDelete.id);
+        await RobotsService.delete(tokenToDelete.userId);
         setAnnouncement(tWithParams("robots.createrobot.modal.delete.succeeded", tokenToDelete.displayName));
         onTokenDeleted(tokenToDelete.id);
         setTokenToDelete(undefined);
@@ -64,7 +64,7 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
         setIsRenewing(true);
         setRenewError(false);
         try {
-            const response = await RobotsService.renew(token.id);
+            const response = await RobotsService.renew(token.userId);
             setRenewedPAT(response);
         } catch {
             setRenewError(true);
@@ -137,7 +137,7 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                                 <ActionTableFrontendPaginated.Body.Row
                                     key={token.id}
                                     data-testid={`robot-token-row-${token.id}`}
-                                    className={token.status == "active" ? "" : "bg-neutral-weaker text-neutral"}
+                                    className={token.status === "active" ? "" : "bg-neutral-weaker text-neutral"}
                                 >
                                     <ActionTableFrontendPaginated.Body.Row.Column className="break-all">
                                         <Link to={`/robots/pats/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:!text-brand">
@@ -154,13 +154,15 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                                         {formatDate(token.expiresAt)}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
-                                        <RefreshButton
-                                            title={t("robots.overview.table.action.renew")}
-                                            disabled={isRenewing || !!renewedPAT}
-                                            onClick={() => void renewToken(token)}
-                                            aria-label={`${token.displayName} ${t("robots.overview.table.action.renew")}`}
-                                            className={"mr-2"}
-                                        />
+                                        {token.status === "active" && (
+                                            <RefreshButton
+                                                title={t("robots.overview.table.action.renew")}
+                                                disabled={isRenewing || !!renewedPAT}
+                                                onClick={() => void renewToken(token)}
+                                                aria-label={`${token.displayName} ${t("robots.overview.table.action.renew")}`}
+                                                className={"mr-2"}
+                                            />
+                                        )}
                                         <DeleteButton
                                             title={t("robots.overview.table.action.delete")}
                                             disabled={isRenewing || !!renewedPAT}

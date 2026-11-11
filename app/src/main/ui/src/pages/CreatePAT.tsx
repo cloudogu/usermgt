@@ -20,7 +20,7 @@ export default function CreatePAT() {
     const {data: tokens, isLoading, error} = useAPI(PATService.getAll);
 
     if (error) {
-        return <p role="alert" className="my-4 text-danger">{t("security.pta.load.error")}</p>;
+        return <p role="alert" className="my-4 text-danger">{t("security.pat.load.error")}</p>;
     }
     if (isLoading || !tokens) {
         return  <div className="flex min-h-[60vh] items-center justify-center">

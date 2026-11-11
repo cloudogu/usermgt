@@ -290,7 +290,7 @@
   "security.overview.delete.dialog.title": "Delete access key",
   "security.overview.delete.dialog.message": "Do you really want to delete the access key '{{displayName}}'?",
   "security.overview.delete.dialog.confirm": "Delete",
-  "security.pta.load.error": "Failed to load personal access tokens.",
+  "security.pat.load.error": "Failed to load personal access tokens.",
 
   "robots.overview.renew.error": "Failed to renew the access token.",
   "robots.overview.title": "Technical accounts",

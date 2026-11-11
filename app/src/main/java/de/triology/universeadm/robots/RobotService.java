@@ -111,40 +111,51 @@ public class RobotService {
     }
 
     /** Replaces a technical user's PAT while keeping the LDAP user unchanged. */
-    public CreatedRobotPAT renewRobot(String id, RenewRobotRequest request) throws LDAPException, IOException {
-        validatePATId(id);
+    public CreatedRobotPAT renewRobot(String username, RenewRobotRequest request) throws LDAPException, IOException {
+        validateUsername(username);
         String expiredAt = request == null ? null : request.getExpiredAt();
         validateExpiration(expiredAt);
-        for (User user : getTechnicalUsers()) {
-            for (RobotPAT pat : getPATs(user)) {
-                if (id.equals(pat.getId())) {
-                    CreateRobotRequest replacement = new CreateRobotRequest();
-                    replacement.setDisplayName(pat.getDisplayName());
-                    replacement.setScope(pat.getScope());
-                    replacement.setExpiresAt(expiredAt == null ? pat.getExpiresAt() : expiredAt);
-                    CreatedRobotPAT renewed = createPAT(user.getUsername(), replacement);
-                    try {
-                        deletePAT(user.getUsername(), id);
-                    } catch (IOException e) {
-                        try {
-                            deletePAT(user.getUsername(), renewed.getId());
-                        } catch (IOException rollbackError) {
-                            e.addSuppressed(rollbackError);
-                            LOG.error("Failed to roll back replacement PAT after old PAT deletion failed", rollbackError);
-                        }
-                        throw e;
-                    }
-                    return renewed;
-                }
-            }
+        SearchResultEntry entry = getTechnicalUserEntry(username);
+        if (entry == null) {
+            return null;
         }
-        return null;
+        List<RobotPAT> pats = getPATs(mapper.convert(entry));
+        if (pats.isEmpty()) {
+            return null;
+        }
+        RobotPAT pat = pats.get(0);
+        CreateRobotRequest replacement = new CreateRobotRequest();
+        replacement.setDisplayName(pat.getDisplayName());
+        replacement.setScope(pat.getScope());
+        replacement.setExpiresAt(request != null && request.hasExpirationOverride() ? expiredAt : pat.getExpiresAt());
+        CreatedRobotPAT renewed = createPAT(username, replacement);
+        try {
+            deletePAT(username, pat.getId());
+        } catch (IOException e) {
+            try {
+                deletePAT(username, renewed.getId());
+            } catch (IOException rollbackError) {
+                e.addSuppressed(rollbackError);
+                LOG.error("Failed to roll back replacement PAT after old PAT deletion failed", rollbackError);
+            }
+            throw e;
+        }
+        return renewed;
     }
 
-    private void validatePATId(String id) {
-        if (id == null || id.trim().isEmpty()) {
-            throw new IllegalArgumentException("PAT id is required");
+    private void validateUsername(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username is required");
         }
+    }
+
+    private SearchResultEntry getTechnicalUserEntry(String username) throws LDAPException {
+        SearchRequest request = new SearchRequest(mapper.getParentDN(), SearchScope.SUB,
+            Filter.createANDFilter(mapper.getBaseFilter(),
+                Filter.createEqualityFilter("technical", "TRUE"),
+                Filter.createEqualityFilter(mapper.getAttribute("username").getLdapName(), username)),
+            mapper.getReturningAttributes().toArray(new String[0]));
+        return strategy.get().searchForEntry(request);
     }
 
     private void deletePAT(String username, String id) throws IOException {
@@ -159,31 +170,21 @@ public class RobotService {
     }
 
     /** Deletes the PAT before deleting its owning technical user. */
-    public boolean deleteRobot(String id) throws LDAPException, IOException {
-        validatePATId(id);
-        for (User user : getTechnicalUsers()) {
-            for (RobotPAT pat : getPATs(user)) {
-                if (!id.equals(pat.getId())) {
-                    continue;
-                }
-                LDAPInterface connection = strategy.get();
-                SearchRequest request = new SearchRequest(mapper.getParentDN(), SearchScope.SUB,
-                    Filter.createANDFilter(mapper.getBaseFilter(),
-                        Filter.createEqualityFilter("technical", "TRUE"),
-                        Filter.createEqualityFilter(mapper.getAttribute("username").getLdapName(), user.getUsername())),
-                    mapper.getReturningAttributes().toArray(new String[0]));
-                SearchResultEntry entry = connection.searchForEntry(request);
-                if (entry == null) {
-                    return false;
-                }
-                User owner = mapper.convert(entry);
-                deletePAT(user.getUsername(), id);
-                connection.delete(entry.getDN());
-                eventBus.post(new UserEvent(owner, EventType.REMOVE));
-                return true;
-            }
+    public boolean deleteRobot(String username) throws LDAPException, IOException {
+        validateUsername(username);
+        SearchResultEntry entry = getTechnicalUserEntry(username);
+        if (entry == null) {
+            return false;
         }
-        return false;
+        User owner = mapper.convert(entry);
+        List<RobotPAT> pats = getPATs(owner);
+        if (pats.isEmpty()) {
+            return false;
+        }
+        deletePAT(username, pats.get(0).getId());
+        strategy.get().delete(entry.getDN());
+        eventBus.post(new UserEvent(owner, EventType.REMOVE));
+        return true;
     }
 
     String createRobotMail(String username, LDAPInterface connection) throws LDAPException {
@@ -240,6 +241,7 @@ public class RobotService {
                 || pat.getToken() == null || pat.getToken().isEmpty()) {
                 throw new IOException("CAS returned incomplete PAT creation data");
             }
+            pat.setUserId(username);
             pat.setDisplayName(username);
             return pat;
         } catch (JsonParseException | IllegalStateException e) {
@@ -311,6 +313,7 @@ public class RobotService {
                 if (pat.getId() == null || pat.getId().isEmpty()) {
                     throw new IOException("CAS PAT metadata has no id");
                 }
+                pat.setUserId(user.getUsername());
                 result.add(pat);
             }
             return result;

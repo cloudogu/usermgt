@@ -21,7 +21,7 @@ export default function CreateRobot() {
     const {data: tokens, isLoading, error} = useAPI(RobotsService.getAll);
 
     if (error) {
-        return <p role="alert" className="my-4 text-danger">{t("security.pta.load.error")}</p>;
+        return <p role="alert" className="my-4 text-danger">{t("security.pat.load.error")}</p>;
     }
     if (isLoading || !tokens) {
         return  <div className="flex min-h-[60vh] items-center justify-center">
@@ -108,15 +108,15 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
 
     const nameError =
         robotName.trim().length === 0
-            ? t("security.createpat.error.displayname.empty")
+            ? t("security.createpat.error.displayname.empty")  // no empty names
             : robotName.length < 2
-                ? t("robots.createrobot.error.displayname.minlength")
+                ? t("robots.createrobot.error.displayname.minlength") // at least 2 signs
                 : robotName.length > 64
-                    ? t("security.createpat.error.displayname.length")
+                    ? t("security.createpat.error.displayname.length") // at most 64 signs
                     : /[^a-zA-Z0-9_@.-]/.test(robotName)
-                        ? t("robots.createrobot.error.displayname.invalidchars")
+                        ? t("robots.createrobot.error.displayname.invalidchars") // only alphabetic chars, numbers, @,_ and -
                         : conflictingName === robotName || tokens.some(token => token.displayName === robotName)
-                            ? t("robots.createrobot.error.displayname.exists")
+                            ? t("robots.createrobot.error.displayname.exists") // unique names
                             : "";
 
     const showError = touched && nameError !== "";

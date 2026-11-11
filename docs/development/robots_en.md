@@ -41,10 +41,10 @@ Requests with a JSON body use `Content-Type: application/json`. Responses contai
 | --- | --- | --- | --- |
 | `GET` | empty | List technical accounts with token metadata | `200 OK` |
 | `POST` | empty | Create a technical account and its first token | `201 Created` |
-| `PUT` | `/{id}` | Replace an existing token | `201 Created` |
-| `DELETE` | `/{id}` | Delete a token and its associated technical account | `204 No Content` |
+| `PUT` | `/{username}` | Replace an existing token | `201 Created` |
+| `DELETE` | `/{username}` | Delete a token and its associated technical account | `204 No Content` |
 
-`id` is the **CAS token ID**, not the username or the secret token value. Encode the ID as a URL path segment where necessary. After renewal, the new token has a new ID.
+`username` is the **LDAP username** returned in `userId`. Encode it as a URL path segment. The username remains unchanged after renewal; only the CAS token ID changes. Renewal and deletion use the account’s first CAS token, as shown in the overview.
 
 There is no `GET /{id}` endpoint. To display account details, the frontend loads the list and searches it for the token ID.
 
@@ -75,8 +75,8 @@ These values are examples. Actual IDs and timestamps are supplied by CAS.
 
 | Field | Meaning |
 | --- | --- |
-| `id` | Token ID; used for renewal and deletion. |
-| `userId` | User association supplied by CAS. |
+| `id` | Token ID in CAS. |
+| `userId` | LDAP username; used for renewal and deletion. |
 | `displayName` | The LDAP display name in the overview; the username is used if the display name is empty. |
 | `createdAt` | Token creation timestamp supplied by CAS. |
 | `expiresAt` | Token expiry timestamp. The field may be absent if there is no expiry date. |
@@ -133,7 +133,7 @@ Example response with `201 Created`:
 }
 ```
 
-The service takes the metadata from CAS and sets the returned `displayName` to the username. It requires at least a non-empty `id` and a non-empty `token` from CAS. Other metadata may be absent if CAS does not provide it.
+The service takes the metadata from CAS and sets `userId` and `displayName` to the LDAP username. It requires at least a non-empty `id` and a non-empty `token` from CAS. Other metadata may be absent if CAS does not provide it.
 
 The secret token value is returned only in the successful response to creation or renewal. The Robots API provides no way to retrieve it again later.
 
@@ -158,7 +158,7 @@ curl --cookie cookies.txt \
   --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
   --data '{"expiredAt":"2099-02-01T00:00:00Z"}' \
-  "$ROBOTS_API/pat-123"
+  "$ROBOTS_API/datenabgleich"
 ```
 
 **The field name here is `expiredAt`, whereas creation uses `expiresAt`.** This difference in spelling is part of the current implementation.
@@ -167,17 +167,17 @@ curl --cookie cookies.txt \
 | --- | --- |
 | `{"expiredAt":"2099-02-01T00:00:00Z"}` | Uses the specified future expiry timestamp. |
 | `{}` | Preserves the existing expiry date. |
-| `{"expiredAt":null}` | Also preserves the existing expiry date. |
+| `{"expiredAt":null}` | Removes the expiry date. |
 
 An explicitly supplied timestamp that is invalid, empty, or not in the future results in `400 Bad Request`. The error messages refer to `expiresAt` because the same validation is used as for creation.
 
-**Using `null` during renewal does not remove an existing expiry date.** A token that already has no expiry date remains without one unless an explicit timestamp is supplied. For an expired token, a new future timestamp should be provided: without an override, the old expiry date is forwarded to CAS rather than automatically extended.
+**An explicit `null` removes the expiry date; omitting `expiredAt` preserves it.** A token that already has no expiry date remains without one unless an explicit timestamp is supplied. For an expired token, provide a new future timestamp or explicitly remove expiration: without an override, the old expiry date is forwarded to CAS rather than automatically extended.
 
-The successful response has status `201 Created` and the same structure as the creation response. It contains the **new ID** and the **new secret token value**. Use this new ID for subsequent operations.
+The successful response has status `201 Created` and the same structure as the creation response. It contains the **new ID** and the **new secret token value**. Continue using the same username for subsequent operations.
 
 ### Workflow and error handling
 
-1. The service searches for the addressed token among the tokens of all technical LDAP accounts. Unlike the overview, this search considers all tokens returned by CAS for an account.
+1. The service looks up the LDAP account by the supplied username and `technical=TRUE`. It loads only that account’s CAS tokens and uses the first one. If the account or token is missing, the API returns `404`.
 2. It copies the old CAS token's display name and scope and applies the new expiry timestamp if supplied.
 3. CAS first creates a new token for the same user.
 4. The old token is then deleted in CAS.
@@ -185,23 +185,23 @@ The successful response has status `201 Created` and the same structure as the c
 
 If creating the replacement token fails, the old token is not deleted. If deleting the old token subsequently fails, the service attempts to remove the replacement token. This rollback attempt can also fail, in which case the failure is logged.
 
-After successful renewal, the old token is invalid. Applications must be updated to use the new token. Renewal is not idempotent: another request using the old ID may return `404` after successful completion. If the successful response is lost, the new token value cannot be retrieved from the overview.
+After successful renewal, the old token is invalid. Applications must be updated to use the new token. Renewal is not idempotent: another request using the same username replaces the current token again. If the successful response is lost, the new token value cannot be retrieved from the overview.
 
 ## Deleting a technical account
 
 ```bash
 curl --cookie cookies.txt \
   --request DELETE \
-  "$ROBOTS_API/pat-123"
+  "$ROBOTS_API/datenabgleich"
 ```
 
-On success, the API responds with `204 No Content` and no response body. Use the current token ID for deletion, which is the replacement token's ID after renewal.
+On success, the API responds with `204 No Content` and no response body. Use the LDAP username for deletion, including after renewal.
 
-The service identifies the technical account using the token ID and reads it again from LDAP. It then deletes the addressed token in CAS, deletes the account in LDAP, and publishes a `UserEvent` of type `REMOVE`.
+The service looks up the technical LDAP account by username and loads only its CAS tokens. It then deletes the first token in CAS, deletes the account in LDAP, and publishes a `UserEvent` of type `REMOVE`.
 
 If deleting the token fails, the LDAP account is retained. If LDAP deletion fails after successful CAS deletion, the token has already been removed while the account may still exist. There is no automatic recovery attempt for this case. A `REMOVE` event is published only after LDAP deletion succeeds.
 
-The operation explicitly deletes the addressed CAS token. It does not loop through and delete additional tokens belonging to the same account. The regular creation and renewal workflows are designed for one managed token per account.
+The operation deletes the first CAS token of the specified account. It does not loop through and delete additional tokens belonging to the same account. The regular creation and renewal workflows are designed for one managed token per account.
 
 ## Status codes and error responses
 
@@ -210,9 +210,9 @@ The operation explicitly deletes the addressed CAS token. It does not loop throu
 | `200 OK` | `GET` | Metadata list loaded successfully, possibly `[]`. |
 | `201 Created` | `POST`, `PUT` | Account and token created, or replacement token created. |
 | `204 No Content` | `DELETE` | Token and account deleted successfully. |
-| `400 Bad Request` | `POST`, `PUT`, `DELETE` | Service validation failed, for example because of an invalid name, timestamp, or empty token ID. |
+| `400 Bad Request` | `POST`, `PUT`, `DELETE` | Service validation failed, for example because of an invalid name, timestamp, or empty username. |
 | `403 Forbidden` | All | The resource does not recognize an authenticated identity with the required role. Upstream filters may return a different response. |
-| `404 Not Found` | `PUT`, `DELETE` | No matching token was found among technical accounts; during deletion, the associated LDAP entry may also no longer exist. |
+| `404 Not Found` | `PUT`, `DELETE` | The specified technical LDAP account does not exist or has no CAS token. |
 | `409 Conflict` | `POST` | The LDAP username is already taken, including by a regular user account. |
 | `500 Internal Server Error` | All | LDAP access failed. |
 | `502 Bad Gateway` | All | CAS access failed, or the CAS response was invalid or incomplete. |
