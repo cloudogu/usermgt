@@ -140,7 +140,7 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                                     className={token.status === "active" ? "" : "bg-neutral-weaker text-neutral"}
                                 >
                                     <ActionTableFrontendPaginated.Body.Row.Column className="break-all">
-                                        <Link to={`/robots/pats/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:!text-brand">
+                                        <Link to={`/robots/pats/${encodeURIComponent(token.userId)}/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:!text-brand">
                                             {token.displayName}
                                         </Link>
                                     </ActionTableFrontendPaginated.Body.Row.Column>

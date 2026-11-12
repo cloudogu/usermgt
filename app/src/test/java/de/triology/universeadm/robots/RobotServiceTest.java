@@ -548,9 +548,80 @@ public class RobotServiceTest {
             return request.getFilter().matchesEntry(entry) ? entry : null;
         });
         assertNull(service.renewRobot("person", null));
+        assertNull(service.getRobot("person", "target"));
         assertFalse(service.deleteRobot("person"));
         verifyZeroInteractions(client, eventBus);
         verify(connection, never()).delete(anyString());
+    }
+
+    @Test
+    public void loadsRequestedPATOnlyFromSpecifiedTechnicalUser() throws Exception {
+        prepareTechnicalUser();
+        User user = new User("robot-a");
+        user.setDisplayName("Robot A");
+        when(mapper.convert(any(SearchResultEntry.class))).thenReturn(user);
+        when(client.getPATs("robot-a")).thenReturn(Response.ok(
+            "[{\"id\":\"first\"},{\"id\":\"target\",\"userId\":\"untrusted\",\"scope\":\"/scm\",\"token\":\"secret\"}]").build());
+
+        RobotPAT pat = service.getRobot("robot-a", "target");
+
+        assertEquals("target", pat.getId());
+        assertEquals("robot-a", pat.getUserId());
+        assertEquals("Robot A", pat.getDisplayName());
+        assertEquals("/scm", pat.getScope());
+        assertFalse(new Gson().toJson(pat).contains("secret"));
+        verify(client).getPATs("robot-a");
+        verifyNoMoreInteractions(client);
+        ArgumentCaptor<SearchRequest> requests = ArgumentCaptor.forClass(SearchRequest.class);
+        verify(connection).searchForEntry(requests.capture());
+        assertEquals("(&(uid=*)(technical=TRUE)(uid=robot-a))", requests.getValue().getFilter().toString());
+        verify(connection, never()).search(any(SearchRequest.class));
+    }
+
+    @Test
+    public void returnsNullForUnknownRobotWithoutCallingCAS() throws Exception {
+        assertNull(service.getRobot("unknown", "target"));
+        verifyZeroInteractions(client);
+    }
+
+    @Test
+    public void returnsNullForMissingPATOfSpecifiedUser() throws Exception {
+        prepareTechnicalUser();
+        when(client.getPATs("robot-a")).thenAnswer(invocation -> Response.ok("[{\"id\":\"other\"}]").build());
+        assertNull(service.getRobot("robot-a", "target"));
+        assertNull(service.getRobot("robot-a", "robot-a"));
+    }
+
+    @Test
+    public void returnsNullForTechnicalUserWithoutPATs() throws Exception {
+        prepareTechnicalUser();
+        when(client.getPATs("robot-a")).thenReturn(Response.noContent().build());
+        assertNull(service.getRobot("robot-a", "target"));
+    }
+
+    @Test
+    public void fallsBackToUsernameForRobotDetails() throws Exception {
+        prepareDelete();
+        assertEquals("robot-a", service.getRobot("robot-a", "target").getDisplayName());
+    }
+
+    @Test
+    public void rejectsMissingRobotDetailIdentifiersBeforeLDAPOrCAS() throws Exception {
+        for (String[] identifiers : new String[][] {{null, "target"}, {" ", "target"}, {"robot-a", null}, {"robot-a", " "}}) {
+            try {
+                service.getRobot(identifiers[0], identifiers[1]);
+                fail("Expected missing identifier to be rejected");
+            } catch (IllegalArgumentException expected) {
+                verifyZeroInteractions(connection, client);
+            }
+        }
+    }
+
+    @Test(expected = IOException.class)
+    public void reportsCASFailureWhenLoadingRobotDetails() throws Exception {
+        prepareTechnicalUser();
+        when(client.getPATs("robot-a")).thenReturn(Response.status(502).build());
+        service.getRobot("robot-a", "target");
     }
 
     private void prepareRenew() throws Exception {

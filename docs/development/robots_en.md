@@ -25,7 +25,7 @@ The API is available at the following base URL:
 https://<ces-host>/usermgt/api/robots
 ```
 
-All four operations require an authenticated account with the internal role `Universe Administrator`. Every method in `RobotResource` checks this role. The configured administrator role in the CAS configuration is mapped to this internal role. For integrations, this server-side role is what matters, even if the interface refers to the permission as a manager permission.
+All operations require an authenticated account with the internal role `Universe Administrator`. Every method in `RobotResource` checks this role. The configured administrator role in the CAS configuration is mapped to this internal role. For integrations, this server-side role is what matters, even if the interface refers to the permission as a manager permission.
 
 The following `curl` examples use an existing authenticated User Management session. `cookies.txt` represents a cookie file in a format supported by `curl`, containing valid session cookies. Authentication itself is not part of the Robots API. Replace the host, IDs, and sample data with values from your environment.
 
@@ -40,13 +40,14 @@ Requests with a JSON body use `Content-Type: application/json`. Responses contai
 | Method | Path relative to the base URL | Purpose | Success status |
 | --- | --- | --- | --- |
 | `GET` | empty | List technical accounts with token metadata | `200 OK` |
+| `GET` | `/{userId}/{id}` | Read one technical account's token metadata | `200 OK` |
 | `POST` | empty | Create a technical account and its first token | `201 Created` |
 | `PUT` | `/{username}` | Replace an existing token | `201 Created` |
 | `DELETE` | `/{username}` | Delete a token and its associated technical account | `204 No Content` |
 
 `username` is the **LDAP username** returned in `userId`. Encode it as a URL path segment. The username remains unchanged after renewal; only the CAS token ID changes. Renewal and deletion use the account’s first CAS token, as shown in the overview.
 
-There is no `GET /{id}` endpoint. To display account details, the frontend loads the list and searches it for the token ID.
+`GET /{userId}/{id}` uses the LDAP username from `userId` and the CAS token ID from `id`. Encode both as URL path segments. The backend looks up only that technical LDAP account and loads only its CAS tokens, then returns the matching token as a single metadata object without the secret `token` field. It returns `404` if the account or the requested token is missing. The display name follows the same rules as the overview. Example: `GET /usermgt/api/robots/datenabgleich/pat-123`. The frontend uses this endpoint for its detail view; the detail page URL includes the username and token ID.
 
 ## Retrieving accounts and token metadata
 
@@ -207,12 +208,12 @@ The operation deletes the first CAS token of the specified account. It does not 
 
 | Status | Operations | Meaning |
 | --- | --- | --- |
-| `200 OK` | `GET` | Metadata list loaded successfully, possibly `[]`. |
+| `200 OK` | `GET` | Metadata list (possibly `[]`) or individual token metadata loaded successfully. |
 | `201 Created` | `POST`, `PUT` | Account and token created, or replacement token created. |
 | `204 No Content` | `DELETE` | Token and account deleted successfully. |
 | `400 Bad Request` | `POST`, `PUT`, `DELETE` | Service validation failed, for example because of an invalid name, timestamp, or empty username. |
 | `403 Forbidden` | All | The resource does not recognize an authenticated identity with the required role. Upstream filters may return a different response. |
-| `404 Not Found` | `PUT`, `DELETE` | The specified technical LDAP account does not exist or has no CAS token. |
+| `404 Not Found` | `GET /{userId}/{id}`, `PUT`, `DELETE` | The specified technical LDAP account or token does not exist. |
 | `409 Conflict` | `POST` | The LDAP username is already taken, including by a regular user account. |
 | `500 Internal Server Error` | All | LDAP access failed. |
 | `502 Bad Gateway` | All | CAS access failed, or the CAS response was invalid or incomplete. |

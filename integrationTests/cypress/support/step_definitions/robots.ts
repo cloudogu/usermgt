@@ -223,6 +223,8 @@ Then("the new technical account is no longer listed", () => {
 });
 
 When("the user opens the new technical account's details by clicking its name", () => {
+    cy.intercept("GET", "**/usermgt/api/robots").as("robotListFromDetails");
+    cy.intercept("GET", "**/usermgt/api/robots/*/*").as("robotDetails");
     cy.get<string>("@robotName").then(name => {
         firstRobotPage();
         findRobotRow(name);
@@ -234,11 +236,17 @@ When("the user opens the new technical account's details by clicking its name", 
 });
 
 Then("the technical account detail page is shown", () => {
-    cy.location("pathname").should("match", /^\/usermgt\/robots\/pats\/[^/]+$/);
+    cy.location("pathname").should("match", /^\/usermgt\/robots\/pats\/[^/]+\/[^/]+$/);
+    cy.wait("@robotDetails").then(({request, response}) => {
+        expect(response?.statusCode).to.eq(200);
+        expect(new URL(request.url).pathname).to.eq(
+            `/usermgt/api/robots/${encodeURIComponent(response!.body.userId)}/${encodeURIComponent(response!.body.id)}`);
+    });
     cy.get<string>("@robotName").then(name => {
         cy.get("h2").should("be.visible").and("have.text", name);
     });
     patElement("robots-create-pat-expiry-select-trigger").should("be.visible");
+    cy.get("@robotListFromDetails.all").should("have.length", 0);
 });
 
 Then("the technical account renewal time selection contains the current expiration date", () => {

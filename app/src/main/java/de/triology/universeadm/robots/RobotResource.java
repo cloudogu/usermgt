@@ -51,6 +51,32 @@ public class RobotResource {
                 .entity("{\"message\":\"Failed to load robot PAT metadata from CAS\"}").build();
         }
     }
+    @GET
+    @Path("/{userId}/{id}")
+    public Response getRobot(@PathParam("userId") String userId, @PathParam("id") String id) {
+        if (!isAuthenticatedAdministrator()) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        try {
+            RobotPAT pat = service.getRobot(userId, id);
+            if (pat == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(GSON.toJson(pat), MediaType.APPLICATION_JSON).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(GSON.toJson(java.util.Collections.singletonMap("message", e.getMessage()))).build();
+        } catch (LDAPException e) {
+            LOG.error("Failed to load technical user from LDAP", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"message\":\"Failed to load technical user from LDAP\"}").build();
+        } catch (IOException e) {
+            LOG.error("Failed to load robot PAT metadata from CAS", e);
+            return Response.status(Response.Status.BAD_GATEWAY)
+                .entity("{\"message\":\"Failed to load robot PAT metadata from CAS\"}").build();
+        }
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createRobot(CreateRobotRequest request) {

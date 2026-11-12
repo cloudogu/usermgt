@@ -69,11 +69,11 @@ function RobotsContent() {
             </div>
             <hr className="my-4 border-0 border-t border-neutral-weak" aria-hidden="true"/>
             <section className="pt-3 pb-8">
+                <div role="status" aria-atomic="true" className="sr-only">
+                    {announcement}
+                </div>
                 <RobotManagement robots={robots} error={error} isLoading={isLoading}/>
             </section>
-            <div role="status" aria-atomic="true" className="sr-only">
-                {announcement}
-            </div>
             {dialogPAT && <CreatedRobotDialog pat={dialogPAT} onClose={closeCreatedRobot}/>}
         </>
     );

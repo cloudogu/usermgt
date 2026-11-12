@@ -3,6 +3,22 @@ import {isSuccessStatus} from "../helpers/api";
 import type {CreatePATRequest, CreatePATResponse, PATMetadata} from "./PATs";
 
 export const RobotsService = {
+    async get(signal?: AbortSignal, identifiers?: {userId?: string; id?: string}): Promise<PATMetadata | undefined> {
+        if (!identifiers?.userId || !identifiers.id) {
+            throw new Error("user ID and PAT ID are required");
+        }
+        const response = await Axios.get<PATMetadata>(
+            `/robots/${encodeURIComponent(identifiers.userId)}/${encodeURIComponent(identifiers.id)}`,
+            {signal, validateStatus: status => isSuccessStatus(status) || status === 404},
+        );
+        if (response.status === 404) {
+            return undefined;
+        }
+        if (!isSuccessStatus(response.status)) {
+            throw new Error("failed to load robot personal access token: " + response.status);
+        }
+        return response.data;
+    },
     async getAll(signal?: AbortSignal): Promise<PATMetadata[]> {
         const response = await Axios.get<PATMetadata[]>("/robots", {signal});
         if (!isSuccessStatus(response.status)) {

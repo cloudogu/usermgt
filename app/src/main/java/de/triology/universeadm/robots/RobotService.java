@@ -74,6 +74,27 @@ public class RobotService {
         return robots;
     }
 
+    /** Returns a technical user's PAT by CAS ID, or null if user or PAT is missing. */
+    public RobotPAT getRobot(String username, String id) throws LDAPException, IOException {
+        validateUsername(username);
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("PAT ID is required");
+        }
+        SearchResultEntry entry = getTechnicalUserEntry(username);
+        if (entry == null) {
+            return null;
+        }
+        User user = mapper.convert(entry);
+        for (RobotPAT pat : getPATs(user)) {
+            if (id.equals(pat.getId())) {
+                String name = user.getDisplayName();
+                pat.setDisplayName(name == null || name.trim().isEmpty() ? user.getUsername() : name);
+                return pat;
+            }
+        }
+        return null;
+    }
+
     /** Creates the technical LDAP user before creating their PAT in CAS. */
     public CreatedRobotPAT createRobot(CreateRobotRequest request) throws LDAPException, IOException {
         validateCreateRequest(request);

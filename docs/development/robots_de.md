@@ -25,7 +25,7 @@ Die API ist unter folgender Basis-URL erreichbar:
 https://<ces-host>/usermgt/api/robots
 ```
 
-Alle vier Operationen setzen ein authentifiziertes Konto mit der internen Rolle `Universe Administrator` voraus. Die Rollenprüfung erfolgt in jeder Methode von `RobotResource`. In der CAS-Konfiguration wird die konfigurierte Administratorrolle auf diese interne Rolle abgebildet. Für Integrationen ist diese serverseitige Rolle maßgeblich, auch wenn die Berechtigung in der Oberfläche als Managerrecht bezeichnet wird.
+Alle Operationen setzen ein authentifiziertes Konto mit der internen Rolle `Universe Administrator` voraus. Die Rollenprüfung erfolgt in jeder Methode von `RobotResource`. In der CAS-Konfiguration wird die konfigurierte Administratorrolle auf diese interne Rolle abgebildet. Für Integrationen ist diese serverseitige Rolle maßgeblich, auch wenn die Berechtigung in der Oberfläche als Managerrecht bezeichnet wird.
 
 Die folgenden `curl`-Beispiele verwenden eine bereits authentifizierte User-Management-Sitzung. `cookies.txt` steht für eine Cookie-Datei im von `curl` unterstützten Format mit den gültigen Sitzungscookies. Die Anmeldung selbst ist nicht Teil der Robots-API. Ersetzen Sie Host, IDs und Beispieldaten durch Werte Ihrer Umgebung.
 
@@ -40,13 +40,14 @@ Requests mit JSON-Inhalt verwenden `Content-Type: application/json`. Antworten m
 | Methode | Pfad relativ zur Basis-URL | Funktion | Erfolgsstatus |
 | --- | --- | --- | --- |
 | `GET` | leer | Technische Konten mit Schlüsselmetadaten auflisten | `200 OK` |
+| `GET` | `/{userId}/{id}` | Schlüsselmetadaten eines technischen Kontos einzeln lesen | `200 OK` |
 | `POST` | leer | Technisches Konto und ersten Schlüssel anlegen | `201 Created` |
 | `PUT` | `/{username}` | Einen vorhandenen Schlüssel ersetzen | `201 Created` |
 | `DELETE` | `/{username}` | Schlüssel und zugehöriges technisches Konto löschen | `204 No Content` |
 
 `username` ist die **LDAP-Benutzerkennung** aus dem Antwortfeld `userId`. Kodieren Sie sie als URL-Pfadsegment. Die Benutzerkennung bleibt beim Erneuern gleich; nur die CAS-Schlüssel-ID ändert sich. Erneuern und Löschen verwenden den ersten CAS-Schlüssel des Kontos, wie die Übersicht.
 
-Ein Endpunkt `GET /{id}` ist nicht implementiert. Für eine Detailansicht lädt das Frontend die Liste und sucht darin nach der Schlüssel-ID.
+`GET /{userId}/{id}` verwendet die LDAP-Benutzerkennung aus `userId` und die CAS-Schlüssel-ID aus `id`. Kodieren Sie beide als URL-Pfadsegmente. Das Backend sucht gezielt dieses technische LDAP-Konto und lädt ausschließlich dessen CAS-Schlüssel. Der passende Schlüssel wird als einzelnes Metadatenobjekt ohne den geheimen Schlüsselwert `token` zurückgegeben. Fehlen Konto oder angeforderter Schlüssel, lautet die Antwort `404`. Für den Anzeigenamen gelten dieselben Regeln wie in der Übersicht. Beispiel: `GET /usermgt/api/robots/datenabgleich/pat-123`. Das Frontend verwendet diesen Endpunkt für die Detailansicht; die URL der Detailseite enthält Benutzerkennung und Schlüssel-ID.
 
 ## Konten und Schlüsselmetadaten abfragen
 
@@ -207,12 +208,12 @@ Die Operation löscht den ersten CAS-Schlüssel des angegebenen Kontos. Sie füh
 
 | Status | Operationen | Bedeutung |
 | --- | --- | --- |
-| `200 OK` | `GET` | Metadatenliste erfolgreich geladen, gegebenenfalls `[]`. |
+| `200 OK` | `GET` | Metadatenliste (gegebenenfalls `[]`) oder einzelne Schlüsselmetadaten erfolgreich geladen. |
 | `201 Created` | `POST`, `PUT` | Konto mit Schlüssel angelegt beziehungsweise Ersatzschlüssel erstellt. |
 | `204 No Content` | `DELETE` | Schlüssel und Konto erfolgreich gelöscht. |
 | `400 Bad Request` | `POST`, `PUT`, `DELETE` | Servicevalidierung fehlgeschlagen, beispielsweise ungültiger Name, Zeitpunkt oder leere Benutzerkennung. |
 | `403 Forbidden` | Alle | Die Resource erkennt keine authentifizierte Identität mit der erforderlichen Rolle. Vorgeschaltete Filter können eine andere Antwort liefern. |
-| `404 Not Found` | `PUT`, `DELETE` | Das angegebene technische LDAP-Konto existiert nicht oder hat keinen CAS-Schlüssel. |
+| `404 Not Found` | `GET /{userId}/{id}`, `PUT`, `DELETE` | Das angegebene technische LDAP-Konto oder der Schlüssel existiert nicht. |
 | `409 Conflict` | `POST` | Der LDAP-Benutzername ist bereits vergeben, auch durch ein normales Benutzerkonto. |
 | `500 Internal Server Error` | Alle | Fehler beim LDAP-Zugriff. |
 | `502 Bad Gateway` | Alle | Fehler beim Zugriff auf CAS oder ungültige beziehungsweise unvollständige CAS-Antwort. |

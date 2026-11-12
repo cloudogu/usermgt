@@ -1,5 +1,5 @@
 import {Button, CesIconArrowLeft, CesIconCheck, CesIconSpinner, CesIconTrash, CesIconArrowClockwise, Label, SegmentedSelect} from "@cloudogu/ces-theme-tailwind";
-import React, {useId, useRef, useState} from "react";
+import React, {useId, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams, Link} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
@@ -21,7 +21,8 @@ import "../ces-styles-enforcing.css";
 
 
 export default function RobotDetails() {
-    const {id} = useParams<{id: string}>();
+    const {userId, id} = useParams<{userId: string; id: string}>();
+    const identifiers = useMemo(() => ({userId, id}), [userId, id]);
     const [submitAttempted, setSubmitAttempted] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [renewedPAT, setRenewedPAT] = useState<CreatePATResponse>();
@@ -29,9 +30,8 @@ export default function RobotDetails() {
 
     const navigate = useNavigate();
     const {t} = useTranslation();
-    const {data: tokens, isLoading, error} = useAPI(RobotsService.getAll);
+    const {data: pat, isLoading, error} = useAPI(RobotsService.get, identifiers);
     const {doguOptions, isLoading: areDogusLoading, error: doguError} = useDogus();
-    const pat = tokens?.find(token => token.id === id);
 
     const deleteToken = async () => {
         if (!pat) return;

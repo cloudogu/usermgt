@@ -70,7 +70,7 @@ const router = createBrowserRouter([
                     <Robots/>
             },
             {
-                path: "robots/pats/:id",
+                path: "robots/pats/:userId/:id",
                 element: <RobotDetails/>
             },
             {
