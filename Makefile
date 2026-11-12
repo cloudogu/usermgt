@@ -1,7 +1,7 @@
 # Set these to the desired values
 ARTIFACT_ID=usermgt
 
-VERSION=1.23.2-1
+VERSION=1.24.0-1
 # overwrite ADDITIONAL_LDFLAGS to disable static compilation
 # this should fix https://github.com/golang/go/issues/13470
 ADDITIONAL_LDFLAGS=""
@@ -9,10 +9,9 @@ NPM_REGISTRY_RELEASE=https://ecosystem.cloudogu.com/nexus/repository/npm-release
 NPM_REGISTRY_INTERNAL=https://ecosystem.cloudogu.com/nexus/repository/npm-internal/
 NPM_REGISTRY_RC=https://ecosystem.cloudogu.com/nexus/repository/npm-releasecandidates/
 UI_SRC=app/src/main/ui
-MAKEFILES_VERSION=10.11.1
 CES_THEME_CONFIG=${UI_SRC}/node_modules/@cloudogu/ces-theme-tailwind/ces-theme-tailwind-config.css
 TAILWIND_WRAPPER_CSS=${UI_SRC}/src/styles.css
-MAKEFILES_VERSION=10.10.0
+MAKEFILES_VERSION=11.2.0
 .DEFAULT_GOAL:=default
 
 HELM_SOURCE_DIR=k8s/helm

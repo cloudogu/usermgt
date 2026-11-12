@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.24.0-1] - 2026-11-12
+### Added
+- [#265] Add technical account management
+
 ## [v1.23.2-1] - 2026-11-02
 ### Changed
 - Promote two-factor authentication (2FA) from experimental to a fully supported feature.

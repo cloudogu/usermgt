@@ -47,7 +47,7 @@ public class PATResourceTest {
         Field serverUrl = CasConfiguration.class.getDeclaredField("serverUrl");
         serverUrl.setAccessible(true);
         serverUrl.set(configuration, "http://localhost:" + server.getAddress().getPort() + "/");
-        resource = new PATResource(configuration);
+        resource = new PATResource(new PATClient(configuration));
     }
 
     @After

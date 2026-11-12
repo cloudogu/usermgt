@@ -3,7 +3,8 @@
 ## Guides
 
 - [Benutzerhandbuch](gui/documentation_de.md)
-- [Persönliche Zugriffsschlüssel (PATs)](operations/personal_access_tokens_de.md)
+- [Persönliche Zugriffsschlüssel (PATs)](gui/personal_access_tokens_de.md)
+- [Technische Konten (Robots)](gui/robots_de.md)
 
 
 ## Informationen für Entwickler

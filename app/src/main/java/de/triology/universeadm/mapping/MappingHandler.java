@@ -327,7 +327,7 @@ public class MappingHandler<T extends Comparable<T>> {
         return new ServerSideSortRequestControl(new SortKey(sortAttribute, "caseIgnoreOrderingMatch", query.isReverse()));
     }
 
-    private Filter createFilter(String query, List<String> excludes) throws LDAPException {
+    protected Filter createFilter(String query, List<String> excludes) throws LDAPException {
         List<Filter> additionalFilters = Lists.newArrayList();
 
         if (!Strings.isNullOrEmpty(query)) {

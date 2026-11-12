@@ -48,3 +48,14 @@
     order: -9999;
 }
 
+.tailwind-wrapper .bg-warning {
+    background: var(--ces-color-warning);
+    border-color: var(--ces-color-warning);
+}
+
+.tailwind-wrapper .bg-warning-weaker {
+    background: var(--ces-color-warning-weak);
+    border-color: var(--ces-color-warning-strong);
+    color: var(--ces-color-warning-strong);
+}
+
