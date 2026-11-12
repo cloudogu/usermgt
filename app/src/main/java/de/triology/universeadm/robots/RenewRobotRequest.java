@@ -2,12 +2,12 @@ package de.triology.universeadm.robots;
 
 /** Missing expiration preserves the previous value; explicit null removes it. */
 public class RenewRobotRequest {
-    private String expiredAt;
+    private String expiresAt;
     private boolean expirationProvided;
 
-    public String getExpiredAt() { return expiredAt; }
-    public void setExpiredAt(String expiredAt) {
-        this.expiredAt = expiredAt;
+    public String getExpiresAt() { return expiresAt; }
+    public void setExpiresAt(String expiresAt) {
+        this.expiresAt = expiresAt;
         this.expirationProvided = true;
     }
     public boolean hasExpirationOverride() { return expirationProvided; }

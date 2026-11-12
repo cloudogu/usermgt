@@ -158,21 +158,21 @@ curl --cookie cookies.txt \
   --request PUT \
   --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
-  --data '{"expiredAt":"2099-02-01T00:00:00Z"}' \
+  --data '{"expiresAt":"2099-02-01T00:00:00Z"}' \
   "$ROBOTS_API/datenabgleich"
 ```
 
-**The field name here is `expiredAt`, whereas creation uses `expiresAt`.** This difference in spelling is part of the current implementation.
+As during creation, the expiry date is supplied in the `expiresAt` field.
 
 | Request body | Effect |
 | --- | --- |
-| `{"expiredAt":"2099-02-01T00:00:00Z"}` | Uses the specified future expiry timestamp. |
+| `{"expiresAt":"2099-02-01T00:00:00Z"}` | Uses the specified future expiry timestamp. |
 | `{}` | Preserves the existing expiry date. |
-| `{"expiredAt":null}` | Removes the expiry date. |
+| `{"expiresAt":null}` | Removes the expiry date. |
 
 An explicitly supplied timestamp that is invalid, empty, or not in the future results in `400 Bad Request`. The error messages refer to `expiresAt` because the same validation is used as for creation.
 
-**An explicit `null` removes the expiry date; omitting `expiredAt` preserves it.** A token that already has no expiry date remains without one unless an explicit timestamp is supplied. For an expired token, provide a new future timestamp or explicitly remove expiration: without an override, the old expiry date is forwarded to CAS rather than automatically extended.
+**An explicit `null` removes the expiry date; omitting `expiresAt` preserves it.** A token that already has no expiry date remains without one unless an explicit timestamp is supplied. For an expired token, provide a new future timestamp or explicitly remove expiration: without an override, the old expiry date is forwarded to CAS rather than automatically extended.
 
 The successful response has status `201 Created` and the same structure as the creation response. It contains the **new ID** and the **new secret token value**. Continue using the same username for subsequent operations.
 
@@ -246,7 +246,7 @@ CAS errors are not forwarded unchanged with their original HTTP status. For exam
 | Create a token | `POST <cas-server-url>/api/users/{username}/pats` |
 | Delete a token | `DELETE <cas-server-url>/api/users/{username}/pats/{id}` |
 
-The username is encoded as a URL path segment. Creation sends `displayName`, optionally `expiresAt`, and `scope` as JSON. The internal CAS field is also named `expiresAt` during renewal: `RobotService` handles the translation from `expiredAt`.
+The username is encoded as a URL path segment. Creation sends `displayName`, optionally `expiresAt`, and `scope` as JSON. The internal CAS field is also named `expiresAt` during renewal.
 
 For CAS requests, `PATClient` reads the Java system properties `cas.mfa.user` and `cas.mfa.password`. If both are set, it sends HTTP Basic Authentication using these service credentials. These credentials are separate from the API caller's session and the newly generated access token. Connection and read timeouts are each set to ten seconds.
 

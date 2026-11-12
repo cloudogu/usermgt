@@ -134,8 +134,8 @@ public class RobotService {
     /** Replaces a technical user's PAT while keeping the LDAP user unchanged. */
     public CreatedRobotPAT renewRobot(String username, RenewRobotRequest request) throws LDAPException, IOException {
         validateUsername(username);
-        String expiredAt = request == null ? null : request.getExpiredAt();
-        validateExpiration(expiredAt);
+        String expiresAt = request == null ? null : request.getExpiresAt();
+        validateExpiration(expiresAt);
         SearchResultEntry entry = getTechnicalUserEntry(username);
         if (entry == null) {
             return null;
@@ -148,7 +148,7 @@ public class RobotService {
         CreateRobotRequest replacement = new CreateRobotRequest();
         replacement.setDisplayName(pat.getDisplayName());
         replacement.setScope(pat.getScope());
-        replacement.setExpiresAt(request != null && request.hasExpirationOverride() ? expiredAt : pat.getExpiresAt());
+        replacement.setExpiresAt(request != null && request.hasExpirationOverride() ? expiresAt : pat.getExpiresAt());
         CreatedRobotPAT renewed = createPAT(username, replacement);
         try {
             deletePAT(username, pat.getId());

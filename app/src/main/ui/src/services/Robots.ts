@@ -33,8 +33,8 @@ export const RobotsService = {
         }
         return response.data;
     },
-    async renew(username: string, expiredAt?: string | null): Promise<CreatePATResponse> {
-        const response = await Axios.put<CreatePATResponse>(`/robots/${encodeURIComponent(username)}`, {expiredAt});
+    async renew(username: string, expiresAt?: string | null): Promise<CreatePATResponse> {
+        const response = await Axios.put<CreatePATResponse>(`/robots/${encodeURIComponent(username)}`, {expiresAt});
         if (!isSuccessStatus(response.status)) {
             throw new Error("failed to renew personal access token: " + response.status);
         }

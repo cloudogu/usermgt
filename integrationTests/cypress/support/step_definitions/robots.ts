@@ -267,8 +267,8 @@ When("the user selects {int} days and renews the technical account from its deta
     cy.get('form button[type="submit"]').should("be.visible").click();
     cy.wait("@renewRobotFromDetails").then(({request, response}) => {
         expect(response?.statusCode).to.eq(201);
-        assertValidity(request.body.expiredAt, days);
-        expect(Date.parse(response!.body.expiresAt)).to.eq(Date.parse(request.body.expiredAt));
+        assertValidity(request.body.expiresAt, days);
+        expect(Date.parse(response!.body.expiresAt)).to.eq(Date.parse(request.body.expiresAt));
         cy.wrap(response!.body.expiresAt).as("robotExpiresAt");
     });
 });

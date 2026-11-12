@@ -167,7 +167,7 @@ public class RobotResourceTest {
     @SubjectAware(username = "trillian", password = "secret")
     public void returnsRenewedPATWithToken() throws Exception {
         RenewRobotRequest request = new RenewRobotRequest();
-        request.setExpiredAt("2099-01-01T00:00:00Z");
+        request.setExpiresAt("2099-01-01T00:00:00Z");
         CreatedRobotPAT pat = new com.google.gson.Gson().fromJson(
             "{\"id\":\"replacement\",\"token\":\"new-secret\"}", CreatedRobotPAT.class);
         when(service.renewRobot("robot-a", request)).thenReturn(pat);

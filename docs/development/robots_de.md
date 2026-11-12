@@ -158,21 +158,21 @@ curl --cookie cookies.txt \
   --request PUT \
   --header 'Content-Type: application/json' \
   --header 'Accept: application/json' \
-  --data '{"expiredAt":"2099-02-01T00:00:00Z"}' \
+  --data '{"expiresAt":"2099-02-01T00:00:00Z"}' \
   "$ROBOTS_API/datenabgleich"
 ```
 
-**Der Feldname lautet hier `expiredAt`, beim Anlegen dagegen `expiresAt`.** Die abweichende Schreibweise ist Teil der aktuellen Implementierung.
+Das Ablaufdatum wird wie beim Anlegen über das Feld `expiresAt` angegeben.
 
 | Request-Inhalt | Wirkung |
 | --- | --- |
-| `{"expiredAt":"2099-02-01T00:00:00Z"}` | Verwendet den angegebenen zukünftigen Ablaufzeitpunkt. |
+| `{"expiresAt":"2099-02-01T00:00:00Z"}` | Verwendet den angegebenen zukünftigen Ablaufzeitpunkt. |
 | `{}` | Behält das bisherige Ablaufdatum bei. |
-| `{"expiredAt":null}` | Entfernt das Ablaufdatum. |
+| `{"expiresAt":null}` | Entfernt das Ablaufdatum. |
 
 Ein ungültiger, leerer oder nicht in der Zukunft liegender expliziter Zeitpunkt führt zu `400 Bad Request`. Die Fehlernachrichten nennen dabei `expiresAt`, weil dieselbe Validierung wie beim Anlegen verwendet wird.
 
-**Ein explizites `null` entfernt das Ablaufdatum; ein fehlendes `expiredAt` behält es bei.** Ein bereits unbefristeter Schlüssel bleibt ohne expliziten Zeitpunkt unbefristet. Bei einem abgelaufenen Schlüssel sollte ein neuer zukünftiger Zeitpunkt angegeben oder das Ablaufdatum explizit entfernt werden: Ohne Überschreibung wird das alte Ablaufdatum an CAS weitergegeben, nicht automatisch verlängert.
+**Ein explizites `null` entfernt das Ablaufdatum; ein fehlendes `expiresAt` behält es bei.** Ein bereits unbefristeter Schlüssel bleibt ohne expliziten Zeitpunkt unbefristet. Bei einem abgelaufenen Schlüssel sollte ein neuer zukünftiger Zeitpunkt angegeben oder das Ablaufdatum explizit entfernt werden: Ohne Überschreibung wird das alte Ablaufdatum an CAS weitergegeben, nicht automatisch verlängert.
 
 Die Erfolgsantwort hat den Status `201 Created` und dieselbe Struktur wie beim Anlegen. Sie enthält die **neue ID** und den **neuen geheimen Schlüsselwert**. Für spätere Operationen verwenden Sie weiterhin dieselbe Benutzerkennung.
 
@@ -246,7 +246,7 @@ CAS-Fehler werden nicht unverändert mit ihrem ursprünglichen HTTP-Status weite
 | Schlüssel erstellen | `POST <cas-server-url>/api/users/{username}/pats` |
 | Schlüssel löschen | `DELETE <cas-server-url>/api/users/{username}/pats/{id}` |
 
-Der Benutzername wird als URL-Pfadsegment kodiert. Beim Erstellen werden `displayName`, gegebenenfalls `expiresAt` und `scope` als JSON gesendet. Auch bei einer Erneuerung lautet das interne CAS-Feld `expiresAt`: Die Übersetzung von `expiredAt` übernimmt `RobotService`.
+Der Benutzername wird als URL-Pfadsegment kodiert. Beim Erstellen werden `displayName`, gegebenenfalls `expiresAt` und `scope` als JSON gesendet. Auch bei einer Erneuerung lautet das interne CAS-Feld `expiresAt`.
 
 Für CAS-Anfragen liest `PATClient` die Java-Systemeigenschaften `cas.mfa.user` und `cas.mfa.password`. Sind beide gesetzt, sendet er HTTP Basic Authentication mit diesen Dienstzugangsdaten. Diese Zugangsdaten sind von der Sitzung des API-Aufrufers und vom neu erzeugten Zugriffsschlüssel getrennt. Verbindungs- und Lese-Timeout sind jeweils auf zehn Sekunden gesetzt.
 

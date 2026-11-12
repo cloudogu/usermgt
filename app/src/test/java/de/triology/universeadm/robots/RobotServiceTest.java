@@ -374,7 +374,7 @@ public class RobotServiceTest {
     public void usesOptionalRenewalExpirationOverride() throws Exception {
         prepareRenew();
         RenewRobotRequest request = new ObjectMapper().readValue(
-            "{\"expiredAt\":\"2099-02-01T00:00:00Z\"}", RenewRobotRequest.class);
+            "{\"expiresAt\":\"2099-02-01T00:00:00Z\"}", RenewRobotRequest.class);
 
         service.renewRobot("robot-a", request);
 
@@ -390,7 +390,7 @@ public class RobotServiceTest {
         prepareRenew();
         when(client.getPATs("robot-a")).thenReturn(Response.ok("[{\"id\":\"target\"}]").build());
         RenewRobotRequest request = new ObjectMapper().readValue(
-            "{\"expiredAt\":\"2099-02-01T00:00:00Z\"}", RenewRobotRequest.class);
+            "{\"expiresAt\":\"2099-02-01T00:00:00Z\"}", RenewRobotRequest.class);
 
         service.renewRobot("robot-a", request);
 
@@ -403,7 +403,7 @@ public class RobotServiceTest {
     @Test
     public void removesExpirationWhenExplicitlyNull() throws Exception {
         prepareRenew();
-        RenewRobotRequest request = new ObjectMapper().readValue("{\"expiredAt\":null}", RenewRobotRequest.class);
+        RenewRobotRequest request = new ObjectMapper().readValue("{\"expiresAt\":null}", RenewRobotRequest.class);
 
         service.renewRobot("robot-a", request);
 
@@ -455,7 +455,7 @@ public class RobotServiceTest {
     public void rejectsInvalidRenewalExpirationBeforeDeletingPAT() throws Exception {
         for (String expiration : Arrays.asList("invalid", "", "2000-01-01T00:00:00Z")) {
             RenewRobotRequest request = new RenewRobotRequest();
-            request.setExpiredAt(expiration);
+            request.setExpiresAt(expiration);
             try {
                 service.renewRobot("robot-a", request);
                 fail("Expected invalid expiration");
