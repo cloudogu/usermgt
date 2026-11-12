@@ -6,8 +6,8 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 ### Added
-- Technische Konten können nun wie personalisierte Zugriffsschlüsseln verwaltete werden
-  - Diese Funktionalität steht nur Nutzern der Manager-Gruppe zur Verfügung 
+- Technical accounts can now be managed like personal access tokens
+  - This feature is available for members of the manager group 
 
 ## [v1.23.2-1] - 2026-11-02
 ### Changed
