@@ -14,6 +14,7 @@ import de.triology.universeadm.dogu.DoguProvider;
 import de.triology.universeadm.dogu.DoguResource;
 import de.triology.universeadm.multifactor.MultifactorResource;
 import de.triology.universeadm.pat.PATResource;
+import de.triology.universeadm.robots.RobotResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +84,7 @@ public class MainModule extends ServletModule {
         bind(LogoutResource.class);
         bind(MultifactorResource.class);
         bind(PATResource.class);
+        bind(RobotResource.class);
         bind(DoguProvider.class).to(CesControlDoguProvider.class);
         bind(DoguResource.class);
 

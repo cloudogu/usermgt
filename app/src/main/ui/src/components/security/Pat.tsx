@@ -26,7 +26,7 @@ export function PATManagement({pat, patError, isPATLoading}: PATManagementProps)
 
     if (patError) {
         return <p className="my-4 text-danger" role="alert">
-            {t("security.pta.load.error")}
+            {t("security.pat.load.error")}
         </p>;
     }
 

@@ -14,6 +14,7 @@ import {useCasUser} from "./hooks/useCasUser";
 import {useGuiConfig} from "./hooks/useGuiConfig";
 import Account from "./pages/Account";
 import CreatePAT from "./pages/CreatePAT";
+import CreateRobot from "./pages/CreateRobot";
 import {EditGroup} from "./pages/EditGroup";
 import EditUser from "./pages/EditUser";
 import ErrorPage from "./pages/Error";
@@ -21,6 +22,8 @@ import Groups from "./pages/Groups";
 import {NewGroup} from "./pages/NewGroup";
 import NewUser from "./pages/NewUser";
 import PATDetails from "./pages/PATDetails";
+import RobotDetails from "./pages/RobotDetails";
+import Robots from "./pages/Robots";
 import Security from "./pages/Security";
 import Summaries from "./pages/Summaries";
 import Users from "./pages/Users";
@@ -28,6 +31,7 @@ import Users from "./pages/Users";
 import UsersImport from "./pages/UsersImport";
 import UsersImportResult from "./pages/UsersImportResult";
 import "./i18n";
+
 
 const contextPath = process.env.PUBLIC_URL || "/usermgt";
 
@@ -59,6 +63,19 @@ const router = createBrowserRouter([
             {
                 path: "security/createPAT",
                 element: <CreatePAT/>
+            },
+            {
+                path: "robots",
+                element:
+                    <Robots/>
+            },
+            {
+                path: "robots/pats/:userId/:id",
+                element: <RobotDetails/>
+            },
+            {
+                path: "robots/createRobot",
+                element: <CreateRobot/>
             },
             {
                 path: "users",
@@ -144,7 +161,7 @@ function Nav() {
     const {casUser, externalLdap} = useApplicationContext();
     const pathname = location?.pathname ?? "";
     const activePath =
-        pathname.startsWith("/security/") ? "/security" : pathname;
+        pathname.startsWith("/security/") ? "/security" : pathname.startsWith("/robots/") ? "/robots" : pathname;
     return (
         <>
             <Navbar currentPath={activePath}>
@@ -162,6 +179,9 @@ function Nav() {
                     </Navbar.ListItem>
                     {casUser.admin ?
                         <>
+                            <Navbar.ListItem path={"/robots"}>
+                                {t("pages.robots")}
+                            </Navbar.ListItem>
                             <Navbar.ListItem path={"/users"}>
                                 <Navbar.ListItem.Icon type={"users"} className={"md:hidden"}/>
                                 {t("pages.users")}

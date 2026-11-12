@@ -5,8 +5,8 @@ import {useNavigate, useParams, Link} from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
 import StatusIndicator from "../components/StatusIndicator";
 import DeletePATDialog from "../components/security/DeletePATDialog";
-import {formatDate} from "../helpers/i18nHelpers";
 import {pageTitle} from "../helpers/pageTitle";
+import {formatPATTimeHint, isPATExpired, resolveScopedDogus} from "../helpers/pat";
 import {useAPI} from "../hooks/useAPI";
 import {useDogus} from "../hooks/useDogus";
 import {useSetPageTitle} from "../hooks/useSetPageTitle";
@@ -29,25 +29,12 @@ export default function PATDetails() {
         setDeleteDialogOpen(false);
         navigate("/security", {replace: true, state: {deletedPATName: pat.displayName}});
     };
-    const timeHint = pat
-        ? `${t("security.overview.table.createdAt")} ${formatDate(pat.createdAt)}・${pat.expiresAt
-            ? `${t("security.overview.table.expiresAt")} ${formatDate(pat.expiresAt)}`
-            : t("security.pat.details.neverExpires")}`
-        : "";
-    const scopeParts = new Set((pat?.scope ?? "").split(",").map(part => part.trim()).filter(Boolean));
-    const allDogus = scopeParts.has("/*");
-    const scopedDoguNames = new Set([...scopeParts].map(scope => scope.replace(/^\//, "")));
-    const selectedDogus = doguOptions.filter(dogu => scopedDoguNames.has(dogu.value));
-    const doguGroups = [
-        {key: "base", dogus: selectedDogus.filter(dogu =>
-            !["Administration", "Administration Apps", "Development", "Development Apps"].includes(dogu.category))},
-        {key: "development", dogus: selectedDogus.filter(dogu =>
-            dogu.category === "Development" || dogu.category === "Development Apps")},
-        {key: "administration", dogus: selectedDogus.filter(dogu =>
-            dogu.category === "Administration" || dogu.category === "Administration Apps")},
-    ].filter(group => group.dogus.length > 0);
-    const hasUnknownDogus = !allDogus && [...scopedDoguNames].some(part =>
-        !doguOptions.some(dogu => dogu.value === part));
+    const timeHint = formatPATTimeHint(pat, {
+        createdAt: t("security.overview.table.createdAt"),
+        expiresAt: t("security.overview.table.expiresAt"),
+        neverExpires: t("security.pat.details.neverExpires"),
+    });
+    const {scopeParts, allDogus, doguGroups, hasUnknownDogus} = resolveScopedDogus(pat?.scope, doguOptions);
 
     useSetPageTitle(pageTitle("pages.patDetails"));
     return (
@@ -80,7 +67,7 @@ export default function PATDetails() {
                         <div className="shrink-0 mt-8">
                             <StatusIndicator
                                 text={
-                                    pat.expiresAt && Date.parse(pat.expiresAt) <= Date.now()
+                                    isPATExpired(pat.expiresAt)
                                         ? "expired"
                                         : "active"
                                 }

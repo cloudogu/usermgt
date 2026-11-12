@@ -13,6 +13,8 @@ import com.google.inject.Inject;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
+import com.unboundid.ldap.sdk.Filter;
+import com.unboundid.ldap.sdk.LDAPException;
 
 import de.triology.universeadm.*;
 import de.triology.universeadm.group.Group;
@@ -342,6 +344,20 @@ public class LDAPUserManager extends AbstractLDAPManager<User>
             }
 
             return modifications;
+        }
+
+        /**
+           Do not List robot-Accounts when searching for normal users
+         */
+        @Override
+        protected Filter createFilter(String query, List<String> excludes)
+            throws LDAPException {
+            return Filter.createANDFilter(
+                super.createFilter(query, excludes),
+                Filter.createNOTFilter(
+                    Filter.createEqualityFilter("technical", "TRUE")
+                )
+            );
         }
 
         /**
