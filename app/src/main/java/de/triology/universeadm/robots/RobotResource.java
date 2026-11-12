@@ -44,7 +44,7 @@ public class RobotResource {
         } catch (LDAPException e) {
             LOG.error("Failed to load technical users from LDAP", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("{\"message\":\"Failed to load technical users from LDAP\"}").build();
+                .entity(GSON.toJson(java.util.Collections.singletonMap("message", "Failed to load technical users from LDAP"))).build();
         } catch (IOException e) {
             LOG.error("Failed to load robot PAT metadata from CAS", e);
             return Response.status(Response.Status.BAD_GATEWAY)
