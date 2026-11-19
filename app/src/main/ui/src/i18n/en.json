@@ -278,6 +278,7 @@
   "security.createpat.modal.delete.succeeded": "The entry “%s” was deleted.",
 
   "security.pat-details.access.label": "Can access these Dogus",
+  "security.pat.description": "Description",
   "security.pat.details.delete": "Delete token",
   "security.pat.details.notFound": "This access token was not found.",
   "security.pat.details.loadError": "The token details could not be loaded.",
@@ -294,11 +295,12 @@
 
   "robots.overview.renew.error": "Failed to renew the access token.",
   "robots.overview.title": "Technical accounts",
-  "robots.overview.description": "Technical accounts allow for automated access without being tied to a personal account. If two-factor authentication is enabled, technical accounts do not require two-factor authentication.",
+  "robots.overview.description": "Technical accounts allow for automated access without being tied to a personal account.",
   "robots.overview.button.create":"Create technical account",
   "robots.overview.headline": "Technical accounts",
   "robots.overview.table.displayName": "Display name",
   "robots.overview.table.status": "Status",
+  "robots.overview.table.owner": "Creator",
   "robots.overview.table.count": "Count",
   "robots.overview.table.createdAt": "Created on",
   "robots.overview.table.expiresAt": "Expiry on",
@@ -308,6 +310,7 @@
   "robots.overview.table.sort.arrow.des": "Sort descending",
   "robots.overview.table.statustype.active": "Active",
   "robots.overview.table.statustype.expired": "Expired",
+  "robots.overview.table.owner.deleted": "deleted account",
   "robots.overview.table.status.noexpiration.option": "Never",
   "robots.overview.table.action.delete": "Delete",
   "robots.overview.table.action.renew": "Renew",
@@ -315,6 +318,7 @@
 
   "robots.createrobot.input.name.label": "Technical account display name",
   "robots.createrobot.input.name.hint": "Unique account name: 2 to 64 characters. Allowed characters are letters (a–z, A–Z), numbers, hyphens, underscores, periods and @.",
+  "robots.createrobot.input.desc.label": "Description",
   "robots.createrobot.input.expires.label": "Expires in",
   "robots.createrobot.select.expires.placeholder": "Select a period",
   "robots.createrobot.select.expires.option.sevendays": "7 days",

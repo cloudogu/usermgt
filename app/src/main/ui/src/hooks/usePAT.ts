@@ -7,6 +7,7 @@ import type {DoguOption} from "../services/Dogus";
 export type PersonalAccessToken = {
     id: string;
     displayName: string;
+    description?: string | null;
     status: "active" | "expired";
     createdAt: string;
     expiresAt: string;
@@ -38,6 +39,7 @@ export function usePAT(username?: string): PATResult {
     const tokens = useMemo<PersonalAccessToken[]>(() => (patMetadata ?? []).map(token => ({
         id: token.id,
         displayName: token.displayName,
+        description: token.description,
         status: token.expiresAt && Date.parse(token.expiresAt) <= Date.now() ? "expired" : "active",
         createdAt: token.createdAt,
         expiresAt: token.expiresAt ?? "-",

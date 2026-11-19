@@ -51,15 +51,21 @@ public class RobotResourceTest {
     @Test
     @SubjectAware(username = "trillian", password = "secret")
     public void returnsRobotsForAdministrators() throws Exception {
-        when(service.getRobots()).thenReturn(Collections.emptyList());
-        assertEquals("[]", resource.getRobots().getEntity());
+        RobotPAT pat = new com.google.gson.Gson().fromJson(
+            "{\"id\":\"pat-id\",\"owner\":\"trillian\",\"description\":\"Build automation\"}", RobotPAT.class);
+        when(service.getRobots()).thenReturn(Collections.singletonList(pat));
+        com.google.gson.JsonObject returned = new com.google.gson.JsonParser()
+            .parse((String) resource.getRobots().getEntity()).getAsJsonArray().get(0).getAsJsonObject();
+        assertEquals("trillian", returned.get("owner").getAsString());
+        assertEquals("Build automation", returned.get("description").getAsString());
     }
 
     @Test
     @SubjectAware(username = "trillian", password = "secret")
     public void returnsRobotByUserAndPATIdForAdministrators() throws Exception {
         RobotPAT pat = new com.google.gson.Gson().fromJson(
-            "{\"id\":\"pat-id\",\"userId\":\"robot-a\",\"scope\":\"/scm\"}", RobotPAT.class);
+            "{\"id\":\"pat-id\",\"userId\":\"robot-a\",\"scope\":\"/scm\","
+                + "\"owner\":\"trillian\",\"description\":\"Build automation\"}", RobotPAT.class);
         when(service.getRobot("robot-a", "pat-id")).thenReturn(pat);
         javax.ws.rs.core.Response response = resource.getRobot("robot-a", "pat-id");
         assertEquals(200, response.getStatus());
@@ -68,6 +74,8 @@ public class RobotResourceTest {
         assertEquals("pat-id", returned.getId());
         assertEquals("robot-a", returned.getUserId());
         assertEquals("/scm", returned.getScope());
+        assertEquals("trillian", returned.getOwner());
+        assertEquals("Build automation", returned.getDescription());
         verify(service).getRobot("robot-a", "pat-id");
     }
 
@@ -113,6 +121,23 @@ public class RobotResourceTest {
         assertEquals(201, response.getStatus());
         assertEquals("new-secret", new com.google.gson.Gson().fromJson(
             (String) response.getEntity(), CreatedRobotPAT.class).getToken());
+        assertEquals("trillian", request.getOwner());
+        verify(service).createRobot(request);
+    }
+
+    @Test
+    @SubjectAware(username = "trillian", password = "secret")
+    public void overridesSubmittedOwnerWithAuthenticatedUserOnCreation() throws Exception {
+        CreateRobotRequest request = new CreateRobotRequest();
+        request.setDisplayName("new-robot");
+        request.setOwner("new-robot");
+        when(service.createRobot(request)).thenAnswer(invocation -> {
+            assertEquals("trillian", ((CreateRobotRequest) invocation.getArguments()[0]).getOwner());
+            return new CreatedRobotPAT();
+        });
+
+        assertEquals(201, resource.createRobot(request).getStatus());
+        verify(service).createRobot(request);
     }
 
     @Test

@@ -41,7 +41,7 @@ export default function RobotDetails() {
     };
     const renewToken = async (expiresAt?: string | null) => {
         if (!pat) return;
-        const response = await RobotsService.renew(pat.userId, expiresAt);
+        const response = await RobotsService.renew(pat.userId, {expiresAt});
         setRenewedPAT(response);
     };
     const closeRenewedRobot = () => {
@@ -114,6 +114,10 @@ export default function RobotDetails() {
                             />
                         </div>
                     </div>
+                    <p className="mb-2 text-neutral">{t("robots.createrobot.input.desc.label")}: {pat.description}</p>
+                    <p className="mb-2 text-neutral">
+                        {t("robots.overview.table.owner")}: {pat.ownerDeleted ? t("robots.overview.table.owner.deleted") : pat.ownerDisplayName || pat.owner || "—"}
+                    </p>
                     <p className="mb-2 text-neutral">{timeHint}</p>
                     <h3>{t("robots.pat.details.manage")}</h3>
                     <h4>{t("robots.pat.details.manage.renewkey")}</h4>

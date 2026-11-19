@@ -17,6 +17,7 @@ import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingAttribute;
 import de.triology.universeadm.pat.PATClient;
 import de.triology.universeadm.user.User;
+import de.triology.universeadm.user.UserManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -38,6 +39,7 @@ public class RobotServiceTest {
     private Mapper<User> mapper;
     private LDAPHasher hasher;
     private EventBus eventBus;
+    private UserManager userManager;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -48,6 +50,7 @@ public class RobotServiceTest {
         mapper = mock(Mapper.class);
         hasher = mock(LDAPHasher.class);
         eventBus = mock(EventBus.class);
+        userManager = mock(UserManager.class);
         connection = mock(LDAPInterface.class);
         client = mock(PATClient.class);
         when(strategy.get()).thenReturn(connection);
@@ -62,7 +65,7 @@ public class RobotServiceTest {
         when(mapper.getAttribute("mail")).thenReturn(
             new MappingAttribute.MappingAttributeBuilder("mail").build());
         when(mapper.getReturningAttributes()).thenReturn(Arrays.asList("uid", "cn", "memberOf"));
-        service = new RobotService(strategy, configuration, factory, client, hasher, eventBus);
+        service = new RobotService(strategy, configuration, factory, client, hasher, eventBus, userManager);
     }
 
     @Test
@@ -86,11 +89,16 @@ public class RobotServiceTest {
 
     @Test
     public void returnsFirstPATPerUserWithLDAPDisplayNameAndOmitsSecrets() throws Exception {
+        User owner = new User("trillian");
+        owner.setSurname("Astra");
+        owner.setGivenname("Tricia");
+        when(userManager.get("trillian")).thenReturn(owner);
         SearchResult searchResult = page(new ASN1OctetString(),
             user("robot-a", "Robot A"), user("robot-b", "Robot B"));
         when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
         when(client.getPATs("robot-a")).thenReturn(Response.ok(
-            "[{\"id\":\"first\",\"userId\":\"robot-a\",\"displayName\":\"original\",\"token\":\"secret\"},{\"id\":\"second\"}]").build());
+            "[{\"id\":\"first\",\"userId\":\"robot-a\",\"displayName\":\"original\",\"token\":\"secret\","
+                + "\"owner\":\"trillian\",\"description\":\"Build automation\"},{\"id\":\"second\"}]").build());
         when(client.getPATs("robot-b")).thenReturn(Response.ok("[{\"id\":\"third\"}]").build());
 
         List<RobotPAT> robots = service.getRobots();
@@ -99,6 +107,9 @@ public class RobotServiceTest {
         assertEquals("first", robots.get(0).getId());
         assertEquals("robot-a", robots.get(0).getUserId());
         assertEquals("Robot A", robots.get(0).getDisplayName());
+        assertEquals("trillian", robots.get(0).getOwner());
+        assertEquals("Astra, Tricia", robots.get(0).getOwnerDisplayName());
+        assertEquals("Build automation", robots.get(0).getDescription());
         assertEquals("third", robots.get(1).getId());
         assertEquals("robot-b", robots.get(1).getUserId());
         assertFalse(new Gson().toJson(robots).contains("secret"));
@@ -149,6 +160,8 @@ public class RobotServiceTest {
         CreateRobotRequest request = createRequest();
         request.setExpiresAt("2099-01-01T00:00:00Z");
         request.setScope("/scm");
+        request.setOwner("trillian");
+        request.setDescription("Build automation");
         when(client.createPAT(eq("build-robot"), anyString())).thenReturn(Response.status(201)
             .entity("{\"id\":\"created\",\"token\":\"pat-secret\",\"displayName\":\"CAS-name\"}").build());
 
@@ -179,6 +192,8 @@ public class RobotServiceTest {
         CreateRobotRequest forwarded = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
         assertEquals(request.getExpiresAt(), forwarded.getExpiresAt());
         assertEquals(request.getScope(), forwarded.getScope());
+        assertEquals("trillian", forwarded.getOwner());
+        assertEquals("Build automation", forwarded.getDescription());
         verify(eventBus).post(any(de.triology.universeadm.user.UserEvent.class));
     }
 
@@ -365,6 +380,8 @@ public class RobotServiceTest {
         assertEquals("2099-01-01T00:00:00Z", replacement.getExpiresAt());
         assertEquals("/scm", replacement.getScope());
         assertEquals("Original PAT", replacement.getDisplayName());
+        assertEquals("trillian", replacement.getOwner());
+        assertEquals("Build automation", replacement.getDescription());
         verify(connection, never()).add(any(com.unboundid.ldap.sdk.Entry.class));
         verify(connection, never()).delete(anyString());
         verifyZeroInteractions(eventBus);
@@ -426,6 +443,55 @@ public class RobotServiceTest {
         CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
         assertEquals("2099-01-01T00:00:00Z", replacement.getExpiresAt());
         assertEquals("/scm", replacement.getScope());
+        assertEquals("trillian", replacement.getOwner());
+        assertEquals("Build automation", replacement.getDescription());
+    }
+
+    @Test
+    public void overridesRenewalMetadataWithoutChangingExpirationOrScope() throws Exception {
+        prepareRenew();
+        RenewRobotRequest request = new ObjectMapper().readValue(
+            "{\"owner\":\"dent\",\"description\":\"Updated automation\"}", RenewRobotRequest.class);
+
+        service.renewRobot("robot-a", request);
+
+        ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
+        verify(client).createPAT(eq("robot-a"), bodies.capture());
+        CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
+        assertEquals("dent", replacement.getOwner());
+        assertEquals("Updated automation", replacement.getDescription());
+        assertEquals("2099-01-01T00:00:00Z", replacement.getExpiresAt());
+        assertEquals("/scm", replacement.getScope());
+    }
+
+    @Test
+    public void clearsRenewalMetadataWhenExplicitlyNullOrEmpty() throws Exception {
+        prepareRenew();
+        RenewRobotRequest request = new ObjectMapper().readValue(
+            "{\"owner\":null,\"description\":\"\"}", RenewRobotRequest.class);
+
+        service.renewRobot("robot-a", request);
+
+        ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
+        verify(client).createPAT(eq("robot-a"), bodies.capture());
+        CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
+        assertNull(replacement.getOwner());
+        assertEquals("", replacement.getDescription());
+    }
+
+    @Test
+    public void preservesOwnerWhenOnlyDescriptionIsOverridden() throws Exception {
+        prepareRenew();
+        RenewRobotRequest request = new ObjectMapper().readValue(
+            "{\"description\":\"Updated automation\"}", RenewRobotRequest.class);
+
+        service.renewRobot("robot-a", request);
+
+        ArgumentCaptor<String> bodies = ArgumentCaptor.forClass(String.class);
+        verify(client).createPAT(eq("robot-a"), bodies.capture());
+        CreateRobotRequest replacement = new Gson().fromJson(bodies.getValue(), CreateRobotRequest.class);
+        assertEquals("trillian", replacement.getOwner());
+        assertEquals("Updated automation", replacement.getDescription());
     }
 
     @Test
@@ -556,12 +622,17 @@ public class RobotServiceTest {
 
     @Test
     public void loadsRequestedPATOnlyFromSpecifiedTechnicalUser() throws Exception {
+        User owner = new User("trillian");
+        owner.setSurname("Astra");
+        owner.setGivenname("Tricia");
+        when(userManager.get("trillian")).thenReturn(owner);
         prepareTechnicalUser();
         User user = new User("robot-a");
         user.setDisplayName("Robot A");
         when(mapper.convert(any(SearchResultEntry.class))).thenReturn(user);
         when(client.getPATs("robot-a")).thenReturn(Response.ok(
-            "[{\"id\":\"first\"},{\"id\":\"target\",\"userId\":\"untrusted\",\"scope\":\"/scm\",\"token\":\"secret\"}]").build());
+            "[{\"id\":\"first\"},{\"id\":\"target\",\"userId\":\"untrusted\",\"scope\":\"/scm\",\"token\":\"secret\","
+                + "\"owner\":\"trillian\",\"description\":\"Build automation\"}]").build());
 
         RobotPAT pat = service.getRobot("robot-a", "target");
 
@@ -569,6 +640,9 @@ public class RobotServiceTest {
         assertEquals("robot-a", pat.getUserId());
         assertEquals("Robot A", pat.getDisplayName());
         assertEquals("/scm", pat.getScope());
+        assertEquals("trillian", pat.getOwner());
+        assertEquals("Astra, Tricia", pat.getOwnerDisplayName());
+        assertEquals("Build automation", pat.getDescription());
         assertFalse(new Gson().toJson(pat).contains("secret"));
         verify(client).getPATs("robot-a");
         verifyNoMoreInteractions(client);
@@ -624,11 +698,75 @@ public class RobotServiceTest {
         service.getRobot("robot-a", "target");
     }
 
+    @Test
+    public void resolvesSharedOwnerOnlyOncePerListRequest() throws Exception {
+        SearchResult searchResult = page(new ASN1OctetString(),
+            user("robot-a", "Robot A"), user("robot-b", "Robot B"));
+        when(connection.search(any(SearchRequest.class))).thenReturn(searchResult);
+        when(client.getPATs("robot-a")).thenReturn(Response.ok(
+            "[{\"id\":\"first\",\"owner\":\"trillian\"}]").build());
+        when(client.getPATs("robot-b")).thenReturn(Response.ok(
+            "[{\"id\":\"second\",\"owner\":\"trillian\"}]").build());
+        User owner = new User("trillian");
+        owner.setSurname("Astra");
+        owner.setGivenname("Tricia");
+        when(userManager.get("trillian")).thenReturn(owner);
+
+        List<RobotPAT> robots = service.getRobots();
+
+        assertEquals("Astra, Tricia", robots.get(0).getOwnerDisplayName());
+        assertEquals("Astra, Tricia", robots.get(1).getOwnerDisplayName());
+        verify(userManager, times(1)).get("trillian");
+    }
+
+    @Test
+    public void marksOwnerAsDeletedWhenLDAPUserIsMissing() throws Exception {
+        prepareTechnicalUser();
+        when(client.getPATs("robot-a")).thenReturn(Response.ok(
+            "[{\"id\":\"target\",\"owner\":\"deleted-user\"}]").build());
+
+        RobotPAT pat = service.getRobot("robot-a", "target");
+
+        assertEquals("deleted-user", pat.getOwner());
+        assertEquals("deleted-user", pat.getOwnerDisplayName());
+        assertTrue(pat.isOwnerDeleted());
+    }
+
+    @Test
+    public void usesOwnerIdWhenEitherNameIsMissing() throws Exception {
+        prepareTechnicalUser();
+        User owner = new User("trillian");
+        when(userManager.get("trillian")).thenReturn(owner);
+        when(client.getPATs("robot-a")).thenAnswer(invocation -> Response.ok(
+            "[{\"id\":\"target\",\"owner\":\"trillian\"}]").build());
+
+        assertEquals("trillian", service.getRobot("robot-a", "target").getOwnerDisplayName());
+        owner.setGivenname(" Tricia ");
+        assertEquals("trillian", service.getRobot("robot-a", "target").getOwnerDisplayName());
+        owner.setGivenname(" ");
+        owner.setSurname(" Astra ");
+        RobotPAT pat = service.getRobot("robot-a", "target");
+        assertEquals("trillian", pat.getOwnerDisplayName());
+        assertFalse(pat.isOwnerDeleted());
+    }
+
+    @Test
+    public void skipsOwnerLookupWhenOwnerIsMissing() throws Exception {
+        prepareDelete();
+
+        RobotPAT pat = service.getRobot("robot-a", "target");
+        assertEquals("", pat.getOwnerDisplayName());
+        assertFalse(pat.isOwnerDeleted());
+
+        verifyZeroInteractions(userManager);
+    }
+
     private void prepareRenew() throws Exception {
         prepareTechnicalUser();
         when(client.getPATs("robot-a")).thenReturn(Response.ok(
             "[{\"id\":\"target\",\"userId\":\"untrusted-owner\",\"displayName\":\"Original PAT\","
-                + "\"expiresAt\":\"2099-01-01T00:00:00Z\",\"scope\":\"/scm\"},{\"id\":\"second\"}]").build());
+                + "\"expiresAt\":\"2099-01-01T00:00:00Z\",\"scope\":\"/scm\","
+                + "\"owner\":\"trillian\",\"description\":\"Build automation\"},{\"id\":\"second\"}]").build());
         when(client.deletePAT("robot-a", "target")).thenReturn(Response.noContent().build());
         when(client.createPAT(eq("robot-a"), anyString())).thenReturn(Response.status(201)
             .entity("{\"id\":\"replacement\",\"token\":\"new-secret\"}").build());

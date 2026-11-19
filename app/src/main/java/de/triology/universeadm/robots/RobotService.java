@@ -24,6 +24,7 @@ import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.pat.PATClient;
 import de.triology.universeadm.user.User;
+import de.triology.universeadm.user.UserManager;
 import de.triology.universeadm.user.UserEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,9 @@ import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class RobotService {
     private static final Gson GSON = new Gson();
@@ -50,24 +54,29 @@ public class RobotService {
     private final LDAPConnectionStrategy strategy;
     private final Mapper<User> mapper;
     private final PATClient patClient;
+    private final UserManager userManager;
 
     @Inject
     public RobotService(LDAPConnectionStrategy strategy, LDAPConfiguration configuration,
-                        MapperFactory mapperFactory, PATClient patClient, LDAPHasher hasher, EventBus eventBus) {
+                        MapperFactory mapperFactory, PATClient patClient, LDAPHasher hasher, EventBus eventBus,
+                        UserManager userManager) {
         this.strategy = strategy;
         this.configuration = configuration;
         this.hasher = hasher;
         this.eventBus = eventBus;
         this.mapper = mapperFactory.createMapper(User.class, configuration.getUserBaseDN());
         this.patClient = patClient;
+        this.userManager = userManager;
     }
 
     /** Returns the first CAS PAT per technical LDAP user, in CAS response order. */
     public List<RobotPAT> getRobots() throws LDAPException, IOException {
         List<RobotPAT> robots = new ArrayList<>();
+        Map<String, Optional<String>> ownerNames = new HashMap<>();
         for (User user : getTechnicalUsers()) {
             RobotPAT pat = getFirstPAT(user);
             if (pat != null) {
+                pat.setOwnerDisplayName(ownerNames.computeIfAbsent(pat.getOwner(), this::resolveOwnerDisplayName));
                 robots.add(pat);
             }
         }
@@ -89,10 +98,24 @@ public class RobotService {
             if (id.equals(pat.getId())) {
                 String name = user.getDisplayName();
                 pat.setDisplayName(name == null || name.trim().isEmpty() ? user.getUsername() : name);
+                pat.setOwnerDisplayName(resolveOwnerDisplayName(pat.getOwner()));
                 return pat;
             }
         }
         return null;
+    }
+
+    private Optional<String> resolveOwnerDisplayName(String owner) {
+        if (owner == null || owner.trim().isEmpty()) {
+            return Optional.of("");
+        }
+        User user = userManager.get(owner);
+        if (user == null) {
+            return Optional.empty();
+        }
+        String surname = user.getSurname() == null ? "" : user.getSurname().trim();
+        String givenname = user.getGivenname() == null ? "" : user.getGivenname().trim();
+        return Optional.of(surname.isEmpty() || givenname.isEmpty() ? owner : surname + ", " + givenname);
     }
 
     /** Creates the technical LDAP user before creating their PAT in CAS. */
@@ -148,6 +171,8 @@ public class RobotService {
         CreateRobotRequest replacement = new CreateRobotRequest();
         replacement.setDisplayName(pat.getDisplayName());
         replacement.setScope(pat.getScope());
+        replacement.setOwner(request != null && request.hasOwnerOverride() ? request.getOwner() : pat.getOwner());
+        replacement.setDescription(request != null && request.hasDescriptionOverride() ? request.getDescription() : pat.getDescription());
         replacement.setExpiresAt(request != null && request.hasExpirationOverride() ? expiresAt : pat.getExpiresAt());
         CreatedRobotPAT renewed = createPAT(username, replacement);
         try {

@@ -121,6 +121,9 @@ export function PatList({tokens, labelledBy, onTokenDeleted}: PatListProps) {
                                         <Link to={`/security/pats/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:!text-brand">
                                             {token.displayName}
                                         </Link>
+                                        {token.description?.trim() && (
+                                            <div className="break-words text-sm text-neutral">{token.description}</div>
+                                        )}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
                                         <StatusIndicator text={token.status} variant="secondary"/>
