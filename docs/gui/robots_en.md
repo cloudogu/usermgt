@@ -8,7 +8,7 @@ Each technical account has an access token. You store this token in the applicat
 
 Sign in to the Cloudogu EcoSystem with an account that has manager permissions. Open **User Management** from the Warp menu and select **Technical accounts**.
 
-The overview lists existing technical accounts with their display name, status, creation date, and expiry date. This lets you see which tokens are still active and which have expired. Click a display name to view the account details and the Dogus it can access.
+The overview lists existing technical accounts with their display name, status, creator, creation date, and expiry date. A description, if provided, appears below the display name. Click the display name to see the description, the creator, and the Dogus the account can access. If the recorded creator account no longer exists, the interface shows **deleted account**.
 
 ![Robot-Overview in technical account section](figures/robots/en/OverviewRobots.png)
 
@@ -16,11 +16,14 @@ The overview lists existing technical accounts with their display name, status, 
 
 1. In the overview, click **Create technical account**.
 2. Enter a unique name under **Technical account display name**, for example `data-sync`. The name must contain 2 to 64 characters. Allowed characters are letters from a to z and A to Z, numbers, hyphens, underscores, periods, and the @ sign. Spaces and umlauts are not allowed.
-3. Under **Expires in**, choose a validity period: **7 days**, **30 days**, **60 days**, **90 days**, or **Never**.
-4. Under **Applies to**, specify which Dogus the application can access. Choose **Selection of Dogus** to select the required Dogus individually. **All Dogus** also includes Dogus installed later. Entries marked as **Incompatible Dogus** cannot be selected individually.
-5. Click **Create technical account**.
-6. Use the copy icon to copy the displayed access token and store it securely, for example in a password manager.
-7. Store the token in the application that will use the technical account. If the application requires a username, use the account name you entered when creating the account.
+3. Optionally, enter the purpose of the account in **Description**.
+4. Under **Expires in**, choose a validity period: **7 days**, **30 days**, **60 days**, **90 days**, or **Never**.
+5. Under **Applies to**, specify which Dogus the application can access. Choose **Selection of Dogus** to select the required Dogus individually. **All Dogus** also includes Dogus installed later. Entries marked as **Incompatible Dogus** cannot be selected individually.
+6. Click **Create technical account**.
+7. Use the copy icon to copy the displayed access token and store it securely, for example in a password manager.
+8. Store the token in the application that will use the technical account. If the application requires a username, use the account name you entered when creating the account.
+
+User Management records your signed-in account as the **Creator** when you create the technical account.
 
 ![Create a technical Account](figures/robots/en/RobotCreate.png)
 
@@ -30,7 +33,7 @@ The overview lists existing technical accounts with their display name, status, 
 
 ## Renewing the access token
 
-Renew the token when it is about to expire or when you need a new token for the existing account. The technical account and its selection of permitted Dogus remain unchanged.
+Renew the token when it is about to expire or when you need a new token for the existing account. Renewal through the interface preserves the technical account, its description, its recorded creator, and its selection of permitted Dogus.
 
 1. Open the **Technical accounts** overview.
 2. Click the display name of the account you want to manage.

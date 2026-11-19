@@ -67,7 +67,11 @@ Example response with `200 OK`:
     "displayName": "datenabgleich",
     "createdAt": "2026-11-10T10:00:00Z",
     "expiresAt": "2099-01-01T00:00:00Z",
-    "scope": "/scm,/redmine"
+    "scope": "/scm,/redmine",
+    "owner": "trillian",
+    "ownerDisplayName": "Astra, Tricia",
+    "ownerDeleted": false,
+    "description": "Scheduled data synchronization"
   }
 ]
 ```
@@ -82,6 +86,10 @@ These values are examples. Actual IDs and timestamps are supplied by CAS.
 | `createdAt` | Token creation timestamp supplied by CAS. |
 | `expiresAt` | Token expiry timestamp. The field may be absent if there is no expiry date. |
 | `scope` | The token's scope, for example `/scm,/redmine` or `/*`. |
+| `description` | Optional description stored with the token in CAS. |
+| `owner` | Username recorded as the creator of the technical account. |
+| `ownerDisplayName` | Display value resolved for list and detail responses. Uses `Last name, First name` when both names are available, or the username as a fallback. It is empty if no creator is recorded. |
+| `ownerDeleted` | `true` if a creator username is recorded and the user lookup returns no matching account. |
 
 The overview never contains the `token` field. The backend does not return a `status` field either; the frontend derives the status from the expiry date. Gson serialization omits fields whose value is `null`.
 
@@ -106,6 +114,7 @@ curl --cookie cookies.txt \
   --header 'Accept: application/json' \
   --data '{
     "displayName": "datenabgleich",
+    "description": "Scheduled data synchronization",
     "expiresAt": "2099-01-01T00:00:00Z",
     "scope": "/scm,/redmine"
   }' \
@@ -117,6 +126,9 @@ curl --cookie cookies.txt \
 | `displayName` | Yes | Also used as the username. Must contain 2 to 64 characters from `a–z`, `A–Z`, `0–9`, `_`, `@`, `.`, and `-`. |
 | `expiresAt` | No | An ISO-8601 timestamp that can be parsed by `Instant.parse` and must be in the future, for example `2099-01-01T00:00:00Z`. If absent or `null`, no expiry date is sent to CAS. |
 | `scope` | Yes in the frontend | The frontend sends a comma-separated list of Dogu paths or `/*` for all Dogus. `RobotService` does not validate this field itself; it forwards it to CAS. |
+| `description` | No | Free-text description of the account’s purpose. It is forwarded to CAS as token metadata. |
+
+On creation, the API sets `owner` to the authenticated caller’s username. This overrides any `owner` supplied in the request.
 
 The timestamp is an absolute point in time. Values such as `30` or `30 days` are not accepted. The interface calculates the timestamp from the selected number of days.
 
@@ -130,6 +142,9 @@ Example response with `201 Created`:
   "createdAt": "2026-11-10T10:00:00Z",
   "expiresAt": "2099-01-01T00:00:00Z",
   "scope": "/scm,/redmine",
+  "owner": "trillian",
+  "ownerDeleted": false,
+  "description": "Scheduled data synchronization",
   "token": "BEISPIEL-KEIN-ECHTER-SCHLUESSEL"
 }
 ```
@@ -174,12 +189,14 @@ An explicitly supplied timestamp that is invalid, empty, or not in the future re
 
 **An explicit `null` removes the expiry date; omitting `expiresAt` preserves it.** A token that already has no expiry date remains without one unless an explicit timestamp is supplied. For an expired token, provide a new future timestamp or explicitly remove expiration: without an override, the old expiry date is forwarded to CAS rather than automatically extended.
 
+A renewal request can also set `description` and `owner`. A string replaces the corresponding value on the new token. An explicit `null` clears the field, and omitting it preserves the previous value. The interface leaves both fields out of renewal requests.
+
 The successful response has status `201 Created` and the same structure as the creation response. It contains the **new ID** and the **new secret token value**. Continue using the same username for subsequent operations.
 
 ### Workflow and error handling
 
 1. The service looks up the LDAP account by the supplied username and `technical=TRUE`. It loads only that account’s CAS tokens and uses the first one. If the account or token is missing, the API returns `404`.
-2. It copies the old CAS token's display name and scope and applies the new expiry timestamp if supplied.
+2. It copies the old CAS token’s display name and scope and applies any overrides for `expiresAt`, `owner`, and `description`.
 3. CAS first creates a new token for the same user.
 4. The old token is then deleted in CAS.
 5. Only then does the API return the new token. The LDAP account remains unchanged, and no user event is published.
@@ -246,7 +263,7 @@ CAS errors are not forwarded unchanged with their original HTTP status. For exam
 | Create a token | `POST <cas-server-url>/api/users/{username}/pats` |
 | Delete a token | `DELETE <cas-server-url>/api/users/{username}/pats/{id}` |
 
-The username is encoded as a URL path segment. Creation sends `displayName`, optionally `expiresAt`, and `scope` as JSON. The internal CAS field is also named `expiresAt` during renewal.
+The username is encoded as a URL path segment. For both creation and renewal, the CAS token creation request sends `displayName`, `expiresAt`, `scope`, `owner`, and `description` as JSON. Fields with a `null` value are omitted.
 
 For CAS requests, `PATClient` reads the Java system properties `cas.mfa.user` and `cas.mfa.password`. If both are set, it sends HTTP Basic Authentication using these service credentials. These credentials are separate from the API caller's session and the newly generated access token. Connection and read timeouts are each set to ten seconds.
 

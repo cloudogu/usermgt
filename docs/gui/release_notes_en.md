@@ -6,7 +6,7 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 ### Added
-- Personal Access Tokens and Technial Accounts can now be enriched with a description
+- Personal Access Tokens and Technical Accounts can now be enriched with a description
 
 ## [v1.24.0-1] - 2026-11-12
 ### Added
