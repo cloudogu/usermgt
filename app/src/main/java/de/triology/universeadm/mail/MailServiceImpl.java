@@ -43,6 +43,26 @@ public class MailServiceImpl implements MailService {
             }));
     }
 
+    @Override
+    public void notifyRobotRenewal(String recipient, String robotUsername, String expiresAt) {
+        String content = "The access token for the robot account \"" + robotUsername + "\" was renewed.";
+        if (expiresAt != null && !expiresAt.trim().isEmpty()) {
+            content += "\n\nThe new token expires at " + expiresAt + ".";
+        }
+
+        new MessageBuilder(session)
+            .from(mailConfiguration.getFrom())
+            .to(recipient)
+            .subject("Robot account access token renewed")
+            .content(content)
+            .build()
+            .ifPresent(message -> mailSender.sendAsync(message).whenComplete((result, error) -> {
+                if (error != null) {
+                    logger.warn("Could not send renewal notification for robot account {}", robotUsername, error);
+                }
+            }));
+    }
+
     private String getMailContent(User user) {
         Map<String, String> substitutes = new HashMap<>();
 

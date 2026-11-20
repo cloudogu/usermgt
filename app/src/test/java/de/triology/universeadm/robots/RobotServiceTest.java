@@ -12,6 +12,7 @@ import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.controls.SimplePagedResultsControl;
 import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPConnectionStrategy;
+import de.triology.universeadm.mail.MailService;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.mapping.MappingAttribute;
@@ -40,6 +41,7 @@ public class RobotServiceTest {
     private LDAPHasher hasher;
     private EventBus eventBus;
     private UserManager userManager;
+    private MailService mailService;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -51,6 +53,7 @@ public class RobotServiceTest {
         hasher = mock(LDAPHasher.class);
         eventBus = mock(EventBus.class);
         userManager = mock(UserManager.class);
+        mailService = mock(MailService.class);
         connection = mock(LDAPInterface.class);
         client = mock(PATClient.class);
         when(strategy.get()).thenReturn(connection);
@@ -65,7 +68,7 @@ public class RobotServiceTest {
         when(mapper.getAttribute("mail")).thenReturn(
             new MappingAttribute.MappingAttributeBuilder("mail").build());
         when(mapper.getReturningAttributes()).thenReturn(Arrays.asList("uid", "cn", "memberOf"));
-        service = new RobotService(strategy, configuration, factory, client, hasher, eventBus, userManager);
+        service = new RobotService(strategy, configuration, factory, client, hasher, eventBus, userManager, mailService);
     }
 
     @Test
@@ -388,6 +391,27 @@ public class RobotServiceTest {
     }
 
     @Test
+    public void notifiesNewOwnerOnlyAfterDeletingOldPAT() throws Exception {
+        prepareRenew();
+        User owner = new User("dent");
+        owner.setMail("dent@example.com");
+        when(userManager.get("dent")).thenReturn(owner);
+        when(client.createPAT(eq("robot-a"), anyString())).thenReturn(Response.status(201)
+            .entity("{\"id\":\"replacement\",\"token\":\"new-secret\",\"owner\":\"dent\","
+                + "\"expiresAt\":\"2099-02-01T00:00:00Z\"}").build());
+        RenewRobotRequest request = new RenewRobotRequest();
+        request.setOwner("dent");
+        request.setExpiresAt("2099-02-01T00:00:00Z");
+
+        service.renewRobot("robot-a", request);
+
+        org.mockito.InOrder order = inOrder(client, userManager, mailService);
+        order.verify(client).deletePAT("robot-a", "target");
+        order.verify(userManager).get("dent");
+        order.verify(mailService).notifyRobotRenewal("dent@example.com", "robot-a", "2099-02-01T00:00:00Z");
+    }
+
+    @Test
     public void usesOptionalRenewalExpirationOverride() throws Exception {
         prepareRenew();
         RenewRobotRequest request = new ObjectMapper().readValue(
@@ -556,6 +580,7 @@ public class RobotServiceTest {
             order.verify(client).createPAT(eq("robot-a"), anyString());
             order.verify(client).deletePAT("robot-a", "target");
             order.verify(client).deletePAT("robot-a", "replacement");
+            verifyZeroInteractions(userManager, mailService);
             verify(connection, never()).delete(anyString());
             verifyZeroInteractions(eventBus);
         }
@@ -769,7 +794,8 @@ public class RobotServiceTest {
                 + "\"owner\":\"trillian\",\"description\":\"Build automation\"},{\"id\":\"second\"}]").build());
         when(client.deletePAT("robot-a", "target")).thenReturn(Response.noContent().build());
         when(client.createPAT(eq("robot-a"), anyString())).thenReturn(Response.status(201)
-            .entity("{\"id\":\"replacement\",\"token\":\"new-secret\"}").build());
+            .entity("{\"id\":\"replacement\",\"token\":\"new-secret\",\"owner\":\"trillian\","
+                + "\"expiresAt\":\"2099-01-01T00:00:00Z\"}").build());
     }
 
     private void prepareDelete() throws Exception {

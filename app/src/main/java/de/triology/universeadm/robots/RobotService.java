@@ -20,6 +20,7 @@ import de.triology.universeadm.LDAPConfiguration;
 import de.triology.universeadm.LDAPHasher;
 import de.triology.universeadm.EventType;
 import de.triology.universeadm.LDAPConnectionStrategy;
+import de.triology.universeadm.mail.MailService;
 import de.triology.universeadm.mapping.Mapper;
 import de.triology.universeadm.mapping.MapperFactory;
 import de.triology.universeadm.pat.PATClient;
@@ -55,11 +56,12 @@ public class RobotService {
     private final Mapper<User> mapper;
     private final PATClient patClient;
     private final UserManager userManager;
+    private final MailService mailService;
 
     @Inject
     public RobotService(LDAPConnectionStrategy strategy, LDAPConfiguration configuration,
                         MapperFactory mapperFactory, PATClient patClient, LDAPHasher hasher, EventBus eventBus,
-                        UserManager userManager) {
+                        UserManager userManager, MailService mailService) {
         this.strategy = strategy;
         this.configuration = configuration;
         this.hasher = hasher;
@@ -67,6 +69,7 @@ public class RobotService {
         this.mapper = mapperFactory.createMapper(User.class, configuration.getUserBaseDN());
         this.patClient = patClient;
         this.userManager = userManager;
+        this.mailService = mailService;
     }
 
     /** Returns the first CAS PAT per technical LDAP user, in CAS response order. */
@@ -186,7 +189,30 @@ public class RobotService {
             }
             throw e;
         }
+        notifyRobotRenewal(renewed);
         return renewed;
+    }
+
+    private void notifyRobotRenewal(CreatedRobotPAT renewed) {
+        String username = renewed.getUserId();
+        String ownerId = renewed.getOwner();
+        if (ownerId == null || ownerId.trim().isEmpty()) {
+            LOG.debug("Skipping renewal notification for robot account {} without an owner", username);
+            return;
+        }
+
+        try {
+            User owner = userManager.get(ownerId);
+            String recipient = owner == null ? null : owner.getMail();
+            if (recipient == null || recipient.trim().isEmpty()) {
+                LOG.warn("Skipping renewal notification for robot account {} because its owner has no mail address", username);
+                return;
+            }
+
+            mailService.notifyRobotRenewal(recipient, username, renewed.getExpiresAt());
+        } catch (RuntimeException e) {
+            LOG.warn("Could not prepare renewal notification for robot account {}", username, e);
+        }
     }
 
     private void validateUsername(String username) {
