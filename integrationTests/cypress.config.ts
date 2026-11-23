@@ -40,13 +40,13 @@ export default defineConfig({
         users: 0,
     },
     e2e: {
-        baseUrl: 'https://35.198.142.194',
+        baseUrl: 'https://192.168.56.2',
         env: {
             "DoguName": "usermgt",
             "MaxLoginRetries": 3,
-            "AdminUsername":  "mbergen",
-            "AdminPassword":  "?O7Y0r}([!)kBfB-",
-            "AdminGroup":  "cesAdmin",
+            "AdminUsername":  "ces-admin",
+            "AdminPassword":  "Ecosystem2016!",
+            "AdminGroup":  "CesAdministrators",
             // Disable @bahmutov/cy-api's server-log feature. There is no
             // /__messages__ endpoint on the dogu; the CES proxy hangs on that
             // path instead of returning 404, so every cy.api() call would time
