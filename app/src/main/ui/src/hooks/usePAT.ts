@@ -33,7 +33,7 @@ export function usePAT(username?: string): PATResult {
     const {
         data: patMetadata,
         isLoading: arePATsLoading,
-        error: patError,
+        error: tokenLoadError,
     } = useAPI(PATService.getAll);
 
     const tokens = useMemo<PersonalAccessToken[]>(() => (patMetadata ?? []).map(token => ({
@@ -45,14 +45,16 @@ export function usePAT(username?: string): PATResult {
         expiresAt: token.expiresAt ?? "-",
     })), [patMetadata]);
 
+    const patError = username
+        ? doguError ?? tokenLoadError
+        : new Error("no username given for usePAT");
+
     return {
         pat: username ? {
             dogus: doguOptions,
             tokens,
         } : undefined,
-        isPATLoading: areDogusLoading || arePATsLoading,
-        patError: username
-            ? doguError ?? patError
-            : new Error("no username given for usePAT"),
+        isPATLoading: (areDogusLoading || arePATsLoading) && !patError,
+        patError,
     };
 }
