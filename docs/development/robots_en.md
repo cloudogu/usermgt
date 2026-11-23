@@ -4,6 +4,12 @@ Technical accounts enable automated access to the Cloudogu EcoSystem independent
 
 This document describes the current implementation and the API for integrations. For instructions on using the interface, see [Technical accounts](../gui/robots_en.md).
 
+## Enable PATs and technical accounts
+
+1. Set `pat/enabled` to `true` in the CAS Dogu configuration.
+2. In the encrypted configuration of the User Management Dogu (`usermgt`), set `2fa/api_user_name` and `2fa/api_user_password` to the same API username and password configured under those keys in the CAS Dogu.
+3. Restart each Dogu whose configuration you changed. If you changed both, restart `cas` first, then `usermgt`.
+
 ## Components and responsibilities
 
 | Component | Responsibility |
@@ -27,7 +33,7 @@ https://<ces-host>/usermgt/api/robots
 
 All operations require an authenticated account with the internal role `Universe Administrator`. Every method in `RobotResource` checks this role. The configured administrator role in the CAS configuration is mapped to this internal role. For integrations, this server-side role is what matters, even if the interface refers to the permission as a manager permission.
 
-The following `curl` examples use an existing authenticated User Management session. `cookies.txt` represents a cookie file in a format supported by `curl`, containing valid session cookies. Authentication itself is not part of the Robots API. Replace the host, IDs, and sample data with values from your environment.
+The following `curl` examples use an existing authenticated User Management session. `cookies.txt` represents a cookie file in a format supported by `curl`, containing valid session cookies. Sign in separately before calling the Robots API. Replace the host, IDs, and sample data with values from your environment.
 
 ```bash
 export ROBOTS_API='https://<ces-host>/usermgt/api/robots'
@@ -71,7 +77,7 @@ Example response with `200 OK`:
     "owner": "trillian",
     "ownerDisplayName": "Astra, Tricia",
     "ownerDeleted": false,
-    "description": "Scheduled data synchronization"
+    "description": "Regular data synchronization"
   }
 ]
 ```
@@ -114,7 +120,7 @@ curl --cookie cookies.txt \
   --header 'Accept: application/json' \
   --data '{
     "displayName": "datenabgleich",
-    "description": "Scheduled data synchronization",
+    "description": "Regular data synchronization",
     "expiresAt": "2099-01-01T00:00:00Z",
     "scope": "/scm,/redmine"
   }' \
@@ -144,8 +150,8 @@ Example response with `201 Created`:
   "scope": "/scm,/redmine",
   "owner": "trillian",
   "ownerDeleted": false,
-  "description": "Scheduled data synchronization",
-  "token": "BEISPIEL-KEIN-ECHTER-SCHLUESSEL"
+  "description": "Regular data synchronization",
+  "token": "EXAMPLE-NOT-A-REAL-TOKEN"
 }
 ```
 
