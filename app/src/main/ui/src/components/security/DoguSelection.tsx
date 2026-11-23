@@ -23,6 +23,7 @@ export function DoguSelection({label, value, onChange, invalid = false, showUnsu
         administrationDogus,
         developmentDogus,
         basicDogus,
+        systemDogus,
         excludedDogus,
     } = useMemo(() => {
         const administrationDogus: DoguOption[] = [];
@@ -53,6 +54,7 @@ export function DoguSelection({label, value, onChange, invalid = false, showUnsu
             administrationDogus,
             developmentDogus,
             basicDogus,
+            systemDogus,
             excludedDogus,
         };
     }, [doguOptions]);
@@ -77,7 +79,7 @@ export function DoguSelection({label, value, onChange, invalid = false, showUnsu
         </CheckboxField>
     );
 
-    const doguCount = doguOptions.length - excludedDogus.length;
+    const doguCount = doguOptions.length - excludedDogus.length - systemDogus.length;
 
     return (
         <RadioGroup label={label} className="font-semibold" invalid={invalid}>
