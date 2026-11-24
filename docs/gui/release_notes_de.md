@@ -5,6 +5,9 @@ Im Folgenden finden Sie die Release Notes für das User Management.
 Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https://docs.cloudogu.com/de/docs/dogus/usermgt/CHANGELOG/).
 
 ## [Unreleased]
+### Hinzugefügt
+- Persönliche Zugriffschlüssel und Technische Konten können nun eine Beschreibung erhalten.
+- Benachrichtigungsmail für den Ersteller eines technischen Accounts, bevor dieser abläuft oder wenn er erneuert wird.
 
 ## [v1.24.0-1] - 2026-11-12
 ### Hinzugefügt

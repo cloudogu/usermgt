@@ -40,6 +40,7 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
 
     const navigate = useNavigate();
     const [robotName, setRobotName] = useState<string>("");
+    const [robotDesc, setRobotDesc] = useState<string>("");
     const [conflictingName, setConflictingName] = useState<string>();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [createError, setCreateError] = useState(false);
@@ -50,10 +51,12 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
     const [selectedOption, setSelectedOption] = useState<string>("");
     const [submitAttempted, setSubmitAttempted] = useState(false);
     const nameRef = useRef<HTMLInputElement>(null);
+    const descRef = useRef<HTMLInputElement>(null);
     const expiryRef = useRef<HTMLButtonElement>(null);
     const dogusRef = useRef<HTMLDivElement>(null);
     const nameLabelId = useId();
     const nameHintId = useId();
+    const descLabelId = useId();
     const expiryLabelId = useId();
     const expiryErrorId = useId();
 
@@ -88,6 +91,7 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
         try {
             const response = await RobotsService.create({
                 displayName: robotName,
+                description: robotDesc,
                 expiresAt,
                 scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.map(dogu => `/${dogu}`).join(","),
             });
@@ -155,6 +159,23 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
                         onBlur={() => setTouched(true)}
                         aria-invalid={showError}
                         data-testid={"security-create-pat-name-input"}
+                    />
+                </div>
+                <div className={[classes.boldLabel,classes.dangerLabel,classes.defaultTextLabel, "mb-6 mt-6"].join(" ")}>
+                    <InputField type={"text"}
+                        ref={descRef}
+                        aria-labelledby={descLabelId}
+                        label={<span id={descLabelId}>{t("robots.createrobot.input.desc.label")}</span>}
+                        value={robotDesc}
+                        required={false}
+                        onChange={(e) => {
+                            setRobotDesc(e.target.value);
+                            setTouched(true);
+                        }}
+                        className={`${classes.defaultTextLabel} focus-visible:ces-focused`}
+                        onBlur={() => setTouched(true)}
+                        aria-invalid={showError}
+                        data-testid={"security-create-pat-desc-input"}
                     />
                 </div>
                 <div

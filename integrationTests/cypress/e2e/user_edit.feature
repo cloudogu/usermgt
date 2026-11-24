@@ -41,4 +41,5 @@ Feature: Tests for editing new users.
     Given the MFA request for user "testuser_1" is observed
     When the user clicks on the edit-user button for the user "testuser_1"
     Then the edit-user-page for user "testuser_1" is shown
+    And the MFA request returns status 503
     And MFA management is not shown in the user form

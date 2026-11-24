@@ -4,6 +4,14 @@ Technische Konten ermöglichen automatisierte Zugriffe auf das Cloudogu EcoSyste
 
 Diese Dokumentation beschreibt die aktuelle Implementierung und die API für Integrationen. Eine Anleitung zur Bedienoberfläche finden Sie unter [Technische Konten](../gui/robots_de.md).
 
+## PATs und technische Konten aktivieren
+
+1. Setzen Sie in der Konfiguration des CAS-Dogus `pat/enabled` auf `true`.
+2. Hinterlegen Sie den API-Benutzernamen unter `2fa/api_user_name` und das API-Passwort unter `2fa/api_user_password` in der verschlüsselten Konfiguration des Usermgt-Dogus. Beide Werte müssen mit den gleichnamigen Schlüsseln im CAS-Dogu übereinstimmen.
+3. Starten Sie die Dogus nach einer Konfigurationsänderung neu. Wenn Sie beide geändert haben, starten Sie zuerst `cas` und danach `usermgt` neu.
+
+Der globale CES-Schlüssel `2fa/activate` steuert sowohl die Zwei-Faktor-Anmeldung in CAS als auch die 2FA-Verwaltung in Usermgt. Mit `true` sind beide Funktionen aktiviert. Der Standardwert ist `false`. Starten Sie nach einer Änderung zuerst `cas` und danach `usermgt` neu.
+
 ## Aufbau und Zuständigkeiten
 
 | Bestandteil | Aufgabe |
@@ -67,7 +75,11 @@ Beispielantwort mit `200 OK`:
     "displayName": "datenabgleich",
     "createdAt": "2026-11-10T10:00:00Z",
     "expiresAt": "2099-01-01T00:00:00Z",
-    "scope": "/scm,/redmine"
+    "scope": "/scm,/redmine",
+    "owner": "trillian",
+    "ownerDisplayName": "Astra, Tricia",
+    "ownerDeleted": false,
+    "description": "Regelmäßiger Datenabgleich"
   }
 ]
 ```
@@ -82,6 +94,10 @@ Die Werte dienen als Beispiel. Die konkreten IDs und Zeitangaben stammen aus CAS
 | `createdAt` | Erstellungszeitpunkt des Schlüssels aus CAS. |
 | `expiresAt` | Ablaufzeitpunkt des Schlüssels. Ohne Ablaufdatum kann das Feld fehlen. |
 | `scope` | Geltungsbereich des Schlüssels, beispielsweise `/scm,/redmine` oder `/*`. |
+| `description` | Optionale Beschreibung, die in CAS mit dem Schlüssel gespeichert wird. |
+| `owner` | Benutzername, der als Ersteller des technischen Kontos hinterlegt ist. |
+| `ownerDisplayName` | Anzeigewert in Listen- und Detailantworten. Wenn beide Namensbestandteile vorliegen, hat er das Format `Nachname, Vorname`. Andernfalls wird der Benutzername verwendet. Ohne hinterlegten Ersteller ist der Anzeigewert leer. |
+| `ownerDeleted` | `true`, wenn ein Ersteller hinterlegt ist und die Benutzersuche kein passendes Konto findet. |
 
 Die Übersicht enthält niemals das Feld `token`. Ein Feld `status` wird vom Backend ebenfalls nicht ausgegeben; das Frontend leitet den Status aus dem Ablaufdatum ab. Die Gson-Serialisierung lässt Felder mit dem Wert `null` weg.
 
@@ -106,6 +122,7 @@ curl --cookie cookies.txt \
   --header 'Accept: application/json' \
   --data '{
     "displayName": "datenabgleich",
+    "description": "Regelmäßiger Datenabgleich",
     "expiresAt": "2099-01-01T00:00:00Z",
     "scope": "/scm,/redmine"
   }' \
@@ -117,6 +134,9 @@ curl --cookie cookies.txt \
 | `displayName` | Ja | Wird zugleich als Benutzername verwendet. Erlaubt sind 2 bis 64 Zeichen aus `a–z`, `A–Z`, `0–9`, `_`, `@`, `.` und `-`. |
 | `expiresAt` | Nein | ISO-8601-Zeitpunkt, der von `Instant.parse` gelesen werden kann und in der Zukunft liegen muss, zum Beispiel `2099-01-01T00:00:00Z`. Fehlend oder `null` bedeutet, dass kein Ablaufdatum an CAS gesendet wird. |
 | `scope` | Im Frontend ja | Das Frontend sendet eine kommaseparierte Liste von Dogu-Pfaden oder `/*` für alle Dogus. `RobotService` validiert dieses Feld nicht selbst, sondern reicht es an CAS weiter. |
+| `description` | Nein | Freitext zum Zweck des Kontos. Die Beschreibung wird als Schlüsselmetadatum an CAS weitergegeben. |
+
+Beim Anlegen setzt die API `owner` auf den Benutzernamen des authentifizierten Aufrufers. Ein im Request angegebenes `owner` wird dabei überschrieben.
 
 Die Zeitangabe ist ein absoluter Zeitpunkt. Angaben wie `30` oder `30 Tage` sind nicht zulässig. Die Oberfläche berechnet aus der gewählten Anzahl von Tagen einen entsprechenden Zeitpunkt.
 
@@ -130,6 +150,9 @@ Beispielantwort mit `201 Created`:
   "createdAt": "2026-11-10T10:00:00Z",
   "expiresAt": "2099-01-01T00:00:00Z",
   "scope": "/scm,/redmine",
+  "owner": "trillian",
+  "ownerDeleted": false,
+  "description": "Regelmäßiger Datenabgleich",
   "token": "BEISPIEL-KEIN-ECHTER-SCHLUESSEL"
 }
 ```
@@ -174,12 +197,14 @@ Ein ungültiger, leerer oder nicht in der Zukunft liegender expliziter Zeitpunkt
 
 **Ein explizites `null` entfernt das Ablaufdatum; ein fehlendes `expiresAt` behält es bei.** Ein bereits unbefristeter Schlüssel bleibt ohne expliziten Zeitpunkt unbefristet. Bei einem abgelaufenen Schlüssel sollte ein neuer zukünftiger Zeitpunkt angegeben oder das Ablaufdatum explizit entfernt werden: Ohne Überschreibung wird das alte Ablaufdatum an CAS weitergegeben, nicht automatisch verlängert.
 
+Beim Erneuern können Sie auch `description` und `owner` angeben. Eine Zeichenkette ersetzt den jeweiligen Wert im neuen Schlüssel. Ein explizites `null` entfernt den Wert. Fehlt das Feld, übernimmt der Service den bisherigen Wert. Die Oberfläche lässt beide Felder beim Erneuern weg.
+
 Die Erfolgsantwort hat den Status `201 Created` und dieselbe Struktur wie beim Anlegen. Sie enthält die **neue ID** und den **neuen geheimen Schlüsselwert**. Für spätere Operationen verwenden Sie weiterhin dieselbe Benutzerkennung.
 
 ### Ablauf und Fehlerbehandlung
 
 1. Der Service sucht gezielt das LDAP-Konto mit der angegebenen Benutzerkennung und `technical=TRUE`. Er lädt ausschließlich dessen CAS-Schlüssel und verwendet den ersten. Fehlen Konto oder Schlüssel, antwortet die API mit `404`.
-2. Er übernimmt Anzeigename und Geltungsbereich des alten CAS-Schlüssels und setzt gegebenenfalls den neuen Ablaufzeitpunkt.
+2. Er übernimmt Anzeigename und Geltungsbereich des alten CAS-Schlüssels und wendet die angegebenen Änderungen an `expiresAt`, `owner` und `description` an.
 3. CAS erstellt zunächst einen neuen Schlüssel für denselben Benutzer.
 4. Anschließend wird der alte Schlüssel in CAS gelöscht.
 5. Erst danach gibt die API den neuen Schlüssel zurück. Das LDAP-Konto bleibt unverändert; ein Benutzerereignis wird dabei nicht veröffentlicht.
@@ -246,7 +271,7 @@ CAS-Fehler werden nicht unverändert mit ihrem ursprünglichen HTTP-Status weite
 | Schlüssel erstellen | `POST <cas-server-url>/api/users/{username}/pats` |
 | Schlüssel löschen | `DELETE <cas-server-url>/api/users/{username}/pats/{id}` |
 
-Der Benutzername wird als URL-Pfadsegment kodiert. Beim Erstellen werden `displayName`, gegebenenfalls `expiresAt` und `scope` als JSON gesendet. Auch bei einer Erneuerung lautet das interne CAS-Feld `expiresAt`.
+Der Benutzername wird als URL-Pfadsegment kodiert. Beim Anlegen und Erneuern sendet der Request zur Schlüsselerstellung in CAS die Felder `displayName`, `expiresAt`, `scope`, `owner` und `description` als JSON. Felder mit dem Wert `null` werden weggelassen.
 
 Für CAS-Anfragen liest `PATClient` die Java-Systemeigenschaften `cas.mfa.user` und `cas.mfa.password`. Sind beide gesetzt, sendet er HTTP Basic Authentication mit diesen Dienstzugangsdaten. Diese Zugangsdaten sind von der Sitzung des API-Aufrufers und vom neu erzeugten Zugriffsschlüssel getrennt. Verbindungs- und Lese-Timeout sind jeweils auf zehn Sekunden gesetzt.
 

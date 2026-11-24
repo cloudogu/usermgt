@@ -5,4 +5,6 @@ import jakarta.mail.NoSuchProviderException;
 
 public interface MailService {
     void notify(User user);
+
+    void notifyRobotRenewal(String recipient, String robotUsername, String expiresAt);
 }

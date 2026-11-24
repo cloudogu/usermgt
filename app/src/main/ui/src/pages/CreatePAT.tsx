@@ -39,6 +39,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
 
     const navigate = useNavigate();
     const [patName, setPatName] = useState<string>("");
+    const [description, setDescription] = useState("");
     const [selectedDogus, setSelectedDogus] = useState<string[]>([]);
     const classes = usePATFormStyles();
 
@@ -50,6 +51,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
     const dogusRef = useRef<HTMLDivElement>(null);
     const nameLabelId = useId();
     const nameHintId = useId();
+    const descriptionLabelId = useId();
     const expiryLabelId = useId();
     const expiryErrorId = useId();
 
@@ -80,6 +82,7 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
             : undefined;
         const response = await PATService.create({
             displayName: patName,
+            description: description.trim() || undefined,
             expiresAt,
             scope: selectedDogus.includes("/*") ? "/*" : selectedDogus.map(dogu => `/${dogu}`).join(","),
         });
@@ -136,6 +139,17 @@ export function CreatePATForm({tokens}: {tokens: Pick<PATMetadata, "displayName"
                         onBlur={() => setTouched(true)}
                         aria-invalid={showError}
                         data-testid={"security-create-pat-name-input"}
+                    />
+                </div>
+                <div className={[classes.boldLabel, classes.defaultTextLabel, "mb-6"].join(" ")}>
+                    <InputField
+                        type="text"
+                        aria-labelledby={descriptionLabelId}
+                        label={<span id={descriptionLabelId}>{t("security.pat.description")}</span>}
+                        value={description}
+                        onChange={event => setDescription(event.target.value)}
+                        className={`${classes.defaultTextLabel} focus-visible:ces-focused`}
+                        data-testid="security-create-pat-desc-input"
                     />
                 </div>
                 <div
