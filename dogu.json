@@ -180,24 +180,6 @@
       "Optional": true
     },
     {
-      "Name": "2fa/activate",
-      "Description": "Enables two-factor authentication management in Usermgmt. Set this value to 'true' to enable.",
-      "Default": "false",
-      "Optional": true
-    },
-    {
-      "Name": "2fa/api_user_name",
-      "Description": "Username for two-factor authentication administration. Supply the same username to the CAS dogu.",
-      "Optional": true,
-      "Encrypted": true
-    },
-    {
-      "Name": "2fa/api_user_password",
-      "Description": "API password for two-factor authentication administration. Supply the same password to the CAS dogu.",
-      "Optional": true,
-      "Encrypted": true
-    },
-    {
       "Name": "container_config/memory_limit",
       "Description": "Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). We recommend at least 200m of memory for usermgt.",
       "Optional": true,

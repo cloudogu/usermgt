@@ -7,8 +7,10 @@ This document describes the current implementation and the API for integrations.
 ## Enable PATs and technical accounts
 
 1. Set `pat/enabled` to `true` in the CAS Dogu configuration.
-2. In the encrypted configuration of the User Management Dogu (`usermgt`), set `2fa/api_user_name` and `2fa/api_user_password` to the same API username and password configured under those keys in the CAS Dogu.
+2. In the global CES configuration, set `2fa/api_user_name` and `2fa/api_user_password` to the same API username and password configured under those keys in the CAS Dogu. Usermgt reads the global credentials as plaintext. When upgrading, transfer the existing Usermgt values to the global configuration.
 3. Restart each Dogu whose configuration you changed. If you changed both, restart `cas` first, then `usermgt`.
+
+To enable 2FA management in Usermgt, also set the global key `2fa/activate` to `true`. If the key is absent, 2FA management is disabled.
 
 ## Components and responsibilities
 

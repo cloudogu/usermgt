@@ -7,8 +7,10 @@ Diese Dokumentation beschreibt die aktuelle Implementierung und die API für Int
 ## PATs und technische Konten aktivieren
 
 1. Setzen Sie in der Konfiguration des CAS-Dogus `pat/enabled` auf `true`.
-2. Hinterlegen Sie in der verschlüsselten Konfiguration des User-Management-Dogus (`usermgt`) unter `2fa/api_user_name` und `2fa/api_user_password` denselben API-Benutzernamen und dasselbe API-Passwort, die im CAS-Dogu unter den gleichnamigen Schlüsseln hinterlegt sind.
+2. Hinterlegen Sie in der globalen CES-Konfiguration unter `2fa/api_user_name` und `2fa/api_user_password` denselben API-Benutzernamen und dasselbe API-Passwort, die im CAS-Dogu unter den gleichnamigen Schlüsseln hinterlegt sind. Usermgt liest die globalen Zugangsdaten als Klartext. Übertragen Sie bei einem Upgrade die bisherigen Usermgt-Werte in die globale Konfiguration.
 3. Starten Sie die Dogus nach einer Konfigurationsänderung neu. Wenn Sie beide geändert haben, starten Sie zuerst `cas` und danach `usermgt` neu.
+
+Für die 2FA-Verwaltung in Usermgt setzen Sie zusätzlich den globalen Schlüssel `2fa/activate` auf `true`. Ohne diesen Schlüssel ist die 2FA-Verwaltung deaktiviert.
 
 
 ## Aufbau und Zuständigkeiten

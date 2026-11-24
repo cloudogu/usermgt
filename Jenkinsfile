@@ -119,7 +119,7 @@ parallel(
                     stage('Setup') {
                         ecoSystem.loginBackend('cesmarvin-setup')
                         String casConfig = casConfigOverride()
-                        String secret = secretOverride()
+                        String mfaApiConfig = mfaApiConfigOverride()
                         ecoSystem.setup([registryConfig: """
                                         "_global": {
                                             "password-policy": {
@@ -128,12 +128,12 @@ parallel(
                                                 "must_contain_digit": "true",
                                                 "must_contain_special_character": "true",
                                                 "min_length": "14"
-                                            }
+                                            },
+                                            "2fa": ${mfaApiConfig}
                                         },
                                         "cas": ${casConfig}
                                         """, registryConfigEncrypted: """
-                                        "cas": ${secret},
-                                        "usermgt": ${secret}
+                                        "cas": { "2fa": ${mfaApiConfig} }
                                         """])
                     }
 
@@ -167,20 +167,6 @@ parallel(
 
                     if (params.RunIntegrationTests || gitflow.isReleaseBranch() || git.getSimpleBranchName() == "develop") {
                         stage('Integration Tests') {
-                            if (gitflow.isPreReleaseBranch()) {
-                                // Purging removes the setup secrets; encrypt them again with the new dogu key.
-                                ecoSystem.waitForDogu("usermgt")
-                                def patApiConfig = readJSON(text: secretOverride())["2fa"]
-                                patApiConfig.each { key, value ->
-                                    String quotedValue = "'" + value.toString().replace("'", "'\"'\"'") + "'"
-                                    ecoSystem.vagrant.ssh(
-                                            "sudo docker exec usermgt doguctl config --encrypted " +
-                                            "2fa/${key} ${quotedValue}"
-                                    )
-                                }
-                                ecoSystem.restartDogu("usermgt", false)
-                                ecoSystem.waitForDogu("usermgt")
-                            }
                             echo "setup mailpit"
                             ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                             ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
@@ -474,13 +460,11 @@ String casConfigOverride() {
 '''.trim()
 }
 
-String secretOverride() {
+String mfaApiConfigOverride() {
     return '''
 {
-  "2fa": {
-    "api_user_name": "pat-api",
-    "api_user_password": "securePassword"
-  }
+  "api_user_name": "pat-api",
+  "api_user_password": "securePassword"
 }
 '''.trim()
 }

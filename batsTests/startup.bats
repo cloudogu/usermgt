@@ -48,7 +48,7 @@ teardown() {
   assert_equal "${LDAP_BIND_PASSWORD_ENC}" "YmFzZTY0IGlzIG5vdCBlbmNyeXB0aW9u"
 }
 
-@test "setMfaEnv() should pass 2FA configuration to the Java process" {
+@test "setMfaEnv() should pass global 2FA configuration to the Java process" {
   export UNIVERSEADM_HOME=""
   export CATALINA_OPTS="-Xmx256m"
   source /workspace/resources/startup.sh
@@ -60,6 +60,9 @@ teardown() {
 
   setMfaEnv
 
-  assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config 2fa/activate --default false"
+  assert_equal "$(mock_get_call_args "${doguctl}" "1")" "config --global --default false 2fa/activate"
+  assert_equal "$(mock_get_call_args "${doguctl}" "2")" "config --global 2fa/api_user_name"
+  assert_equal "$(mock_get_call_args "${doguctl}" "3")" "config --global 2fa/api_user_password"
+  assert_equal "$(mock_get_call_args "${doguctl}" "4")" "config -g fqdn"
   assert_equal "${CATALINA_OPTS}" "-Xmx256m -Dcas.mfa.activate=true -Dcas.mfa.user=mfa-user -Dcas.mfa.password=mfa-password -Dcas.mfa.fqdn=ces.example.com"
 }
