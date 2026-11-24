@@ -40,11 +40,12 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
     const [formDisabled, setFormDisabled] = useState(false);
     useEffect(() => hasEmptyRequiredFields(), []);
 
+    const isNewUser = !props.initialUser.username;
     const {mfa, isMfaLoading, mfaError, isMfaAvailable, reloadMfa} = useMfa(props.initialUser.username);
     const {notification: mfaNotification, notify: mfaNotify} = useAlertNotification();
 
-    const {admin} = useApplicationContext().casUser;
-    const editingDisabled  = useApplicationContext().externalLdap;
+    const {casUser: {admin}, externalLdap: editingDisabled, mfaActive} = useApplicationContext();
+    const showMfa = !props.twoFADisabled && (isNewUser ? mfaActive : isMfaAvailable);
 
 
     const originalChangeFunction = handler.handleChange;
@@ -229,7 +230,7 @@ export default function UserForm<T extends User>(props: UserFormProps<T>) {
                     <></>
                 )
             }
-            {props.twoFADisabled || !isMfaAvailable ? (
+            {!showMfa ? (
                 <></>
             ) : (<div>
                 <hr className={"mb-4"}/>

@@ -4,7 +4,12 @@ import {RobotsService} from "../services/Robots";
 import {useAPI} from "./useAPI";
 import type {PersonalAccessToken} from "./usePAT";
 
-export type RobotToken = PersonalAccessToken & {userId: string; owner: string; ownerDisplayName: string; description: string};
+export type RobotToken = PersonalAccessToken & {
+    userId: string;
+    owner?: string;
+    ownerDisplayName: string;
+    description?: string;
+};
 
 export type RobotsResult = {
     robots: RobotToken[];

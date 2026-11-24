@@ -128,12 +128,12 @@ parallel(
                                                 "must_contain_digit": "true",
                                                 "must_contain_special_character": "true",
                                                 "min_length": "14"
-                                            },
-                                            "2fa": ${mfaApiConfig}
+                                            }
                                         },
                                         "cas": ${casConfig}
                                         """, registryConfigEncrypted: """
-                                        "cas": { "2fa": ${mfaApiConfig} }
+                                        "cas": { "2fa": ${mfaApiConfig} },
+                                        "usermgt": { "2fa": ${mfaApiConfig} }
                                         """])
                     }
 
@@ -167,6 +167,11 @@ parallel(
 
                     if (params.RunIntegrationTests || gitflow.isReleaseBranch() || git.getSimpleBranchName() == "develop") {
                         stage('Integration Tests') {
+                            if (gitflow.isPreReleaseBranch()) {
+                                // Purging removes the setup secrets and the Dogu encryption key.
+                                ecoSystem.waitForDogu(doguName)
+                                configureMfaApiCredentials(ecoSystem, doguName)
+                            }
                             echo "setup mailpit"
                             ecoSystem.vagrant.sshOut 'chmod +x /dogu/resources/setup-mailhog.sh'
                             ecoSystem.vagrant.sshOut "/dogu/resources/setup-mailhog.sh"
@@ -205,6 +210,7 @@ parallel(
 
                                     // Wait for upgraded dogu to get healthy
                                     ecoSystem.waitForDogu(doguName)
+                                    configureMfaApiCredentials(ecoSystem, doguName)
                                 }
 
                                 stage('Integration Tests - After Upgrade') {
@@ -467,6 +473,18 @@ String mfaApiConfigOverride() {
   "api_user_password": "securePassword"
 }
 '''.trim()
+}
+
+void configureMfaApiCredentials(ecoSystem, String doguName) {
+    def credentials = readJSON(text: mfaApiConfigOverride(), returnPojo: true)
+    credentials.each { key, value ->
+        String quotedValue = "'" + value.toString().replace("'", "'\"'\"'") + "'"
+        ecoSystem.vagrant.ssh(
+                "sudo docker exec ${doguName} doguctl config --encrypted 2fa/${key} ${quotedValue}"
+        )
+    }
+    ecoSystem.restartDogu(doguName, false)
+    ecoSystem.waitForDogu(doguName)
 }
 
 def mergeConfigMapYaml = { String configMapName, String overrideConfig ->

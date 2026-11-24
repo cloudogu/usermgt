@@ -206,6 +206,7 @@
   "users.mfa.load.error": "The two-factor authentication could not be loaded.",
   "users.mfa.status.enabled": "Two-Factor Authentication for {{username}} is active and configured.",
   "users.mfa.status.disabled": "Two-Factor Authentication for {{username}} is active and not configured. {{username}} must configure the second factor on the next login.",
+  "users.mfa.status.newUser": "Two-Factor Authentication for new users is active and not configured. The new user must configure the second factor on the next login.",
   "users.mfa.device.name": "Device name",
   "users.mfa.buttons.delete": "Reset two-factor authentication",
   "users.mfa.delete.confirmation.title": "Reset two-factor authentication",

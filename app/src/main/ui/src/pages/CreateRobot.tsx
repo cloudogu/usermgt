@@ -57,7 +57,6 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
     const nameLabelId = useId();
     const nameHintId = useId();
     const descLabelId = useId();
-    const descHintId = useId();
     const expiryLabelId = useId();
     const expiryErrorId = useId();
 
@@ -166,7 +165,6 @@ export function CreateRobotForm({tokens}: {tokens: Pick<PATMetadata, "displayNam
                     <InputField type={"text"}
                         ref={descRef}
                         aria-labelledby={descLabelId}
-                        aria-describedby={descHintId}
                         label={<span id={descLabelId}>{t("robots.createrobot.input.desc.label")}</span>}
                         value={robotDesc}
                         required={false}

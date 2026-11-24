@@ -3,10 +3,10 @@ import {isSuccessStatus} from "../helpers/api";
 import type {CreatePATRequest, CreatePATResponse, PATMetadata} from "./PATs";
 
 type RobotPATMetadata = PATMetadata & {
-    owner: string;
+    owner?: string;
     ownerDisplayName?: string;
     ownerDeleted?: boolean;
-    description: string;
+    description?: string;
 };
 
 type CreateRobotRequest = CreatePATRequest & {owner?: string};

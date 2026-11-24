@@ -180,6 +180,18 @@
       "Optional": true
     },
     {
+      "Name": "2fa/api_user_name",
+      "Description": "API username for two-factor authentication administration and personal access tokens. Use the same username as in the CAS dogu.",
+      "Optional": true,
+      "Encrypted": true
+    },
+    {
+      "Name": "2fa/api_user_password",
+      "Description": "API password for two-factor authentication administration and personal access tokens. Use the same password as in the CAS dogu.",
+      "Optional": true,
+      "Encrypted": true
+    },
+    {
       "Name": "container_config/memory_limit",
       "Description": "Limits the container's memory usage. Use a positive integer value followed by one of these units [b,k,m,g] (byte, kibibyte, mebibyte, gibibyte). We recommend at least 200m of memory for usermgt.",
       "Optional": true,
