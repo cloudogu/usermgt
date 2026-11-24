@@ -7,6 +7,9 @@ Feature: Tests for creating new users.
     And the user clicks on the create-user button
     Then the new-user-page is shown
 
+  Scenario: MFA management is not shown for a new user
+    Then MFA management is not shown in the user form
+
   @clean_new_user
   Scenario: a user who is manager wants to create a new user
     When the user fills the user-form for a user with the name "testuser_new"

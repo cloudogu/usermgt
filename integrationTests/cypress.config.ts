@@ -55,7 +55,7 @@ export default defineConfig({
         },
         videoCompression: false,
         experimentalRunAllSpecs: true,
-        specPattern: ["cypress/e2e/**/robots.feature"],
+        specPattern: ["cypress/e2e/**/*.feature"],
         //can be set to ensure minimization of flaky tests
         retries: {
             runMode: 2,

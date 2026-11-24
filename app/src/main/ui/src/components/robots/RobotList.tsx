@@ -122,7 +122,7 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "status" ? sortDirection : undefined} >
                                 {sortableHeader("status", t("robots.overview.table.status"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
-                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "status" ? sortDirection : undefined} >
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "ownerDisplayName" ? sortDirection : undefined} >
                                 {sortableHeader("ownerDisplayName", t("robots.overview.table.owner"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "createdAt" ? sortDirection : undefined} >

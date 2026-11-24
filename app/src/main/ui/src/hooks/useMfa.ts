@@ -20,8 +20,8 @@ export function useMfa(username?: string): mfaResult {
         return {
             mfa: undefined,
             isMfaLoading: false,
-            mfaError: new Error("no username given for useMfa"),
-            isMfaAvailable: true,
+            mfaError: undefined,
+            isMfaAvailable: false,
             reloadMfa: () => {},
         };
     }
