@@ -17,7 +17,7 @@
     {
       "Type": "dogu",
       "Name": "cas",
-      "Version": ">=7.0.5.1-6"
+      "Version": ">=8.0.3-2"
     },
     {
       "Type": "dogu",
