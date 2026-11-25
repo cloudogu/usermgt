@@ -23,6 +23,7 @@ After({tags: "@created_robot"}, () => {
 const robotCount = () => patElement("robots-count").should("be.visible");
 const robotTable = () => patElement("robot-tokens-table").should("be.visible");
 const robotDialog = () => cy.get('[role="dialog"]').should("be.visible");
+const robotExpirationCell = () => cy.get("@robotRow").find('[data-testid="robot-token-expiration"]');
 // SegmentedSelect.Content adds the suffix "-viewport" to its options container's test ID.
 const robotExpiryOptions = () => patElement("robots-create-pat-expiry-select-viewport")
     .should("be.visible").find('[role="option"]');
@@ -164,7 +165,7 @@ Then("the new technical account is listed as active without expiration", () => {
         firstRobotPage();
         findRobotRow(name);
         cy.get("@robotRow").find("td").eq(1).should("contain.text", "Active");
-        cy.get("@robotRow").find("td").eq(3).should("have.text", "Never");
+        robotExpirationCell().should("have.text", "Never");
     });
 });
 
@@ -228,7 +229,7 @@ When("the user opens the new technical account's details by clicking its name", 
     cy.get<string>("@robotName").then(name => {
         firstRobotPage();
         findRobotRow(name);
-        cy.get("@robotRow").find("td").eq(3).invoke("text").then(date => {
+        robotExpirationCell().invoke("text").then(date => {
             cy.wrap(date.trim()).as("robotDisplayedExpiration");
         });
         cy.get("@robotRow").find("a").should("have.text", name).click();
@@ -254,15 +255,12 @@ Then("the technical account renewal time selection contains the current expirati
         expect(date, "current account expiration").not.to.eq("Never");
         expect(date).not.to.be.empty;
         patElement("robots-create-pat-expiry-select-trigger").click();
-        robotExpiryOptions()
-            .filter((_, option) => Cypress.$(option).text().trim() === date)
-            .should("have.length", 1).and("be.visible");
+        patElement("robots-renew-current-expiration").should("be.visible").and("have.text", date);
     });
 });
 
 When("the user selects {int} days and renews the technical account from its details", (days: number) => {
-    // The current-date option shares a test ID with the seven-day option; use its visible label.
-    robotExpiryOptions().contains(new RegExp(`^${days} days$`)).click();
+    patElement(`security-create-pat-expiry-${days}`).should("have.text", `${days} days`).click();
     cy.intercept("PUT", "**/usermgt/api/robots/*").as("renewRobotFromDetails");
     cy.get('form button[type="submit"]').should("be.visible").click();
     cy.wait("@renewRobotFromDetails").then(({request, response}) => {

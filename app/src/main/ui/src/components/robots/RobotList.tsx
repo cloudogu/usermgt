@@ -157,7 +157,7 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                                     <ActionTableFrontendPaginated.Body.Row.Column>
                                         {formatDate(token.createdAt)}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
-                                    <ActionTableFrontendPaginated.Body.Row.Column>
+                                    <ActionTableFrontendPaginated.Body.Row.Column data-testid="robot-token-expiration">
                                         {formatDate(token.expiresAt)}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
