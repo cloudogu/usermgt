@@ -1,6 +1,6 @@
 {
   "Name": "official/usermgt",
-  "Version": "1.24.0-1",
+  "Version": "1.25.0-1",
   "DisplayName": "User Management",
   "Description": "User and Group Management.",
   "Category": "Administration Apps",
@@ -17,7 +17,7 @@
     {
       "Type": "dogu",
       "Name": "cas",
-      "Version": ">=7.0.5.1-6"
+      "Version": ">=8.0.3-2"
     },
     {
       "Type": "dogu",
@@ -180,20 +180,14 @@
       "Optional": true
     },
     {
-      "Name": "2fa/activate",
-      "Description": "Enables two-factor authentication management in Usermgmt. Set this value to 'true' to enable.",
-      "Default": "false",
-      "Optional": true
-    },
-    {
       "Name": "2fa/api_user_name",
-      "Description": "Username for two-factor authentication administration. Supply the same username to the CAS dogu.",
+      "Description": "API username for two-factor authentication administration and personal access tokens. Use the same username as in the CAS dogu.",
       "Optional": true,
       "Encrypted": true
     },
     {
       "Name": "2fa/api_user_password",
-      "Description": "API password for two-factor authentication administration. Supply the same password to the CAS dogu.",
+      "Description": "API password for two-factor authentication administration and personal access tokens. Use the same password as in the CAS dogu.",
       "Optional": true,
       "Encrypted": true
     },

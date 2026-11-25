@@ -41,7 +41,7 @@ export default function RobotDetails() {
     };
     const renewToken = async (expiresAt?: string | null) => {
         if (!pat) return;
-        const response = await RobotsService.renew(pat.userId, expiresAt);
+        const response = await RobotsService.renew(pat.userId, {expiresAt});
         setRenewedPAT(response);
     };
     const closeRenewedRobot = () => {
@@ -114,6 +114,10 @@ export default function RobotDetails() {
                             />
                         </div>
                     </div>
+                    <p className="mb-2 text-neutral">{t("robots.createrobot.input.desc.label")}: {pat.description}</p>
+                    <p className="mb-2 text-neutral">
+                        {t("robots.overview.table.owner")}: {pat.ownerDeleted ? t("robots.overview.table.owner.deleted") : pat.ownerDisplayName || pat.owner || "—"}
+                    </p>
                     <p className="mb-2 text-neutral">{timeHint}</p>
                     <h3>{t("robots.pat.details.manage")}</h3>
                     <h4>{t("robots.pat.details.manage.renewkey")}</h4>
@@ -144,7 +148,7 @@ export default function RobotDetails() {
                                         {t("robots.createrobot.select.expires.placeholder")}
                                     </SegmentedSelect.TriggerButton>
                                     <SegmentedSelect.Content data-testid="robots-create-pat-expiry-select">
-                                        {!isExpired && pat.expiresAt && <SegmentedSelect.Content.Item value="-1" data-testid={"security-create-pat-expiry-7"}>{formatDate(pat.expiresAt)}</SegmentedSelect.Content.Item>}
+                                        {!isExpired && pat.expiresAt && <SegmentedSelect.Content.Item value="-1" data-testid="robots-renew-current-expiration">{formatDate(pat.expiresAt)}</SegmentedSelect.Content.Item>}
                                         <SegmentedSelect.Content.Item value="7" data-testid={"security-create-pat-expiry-7"}>{t("robots.createrobot.select.expires.option.sevendays")}</SegmentedSelect.Content.Item>
                                         <SegmentedSelect.Content.Item value="30" data-testid={"security-create-pat-expiry-30"}>{t("robots.createrobot.select.expires.option.thirtydays")}</SegmentedSelect.Content.Item>
                                         <SegmentedSelect.Content.Item value="60" data-testid={"security-create-pat-expiry-60"}>{t("robots.createrobot.select.expires.option.sixtydays")}</SegmentedSelect.Content.Item>

@@ -145,7 +145,7 @@ function ApplicationContainer({children}: ApplicationContainerProps) {
     const {user: casUser} = useCasUser();
     const {guiConfig} = useGuiConfig();
     const {t} = useTranslation();
-    return <ApplicationContext.Provider value={{casUser: casUser, externalLdap: guiConfig.externalLdap}}>
+    return <ApplicationContext.Provider value={{casUser, externalLdap: guiConfig.externalLdap, mfaActive: guiConfig.mfaActive === true}}>
         <Nav/>
         <Main>
             {guiConfig.externalLdap && (<Alert className={"mt-2"} onClose={() => {

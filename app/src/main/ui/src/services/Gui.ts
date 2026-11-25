@@ -4,6 +4,7 @@ import {isSuccessStatus} from "../helpers/api";
 export type GuiConfig = {
     pwdResetPreselected: boolean;
     externalLdap: boolean;
+    mfaActive?: boolean;
 };
 
 export const GuiService = {

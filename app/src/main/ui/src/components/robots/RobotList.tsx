@@ -30,7 +30,7 @@ export type RobotListProps = {
     onTokenDeleted: (_id: string) => void;
 };
 
-type SortableColumn = "displayName" | "status" | "createdAt" | "expiresAt";
+type SortableColumn = "displayName" | "status" | "createdAt" | "expiresAt" | "ownerDisplayName";
 
 export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) {
     const [sortColumn, setSortColumn] = useState<SortableColumn>("displayName");
@@ -122,6 +122,9 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "status" ? sortDirection : undefined} >
                                 {sortableHeader("status", t("robots.overview.table.status"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
+                            <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "ownerDisplayName" ? sortDirection : undefined} >
+                                {sortableHeader("ownerDisplayName", t("robots.overview.table.owner"))}
+                            </ActionTableFrontendPaginated.HeadWithOneRow.Column>
                             <ActionTableFrontendPaginated.HeadWithOneRow.Column aria-sort={sortColumn === "createdAt" ? sortDirection : undefined} >
                                 {sortableHeader("createdAt", t("robots.overview.table.createdAt"))}
                             </ActionTableFrontendPaginated.HeadWithOneRow.Column>
@@ -143,36 +146,43 @@ export function RobotList({tokens, labelledBy, onTokenDeleted}: RobotListProps) 
                                         <Link to={`/robots/pats/${encodeURIComponent(token.userId)}/${encodeURIComponent(token.id)}`} className="text-default-text hover:!text-default-text hover:underline hover:!decoration-current active:!text-brand">
                                             {token.displayName}
                                         </Link>
+                                        <div className={"text-neutral text-sm"}>{token.description}</div>
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
                                         <StatusIndicator text={token.status} variant="secondary"/>
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
-                                        {formatDate(token.createdAt)}
+                                        {token.ownerDisplayName}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
+                                        {formatDate(token.createdAt)}
+                                    </ActionTableFrontendPaginated.Body.Row.Column>
+                                    <ActionTableFrontendPaginated.Body.Row.Column data-testid="robot-token-expiration">
                                         {formatDate(token.expiresAt)}
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                     <ActionTableFrontendPaginated.Body.Row.Column>
-                                        {token.status === "active" && (
-                                            <RefreshButton
-                                                title={t("robots.overview.table.action.renew")}
+                                        <div className="inline-flex flex-nowrap items-center gap-2">
+                                            {token.status === "active" && (
+                                                <RefreshButton
+                                                    title={t("robots.overview.table.action.renew")}
+                                                    disabled={isRenewing || !!renewedPAT}
+                                                    onClick={() => void renewToken(token)}
+                                                    aria-label={`${token.displayName} ${t("robots.overview.table.action.renew")}`}
+                                                    className="shrink-0"
+                                                />
+                                            )}
+                                            <DeleteButton
+                                                title={t("robots.overview.table.action.delete")}
                                                 disabled={isRenewing || !!renewedPAT}
-                                                onClick={() => void renewToken(token)}
-                                                aria-label={`${token.displayName} ${t("robots.overview.table.action.renew")}`}
-                                                className={"mr-2"}
+                                                onClick={event => {
+                                                    setAnnouncement("");
+                                                    deleteButtonRef.current = event.currentTarget;
+                                                    setTokenToDelete(token);
+                                                }}
+                                                aria-label={`${token.displayName} ${t("robots.overview.table.action.delete")}`}
+                                                className="shrink-0"
                                             />
-                                        )}
-                                        <DeleteButton
-                                            title={t("robots.overview.table.action.delete")}
-                                            disabled={isRenewing || !!renewedPAT}
-                                            onClick={event => {
-                                                setAnnouncement("");
-                                                deleteButtonRef.current = event.currentTarget;
-                                                setTokenToDelete(token);
-                                            }}
-                                            aria-label={`${token.displayName} ${t("robots.overview.table.action.delete")}`}
-                                        />
+                                        </div>
                                     </ActionTableFrontendPaginated.Body.Row.Column>
                                 </ActionTableFrontendPaginated.Body.Row>
                             ))}

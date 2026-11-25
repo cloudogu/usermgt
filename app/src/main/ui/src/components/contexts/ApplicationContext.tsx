@@ -7,6 +7,7 @@ const isExternalLdap = process.env.EXTERNAL_LDAP || "false";
 export type ApplicationContextProps = {
     casUser: CasUser;
     externalLdap: boolean;
+    mfaActive: boolean;
 }
 export const ApplicationContext = createContext<ApplicationContextProps>({
     casUser: {
@@ -15,6 +16,7 @@ export const ApplicationContext = createContext<ApplicationContextProps>({
         loading: true
     },
     externalLdap: isExternalLdap === "true",
+    mfaActive: false,
 });
 
 export function useApplicationContext() {

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.25.0-1] - 2026-11-25
+### Added
+- [#266] Manager descriptions for robots and pats
+
 ## [v1.24.0-1] - 2026-11-12
 ### Added
 - [#265] Add technical account management

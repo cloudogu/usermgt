@@ -6,6 +6,11 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.25.0-1] - 2026-11-25
+### Added
+- Personal Access Tokens and Technical Accounts can now be enriched with a description.
+- Send Mail to Technical-Account Owner before the account expires or the account is renewed.
+
 ## [v1.24.0-1] - 2026-11-12
 ### Added
 - Technical accounts can now be managed like personal access tokens

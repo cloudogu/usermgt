@@ -84,6 +84,9 @@ public class RobotResource {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         try {
+            if (request != null) {
+                request.setOwner(SecurityUtils.getSubject().getPrincipal().toString());
+            }
             CreatedRobotPAT pat = service.createRobot(request);
             return Response.status(Response.Status.CREATED)
                 .entity(GSON.toJson(pat)).type(MediaType.APPLICATION_JSON).build();

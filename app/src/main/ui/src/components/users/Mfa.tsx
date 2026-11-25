@@ -57,7 +57,7 @@ export function MfaManagement({username, mfa, onDelete, className}: MfaManagemen
                     <div className="flex items-center gap-2">
                         <CesIconShieldWarning className="w-6 h-6 text-gray-600" />
                         <p className="text-gray-600">
-                            {t("users.mfa.status.disabled", { username })}
+                            {username ? t("users.mfa.status.disabled", {username}) : t("users.mfa.status.newUser")}
                         </p>
                     </div>
                 )}

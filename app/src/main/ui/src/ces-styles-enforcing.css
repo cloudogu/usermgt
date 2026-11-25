@@ -16,6 +16,19 @@
     margin-bottom: .5rem;
 }
 
+.tailwind-wrapper .pat-list-table table,
+.tailwind-wrapper .pat-list-table tbody,
+.tailwind-wrapper .pat-list-table tr {
+    height: auto;
+}
+
+.tailwind-wrapper .pat-list-table tbody td {
+    height: auto;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    vertical-align: middle;
+}
+
 .tailwind-wrapper a.text-default-text {
     color: var(--ces-color-default-text);
     text-decoration: none;

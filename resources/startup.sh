@@ -148,11 +148,18 @@ renderTemplates() {
 }
 
 createGuiConfiguration() {
+  local -n mfaActivation="$1"
+  mfaActivation="$(doguctl config --global --default false 2fa/activate)"
+  if [[ "${mfaActivation}" != "true" ]]; then
+    mfaActivation=false
+  fi
+
   echo "Read configuration of preselection of password reset attribute checkbox"
   PWD_RESET_PRESELECTION="$(doguctl config "${PASSWORD_RESET_DEFAULT_VALUE_KEY}" --default 'false')"
   echo "Preselection of password reset attribute checkbox is: ${PWD_RESET_PRESELECTION}"
 
-  echo "{ \"pwdResetPreselected\": ${PWD_RESET_PRESELECTION}, \"externalLdap\": ${EXTERNAL_LDAP}}" >"${GUI_CONFIG_PATH}"
+  printf '{"pwdResetPreselected": %s, "externalLdap": %s, "mfaActive": %s}\n' \
+    "${PWD_RESET_PRESELECTION}" "${EXTERNAL_LDAP}" "${mfaActivation}" >"${GUI_CONFIG_PATH}"
 }
 
 createTrustStore() {
@@ -183,20 +190,19 @@ migrateLDAPEntries() {
 
 # these env are used by the frontend to connect to the cas mfa api
 setMfaEnv() {
-      local mfaActivated=""
+      local mfaActivated="$1"
       local mfaApiUser=""
       local mfaApiPassword=""
 
-      mfaActivated="$(doguctl config 2fa/activate --default 'false')"
       export CATALINA_OPTS="${CATALINA_OPTS:-} -Dcas.mfa.activate=${mfaActivated}"
 
-      if ! mfaApiUser="$(doguctl config -e 2fa/api_user_name 2>/dev/null)"; then
-        echo "Skipping MFA env setup because 2fa/api_user_name is not configured"
+      if ! mfaApiUser="$(doguctl config --encrypted 2fa/api_user_name 2>/dev/null)"; then
+        echo "Skipping MFA env setup because encrypted 2fa/api_user_name is not configured"
         return
       fi
 
-      if ! mfaApiPassword="$(doguctl config -e 2fa/api_user_password 2>/dev/null)"; then
-        echo "Skipping MFA env setup because 2fa/api_user_password is not configured"
+      if ! mfaApiPassword="$(doguctl config --encrypted 2fa/api_user_password 2>/dev/null)"; then
+        echo "Skipping MFA env setup because encrypted 2fa/api_user_password is not configured"
         return
       fi
 
@@ -210,7 +216,6 @@ setMfaEnv() {
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.user=${mfaApiUser}"
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.password=${mfaApiPassword}"
       export CATALINA_OPTS="${CATALINA_OPTS} -Dcas.mfa.fqdn=${FQDN}"
-      echo "${CATALINA_OPTS}"
 }
 
 setCesControlEnv() {
@@ -234,9 +239,11 @@ runMain() {
   configureLDAP
   copyConfigurationResources
   renderTemplates
-  createGuiConfiguration
+
+  local mfaActivated
+  createGuiConfiguration mfaActivated
   createTrustStore
-  setMfaEnv
+  setMfaEnv "${mfaActivated}"
   setCesControlEnv
 
   if [[ "${EXTERNAL_LDAP}" != "true" ]]; then

@@ -75,6 +75,11 @@ export default function PATDetails() {
                             />
                         </div>
                     </div>
+                    {pat.description?.trim() && (
+                        <p className="mb-2 whitespace-pre-wrap break-words text-neutral">
+                            {t("security.pat.description")}: {pat.description}
+                        </p>
+                    )}
                     <p className="my-2 text-neutral">{timeHint}</p>
                     <Button
                         className="flex w-full desktop:w-fit items-center justify-center gap-2 mb-2 mt-4 hover:bg-neutral-weaker focus-visible:!bg-transparent"

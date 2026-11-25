@@ -7,6 +7,16 @@ Feature: Tests for creating new users.
     And the user clicks on the create-user button
     Then the new-user-page is shown
 
+  @mfa_active
+  Scenario: The MFA notice is shown with static text when MFA is enabled
+    When the user fills the user-form for a user with the name "testuser_new"
+    Then the MFA notice for new users is shown in the user form
+
+  @mfa_inactive
+  Scenario: The MFA section is hidden when MFA is disabled
+    Then the GUI configuration reports that MFA is disabled
+    And MFA management is not shown in the user form
+
   @clean_new_user
   Scenario: a user who is manager wants to create a new user
     When the user fills the user-form for a user with the name "testuser_new"
