@@ -10,6 +10,8 @@ Sign in to the Cloudogu EcoSystem with an account that has manager permissions. 
 
 The overview lists existing technical accounts with their display name, status, creator, creation date, and expiry date. A description, if provided, appears below the display name. Click the display name to see the description, the creator, and the Dogus the account can access. If the recorded creator account no longer exists, the interface shows **deleted account**.
 
+An email reminder is sent 30, 14, 7 and 1 day(s) before the access token expires.
+
 ![Robot-Overview in technical account section](figures/robots/en/OverviewRobots.png)
 
 ## Creating a technical account
@@ -43,6 +45,8 @@ Renew the token when it is about to expire or when you need a new token for the 
 6. Replace the previous token in all applications that use this technical account.
 
 **The old token becomes invalid as soon as renewal succeeds.** Plan to update the credentials in the affected applications immediately afterwards. Until then, these applications can no longer access the system using the old token.
+
+An email notification is sent after successful renewal.
 
 Even if a token has already expired, you can select a new validity period in the account details and generate a new token.
 

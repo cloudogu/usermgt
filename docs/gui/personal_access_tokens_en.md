@@ -16,6 +16,8 @@ You must be logged in to the Cloudogu EcoSystem to manage PATs. You can only vie
 
 The overview shows each token's display name, status, creation date, and expiry date. Active and expired tokens are marked accordingly. You can sort the list using the column headings.
 
+An email reminder is sent before a PAT expires.
+
 ![PAT overview in the Security section](figures/pat/en/OverviewPAT.png)
 
 Click a token's display name to view its details and the Dogus it can access. The actual token value cannot be displayed again after creation.

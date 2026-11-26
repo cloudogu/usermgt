@@ -10,6 +10,8 @@ Melden Sie sich mit einem Konto mit Managerrechten am Cloudogu EcoSystem an. Öf
 
 Die Übersicht zeigt die vorhandenen technischen Konten mit Anzeigename, Status, Ersteller, Erstellungsdatum und Ablaufdatum. Eine hinterlegte Beschreibung steht unter dem Anzeigenamen. Klicken Sie auf den Anzeigenamen, um die Beschreibung, den Ersteller und die freigegebenen Dogus zu sehen. Existiert das hinterlegte Erstellerkonto nicht mehr, zeigt die Oberfläche **gelöschtes Konto** an.
 
+Vor 30, 14, 7 und 1 Tag(e) vor Ablauf des Zugriffsschlüssels wird eine Erinnerung per E-Mail an den Ersteller verschickt.
+
 ![Robot-Übersicht im Bereich Technische Konten](figures/robots/de/OverviewRobots.png)
 
 ## Ein technisches Konto anlegen
@@ -43,6 +45,8 @@ Erneuern Sie den Schlüssel, wenn seine Gültigkeit bald endet oder Sie einen ne
 6. Ersetzen Sie den bisherigen Schlüssel in allen Anwendungen, die dieses technische Konto verwenden.
 
 **Der alte Schlüssel wird beim erfolgreichen Erneuern sofort ungültig.** Planen Sie deshalb ein, die Zugangsdaten der betroffenen Anwendungen direkt anschließend zu aktualisieren. Bis dahin können diese mit dem alten Schlüssel nicht mehr zugreifen.
+
+Nach erfolgreicher Erneuerung wird eine E-Mail-Benachrichtigung verschickt.
 
 Auch bei einem bereits abgelaufenen Schlüssel können Sie über die Kontodetails eine neue Gültigkeitsdauer wählen und einen neuen Schlüssel erzeugen.
 
