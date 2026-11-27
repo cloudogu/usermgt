@@ -6,6 +6,10 @@ Technische Details zu einem Release finden Sie im zugehörigen [Changelog](https
 
 ## [Unreleased]
 
+## [v1.25.0-2] - 2026-11-27
+### Hinzugefügt
+- Dokumentation der Beschreibungstexte für PATs und technische Konten
+
 ## [v1.25.0-1] - 2026-11-25
 ### Hinzugefügt
 - Persönliche Zugriffschlüssel und Technische Konten können nun eine Beschreibung erhalten.
