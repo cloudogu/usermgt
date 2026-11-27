@@ -16,6 +16,8 @@ Für die Verwaltung von PATs müssen Sie am Cloudogu EcoSystem angemeldet sein. 
 
 Die Übersicht enthält den Anzeigenamen, Status, Erstellungszeitpunkt und Ablaufzeitpunkt eines Schlüssels. Aktive und abgelaufene Schlüssel sind entsprechend gekennzeichnet. Über die Spaltenüberschriften können Sie die Liste sortieren.
 
+Vor Ablauf eines PATs wird eine Erinnerung per E-Mail verschickt.
+
 ![PAT-Übersicht im Bereich Sicherheit](figures/pat/de/OverviewPAT.png)
 
 Klicken Sie auf den Anzeigenamen eines Schlüssels, um dessen Details und die freigegebenen Dogus anzuzeigen. Der eigentliche Schlüsselwert kann nach der Erstellung nicht erneut angezeigt werden.
