@@ -6,6 +6,10 @@ Technical details on a release can be found in the corresponding [Changelog](htt
 
 ## [Unreleased]
 
+## [v1.25.0-2] - 2026-11-27
+### Added
+- added documentation for description on pats and technical accounts
+
 ## [v1.25.0-1] - 2026-11-25
 ### Added
 - Personal Access Tokens and Technical Accounts can now be enriched with a description.
